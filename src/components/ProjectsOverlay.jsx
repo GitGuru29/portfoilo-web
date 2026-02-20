@@ -93,15 +93,15 @@ export default function ProjectsOverlay() {
                     <div
                         key={index}
                         ref={addToRefs}
-                        className="w-screen h-screen flex-shrink-0 flex items-center justify-center p-12"
+                        className="w-[100vw] h-screen flex-shrink-0 flex items-center justify-center p-6 md:p-12"
                     >
-                        <div className="max-w-3xl glass p-12 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md">
-                            <span className="text-sm font-mono tracking-widest text-[#a855f7] mb-4 block uppercase flex items-center gap-2">
+                        <div className="max-w-3xl glass p-8 md:p-12 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md">
+                            <span className="text-xs md:text-sm font-mono tracking-widest text-[#a855f7] mb-4 block uppercase flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-[#a855f7] animate-pulse" />
                                 {project.role}
                             </span>
-                            <h2 className="text-5xl md:text-7xl font-bold mb-6 text-white">{project.title}</h2>
-                            <p className="text-2xl text-gray-400 font-light leading-relaxed">
+                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 text-white">{project.title}</h2>
+                            <p className="text-lg md:text-2xl text-gray-400 font-light leading-relaxed">
                                 {project.description}
                             </p>
                         </div>

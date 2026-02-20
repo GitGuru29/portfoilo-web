@@ -9,7 +9,11 @@ export default function CanvasScene() {
 
     return (
         <div className="fixed inset-0 z-0 pointer-events-none bg-black">
-            <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+            <Canvas
+                camera={{ position: [0, 0, 5], fov: 75 }}
+                dpr={[1, 1.5]} // Cap pixel ratio for mobile performance
+                gl={{ antialias: false }} // Also disable antialiasing on low performance
+            >
                 <color attach="background" args={['#020202']} />
 
                 {/* We will conditionally render or blend environments based on mood */}

@@ -9,8 +9,12 @@ export default function HeroScene() {
     // Create random particles for the hero abstract grid/particles
     // Use useMemo to avoid recreating on every render
     const sphere = React.useMemo(() => {
-        const positions = new Float32Array(2000 * 3);
-        for (let i = 0; i < 2000; i++) {
+        // Mobile optimization: reduce particle count drastically to save GPU
+        const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+        const particleCount = isMobile ? 600 : 2000;
+
+        const positions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
             // Simple random distribution in a sphere
             const r = 10 * Math.cbrt(Math.random());
             const theta = Math.random() * 2 * Math.PI;

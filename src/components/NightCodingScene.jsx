@@ -44,12 +44,16 @@ export default function NightCodingScene() {
     useEffect(() => {
         if (currentMood === 'HERO') return;
 
+        // Mobile optimization: Limit DOM nodes heavily on small screens
+        const isMobile = window.innerWidth < 768;
+        const maxLines = isMobile ? 12 : 35;
+
         let index = 0;
         const interval = setInterval(() => {
             setVisibleLines((lines) => {
                 const newLines = [...lines, CODE_LINES[index]];
                 // Keep the screen from overflowing indefinitely
-                if (newLines.length > 35) newLines.shift();
+                if (newLines.length > maxLines) newLines.shift();
                 return newLines;
             });
             index = (index + 1) % CODE_LINES.length;
