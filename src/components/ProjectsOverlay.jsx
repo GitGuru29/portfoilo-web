@@ -54,47 +54,60 @@ export default function ProjectsOverlay() {
         ScrollTrigger.create({
             trigger: containerRef.current,
             start: "top center",
-            end: "bottom center",
+            end: "bottom top",
             onEnter: () => setMood(MOODS.OWL_MODE),
             onEnterBack: () => setMood(MOODS.OWL_MODE),
         });
 
-        // 2. Mood tracking per sticky project slide
-        sectionsRef.current.forEach((section, i) => {
-            ScrollTrigger.create({
-                trigger: section,
-                start: "top center", // Trigger mood change when the card reaches the middle of the screen
-                end: "bottom center",
-                onEnter: () => setMood(projects[i].mood),
-                onEnterBack: () => setMood(projects[i].mood),
-            });
+        // 2. Horizontal pinning or scrub mechanics
+        const pinAnimation = gsap.to(sectionsRef.current, {
+            xPercent: -100 * (sectionsRef.current.length - 1),
+            ease: "none",
+            scrollTrigger: {
+                trigger: containerRef.current,
+                pin: true,
+                scrub: 1, // smooth scrubbing
+                end: () => "+=" + containerRef.current.offsetWidth * sectionsRef.current.length,
+                onUpdate: (self) => {
+                    // Calculate the current active slide based on scroll progress
+                    const index = Math.min(
+                        projects.length - 1,
+                        Math.floor(self.progress * projects.length)
+                    );
+                    setMood(projects[index].mood);
+                }
+            }
         });
 
         return () => {
+            pinAnimation.scrollTrigger?.kill();
+            pinAnimation.kill();
             ScrollTrigger.getAll().forEach(t => t.kill());
         };
     }, [setMood]);
 
     return (
-        <section id="projects" ref={containerRef} className="relative w-full bg-transparent flex flex-col">
-            {projects.map((project, index) => (
-                <div
-                    key={index}
-                    ref={addToRefs}
-                    className="sticky top-0 w-full h-screen flex-shrink-0 flex items-center justify-center p-6 md:p-12 overflow-hidden"
-                >
-                    <div className="max-w-3xl w-full glass p-8 md:p-12 rounded-3xl border border-white/5 bg-black/60 backdrop-blur-xl shadow-2xl">
-                        <span className="text-xs md:text-sm font-mono tracking-widest text-[#a855f7] mb-4 block uppercase flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[#a855f7] animate-pulse" />
-                            {project.role}
-                        </span>
-                        <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 text-white">{project.title}</h2>
-                        <p className="text-lg md:text-2xl text-gray-400 font-light leading-relaxed">
-                            {project.description}
-                        </p>
+        <section id="projects" ref={containerRef} className="h-screen flex items-center overflow-hidden bg-transparent">
+            <div className="flex w-full h-full items-center">
+                {projects.map((project, index) => (
+                    <div
+                        key={index}
+                        ref={addToRefs}
+                        className="w-[100vw] h-screen flex-shrink-0 flex items-center justify-center p-6 md:p-12"
+                    >
+                        <div className="max-w-3xl glass p-8 md:p-12 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md">
+                            <span className="text-xs md:text-sm font-mono tracking-widest text-[#a855f7] mb-4 block uppercase flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-[#a855f7] animate-pulse" />
+                                {project.role}
+                            </span>
+                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 text-white">{project.title}</h2>
+                            <p className="text-lg md:text-2xl text-gray-400 font-light leading-relaxed">
+                                {project.description}
+                            </p>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </section>
     );
 }
