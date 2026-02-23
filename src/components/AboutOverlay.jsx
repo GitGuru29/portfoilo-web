@@ -6,7 +6,7 @@ import {
     SiKotlin, SiPython, SiCplusplus, SiJavascript, SiDart,
     SiAndroid, SiFirebase, SiApachespark, SiMongodb, SiLinux, SiXcode,
     SiGooglecolab, SiCloudinary, SiPostgresql, SiPhp,
-    SiGnubash, SiFishshell
+    SiGnubash, SiFishshell, SiSwift
 } from 'react-icons/si';
 import { FaJava, FaAws } from 'react-icons/fa';
 
@@ -27,25 +27,31 @@ const techStack = [
             { name: "C/C++", icon: <SiCplusplus className="text-[#00599C] w-6 h-6" /> },
             { name: "JavaScript", icon: <SiJavascript className="text-[#F7DF1E] w-6 h-6" /> },
             { name: "Dart", icon: <SiDart className="text-[#0175C2] w-6 h-6" /> },
+            { name: "PHP", icon: <SiPhp className="text-[#777BB3] w-6 h-6" /> },
             { name: "Bash", icon: <SiGnubash className="text-[#4EAA25] w-6 h-6" /> },
-            { name: "Fish", icon: <SiFishshell className="text-[#4EAA25] w-6 h-6" /> }
+            { name: "Fish", icon: <SiFishshell className="text-[#4EAA25] w-6 h-6" /> },
+            { name: "Swift", icon: <SiSwift className="text-[#F05138] w-6 h-6" /> }
         ]
     },
     {
-        category: "Frameworks & Tools",
+        category: "Frameworks & Libraries",
         items: [
             { name: "Android SDK", icon: <SiAndroid className="text-[#3DDC84] w-6 h-6" /> },
             { name: "Jetpack Compose", icon: <SiAndroid className="text-[#4285F4] w-6 h-6" /> },
+            { name: "PySpark", icon: <SiApachespark className="text-[#E25A1C] w-6 h-6" /> }
+        ]
+    },
+    {
+        category: "Tools & Platforms",
+        items: [
             { name: "Firebase", icon: <SiFirebase className="text-[#FFCA28] w-6 h-6" /> },
-            { name: "PySpark", icon: <SiApachespark className="text-[#E25A1C] w-6 h-6" /> },
             { name: "MongoDB", icon: <SiMongodb className="text-[#47A248] w-6 h-6" /> },
+            { name: "PostgreSQL", icon: <SiPostgresql className="text-[#336791] w-6 h-6" /> },
+            { name: "AWS", icon: <FaAws className="text-[#232F3E] w-6 h-6" /> },
             { name: "Linux", icon: <SiLinux className="text-[#FCC624] w-6 h-6" /> },
             { name: "Xcode", icon: <SiXcode className="text-[#147EFB] w-6 h-6" /> },
             { name: "Colab", icon: <SiGooglecolab className="text-[#F9AB00] w-6 h-6" /> },
-            { name: "AWS", icon: <FaAws className="text-[#232F3E] w-6 h-6" /> },
-            { name: "Cloudinary", icon: <SiCloudinary className="text-[#3448C5] w-6 h-6" /> },
-            { name: "PostgreSQL", icon: <SiPostgresql className="text-[#336791] w-6 h-6" /> },
-            { name: "PHP", icon: <SiPhp className="text-[#777BB3] w-6 h-6" /> }
+            { name: "Cloudinary", icon: <SiCloudinary className="text-[#3448C5] w-6 h-6" /> }
         ]
     },
     {
