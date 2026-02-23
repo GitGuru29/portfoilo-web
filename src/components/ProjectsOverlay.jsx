@@ -1,46 +1,9 @@
 import React, { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useStore, { MOODS } from '../store/useStore';
-
-const projects = [
-    {
-        title: 'GameModeX',
-        role: 'Android / Performance Optimization',
-        mood: MOODS.OS,
-        description: 'A System-level Game Launcher & Optimizer for Android featuring 4K recording, AI Game Booster, and Thermal Monitoring. Built with Native Kotlin and Android System APIs.'
-    },
-    {
-        title: 'Bybridge',
-        role: 'C++ Daemon / WebSockets',
-        mood: MOODS.NETWORKING,
-        description: 'A Cross-Device Ecosystem Daemon to control Arch Linux from Android, including biometric integration and real-time device synchronization.'
-    },
-    {
-        title: 'AeroLang',
-        role: 'Compiler Development',
-        mood: MOODS.OS,
-        description: 'A custom compiled programming language built from scratch using C++ and LLVM. Currently in Lexer and Parser phase.',
-        images: [
-            '/aerolang/aero-1.png',
-            '/aerolang/aero-2.jpg',
-            '/aerolang/aero-3.jpg',
-            '/aerolang/aero-4.jpg'
-        ]
-    },
-    {
-        title: 'LankaSmartMart',
-        role: 'Android / E-Commerce',
-        mood: MOODS.MOBILE,
-        description: 'A modern, secure E-Commerce Android app built with Jetpack Compose & Firebase featuring ML Kit Card Scanning and Google Maps.'
-    },
-    {
-        title: 'NeonMonitor',
-        role: 'Linux / System Processing',
-        mood: MOODS.AI,
-        description: 'A high-performance Linux task manager and resource monitor utilizing Procfs and system calls for real-time tracking.'
-    }
-];
+import { projectsData as projects } from '../data/projects';
 
 export default function ProjectsOverlay() {
     const containerRef = useRef(null);
@@ -101,58 +64,25 @@ export default function ProjectsOverlay() {
                         ref={addToRefs}
                         className="w-[100vw] h-screen flex-shrink-0 flex items-center justify-center p-6 md:p-12"
                     >
-                        <div className={`flex flex-col lg:flex-row items-center justify-center gap-12 w-full max-w-7xl`}>
+                        <Link to={`/project/${project.id}`} className={`flex flex-col lg:flex-row items-center justify-center gap-12 w-full max-w-7xl group cursor-pointer`}>
                             {/* Text Info */}
-                            <div className="max-w-2xl glass p-8 md:p-10 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md">
+                            <div className="max-w-2xl glass p-8 md:p-10 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-[0_0_40px_rgba(168,85,247,0.2)] group-hover:border-purple-500/30">
                                 <span className="text-xs md:text-sm font-mono tracking-widest text-[#a855f7] mb-4 uppercase flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-[#a855f7] animate-pulse" />
                                     {project.role}
                                 </span>
                                 <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 text-white">{project.title}</h2>
-                                <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed">
+                                <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed mb-6">
                                     {project.description}
                                 </p>
-                            </div>
-
-                            {/* Scrolling Image Gallery for detailed shots */}
-                            {project.images && (
-                                <div className="absolute bottom-12 md:bottom-20 left-0 w-full px-6 md:px-12 pointer-events-none">
-                                    <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory pointer-events-auto items-end justify-start xl:justify-center custom-scrollbar">
-                                        {project.images.map((img, i) => (
-                                            <div
-                                                key={i}
-                                                className="shrink-0 w-[85vw] md:w-[600px] snap-center rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#0a0a0a] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.3)] group-card"
-                                            >
-                                                <img
-                                                    src={img}
-                                                    className="w-full h-auto object-cover opacity-80 hover:opacity-100 transition-opacity duration-300"
-                                                    alt={`${project.title} screenshot ${i + 1}`}
-                                                    loading="lazy"
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {/* Subdued custom scrollbar styling */}
-                                    <style>{`
-                                        .custom-scrollbar::-webkit-scrollbar {
-                                            height: 6px;
-                                        }
-                                        .custom-scrollbar::-webkit-scrollbar-track {
-                                            background: rgba(255, 255, 255, 0.05);
-                                            border-radius: 10px;
-                                        }
-                                        .custom-scrollbar::-webkit-scrollbar-thumb {
-                                            background: rgba(168, 85, 247, 0.5);
-                                            border-radius: 10px;
-                                        }
-                                        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                                            background: rgba(168, 85, 247, 0.8);
-                                        }
-                                    `}</style>
+                                <div className="inline-flex items-center gap-2 text-[#a855f7] font-medium border border-[#a855f7]/30 px-6 py-3 rounded-full hover:bg-[#a855f7]/10 transition-colors">
+                                    View Full Project Details
+                                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        </Link>
                     </div>
                 ))}
             </div>
