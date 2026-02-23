@@ -71,28 +71,30 @@ export default function Contact() {
 
             {/* Footer in normal document flow below the section */}
             <footer className="w-full border-t border-white/5 bg-[#010101] py-8 px-6 relative z-20">
-                <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="max-w-6xl mx-auto grid grid-cols-3 items-center gap-4">
 
-                    {/* Left Side: Logo & Status */}
-                    <div className="flex items-center gap-4">
+                    {/* Left: Small logo icon */}
+                    <div className="flex items-center justify-start">
                         <img
                             src="/sn-logo.png"
                             alt="SN Logo"
-                            className="w-14 h-14 md:w-16 md:h-16 object-contain mix-blend-screen drop-shadow-[0_0_8px_rgba(59,130,246,0.3)] hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.6)] transition-all duration-300"
+                            className="w-12 h-12 object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.4)] hover:drop-shadow-[0_0_14px_rgba(59,130,246,0.7)] transition-all duration-300"
                         />
-                        <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                            <span className="text-sm md:text-base font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                                SILUNA NUSAL
-                            </span>
-                            <div className="flex items-center gap-2 text-[10px] md:text-xs font-mono text-green-500 mt-1">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                SYSTEM STATUS: ONLINE
-                            </div>
+                    </div>
+
+                    {/* Center: Brand + Status */}
+                    <div className="flex flex-col items-center text-center">
+                        <span className="text-sm md:text-base font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                            SILUNA NUSAL
+                        </span>
+                        <div className="flex items-center gap-2 text-[10px] md:text-xs font-mono text-green-500 mt-1">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                            SYSTEM STATUS: ONLINE
                         </div>
                     </div>
 
-                    {/* Right Side: Socials */}
-                    <div className="flex items-center gap-6">
+                    {/* Right: Social Icons */}
+                    <div className="flex items-center justify-end gap-6">
                         <a href="https://github.com/GitGuru29" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white hover:-translate-y-1 transition-all duration-300">
                             <span className="sr-only">GitHub</span>
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
