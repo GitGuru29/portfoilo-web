@@ -73,9 +73,11 @@ export default function Contact() {
             <footer className="w-full border-t border-white/5 bg-[#010101] pb-8 pt-12 px-6 relative z-20">
                 <div className="max-w-4xl mx-auto flex flex-col items-center justify-center gap-6 text-center">
                     <div className="flex flex-col items-center">
-                        <span className="text-2xl font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4">
-                            SILUNA NUSAL
-                        </span>
+                        <img
+                            src="/sn-logo.png"
+                            alt="Siluna Nusal Logo"
+                            className="w-24 md:w-32 mb-4 mix-blend-screen opacity-90 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                        />
                         <div className="flex items-center gap-2 text-xs font-mono text-green-500 bg-green-500/10 px-3 py-1.5 rounded-full border border-green-500/20 mb-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                             SYSTEM STATUS: ONLINE
