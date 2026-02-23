@@ -78,13 +78,13 @@ export default function Contact() {
                         <img
                             src="/sn-logo.png"
                             alt="SN Logo"
-                            className="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.3)] hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.6)] transition-all duration-300"
+                            className="w-14 h-14 md:w-16 md:h-16 object-contain mix-blend-screen drop-shadow-[0_0_8px_rgba(59,130,246,0.3)] hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.6)] transition-all duration-300"
                         />
                         <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                            <span className="text-sm font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                            <span className="text-sm md:text-base font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
                                 SILUNA NUSAL
                             </span>
-                            <div className="flex items-center gap-2 text-[10px] font-mono text-green-500 mt-1">
+                            <div className="flex items-center gap-2 text-[10px] md:text-xs font-mono text-green-500 mt-1">
                                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                                 SYSTEM STATUS: ONLINE
                             </div>
