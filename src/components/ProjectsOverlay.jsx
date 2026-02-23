@@ -116,50 +116,48 @@ export default function ProjectsOverlay() {
 
                             {/* Stacked Image Cards (if available) */}
                             {project.images && (
-                                <div className="hidden lg:flex relative w-96 h-96 items-center justify-center group cursor-pointer perspective-1000">
+                                <div className="flex relative w-full lg:w-96 h-64 lg:h-96 items-center justify-center group cursor-pointer perspective-1000 mt-8 lg:mt-0">
                                     {project.images.map((img, i) => {
                                         // Slight offsets to create a messy stack
                                         const rot = [-10, -3, 4, 12][i % 4];
                                         const zInd = [10, 20, 30, 40][i % 4];
 
-                                        // On group hover, they fan out along the X/Y axes to become visible
-                                        const hoverX = [-120, -40, 40, 120][i % 4];
-                                        const hoverY = [20, -10, -10, 20][i % 4];
-                                        const hoverRot = [-15, -5, 5, 15][i % 4];
+                                        // We use peer or group hover classes, but inline custom properties are safer here since group-hover dynamic translates need to be applied specifically per child.
+                                        // The easiest Tailwind-only approach for complex per-child group-hover is to assign a unique class or just inject a standard <style> (not jsx="true").
 
                                         return (
                                             <div
                                                 key={i}
-                                                className="absolute w-72 h-72 rounded-xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 ease-out origin-bottom bg-[#0a0a0a]"
+                                                className={`card-${i} absolute w-48 h-48 lg:w-72 lg:h-72 rounded-xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 ease-out origin-bottom bg-[#0a0a0a]`}
                                                 style={{
                                                     transform: `rotate(${rot}deg)`,
                                                     zIndex: zInd,
                                                     boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
                                                 }}
-                                            // We use a small inline style trick to bind group-hover transforms effectively
-                                            // tailwind 'group-hover:' doesn't cleanly support dynamic values per element without arbitrary variants.
                                             >
-                                                <div
-                                                    className="w-full h-full transition-all duration-500 hover:scale-105 group-hover:opacity-100 opacity-90"
-                                                    style={{
-                                                        // Fallback inline hover logic if needed, but we'll use a hack with group-hover peer
-                                                    }}
-                                                >
+                                                <div className="w-full h-full transition-all duration-500 hover:scale-105 opacity-90 group-hover:opacity-100">
                                                     <img src={img} className="w-full h-full object-cover" alt={`${project.title} screenshot ${i + 1}`} />
                                                 </div>
                                             </div>
                                         )
                                     })}
 
-                                    {/* Fan-out hover stylesheet injection for this specific block to keep it clean */}
-                                    <style jsx="true">{`
-                                        .group:hover div:nth-child(1) { transform: translate(-100px, 20px) rotate(-15deg) !important; z-index: 50 !important; }
-                                        .group:hover div:nth-child(2) { transform: translate(-30px, -10px) rotate(-5deg) !important; z-index: 50 !important; }
-                                        .group:hover div:nth-child(3) { transform: translate(40px, -10px) rotate(5deg) !important; z-index: 50 !important; }
-                                        .group:hover div:nth-child(4) { transform: translate(110px, 20px) rotate(15deg) !important; z-index: 50 !important; }
+                                    {/* Standard React style block for the complex fan-out interactions */}
+                                    <style>{`
+                                        .group:hover .card-0 { transform: translate(-80px, 15px) rotate(-15deg) !important; z-index: 50 !important; }
+                                        .group:hover .card-1 { transform: translate(-25px, -10px) rotate(-5deg) !important; z-index: 50 !important; }
+                                        .group:hover .card-2 { transform: translate(30px, -10px) rotate(5deg) !important; z-index: 50 !important; }
+                                        .group:hover .card-3 { transform: translate(90px, 15px) rotate(15deg) !important; z-index: 50 !important; }
                                         
+                                        @media (min-width: 1024px) {
+                                            .group:hover .card-0 { transform: translate(-100px, 20px) rotate(-15deg) !important; }
+                                            .group:hover .card-1 { transform: translate(-30px, -10px) rotate(-5deg) !important; }
+                                            .group:hover .card-2 { transform: translate(40px, -10px) rotate(5deg) !important; }
+                                            .group:hover .card-3 { transform: translate(110px, 20px) rotate(15deg) !important; }
+                                        }
+
                                         /* Bring the actively hovered card all the way to the front and scale it up */
-                                        .group div:hover {
+                                        .group .card-0:hover, .group .card-1:hover, .group .card-2:hover, .group .card-3:hover {
                                             transform: scale(1.15) translateY(-20px) !important;
                                             z-index: 100 !important;
                                             box-shadow: 0 0 40px rgba(168, 85, 247, 0.4) !important;
