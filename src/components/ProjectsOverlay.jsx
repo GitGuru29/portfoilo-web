@@ -114,53 +114,40 @@ export default function ProjectsOverlay() {
                                 </p>
                             </div>
 
-                            {/* Stacked Image Cards (if available) */}
+                            {/* Scrolling Image Gallery for detailed shots */}
                             {project.images && (
-                                <div className="flex relative w-full lg:w-96 h-64 lg:h-96 items-center justify-center group cursor-pointer perspective-1000 mt-8 lg:mt-0">
-                                    {project.images.map((img, i) => {
-                                        // Slight offsets to create a messy stack
-                                        const rot = [-10, -3, 4, 12][i % 4];
-                                        const zInd = [10, 20, 30, 40][i % 4];
-
-                                        // We use peer or group hover classes, but inline custom properties are safer here since group-hover dynamic translates need to be applied specifically per child.
-                                        // The easiest Tailwind-only approach for complex per-child group-hover is to assign a unique class or just inject a standard <style> (not jsx="true").
-
-                                        return (
+                                <div className="absolute bottom-12 md:bottom-20 left-0 w-full px-6 md:px-12 pointer-events-none">
+                                    <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory pointer-events-auto items-end justify-start xl:justify-center custom-scrollbar">
+                                        {project.images.map((img, i) => (
                                             <div
                                                 key={i}
-                                                className={`card-${i} absolute w-48 h-48 lg:w-72 lg:h-72 rounded-xl border border-white/10 shadow-2xl overflow-hidden transition-all duration-500 ease-out origin-bottom bg-[#0a0a0a]`}
-                                                style={{
-                                                    transform: `rotate(${rot}deg)`,
-                                                    zIndex: zInd,
-                                                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-                                                }}
+                                                className="shrink-0 w-[85vw] md:w-[600px] snap-center rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#0a0a0a] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.3)] group-card"
                                             >
-                                                <div className="w-full h-full transition-all duration-500 hover:scale-105 opacity-90 group-hover:opacity-100">
-                                                    <img src={img} className="w-full h-full object-cover" alt={`${project.title} screenshot ${i + 1}`} />
-                                                </div>
+                                                <img
+                                                    src={img}
+                                                    className="w-full h-auto object-cover opacity-80 hover:opacity-100 transition-opacity duration-300"
+                                                    alt={`${project.title} screenshot ${i + 1}`}
+                                                    loading="lazy"
+                                                />
                                             </div>
-                                        )
-                                    })}
+                                        ))}
+                                    </div>
 
-                                    {/* Standard React style block for the complex fan-out interactions */}
+                                    {/* Subdued custom scrollbar styling */}
                                     <style>{`
-                                        .group:hover .card-0 { transform: translate(-80px, 15px) rotate(-15deg) !important; z-index: 50 !important; }
-                                        .group:hover .card-1 { transform: translate(-25px, -10px) rotate(-5deg) !important; z-index: 50 !important; }
-                                        .group:hover .card-2 { transform: translate(30px, -10px) rotate(5deg) !important; z-index: 50 !important; }
-                                        .group:hover .card-3 { transform: translate(90px, 15px) rotate(15deg) !important; z-index: 50 !important; }
-                                        
-                                        @media (min-width: 1024px) {
-                                            .group:hover .card-0 { transform: translate(-100px, 20px) rotate(-15deg) !important; }
-                                            .group:hover .card-1 { transform: translate(-30px, -10px) rotate(-5deg) !important; }
-                                            .group:hover .card-2 { transform: translate(40px, -10px) rotate(5deg) !important; }
-                                            .group:hover .card-3 { transform: translate(110px, 20px) rotate(15deg) !important; }
+                                        .custom-scrollbar::-webkit-scrollbar {
+                                            height: 6px;
                                         }
-
-                                        /* Bring the actively hovered card all the way to the front and scale it up */
-                                        .group .card-0:hover, .group .card-1:hover, .group .card-2:hover, .group .card-3:hover {
-                                            transform: scale(1.15) translateY(-20px) !important;
-                                            z-index: 100 !important;
-                                            box-shadow: 0 0 40px rgba(168, 85, 247, 0.4) !important;
+                                        .custom-scrollbar::-webkit-scrollbar-track {
+                                            background: rgba(255, 255, 255, 0.05);
+                                            border-radius: 10px;
+                                        }
+                                        .custom-scrollbar::-webkit-scrollbar-thumb {
+                                            background: rgba(168, 85, 247, 0.5);
+                                            border-radius: 10px;
+                                        }
+                                        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                                            background: rgba(168, 85, 247, 0.8);
                                         }
                                     `}</style>
                                 </div>
