@@ -70,21 +70,29 @@ export default function Contact() {
             </section>
 
             {/* Footer in normal document flow below the section */}
-            <footer className="w-full border-t border-white/5 bg-[#010101] pb-8 pt-12 px-6 relative z-20">
-                <div className="max-w-4xl mx-auto flex flex-col items-center justify-center gap-6 text-center">
-                    <div className="flex flex-col items-center">
+            <footer className="w-full border-t border-white/5 bg-[#010101] py-8 px-6 relative z-20">
+                <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+
+                    {/* Left Side: Logo & Status */}
+                    <div className="flex items-center gap-4">
                         <img
                             src="/sn-logo.png"
-                            alt="Siluna Nusal Logo"
-                            className="w-24 md:w-32 mb-4 mix-blend-screen opacity-90 hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                            alt="SN Logo"
+                            className="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.3)] hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.6)] transition-all duration-300"
                         />
-                        <div className="flex items-center gap-2 text-xs font-mono text-green-500 bg-green-500/10 px-3 py-1.5 rounded-full border border-green-500/20 mb-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                            SYSTEM STATUS: ONLINE
+                        <div className="flex flex-col items-center md:items-start text-center md:text-left">
+                            <span className="text-sm font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                                SILUNA NUSAL
+                            </span>
+                            <div className="flex items-center gap-2 text-[10px] font-mono text-green-500 mt-1">
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                                SYSTEM STATUS: ONLINE
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-8 my-2">
+                    {/* Right Side: Socials */}
+                    <div className="flex items-center gap-6">
                         <a href="https://github.com/GitGuru29" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white hover:-translate-y-1 transition-all duration-300">
                             <span className="sr-only">GitHub</span>
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -104,11 +112,12 @@ export default function Contact() {
                             </svg>
                         </a>
                     </div>
+                </div>
 
-                    <div className="w-full border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-gray-600 font-mono">
-                        <span>© {new Date().getFullYear()} SILUNA NUSAL</span>
-                        <span className="mt-2 md:mt-0 opacity-40">ENCRYPTED // CONNECTION SECURE</span>
-                    </div>
+                {/* Bottom: Copyright */}
+                <div className="mt-8 text-center text-xs text-gray-600 border-t border-white/5 pt-6 max-w-6xl mx-auto flex flex-col md:flex-row justify-between font-mono">
+                    <span>© {new Date().getFullYear()} SILUNA NUSAL</span>
+                    <span className="mt-2 md:mt-0 opacity-40">ENCRYPTED // CONNECTION SECURE</span>
                 </div>
             </footer>
         </>
