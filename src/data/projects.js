@@ -22,7 +22,8 @@ export const projectsData = [
         title: 'AeroLang',
         role: 'Compiler Development',
         mood: MOODS.OS,
-        description: `AeroLang — Experimental Transpiled Language for Native Android
+        description: 'A custom compiled programming language built from scratch using C++ and LLVM. Currently in Lexer and Parser phase.',
+        longDescription: `AeroLang — Experimental Transpiled Language for Native Android
 Overview
 AeroLang is an experimental Kotlin-influenced programming language designed to explore JVM-free Android application development.
 Instead of targeting the JVM, AeroLang transpiles to C++17 and integrates with the Android NDK toolchain, enabling applications to execute as native binaries.
