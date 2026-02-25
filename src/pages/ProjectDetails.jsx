@@ -61,9 +61,47 @@ export default function ProjectDetails() {
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 text-white tracking-tight">
                     {project.title}
                 </h1>
-                <p className="text-base md:text-lg lg:text-xl text-gray-400 font-light leading-relaxed max-w-4xl whitespace-pre-line">
-                    {project.longDescription || project.description}
-                </p>
+                {/* Project Description or Report Array */}
+                {project.report ? (
+                    <div className="flex flex-col gap-8 md:gap-12 mt-12 max-w-4xl">
+                        {project.report.map((section, idx) => (
+                            <div key={idx} className="bg-black/40 border border-white/5 rounded-3xl p-8 md:p-10 backdrop-blur-md transition-all hover:bg-black/60 hover:border-white/10">
+                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                                    <span className="text-[#a855f7]">/</span> {section.title}
+                                </h3>
+
+                                {section.type === 'text' && (
+                                    <p className="text-base md:text-lg text-gray-400 font-light leading-relaxed whitespace-pre-line">
+                                        {section.content}
+                                    </p>
+                                )}
+
+                                {section.type === 'code' && (
+                                    <div className="bg-[#050505] rounded-xl p-6 md:p-8 border border-white/5 overflow-x-auto custom-scrollbar shadow-inner mt-4">
+                                        <pre className="text-sm md:text-base text-[#a855f7] font-mono whitespace-pre leading-relaxed">
+                                            {section.content}
+                                        </pre>
+                                    </div>
+                                )}
+
+                                {section.type === 'list' && (
+                                    <ul className="flex flex-col gap-4">
+                                        {section.content.map((item, i) => (
+                                            <li key={i} className="flex items-start gap-4 text-base md:text-lg text-gray-400 font-light leading-relaxed">
+                                                <div className="mt-2 min-w-[8px] h-2 rounded-full bg-[#a855f7] shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
+                                                <span>{item}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-base md:text-lg lg:text-xl text-gray-400 font-light leading-relaxed max-w-4xl whitespace-pre-line">
+                        {project.longDescription || project.description}
+                    </p>
+                )}
             </div>
 
             {/* Immersive Full-Screen Image Gallery */}
