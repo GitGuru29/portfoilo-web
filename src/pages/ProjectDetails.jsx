@@ -78,8 +78,8 @@ export default function ProjectDetails() {
                         <button
                             onClick={() => setActivePlatform('linux')}
                             className={`px-8 py-3 rounded-full font-medium transition-all ${activePlatform === 'linux'
-                                    ? 'bg-[#a855f7] text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-[#a855f7] text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 }`}
                         >
                             Linux System
@@ -87,8 +87,8 @@ export default function ProjectDetails() {
                         <button
                             onClick={() => setActivePlatform('android')}
                             className={`px-8 py-3 rounded-full font-medium transition-all ${activePlatform === 'android'
-                                    ? 'bg-[#a855f7] text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-[#a855f7] text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 }`}
                         >
                             Android Client
@@ -139,7 +139,7 @@ export default function ProjectDetails() {
             </div>
 
             {/* Immersive Full-Screen Image Gallery - Stacked Cards Effect */}
-            {activeImages && activeImages.length > 0 && (
+            {activeImages?.length > 0 && (
                 <div className="flex flex-col w-full mt-24 mb-32 relative">
                     {activeImages.map((img, i) => (
                         <div
