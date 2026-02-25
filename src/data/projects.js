@@ -90,6 +90,90 @@ export const projectsData = [
             }
         ],
         linuxImages: [],
+        androidReport: [
+            {
+                title: "1. Executive Summary",
+                type: "text",
+                content: "BYBRIDGE is a high-performance Android companion application designed to bridge the gap between mobile devices and desktop environments. Functioning as a secure, low-latency telemetry and control hub, the application establishes a bidirectional websocket-like TCP/UDP communication link with a host daemon. It features real-time system resource monitoring, remote execution of ACPI and media commands, robust file transfer capabilities, and a custom-implemented screen mirroring protocol utilizing H.264 encoding over RTP (Real-Time Transport Protocol)."
+            },
+            {
+                title: "2. System Architecture & Core Technologies",
+                type: "text",
+                content: "The application is built upon a modern Android stack, leveraging both high-level UI frameworks and low-level system APIs to achieve its functionality."
+            },
+            {
+                title: "Core Technologies",
+                type: "list",
+                content: [
+                    "Languages & Frameworks: Kotlin, Android SDK (API 21-36), Material Design Components.",
+                    "Computer Vision: Google ML Kit for high-speed, on-device Barcode/QR Code parsing to facilitate zero-configuration pairing.",
+                    "Multimedia & Encoding: MediaProjection API for screen capture, MediaCodec for hardware-accelerated H.264 video compression, and VirtualDisplay for surface rendering.",
+                    "Networking: Custom TCP sockets for telemetry and command transport; UDP Datagram sockets for real-time video streaming.",
+                    "Concurrency: Multi-threaded architecture utilizing Java Executors, HandlerThread paradigms, and concurrent socket connections to prevent UI thread blocking and ensure fluid performance."
+                ]
+            },
+            {
+                title: "3.1. Zero-Configuration Pairing Protocol",
+                type: "list",
+                content: [
+                    "To eliminate complex IP and port configuration, the system utilizes an optical pairing mechanism.",
+                    "The desktop daemon generates a QR code containing the host's IP address and a cryptographically secure session key.",
+                    "The Android application utilizes Android CameraX and Google ML Kit's Barcode Scanning API to process frames in real-time (ImageAnalysis.Analyzer).",
+                    "Upon successful decoding, a TCP handshake is initiated via SessionManager, authenticating the session and establishing a persistent control channel."
+                ]
+            },
+            {
+                title: "3.2. Real-Time Telemetry and State Management",
+                type: "list",
+                content: [
+                    "The application acts as a real-time monitoring dashboard for the host machine.",
+                    "A dedicated polling thread runs at a 1Hz frequency (STAT_UPDATE_INTERVAL = 1000L), querying the daemon for system state (CPU load, RAM usage, storage metrics, battery level, network speed).",
+                    "The JSON payloads are parsed and mapped to custom UI components (ProgressRingDrawable).",
+                    "The UI gracefully degrades when the socket connection drops or times out, clearing the charts and indicating an offline state, demonstrating robust error handling."
+                ]
+            },
+            {
+                title: "3.3. Remote System and Media Control",
+                type: "list",
+                content: [
+                    "Beyond monitoring, BYBRIDGE implements a comprehensive remote execution interface for host management.",
+                    "ACPI and Power States: The application provides direct triggers for critical system power states, including remote Shutdown, Reboot, Sleep, and Lock commands.",
+                    "Media Management: Real-time volume controls (Volume Up, Volume Down, Mute) are transmitted seamlessly over the TCP socket to the host daemon with near-zero latency, transforming the mobile device into a versatile media remote."
+                ]
+            },
+            {
+                title: "3.4. Asynchronous File Transfer Protocol",
+                type: "list",
+                content: [
+                    "The file transfer module is engineered to reliably dispatch arbitrary files (documents, executables, media) from the Android device to the paired host safely over the network.",
+                    "Memory Efficiency: Files are read sequentially utilizing a BufferedInputStream with a configured 16KB chunk size. This explicitly prevents OutOfMemoryError constraints when transferring multi-gigabyte files.",
+                    "Throughput Profiling: The system continuously calculates transfer bandwidth by tracking byte transmission deltas against time intervals (every 500ms), driving a real-time Megabits per second (Mbps) UI metric.",
+                    "OS Lifecycle Integration: File transfer progress is offloaded to a foreground-accessible progress bar and bound to NotificationManagerCompat. This sets a foreground-like state that attempts to prevent the Android OS from terminating the transfer process."
+                ]
+            },
+            {
+                title: "3.5. Low-Latency Screen Mirroring (RTP/H.264)",
+                type: "text",
+                content: "The standout technical achievement of the BYBRIDGE application is its custom implementation of a screen casting server, completely bypassing high-level abstractions like WebRTC in favor of a granular, low-level approach."
+            },
+            {
+                title: "Mirroring Implementation",
+                type: "list",
+                content: [
+                    "Hardware-Accelerated Encoding: The screen is captured using MediaProjectionManager and passed to a VirtualDisplay. The display surface is directly fed into an Android MediaCodec instance configured for VIDEO_AVC (H.264).",
+                    "Resolution Optimization: To maintain stable framerates and avoid hardware encoder limitations (which often fault on odd-pixel widths), the application actively calculates display aspect ratios and aligns the output width to a multiple of 16 (Macroblock alignment).",
+                    "RFC 6184 RTP Packetization: Instead of sending raw H.264 streams, the project features a fully custom RtpPacketizer that wraps NAL (Network Abstraction Layer) units into standard RTP packets.",
+                    "Fragmentation: It parses the H.264 bitstream, detects start codes (00 00 00 01), extracts NAL units, and implements FU-A (Fragmentation Unit A) fragmentation. If a NAL unit exceeds the network MTU (1400 bytes), it is meticulously sliced and reconstructed with appropriate FU Indicator and FU Header bytes, guaranteeing delivery over UDP without IP-level packet fragmentation.",
+                    "Synchronization: The packetizer manages its own Sequence Numbers, SSRC (Synchronization Source Identifier), and calculates accurate RTP timestamps based on presentation time, ensuring flawless lip-sync and frame pacing on the receiving decoder (e.g., GStreamer)."
+                ]
+            },
+            {
+                title: "4. Conclusion",
+                type: "text",
+                content: "BYBRIDGE is not merely a utility application; it is a profound demonstration of systems engineering within the Android ecosystem. By successfully integrating computer vision, concurrent socket programming, hardware-accelerated video encoding, and RFC-compliant network protocol implementation (RTP/H.264), the project showcases advanced competencies in network programming, multimedia processing, and system architecture. This positions the developer as highly capable of tackling complex, low-level engineering challenges in modern mobile environments."
+            }
+        ],
+        androidImages: [],
         images: []
     },
     {
