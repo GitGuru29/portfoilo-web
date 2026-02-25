@@ -12,7 +12,7 @@ function App() {
     return (
         <HashRouter>
             <LenisWrapper>
-                <div className="relative text-white font-sans overflow-x-hidden selection:bg-blue-500/30">
+                <div className="relative text-white font-sans overflow-clip selection:bg-blue-500/30">
                     <Navigation />
 
                     {/* The permanent WebGL Background */}
