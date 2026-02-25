@@ -173,7 +173,13 @@ export const projectsData = [
                 content: "BYBRIDGE is not merely a utility application; it is a profound demonstration of systems engineering within the Android ecosystem. By successfully integrating computer vision, concurrent socket programming, hardware-accelerated video encoding, and RFC-compliant network protocol implementation (RTP/H.264), the project showcases advanced competencies in network programming, multimedia processing, and system architecture. This positions the developer as highly capable of tackling complex, low-level engineering challenges in modern mobile environments."
             }
         ],
-        androidImages: [],
+        androidImages: [
+            '/bybridge/android-1.png',
+            '/bybridge/android-2.png',
+            '/bybridge/android-3.png',
+            '/bybridge/android-4.png',
+            '/bybridge/android-5.png'
+        ],
         images: []
     },
     {
