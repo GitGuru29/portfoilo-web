@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import LenisWrapper from './components/LenisWrapper';
 import CanvasScene from './components/canvas/CanvasScene';
 import Navigation from './components/Navigation';
@@ -10,7 +10,7 @@ import ProjectDetails from './pages/ProjectDetails';
 
 function App() {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <LenisWrapper>
                 <div className="relative text-white font-sans overflow-x-hidden selection:bg-blue-500/30">
                     <Navigation />
@@ -26,7 +26,7 @@ function App() {
                     </Routes>
                 </div>
             </LenisWrapper>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 
