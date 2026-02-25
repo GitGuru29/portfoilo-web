@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { projectsData } from '../data/projects';
@@ -8,9 +8,19 @@ export default function ProjectDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
     const setMood = useStore((state) => state.setMood);
+    const [activePlatform, setActivePlatform] = useState('linux');
 
     // Find the current project based on the URL parameter
     const project = projectsData.find(p => p.id === id);
+
+    // Determine what to show based on multi-platform data
+    const hasPlatforms = project && (project.linuxReport || project.androidReport);
+    const activeReport = hasPlatforms
+        ? (activePlatform === 'linux' ? project.linuxReport : project.androidReport)
+        : project.report;
+    const activeImages = hasPlatforms
+        ? (activePlatform === 'linux' ? project.linuxImages : project.androidImages)
+        : project.images;
 
     useEffect(() => {
         // Scroll to top when loading the new page
@@ -61,10 +71,34 @@ export default function ProjectDetails() {
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 text-white tracking-tight">
                     {project.title}
                 </h1>
+
+                {/* Platform Toggle (if applicable) */}
+                {hasPlatforms && (
+                    <div className="flex items-center gap-2 mb-12 p-1.5 bg-black/40 border border-white/10 rounded-full w-max backdrop-blur-md">
+                        <button
+                            onClick={() => setActivePlatform('linux')}
+                            className={`px-8 py-3 rounded-full font-medium transition-all ${activePlatform === 'linux'
+                                    ? 'bg-[#a855f7] text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                }`}
+                        >
+                            Linux System
+                        </button>
+                        <button
+                            onClick={() => setActivePlatform('android')}
+                            className={`px-8 py-3 rounded-full font-medium transition-all ${activePlatform === 'android'
+                                    ? 'bg-[#a855f7] text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                }`}
+                        >
+                            Android Client
+                        </button>
+                    </div>
+                )}
                 {/* Project Description or Report Array */}
-                {project.report ? (
+                {activeReport ? (
                     <div className="flex flex-col gap-8 md:gap-12 mt-12 max-w-4xl">
-                        {project.report.map((section, idx) => (
+                        {activeReport.map((section, idx) => (
                             <div key={idx} className="bg-black/40 border border-white/5 rounded-3xl p-8 md:p-10 backdrop-blur-md transition-all hover:bg-black/60 hover:border-white/10">
                                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-3">
                                     <span className="text-[#a855f7]">/</span> {section.title}
@@ -105,9 +139,9 @@ export default function ProjectDetails() {
             </div>
 
             {/* Immersive Full-Screen Image Gallery - Stacked Cards Effect */}
-            {project.images && project.images.length > 0 && (
+            {activeImages && activeImages.length > 0 && (
                 <div className="flex flex-col w-full mt-24 mb-32 relative">
-                    {project.images.map((img, i) => (
+                    {activeImages.map((img, i) => (
                         <div
                             key={i}
                             className="sticky w-full h-[70vh] md:h-[85vh] flex items-center justify-center mb-16 md:mb-32 last:mb-0"
