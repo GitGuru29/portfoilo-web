@@ -106,16 +106,21 @@ export default function ProjectDetails() {
 
             {/* Immersive Full-Screen Image Gallery */}
             {project.images && project.images.length > 0 && (
-                <div className="flex flex-col gap-16 md:gap-24 w-full mt-24">
+                <div className="flex flex-col w-full mt-32 pb-32 relative">
                     {project.images.map((img, i) => (
                         <div
                             key={i}
-                            className="w-full rounded-2xl md:rounded-3xl overflow-hidden border border-white/5 shadow-2xl bg-black/50"
+                            className="sticky w-full rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 shadow-[0_-15px_50px_rgba(0,0,0,0.6)] bg-[#050505] flex items-center justify-center p-4 md:p-8"
+                            style={{
+                                top: `calc(6rem + ${i * 2}rem)`, // Offset each card slightly lower down
+                                zIndex: i + 10,
+                                marginBottom: i === project.images.length - 1 ? '0' : '60vh' // Scroll buffer before next child appears
+                            }}
                         >
                             <img
                                 src={img}
                                 alt={`${project.title} detailed screenshot ${i + 1}`}
-                                className="w-full h-auto object-contain"
+                                className="w-full h-auto max-h-[75vh] object-contain rounded-xl md:rounded-2xl border border-white/5 bg-black/50"
                                 loading="lazy"
                             />
                         </div>
