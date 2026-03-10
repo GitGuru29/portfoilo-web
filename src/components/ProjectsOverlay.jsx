@@ -7,19 +7,10 @@ import { projectsData as projects } from '../data/projects';
 
 export default function ProjectsOverlay() {
     const containerRef = useRef(null);
-    const sectionsRef = useRef([]);
     const setMood = useStore((state) => state.setMood);
 
-    // Set ref array
-    sectionsRef.current = [];
-    const addToRefs = (el) => {
-        if (el && !sectionsRef.current.includes(el)) {
-            sectionsRef.current.push(el);
-        }
-    };
-
     useEffect(() => {
-        // 1. Enter Owl Mode when container hits viewport
+        // Trigger Owl Mode when reaching projects
         ScrollTrigger.create({
             trigger: containerRef.current,
             start: "top center",
@@ -28,64 +19,78 @@ export default function ProjectsOverlay() {
             onEnterBack: () => setMood(MOODS.OWL_MODE),
         });
 
-        // 2. Horizontal pinning or scrub mechanics
-        const pinAnimation = gsap.to(sectionsRef.current, {
-            xPercent: -100 * (sectionsRef.current.length - 1),
-            ease: "none",
-            scrollTrigger: {
-                trigger: containerRef.current,
-                pin: true,
-                scrub: 1, // smooth scrubbing
-                end: () => "+=" + containerRef.current.offsetWidth * sectionsRef.current.length,
-                onUpdate: (self) => {
-                    // Calculate the current active slide based on scroll progress
-                    const index = Math.min(
-                        projects.length - 1,
-                        Math.floor(self.progress * projects.length)
-                    );
-                    setMood(projects[index].mood);
-                }
-            }
-        });
-
         return () => {
-            pinAnimation.scrollTrigger?.kill();
-            pinAnimation.kill();
             ScrollTrigger.getAll().forEach(t => t.kill());
         };
     }, [setMood]);
 
     return (
-        <section id="projects" ref={containerRef} className="h-screen flex items-center overflow-hidden bg-transparent">
-            <div className="flex w-full h-full items-center">
-                {projects.map((project, index) => (
-                    <div
-                        key={index}
-                        ref={addToRefs}
-                        className="w-[100vw] h-screen flex-shrink-0 flex items-center justify-center p-6 md:p-12"
-                    >
-                        <Link to={`/project/${project.id}`} className={`flex flex-col lg:flex-row items-center justify-center gap-12 w-full max-w-7xl group cursor-pointer`}>
-                            {/* Text Info */}
-                            <div className="max-w-2xl glass p-8 md:p-10 rounded-3xl border border-white/5 bg-cyber-dark/60 backdrop-blur-xl transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-[0_0_40px_rgba(181,55,242,0.3)] group-hover:border-cyber-violet/50 relative overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-br from-cyber-violet/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                                <span className="text-xs md:text-sm font-space tracking-widest text-cyber-violet mb-4 uppercase flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-cyber-violet animate-pulse shadow-[0_0_8px_#b537f2]" />
-                                    {project.role}
-                                </span>
-                                <h2 className="text-3xl md:text-4xl lg:text-5xl pb-2 font-orbitron font-black mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 group-hover:to-cyber-violet transition-colors duration-500">{project.title}</h2>
-                                <p className="text-lg md:text-xl text-gray-400 font-inter font-light leading-relaxed mb-6">
-                                    {project.description}
-                                </p>
-                                <div className="inline-flex items-center gap-2 text-cyber-violet font-space font-medium border border-cyber-violet/30 px-6 py-3 rounded-full hover:bg-cyber-violet/10 hover:shadow-[0_0_15px_rgba(181,55,242,0.4)] transition-all duration-300">
-                                    View Full Project Details
-                                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
+        <section id="projects" ref={containerRef} className="relative w-full min-h-screen bg-transparent py-32 flex flex-col items-center">
+
+            {/* Header */}
+            <div className="w-full max-w-6xl mx-auto px-6 mb-24 md:mb-32">
+                <span className="text-sm font-space tracking-widest text-cyber-violet mb-4 uppercase flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-cyber-violet animate-pulse shadow-[0_0_10px_#b537f2]" />
+                    Work Portfolio
+                </span>
+                <h2 className="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500 tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                    FEATURED <span className="text-cyber-cyan drop-shadow-[0_0_20px_rgba(0,243,255,0.4)]">SYSTEMS</span>
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-cyber-cyan to-cyber-violet mt-8 rounded-full shadow-[0_0_15px_#00f3ff]" />
+            </div>
+
+            {/* Sticky Stacked Cards */}
+            <div className="w-full max-w-6xl mx-auto px-6 pb-64 relative flex flex-col">
+                {projects.map((project, index) => {
+                    return (
+                        <div
+                            key={index}
+                            className="sticky w-full mb-16 md:mb-32 last:mb-0"
+                            style={{
+                                top: `calc(10rem + ${index * 30}px)`,
+                                zIndex: index + 10,
+                            }}
+                        >
+                            <Link to={`/project/${project.id}`} className="block w-full group cursor-pointer">
+                                <div className="w-full glass p-8 md:p-14 rounded-[2.5rem] border border-white/5 bg-[#050505]/90 backdrop-blur-2xl transition-all duration-700 hover:scale-[1.01] hover:border-cyber-violet/40 hover:shadow-[0_-15px_60px_rgba(181,55,242,0.2)] flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
+
+                                    {/* Hover Ambient Glow */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-cyber-violet/10 via-transparent to-cyber-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none mix-blend-screen" />
+
+                                    <div className="w-full md:w-[65%] flex flex-col relative z-10">
+                                        <span className="text-xs md:text-sm font-space tracking-widest text-cyber-violet mb-6 uppercase flex items-center gap-2">
+                                            {project.role}
+                                        </span>
+                                        <h3 className="text-4xl md:text-5xl lg:text-6xl font-orbitron font-black mb-8 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 group-hover:to-cyber-cyan transition-colors duration-500 pb-2">
+                                            {project.title}
+                                        </h3>
+                                        <p className="text-lg md:text-xl text-gray-400 font-inter font-light leading-relaxed mb-10 max-w-2xl">
+                                            {project.description}
+                                        </p>
+
+                                        <div className="mt-auto pt-4 inline-flex items-center gap-3 text-white font-space font-medium group-hover:text-cyber-cyan transition-colors tracking-widest text-sm uppercase">
+                                            Access Terminal
+                                            <svg className="w-5 h-5 transition-transform duration-500 group-hover:translate-x-3 text-cyber-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    {/* Minimalist Tech Representation Line */}
+                                    <div className="w-full md:w-[30%] flex-col items-end justify-center relative z-10 hidden md:flex border-r border-cyber-cyan/10 pr-8 transition-all duration-500 group-hover:border-cyber-cyan/40">
+                                        <div className="flex flex-col gap-4 items-end opacity-50 group-hover:opacity-100 transition-opacity duration-500">
+                                            {['SYSTEM', 'ARCHITECTURE', 'DEPLOYMENT', 'ANALYSIS'].slice(0, index + 2).map((tech, i) => (
+                                                <span key={i} className="font-space text-xs tracking-[0.3em] text-cyber-cyan uppercase">{tech}</span>
+                                            ))}
+                                            <div className="w-1.5 h-1.5 rounded-full bg-cyber-pink shadow-[0_0_8px_#ff00ff] mt-4" />
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
-                        </Link>
-                    </div>
-                ))}
+                            </Link>
+                        </div>
+                    );
+                })}
             </div>
         </section>
     );
