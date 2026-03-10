@@ -3,6 +3,22 @@ import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
 
 export default function Contact() {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 30 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    };
+
     return (
         <>
             <section className="min-h-[80vh] py-24 px-6 relative flex items-center justify-center bg-cyber-dark overflow-hidden">
@@ -12,52 +28,53 @@ export default function Contact() {
 
                 <div className="w-full max-w-3xl z-10">
                     <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        variants={containerVariants}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, margin: "-100px" }}
                         className="glass p-10 md:p-14 rounded-3xl border border-white/5 bg-cyber-dark/80 backdrop-blur-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)]"
                     >
-                        <div className="text-center mb-10">
+                        <motion.div variants={itemVariants} className="text-center mb-10">
                             <span className="text-sm font-space tracking-widest text-cyber-cyan mb-4 flex items-center justify-center gap-2 uppercase">
                                 <div className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_8px_#00f3ff]" />
                                 System.out.println("Hello");
                             </span>
                             <h2 className="text-4xl md:text-5xl font-orbitron font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-cyber-violet">Initialize Connection</h2>
                             <p className="text-gray-400 font-inter font-light leading-relaxed text-lg">Looking to optimize a system, build a daemon, or discuss Android internals? Drop a packet below.</p>
-                        </div>
+                        </motion.div>
 
                         <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="flex flex-col gap-2">
+                                <motion.div variants={itemVariants} className="flex flex-col gap-2">
                                     <label className="text-sm text-gray-400 ml-1">Name</label>
                                     <input
                                         type="text"
-                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all text-white"
+                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-cyber-cyan/50 focus:bg-white/10 transition-all text-white placeholder-gray-600"
                                         placeholder="John Doe"
                                     />
-                                </div>
-                                <div className="flex flex-col gap-2">
+                                </motion.div>
+                                <motion.div variants={itemVariants} className="flex flex-col gap-2">
                                     <label className="text-sm text-gray-400 ml-1">Email</label>
                                     <input
                                         type="email"
-                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all text-white"
+                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-cyber-cyan/50 focus:bg-white/10 transition-all text-white placeholder-gray-600"
                                         placeholder="john@example.com"
                                     />
-                                </div>
+                                </motion.div>
                             </div>
 
-                            <div className="flex flex-col gap-2">
+                            <motion.div variants={itemVariants} className="flex flex-col gap-2">
                                 <label className="text-sm text-gray-400 ml-1">Message</label>
                                 <textarea
                                     rows="5"
-                                    className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all text-white resize-none"
+                                    className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-cyber-cyan/50 focus:bg-white/10 transition-all text-white resize-none placeholder-gray-600"
                                     placeholder="What's on your mind?"
                                     spellCheck="false"
                                 />
-                            </div>
+                            </motion.div>
 
                             <motion.button
+                                variants={itemVariants}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 className="mt-4 bg-gradient-to-r from-cyber-cyan to-cyber-violet text-white font-space font-bold tracking-widest uppercase py-4 rounded-xl flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(181,55,242,0.4)] transition-shadow border border-white/10"
