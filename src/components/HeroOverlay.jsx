@@ -54,8 +54,11 @@ export default function HeroOverlay() {
         <section ref={heroRef} className="h-screen w-full flex items-center pointer-events-none relative z-10">
             <div className="w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between h-full">
 
-                {/* Left Side: Text Box */}
-                <div ref={textRef} className="w-full md:w-1/2 flex flex-col items-start justify-center text-left pointer-events-auto h-full pt-24 md:pt-0">
+                {/* Left Side: Empty Zone for offset */}
+                <div className="hidden lg:block w-1/4 h-full pointer-events-none" />
+
+                {/* Right/Center Side: Text Box */}
+                <div ref={textRef} className="w-full lg:w-3/4 flex flex-col items-start justify-center text-left pointer-events-auto h-full pt-24 md:pt-0 pl-0 md:pl-12 lg:pl-24">
                     <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyber-cyan/30 bg-cyber-cyan/5 backdrop-blur-md shadow-[0_0_15px_rgba(0,243,255,0.1)]">
                         <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_10px_#00f3ff]" />
                         <span className="text-xs font-space tracking-widest text-cyber-cyan uppercase">System Initialized</span>
@@ -83,9 +86,6 @@ export default function HeroOverlay() {
                         <span className="hover:text-cyber-pink hover:drop-shadow-[0_0_8px_#ff00ff] transition-all cursor-crosshair">Security</span>
                     </div>
                 </div>
-
-                {/* Right Side: Empty Zone for Canvas interraction */}
-                <div className="w-full md:w-1/2 h-full pointer-events-auto" />
 
             </div>
         </section>
