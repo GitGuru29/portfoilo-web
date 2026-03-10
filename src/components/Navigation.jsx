@@ -15,24 +15,20 @@ export default function Navigation() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Handle scroll after navigating from another page
-    useEffect(() => {
-        if (location.pathname === '/' && location.state?.scrollTo) {
+    const handleNavClick = (e, id) => {
+        e.preventDefault();
+
+        if (location.pathname !== '/') {
+            navigate('/');
+            // Wait slightly for the Home component to mount before scrolling
             setTimeout(() => {
-                const element = document.getElementById(location.state.scrollTo);
+                const element = document.getElementById(id);
                 if (element) {
                     element.scrollIntoView({ behavior: 'smooth' });
                 }
-            }, 100);
-        }
-    }, [location.pathname, location.state]);
-
-    const handleNavClick = (e, sectionId) => {
-        e.preventDefault();
-        if (location.pathname !== '/') {
-            navigate('/', { state: { scrollTo: sectionId } });
+            }, 150);
         } else {
-            const element = document.getElementById(sectionId);
+            const element = document.getElementById(id);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
@@ -44,34 +40,18 @@ export default function Navigation() {
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ duration: 0.8 }}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-cyber-dark/80 backdrop-blur-xl border-b border-white/5 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.5)]' : 'bg-transparent py-6'}`}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-cyber-dark/80 backdrop-blur-xl border-b border-cyber-cyan/20 py-4 shadow-[0_5px_20px_rgba(0,243,255,0.05)]' : 'bg-transparent py-6'}`}
         >
             <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-                <a
-                    href="#/"
-                    onClick={(e) => handleNavClick(e, 'root')}
-                    className="text-2xl font-orbitron font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyber-cyan to-cyber-violet drop-shadow-[0_0_8px_rgba(0,243,255,0.4)]"
-                >
-                    SN
+                <a href="#" onClick={(e) => handleNavClick(e, 'root')} className="text-2xl font-orbitron font-black tracking-widest text-white hover:scale-105 transition-transform group">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyber-cyan to-cyber-violet group-hover:drop-shadow-[0_0_8px_rgba(0,243,255,0.5)] transition-all">SN</span>
                 </a>
-                <div className="hidden md:flex items-center gap-8">
-                    <NavLink onClick={(e) => handleNavClick(e, 'about')}>System.About()</NavLink>
-                    <NavLink onClick={(e) => handleNavClick(e, 'projects')}>System.Work()</NavLink>
-                    <NavLink onClick={(e) => handleNavClick(e, 'contact')}>System.Contact()</NavLink>
+                <div className="hidden md:flex items-center gap-8 bg-black/40 px-6 py-2 rounded-full border border-white/5 backdrop-blur-md">
+                    <button onClick={(e) => handleNavClick(e, 'about')} className="text-sm font-space font-medium text-gray-300 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_rgba(0,243,255,0.5)] transition-all uppercase tracking-widest">About</button>
+                    <button onClick={(e) => handleNavClick(e, 'projects')} className="text-sm font-space font-medium text-gray-300 hover:text-cyber-violet hover:drop-shadow-[0_0_8px_rgba(181,55,242,0.5)] transition-all uppercase tracking-widest">Work</button>
+                    <button onClick={(e) => handleNavClick(e, 'contact')} className="text-sm font-space font-medium text-gray-300 hover:text-cyber-pink hover:drop-shadow-[0_0_8px_rgba(255,0,255,0.5)] transition-all uppercase tracking-widest">Contact</button>
                 </div>
             </div>
         </motion.nav>
-    );
-}
-
-function NavLink({ onClick, children }) {
-    return (
-        <a
-            href="#"
-            onClick={onClick}
-            className="text-sm font-space font-medium text-gray-300 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_rgba(0,243,255,0.6)] transition-all duration-300 uppercase tracking-widest"
-        >
-            {children}
-        </a>
     );
 }
