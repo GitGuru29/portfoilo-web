@@ -10,6 +10,9 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@fontsource/inter": "^5.2.8",
+        "@fontsource/orbitron": "^5.2.8",
+        "@fontsource/space-grotesk": "^5.2.10",
         "@react-three/drei": "^9.112.0",
         "@react-three/fiber": "^8.17.10",
         "@tailwindcss/postcss": "^4.2.0",

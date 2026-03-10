@@ -66,16 +66,17 @@ export default function ProjectsOverlay() {
                     >
                         <Link to={`/project/${project.id}`} className={`flex flex-col lg:flex-row items-center justify-center gap-12 w-full max-w-7xl group cursor-pointer`}>
                             {/* Text Info */}
-                            <div className="max-w-2xl glass p-8 md:p-10 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-[0_0_40px_rgba(168,85,247,0.2)] group-hover:border-purple-500/30">
-                                <span className="text-xs md:text-sm font-mono tracking-widest text-[#a855f7] mb-4 uppercase flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-[#a855f7] animate-pulse" />
+                            <div className="max-w-2xl glass p-8 md:p-10 rounded-3xl border border-white/5 bg-cyber-dark/60 backdrop-blur-xl transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-[0_0_40px_rgba(181,55,242,0.3)] group-hover:border-cyber-violet/50 relative overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-br from-cyber-violet/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                                <span className="text-xs md:text-sm font-space tracking-widest text-cyber-violet mb-4 uppercase flex items-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-cyber-violet animate-pulse shadow-[0_0_8px_#b537f2]" />
                                     {project.role}
                                 </span>
-                                <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 text-white">{project.title}</h2>
-                                <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed mb-6">
+                                <h2 className="text-4xl md:text-5xl lg:text-7xl font-orbitron font-black mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 group-hover:to-cyber-violet transition-colors duration-500">{project.title}</h2>
+                                <p className="text-lg md:text-xl text-gray-400 font-inter font-light leading-relaxed mb-6">
                                     {project.description}
                                 </p>
-                                <div className="inline-flex items-center gap-2 text-[#a855f7] font-medium border border-[#a855f7]/30 px-6 py-3 rounded-full hover:bg-[#a855f7]/10 transition-colors">
+                                <div className="inline-flex items-center gap-2 text-cyber-violet font-space font-medium border border-cyber-violet/30 px-6 py-3 rounded-full hover:bg-cyber-violet/10 hover:shadow-[0_0_15px_rgba(181,55,242,0.4)] transition-all duration-300">
                                     View Full Project Details
                                     <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />

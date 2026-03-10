@@ -64,31 +64,31 @@ export default function ProjectDetails() {
 
             {/* Project Header Info */}
             <div className="max-w-4xl mb-16">
-                <span className="text-sm font-mono tracking-widest text-[#a855f7] mb-6 uppercase flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#a855f7] animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+                <span className="text-sm font-space tracking-widest text-cyber-cyan mb-6 uppercase flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_10px_#00f3ff]" />
                     {project.role}
                 </span>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 text-white tracking-tight">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white to-cyber-violet tracking-tight drop-shadow-[0_0_10px_rgba(181,55,242,0.3)]">
                     {project.title}
                 </h1>
 
                 {/* Platform Toggle (if applicable) */}
                 {hasPlatforms && (
-                    <div className="flex items-center gap-2 mb-12 p-1.5 bg-black/40 border border-white/10 rounded-full w-max backdrop-blur-md">
+                    <div className="flex items-center gap-2 mb-12 p-1.5 bg-cyber-dark/80 border border-white/10 rounded-full w-max backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                         <button
                             onClick={() => setActivePlatform('linux')}
-                            className={`px-8 py-3 rounded-full font-medium transition-all ${activePlatform === 'linux'
-                                ? 'bg-[#a855f7] text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                            className={`px-8 py-3 rounded-full font-space font-medium transition-all ${activePlatform === 'linux'
+                                ? 'bg-cyber-violet/20 border border-cyber-violet/50 text-white shadow-[0_0_15px_rgba(181,55,242,0.4)]'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
                                 }`}
                         >
                             Linux System
                         </button>
                         <button
                             onClick={() => setActivePlatform('android')}
-                            className={`px-8 py-3 rounded-full font-medium transition-all ${activePlatform === 'android'
-                                ? 'bg-[#a855f7] text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                            className={`px-8 py-3 rounded-full font-space font-medium transition-all ${activePlatform === 'android'
+                                ? 'bg-cyber-cyan/20 border border-cyber-cyan/50 text-white shadow-[0_0_15px_rgba(0,243,255,0.4)]'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
                                 }`}
                         >
                             Android Client
@@ -99,20 +99,20 @@ export default function ProjectDetails() {
                 {activeReport ? (
                     <div className="flex flex-col gap-8 md:gap-12 mt-12 max-w-4xl">
                         {activeReport.map((section, idx) => (
-                            <div key={idx} className="bg-black/40 border border-white/5 rounded-3xl p-8 md:p-10 backdrop-blur-md transition-all hover:bg-black/60 hover:border-white/10">
-                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                                    <span className="text-[#a855f7]">/</span> {section.title}
+                            <div key={idx} className="bg-cyber-dark/60 border border-white/5 rounded-3xl p-8 md:p-10 backdrop-blur-xl transition-all hover:bg-cyber-dark hover:border-cyber-violet/30 hover:shadow-[0_0_20px_rgba(181,55,242,0.15)] group">
+                                <h3 className="text-2xl md:text-3xl font-orbitron font-bold text-white mb-6 flex items-center gap-3">
+                                    <span className="text-cyber-cyan group-hover:text-cyber-violet transition-colors duration-300">/</span> {section.title}
                                 </h3>
 
                                 {section.type === 'text' && (
-                                    <p className="text-base md:text-lg text-gray-400 font-light leading-relaxed whitespace-pre-line">
+                                    <p className="text-base md:text-lg text-gray-300 font-inter font-light leading-relaxed whitespace-pre-line">
                                         {section.content}
                                     </p>
                                 )}
 
                                 {section.type === 'code' && (
-                                    <div className="bg-[#050505] rounded-xl p-6 md:p-8 border border-white/5 overflow-x-auto custom-scrollbar shadow-inner mt-4">
-                                        <pre className="text-sm md:text-base text-[#a855f7] font-mono whitespace-pre leading-relaxed">
+                                    <div className="bg-[#050505] rounded-xl p-6 md:p-8 border border-cyber-cyan/20 overflow-x-auto custom-scrollbar shadow-[inset_0_0_20px_rgba(0,243,255,0.05)] mt-4">
+                                        <pre className="text-sm md:text-base text-cyber-cyan font-mono whitespace-pre leading-relaxed">
                                             {section.content}
                                         </pre>
                                     </div>
@@ -121,8 +121,8 @@ export default function ProjectDetails() {
                                 {section.type === 'list' && (
                                     <ul className="flex flex-col gap-4">
                                         {section.content.map((item, i) => (
-                                            <li key={i} className="flex items-start gap-4 text-base md:text-lg text-gray-400 font-light leading-relaxed">
-                                                <div className="mt-2 min-w-[8px] h-2 rounded-full bg-[#a855f7] shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
+                                            <li key={i} className="flex items-start gap-4 text-base md:text-lg text-gray-300 font-inter font-light leading-relaxed">
+                                                <div className="mt-2 min-w-[8px] h-2 rounded-full bg-cyber-pink shadow-[0_0_8px_rgba(255,0,255,0.6)]" />
                                                 <span>{item}</span>
                                             </li>
                                         ))}

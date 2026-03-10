@@ -97,26 +97,27 @@ export default function AboutOverlay() {
         <section id="about" ref={containerRef} className="min-h-[150vh] w-full py-32 px-6 flex flex-col items-center pointer-events-none">
             <div ref={contentRef} className="max-w-5xl w-full pointer-events-auto flex flex-col items-center">
 
-                <div className="glass p-12 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md mb-12 w-full">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">The Mindset</h2>
-                    <p className="text-2xl text-gray-400 font-light leading-relaxed mb-6">
+                <div className="glass p-12 rounded-3xl border border-white/5 bg-cyber-dark/60 backdrop-blur-xl mb-12 w-full hover:border-cyber-cyan/30 transition-colors duration-500 relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyber-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                    <h2 className="text-4xl md:text-5xl font-orbitron font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyber-cyan to-white">The System Architecture</h2>
+                    <p className="text-2xl text-gray-300 font-inter font-light leading-relaxed mb-8">
                         I focus on building practical projects that help me understand how systems work under the hood, while improving performance, reliability, and maintainability.
                     </p>
-                    <div className="flex items-center gap-3 text-sm text-gray-500 font-mono bg-white/5 inline-flex px-4 py-2 rounded-lg border border-white/10">
-                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <div className="flex items-center gap-3 text-sm text-cyber-cyan/80 font-space uppercase tracking-widest bg-cyber-cyan/10 inline-flex px-5 py-3 rounded-lg border border-cyber-cyan/20">
+                        <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_8px_#00f3ff]" />
                         Current Focus: Face Recognition System (Final Year Project)
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-20">
                     {arsenal.map((item, index) => (
-                        <div key={index} className="glass p-8 rounded-2xl border border-white/5 bg-black/40 backdrop-blur-md flex gap-6 items-start hover:bg-white/5 hover:border-white/10 transition-colors">
-                            <div className="p-4 bg-white/5 rounded-2xl text-blue-400 border border-white/10 flex-shrink-0">
+                        <div key={index} className="glass p-8 rounded-2xl border border-white/5 bg-cyber-dark/60 backdrop-blur-md flex gap-6 items-start hover:bg-cyber-cyan/5 hover:border-cyber-cyan/40 hover:shadow-[0_0_20px_rgba(0,243,255,0.15)] transition-all duration-300 group">
+                            <div className="p-4 bg-cyber-cyan/10 rounded-2xl text-cyber-cyan border border-cyber-cyan/20 flex-shrink-0 group-hover:scale-110 transition-transform">
                                 {item.icon}
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                                <p className="text-gray-400">{item.desc}</p>
+                                <h3 className="text-xl font-space font-bold text-white mb-2 group-hover:text-cyber-cyan transition-colors">{item.title}</h3>
+                                <p className="text-gray-400 font-inter font-light">{item.desc}</p>
                             </div>
                         </div>
                     ))}
@@ -124,16 +125,16 @@ export default function AboutOverlay() {
 
                 {/* Tech Stack Section */}
                 <div className="w-full">
-                    <h2 className="text-4xl font-bold mb-12 text-center text-white">Tech I Build With</h2>
+                    <h2 className="text-4xl font-orbitron font-bold mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-white to-cyber-pink">Core Libraries & Packages</h2>
                     <div className="flex flex-col gap-12 w-full">
                         {techStack.map((category, idx) => (
-                            <div key={idx} className="glass p-8 rounded-3xl border border-white/5 bg-black/40 backdrop-blur-md">
-                                <h3 className="text-2xl font-semibold mb-8 text-gray-300 border-b border-white/10 pb-4">{category.category}</h3>
+                            <div key={idx} className="glass p-8 rounded-3xl border border-white/5 bg-cyber-dark/60 backdrop-blur-xl hover:border-cyber-pink/20 transition-colors duration-500">
+                                <h3 className="text-2xl font-space font-semibold mb-8 text-cyber-pink/90 border-b border-white/10 pb-4">{category.category}</h3>
                                 <div className="flex flex-wrap gap-4">
                                     {category.items.map((tech, tIdx) => (
-                                        <div key={tIdx} className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-5 py-3 hover:bg-white/10 hover:scale-105 hover:border-white/20 transition-all cursor-default">
+                                        <div key={tIdx} className="flex items-center gap-3 bg-black/40 border border-white/5 rounded-xl px-5 py-3 hover:bg-cyber-pink/10 hover:scale-105 hover:border-cyber-pink/30 hover:shadow-[0_0_15px_rgba(255,0,255,0.2)] transition-all cursor-default">
                                             {tech.icon}
-                                            <span className="text-gray-200 font-medium">{tech.name}</span>
+                                            <span className="text-gray-200 font-inter font-medium tracking-wide">{tech.name}</span>
                                         </div>
                                     ))}
                                 </div>

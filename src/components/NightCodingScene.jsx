@@ -65,22 +65,25 @@ export default function NightCodingScene() {
     if (currentMood === 'HERO') return null;
 
     return (
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#030303] flex flex-col justify-end opacity-60 transition-opacity duration-1000">
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-cyber-dark flex flex-col justify-end opacity-80 transition-opacity duration-1000">
             {/* Stylized dark vignette and ambient glows to make it atmospheric */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-10" />
-            <div className="absolute inset-0 opacity-30 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyber-cyan/30 via-transparent to-transparent"></div>
+
+            {/* CRT Scanline Overlay */}
+            <div className="absolute inset-0 z-20 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-40"></div>
 
             {/* The scrolling code terminal */}
-            <div className="w-full h-full p-8 md:p-16 lg:p-32 font-mono text-xs md:text-sm text-green-500/60 whitespace-pre overflow-hidden relative z-0 mask-image-top-fade flex flex-col justify-end">
+            <div className="w-full h-full p-8 md:p-16 lg:p-32 font-mono text-xs md:text-sm text-cyber-cyan/80 whitespace-pre overflow-hidden relative z-0 mask-image-top-fade flex flex-col justify-end">
                 {visibleLines.map((line, i) => (
-                    <div key={i} className="animate-fade-in-up tracking-widest">{line}</div>
+                    <div key={i} className="animate-fade-in-up tracking-widest drop-shadow-[0_0_8px_rgba(0,243,255,0.8)] font-bold">{line}</div>
                 ))}
             </div>
 
             <style>{`
                 .mask-image-top-fade {
-                    mask-image: linear-gradient(to top, black 60%, transparent 100%);
-                    -webkit-mask-image: linear-gradient(to top, black 60%, transparent 100%);
+                    mask-image: linear-gradient(to top, black 50%, transparent 100%);
+                    -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
                 }
                 @keyframes fadeInUp {
                     from { opacity: 0; transform: translateY(10px); }
