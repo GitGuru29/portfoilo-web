@@ -72,7 +72,7 @@ export default function ProjectsOverlay() {
                                     <div className="w-2 h-2 rounded-full bg-cyber-violet animate-pulse shadow-[0_0_8px_#b537f2]" />
                                     {project.role}
                                 </span>
-                                <h2 className="text-4xl md:text-5xl lg:text-7xl font-orbitron font-black mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 group-hover:to-cyber-violet transition-colors duration-500">{project.title}</h2>
+                                <h2 className="text-3xl md:text-4xl lg:text-5xl pb-2 font-orbitron font-black mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 group-hover:to-cyber-violet transition-colors duration-500">{project.title}</h2>
                                 <p className="text-lg md:text-xl text-gray-400 font-inter font-light leading-relaxed mb-6">
                                     {project.description}
                                 </p>

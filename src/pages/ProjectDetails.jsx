@@ -68,7 +68,7 @@ export default function ProjectDetails() {
                     <div className="w-2.5 h-2.5 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_10px_#00f3ff]" />
                     {project.role}
                 </span>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white to-cyber-violet tracking-tight drop-shadow-[0_0_10px_rgba(181,55,242,0.3)]">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl pb-2 font-orbitron font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white to-cyber-violet tracking-tight drop-shadow-[0_0_10px_rgba(181,55,242,0.3)]">
                     {project.title}
                 </h1>
 
@@ -154,7 +154,7 @@ export default function ProjectDetails() {
                                 <img
                                     src={img}
                                     alt={`${project.title} detailed screenshot ${i + 1}`}
-                                    className="w-full h-full object-contain md:object-cover md:hover:object-contain transition-all duration-700 rounded-xl"
+                                    className="max-w-full max-h-full object-scale-down transition-transform duration-700 rounded-xl hover:scale-[1.02]"
                                     loading="lazy"
                                 />
                             </div>
