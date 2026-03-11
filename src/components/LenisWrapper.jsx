@@ -19,6 +19,8 @@ export default function LenisWrapper({ children }) {
             infinite: false,
         });
 
+        window.lenis = lenis;
+
         lenis.on('scroll', ScrollTrigger.update);
 
         gsap.ticker.add((time) => {
@@ -30,6 +32,7 @@ export default function LenisWrapper({ children }) {
         return () => {
             lenis.destroy();
             gsap.ticker.remove(lenis.raf);
+            delete window.lenis;
         };
     }, []);
 
