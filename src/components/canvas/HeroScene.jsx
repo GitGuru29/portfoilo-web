@@ -8,7 +8,8 @@ export default function HeroScene() {
 
     // Mobile optimization: reduce particle count drastically to save GPU
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const particleCount = isMobile ? 800 : 3500;
+    // Reduced by ~30% for cleaner look
+    const particleCount = isMobile ? 600 : 2500;
 
     const { positions, colors } = useMemo(() => {
         const positions = new Float32Array(particleCount * 3);
@@ -16,7 +17,7 @@ export default function HeroScene() {
 
         // Neon Cyber Palette
         const colorPalette = [
-            new THREE.Color('#00f3ff'), // cyan
+            new THREE.Color('#00f7ff'), // cyan (brighter)
             new THREE.Color('#b537f2'), // violet
             new THREE.Color('#ff00ff'), // pink
             new THREE.Color('#4287f5'), // blue
@@ -58,6 +59,11 @@ export default function HeroScene() {
             pointsRef.current.rotation.x += targetRotation.current.x * delta;
             pointsRef.current.rotation.y += targetRotation.current.y * delta;
         }
+
+        // Add true depth parallax by shifting the camera slightly based on mouse
+        state.camera.position.x += (state.pointer.x * 2 - state.camera.position.x) * 0.05;
+        state.camera.position.y += (state.pointer.y * 2 - state.camera.position.y) * 0.05;
+        state.camera.lookAt(0, 0, 0);
     });
 
     return (
