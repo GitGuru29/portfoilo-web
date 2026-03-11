@@ -197,7 +197,7 @@ export default function TerminalSection() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 1.5 }}
                         onClick={() => unlockSystem()}
-                        className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-gray-500 hover:text-white font-mono text-sm tracking-widest transition-colors flex items-center gap-2 px-4 py-2 rounded-full hover:bg-white/5"
+                        className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-gray-400 hover:text-white font-mono text-sm tracking-widest transition-colors flex items-center gap-2 px-4 py-2 rounded-full hover:bg-white/5 z-[110] pointer-events-auto"
                     >
                         SKIP <span className="text-lg leading-none">→</span>
                     </motion.button>
