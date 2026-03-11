@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -50,6 +50,27 @@ export default function Contact() {
         }
     };
 
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        const { name, email, message } = formData;
+
+        if (!name || !email || !message) {
+            alert("Please fill in all fields to send a message.");
+            return;
+        }
+
+        const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+        const mailtoLink = `mailto:sdangalla44@gmail.com?subject=${subject}&body=${body}`;
+
+        window.open(mailtoLink, '_blank');
+
+        // Optional: clear the form after opening the mail client
+        setFormData({ name: '', email: '', message: '' });
+    };
+
     return (
         <>
             <section className="min-h-[80vh] py-24 px-6 relative flex items-center justify-center bg-cyber-dark overflow-hidden">
@@ -74,7 +95,7 @@ export default function Contact() {
                             <p className="text-gray-400 font-inter font-light leading-relaxed text-lg">Looking to optimize a system, build a daemon, or discuss Android internals? Drop a packet below.</p>
                         </motion.div>
 
-                        <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+                        <form className="flex flex-col gap-6" onSubmit={handleFormSubmit}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <motion.div variants={itemVariants} className="flex flex-col gap-2">
                                     <label className="text-sm text-gray-400 ml-1">Name</label>
@@ -82,6 +103,9 @@ export default function Contact() {
                                         type="text"
                                         className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-cyber-cyan/50 focus:bg-white/10 transition-all text-white placeholder-gray-600"
                                         placeholder="John Doe"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        required
                                     />
                                 </motion.div>
                                 <motion.div variants={itemVariants} className="flex flex-col gap-2">
@@ -90,6 +114,9 @@ export default function Contact() {
                                         type="email"
                                         className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-cyber-cyan/50 focus:bg-white/10 transition-all text-white placeholder-gray-600"
                                         placeholder="john@example.com"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        required
                                     />
                                 </motion.div>
                             </div>
@@ -101,6 +128,9 @@ export default function Contact() {
                                     className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-cyber-cyan/50 focus:bg-white/10 transition-all text-white resize-none placeholder-gray-600"
                                     placeholder="What's on your mind?"
                                     spellCheck="false"
+                                    value={formData.message}
+                                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                    required
                                 />
                             </motion.div>
 
@@ -108,6 +138,7 @@ export default function Contact() {
                                 variants={itemVariants}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
+                                type="submit"
                                 className="mt-4 bg-gradient-to-r from-cyber-cyan to-cyber-violet text-white font-space font-bold tracking-widest uppercase py-4 rounded-xl flex items-center justify-center gap-3 hover:shadow-[0_0_30px_rgba(181,55,242,0.4)] transition-shadow border border-white/10"
                             >
                                 Send Message <Send className="w-5 h-5 drop-shadow-md" />
