@@ -66,46 +66,46 @@ export default function TerminalSection() {
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="fixed inset-0 z-[100] w-full h-screen bg-[#020202] flex items-center justify-center p-4 md:p-12 pointer-events-auto"
+                    className="fixed inset-0 z-[100] w-full h-screen bg-[#111111] flex items-center justify-center p-4 md:p-8 pointer-events-auto"
                 >
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="w-full max-w-5xl h-full max-h-[800px] bg-[#060606] rounded-xl border border-white/10 shadow-[0_0_60px_rgba(0,247,255,0.05)] overflow-hidden font-space flex flex-col"
+                        className="w-full max-w-5xl h-full max-h-[800px] bg-[#0A0A0A] rounded-xl shadow-2xl overflow-hidden font-mono flex flex-col border border-[#2A2A2A]"
                         onClick={() => inputRef.current?.focus()}
                     >
-                        {/* Window Header */}
-                        <div className="flex items-center px-4 py-3 bg-[#0a0a0a] border-b border-white/5 relative shrink-0">
+                        {/* Kitty Window Header */}
+                        <div className="flex items-center justify-center px-4 py-3 bg-[#1A1A1A] border-b border-[#222222] relative shrink-0">
                             <div className="flex gap-2 absolute left-4">
-                                <div className="w-3 h-3 rounded-full bg-red-500/80 shadow-[0_0_5px_rgba(239,68,68,0.5)]"></div>
-                                <div className="w-3 h-3 rounded-full bg-yellow-500/80 shadow-[0_0_5px_rgba(234,179,8,0.5)]"></div>
-                                <div className="w-3 h-3 rounded-full bg-green-500/80 shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div>
+                                <div className="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
+                                <div className="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+                                <div className="w-3 h-3 rounded-full bg-[#27C93F]"></div>
                             </div>
-                            <div className="mx-auto text-xs text-gray-500 tracking-widest uppercase font-mono">root@siluna-mainframe:~</div>
+                            <div className="text-xs text-[#808080] tracking-widest uppercase font-mono">ROOT@SILUNA-MAINFRAME:~</div>
                         </div>
 
                         {/* Terminal Body */}
-                        <div className="p-6 md:p-8 flex-1 overflow-y-auto text-sm md:text-base flex flex-col gap-3 font-mono">
+                        <div className="p-6 md:p-8 flex-1 overflow-y-auto text-[15px] leading-[1.8] flex flex-col gap-6 font-mono">
                             {history.map((line, i) => (
                                 <div key={i} className={`
-                                    ${line.type === 'cmd' ? 'text-cyber-pink' : ''}
-                                    ${line.type === 'sys' ? 'text-gray-500' : ''}
+                                    ${line.type === 'cmd' ? 'text-[#e54bfe]' : ''}
+                                    ${line.type === 'sys' ? 'text-[#888888]' : ''}
                                     ${line.type === 'out' ? 'text-cyber-cyan' : ''}
                                 `}>
                                     {line.text}
                                 </div>
                             ))}
 
-                            <div className="flex items-center gap-3 mt-2">
-                                <span className="text-cyber-violet font-bold">siluna@system:~$</span>
+                            <div className="flex items-center gap-3 mt-1">
+                                <span className="text-[#e54bfe] font-bold">siluna@system:~$</span>
                                 <input
                                     ref={inputRef}
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyDown={handleCommand}
-                                    className="flex-1 bg-transparent outline-none text-white border-none placeholder-gray-800"
+                                    className="flex-1 bg-transparent outline-none text-[#888888] border-none placeholder-[#333333]"
                                     spellCheck="false"
                                     autoComplete="off"
                                     autoFocus
