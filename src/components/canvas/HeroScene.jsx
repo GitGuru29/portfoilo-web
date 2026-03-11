@@ -48,21 +48,21 @@ export default function HeroScene() {
 
     useFrame((state, delta) => {
         if (pointsRef.current) {
-            // Base slow rotation
-            pointsRef.current.rotation.x -= delta * 0.05;
-            pointsRef.current.rotation.y -= delta * 0.08;
+            // Base slow rotation - reduced by 50%
+            pointsRef.current.rotation.x -= delta * 0.025;
+            pointsRef.current.rotation.y -= delta * 0.04;
 
-            // Interactive rotation based on mouse pointer
-            targetRotation.current.x += (state.pointer.y * 0.8 - targetRotation.current.x) * 4 * delta;
-            targetRotation.current.y += (state.pointer.x * 0.8 - targetRotation.current.y) * 4 * delta;
+            // Interactive rotation based on mouse pointer - slowed down responsiveness
+            targetRotation.current.x += (state.pointer.y * 0.8 - targetRotation.current.x) * 2 * delta;
+            targetRotation.current.y += (state.pointer.x * 0.8 - targetRotation.current.y) * 2 * delta;
 
-            pointsRef.current.rotation.x += targetRotation.current.x * delta;
-            pointsRef.current.rotation.y += targetRotation.current.y * delta;
+            pointsRef.current.rotation.x += targetRotation.current.x * (delta * 0.5);
+            pointsRef.current.rotation.y += targetRotation.current.y * (delta * 0.5);
         }
 
-        // Add true depth parallax by shifting the camera slightly based on mouse
-        state.camera.position.x += (state.pointer.x * 2 - state.camera.position.x) * 0.05;
-        state.camera.position.y += (state.pointer.y * 2 - state.camera.position.y) * 0.05;
+        // Add true depth parallax by shifting the camera slightly based on mouse - softened transition
+        state.camera.position.x += (state.pointer.x * 2 - state.camera.position.x) * 0.02;
+        state.camera.position.y += (state.pointer.y * 2 - state.camera.position.y) * 0.02;
         state.camera.lookAt(0, 0, 0);
     });
 
