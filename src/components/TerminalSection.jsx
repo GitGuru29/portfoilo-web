@@ -101,42 +101,57 @@ export default function TerminalSection() {
                         onClick={() => inputRef.current?.focus()}
                     >
                         {/* Terminal Body */}
-                        <div className="p-6 md:p-8 flex-1 overflow-y-auto text-[15px] leading-[1.6] flex flex-col font-mono text-[#a9b1d6]">
-                            {history.map((line, i) => (
-                                <div key={i} className="mb-2">
-                                    {line.type === 'cmd' ? (
-                                        <div>
-                                            <CustomPrompt />
-                                            <div className="ml-8 text-white">{line.text}</div>
-                                        </div>
-                                    ) : (
-                                        <div className={`
-                                            ${line.type === 'sys' ? 'text-[#565f89]' : ''}
-                                            ${line.type === 'out' ? 'text-[#7dcfff]' : ''}
-                                        `}>
-                                            {line.text}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                        <div className="relative p-6 md:p-8 flex-1 overflow-y-auto text-[15px] leading-[1.6] flex flex-col font-mono text-[#a9b1d6]">
 
-                            <div className="flex flex-col">
-                                <CustomPrompt />
-                                <div className="flex items-center gap-3 ml-8">
-                                    <input
-                                        ref={inputRef}
-                                        type="text"
-                                        value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        onKeyDown={handleCommand}
-                                        className="flex-1 bg-transparent outline-none text-white border-none placeholder-[#565f89]"
-                                        spellCheck="false"
-                                        autoComplete="off"
-                                        autoFocus
-                                    />
+                            {/* Background Image Overlay */}
+                            <div
+                                className="absolute inset-0 z-0 opacity-15 pointer-events-none"
+                                style={{
+                                    backgroundImage: "url('/assets/kitty_bg.png')",
+                                    backgroundSize: "cover",
+                                    backgroundPosition: "center",
+                                    backgroundRepeat: "no-repeat",
+                                }}
+                            />
+
+                            {/* Content Layer */}
+                            <div className="relative z-10">
+                                {history.map((line, i) => (
+                                    <div key={i} className="mb-2">
+                                        {line.type === 'cmd' ? (
+                                            <div>
+                                                <CustomPrompt />
+                                                <div className="ml-8 text-white">{line.text}</div>
+                                            </div>
+                                        ) : (
+                                            <div className={`
+                                                ${line.type === 'sys' ? 'text-[#565f89]' : ''}
+                                                ${line.type === 'out' ? 'text-[#7dcfff]' : ''}
+                                            `}>
+                                                {line.text}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+
+                                <div className="flex flex-col">
+                                    <CustomPrompt />
+                                    <div className="flex items-center gap-3 ml-8">
+                                        <input
+                                            ref={inputRef}
+                                            type="text"
+                                            value={input}
+                                            onChange={(e) => setInput(e.target.value)}
+                                            onKeyDown={handleCommand}
+                                            className="flex-1 bg-transparent outline-none text-white border-none placeholder-[#565f89]"
+                                            spellCheck="false"
+                                            autoComplete="off"
+                                            autoFocus
+                                        />
+                                    </div>
                                 </div>
+                                <div ref={bottomRef} className="pb-4" />
                             </div>
-                            <div ref={bottomRef} className="pb-4" />
                         </div>
                     </motion.div>
                 </motion.section>
