@@ -33,7 +33,7 @@ export default function TerminalSection() {
         'skills': "[ C++, Rust, Kotlin, Python, Bash ] -> Focusing on Kernel internals, Android OS & reverse engineering.",
         'system': "System specs: Brain (Overclocked), Coffee (100%), Sleep (.05%).",
         'github': "GitHub Stats\n-------------\nRepos: 30+\nLanguages: C++, Kotlin, Python, JavaScript\nFocus: Systems, Security, Tooling\n\nLink: https://github.com/GitGuru29",
-        'resume': "Downloading CV...\nView LinkedIn: linkedin.com/in/silunadangalla\nContact Email: minidusiluna29@gmail.com",
+        'resume': "Downloading CV...\nView LinkedIn: https://www.linkedin.com/in/siluna-dangalla-0744a02b1/\nContact Email: sdangalla44@gmail.com",
         'hack nasa': "Nice try.\nAccess denied.",
         'sudo make coffee': "☕ Brewing developer fuel...",
         'aero': "Launching AeroLang demo...\n\nfun main() {\n    println(\"Hello, Native Android!\")\n}",

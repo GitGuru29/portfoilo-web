@@ -47,8 +47,9 @@ export default function Navigation() {
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f7ff] to-cyber-violet group-hover:drop-shadow-[0_0_8px_rgba(0,247,255,0.5)] transition-all">SN</span>
                 </a>
                 <div className="hidden md:flex items-center gap-8 bg-white/[0.04] px-6 py-2 rounded-full border border-white/[0.08] backdrop-blur-md">
-                    <button onClick={(e) => handleNavClick(e, 'about')} className="text-sm font-space font-medium text-gray-300 hover:text-[#00f7ff] hover:drop-shadow-[0_0_8px_rgba(0,247,255,0.8)] transition-all uppercase tracking-widest">About</button>
-                    <button onClick={(e) => handleNavClick(e, 'projects')} className="text-sm font-space font-medium text-gray-300 hover:text-[#00f7ff] hover:drop-shadow-[0_0_8px_rgba(0,247,255,0.8)] transition-all uppercase tracking-widest">Work</button>
+                    <button onClick={(e) => handleNavClick(e, 'home')} className="text-sm font-space font-medium text-gray-300 hover:text-[#00f7ff] hover:drop-shadow-[0_0_8px_rgba(0,247,255,0.8)] transition-all uppercase tracking-widest">Home</button>
+                    <button onClick={(e) => handleNavClick(e, 'projects')} className="text-sm font-space font-medium text-gray-300 hover:text-[#00f7ff] hover:drop-shadow-[0_0_8px_rgba(0,247,255,0.8)] transition-all uppercase tracking-widest">Projects</button>
+                    <button onClick={(e) => handleNavClick(e, 'skills')} className="text-sm font-space font-medium text-gray-300 hover:text-[#00f7ff] hover:drop-shadow-[0_0_8px_rgba(0,247,255,0.8)] transition-all uppercase tracking-widest">Skills</button>
                     <button onClick={(e) => handleNavClick(e, 'contact')} className="text-sm font-space font-medium text-gray-300 hover:text-[#00f7ff] hover:drop-shadow-[0_0_8px_rgba(0,247,255,0.8)] transition-all uppercase tracking-widest">Contact</button>
                 </div>
             </div>

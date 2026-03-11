@@ -60,7 +60,7 @@ export default function HeroOverlay() {
     };
 
     return (
-        <section ref={heroRef} className="h-screen w-full flex items-center pointer-events-none relative z-10">
+        <section id="home" ref={heroRef} className="h-screen w-full flex items-center pointer-events-none relative z-10">
             <div className="w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col items-center justify-center h-full relative">
 
                 {/* Center Content Box */}

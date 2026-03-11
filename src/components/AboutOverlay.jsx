@@ -145,7 +145,7 @@ export default function AboutOverlay() {
                 </div>
 
                 {/* Tech Stack Section */}
-                <div className="w-full">
+                <div id="skills" className="w-full pt-10">
                     <h2 className="text-4xl font-orbitron font-bold mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-white to-cyber-pink">Core Libraries & Packages</h2>
                     <div className="flex flex-col gap-12 w-full">
                         {techStack.map((category, idx) => (

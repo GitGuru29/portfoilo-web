@@ -114,7 +114,7 @@ export default function Contact() {
                             <div className="flex flex-col gap-3">
                                 <a href="#home" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Home</a>
                                 <a href="#projects" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Projects</a>
-                                <a href="#about" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Skills</a>
+                                <a href="#skills" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Skills</a>
                                 <a href="#contact" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Contact</a>
                             </div>
                         </div>
@@ -126,10 +126,10 @@ export default function Contact() {
                                 <a href="https://github.com/GitGuru29" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors flex items-center gap-2">
                                     <span className="text-lg">↗</span> GitHub
                                 </a>
-                                <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0077B5] transition-colors flex items-center gap-2">
+                                <a href="https://www.linkedin.com/in/siluna-dangalla-0744a02b1/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0077B5] transition-colors flex items-center gap-2">
                                     <span className="text-lg">↗</span> LinkedIn
                                 </a>
-                                <a href="mailto:sdangalla66@gmail.com" className="text-gray-400 hover:text-cyber-pink transition-colors flex items-center gap-2">
+                                <a href="mailto:sdangalla44@gmail.com" className="text-gray-400 hover:text-cyber-pink transition-colors flex items-center gap-2">
                                     <span className="text-lg">↗</span> Email
                                 </a>
                             </div>
