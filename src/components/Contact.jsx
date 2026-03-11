@@ -147,6 +147,7 @@ export default function Contact() {
                                 <a href="#projects" onClick={(e) => handleNavClick(e, 'projects')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Projects</a>
                                 <a href="#skills" onClick={(e) => handleNavClick(e, 'skills')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Skills</a>
                                 <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Contact</a>
+                                <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-violet hover:drop-shadow-[0_0_8px_#b537f2] transition-all">Download CV</a>
                             </div>
                         </div>
 

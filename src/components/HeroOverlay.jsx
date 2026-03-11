@@ -102,9 +102,17 @@ export default function HeroOverlay() {
                         </div>
                     </div>
 
-                    <a href="#projects" onClick={(e) => handleScrollClick(e, 'projects')} className="inline-block border border-cyber-cyan px-6 py-2.5 rounded-[25px] text-cyber-cyan font-space uppercase tracking-widest text-sm hover:bg-cyber-cyan/10 hover:shadow-[0_0_15px_rgba(0,247,255,0.4)] transition-all pointer-events-auto mx-auto mt-4">
-                        View My Work
-                    </a>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4 mx-auto pointer-events-auto w-full">
+                        <a href="#projects" onClick={(e) => handleScrollClick(e, 'projects')} className="inline-block border border-cyber-cyan px-6 py-2.5 rounded-[25px] text-cyber-cyan font-space uppercase tracking-widest text-sm hover:bg-cyber-cyan/10 hover:shadow-[0_0_15px_rgba(0,247,255,0.4)] transition-all">
+                            View My Work
+                        </a>
+                        <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-cyber-violet bg-cyber-violet/10 px-6 py-2.5 rounded-[25px] text-cyber-violet font-space uppercase tracking-widest text-sm hover:bg-cyber-violet/20 hover:shadow-[0_0_15px_rgba(181,55,242,0.4)] transition-all">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Download CV
+                        </a>
+                    </div>
                 </div>
 
             </div>
