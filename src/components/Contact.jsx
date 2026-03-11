@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Contact() {
     const containerVariants = {
@@ -17,6 +18,36 @@ export default function Contact() {
     const itemVariants = {
         hidden: { opacity: 0, y: 30 },
         show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    };
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleNavClick = (e, id) => {
+        e.preventDefault();
+
+        if (location.pathname !== '/') {
+            navigate('/');
+            setTimeout(() => {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (window.lenis) {
+                        window.lenis.scrollTo(element, { offset: 0, duration: 1.2 });
+                    } else {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            }, 150);
+        } else {
+            const element = document.getElementById(id);
+            if (element) {
+                if (window.lenis) {
+                    window.lenis.scrollTo(element, { offset: 0, duration: 1.2 });
+                } else {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
     };
 
     return (
@@ -112,10 +143,10 @@ export default function Contact() {
                         <div className="flex flex-col items-center md:items-start text-center md:text-left font-space tracking-widest text-sm">
                             <h4 className="text-white/60 font-bold mb-4 uppercase text-xs">Navigation</h4>
                             <div className="flex flex-col gap-3">
-                                <a href="#home" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Home</a>
-                                <a href="#projects" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Projects</a>
-                                <a href="#skills" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Skills</a>
-                                <a href="#contact" className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Contact</a>
+                                <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Home</a>
+                                <a href="#projects" onClick={(e) => handleNavClick(e, 'projects')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Projects</a>
+                                <a href="#skills" onClick={(e) => handleNavClick(e, 'skills')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Skills</a>
+                                <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Contact</a>
                             </div>
                         </div>
 
