@@ -12,6 +12,8 @@ export const MOODS = {
 const useStore = create((set) => ({
     currentMood: MOODS.HERO,
     setMood: (mood) => set({ currentMood: mood }),
+    isUnlocked: false,
+    unlockSystem: () => set({ isUnlocked: true }),
 }));
 
 export default useStore;
