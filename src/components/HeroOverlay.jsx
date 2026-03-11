@@ -10,7 +10,7 @@ export default function HeroOverlay() {
     const setMood = useStore((state) => state.setMood);
 
     const [typedText, setTypedText] = useState('');
-    const fullText = "FULL STACK / SECURITY / SYSTEMS";
+    const fullText = "ANDROID / SYSTEMS / SECURITY";
 
     useEffect(() => {
         // Typing Effect
@@ -70,11 +70,11 @@ export default function HeroOverlay() {
                 <div ref={textRef} className="w-full lg:w-3/4 flex flex-col items-center lg:items-start justify-center text-center lg:text-left pointer-events-auto h-full pt-20 md:pt-0 pl-0 md:pl-12 lg:pl-24">
                     <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyber-cyan/30 bg-cyber-cyan/5 backdrop-blur-md shadow-[0_0_15px_rgba(0,247,255,0.1)]">
                         <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_10px_#00f7ff]" />
-                        <span className="text-xs font-space tracking-widest text-cyber-cyan uppercase">System Initialized</span>
+                        <span className="text-xs font-space tracking-widest text-cyber-cyan uppercase">System Status: Online</span>
                     </div>
 
                     <div className="glitch-wrapper mb-2">
-                        <h1 className="text-6xl md:text-8xl lg:text-9xl font-orbitron font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-gray-200 to-cyber-violet drop-shadow-[0_0_15px_rgba(181,55,242,0.5)] glitch leading-[0.9]" data-text="Siluna Nusal">
+                        <h1 className="text-6xl md:text-8xl lg:text-9xl font-orbitron font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-gray-200 to-cyber-violet drop-shadow-[0_0_8px_rgba(181,55,242,0.3)] glitch leading-[0.9]" data-text="Siluna Nusal">
                             Siluna<br className="lg:hidden" /> Nusal
                         </h1>
                     </div>
@@ -83,7 +83,7 @@ export default function HeroOverlay() {
                         {typedText}<span className="typing-cursor"></span>
                     </h2>
 
-                    <p className="max-w-[600px] text-md md:text-lg text-gray-300 font-inter font-light tracking-wide mb-8 leading-relaxed text-center mx-auto lg:mx-0 opacity-75">
+                    <p className="max-w-[600px] text-md md:text-lg text-white/85 font-inter font-light tracking-wide mb-8 leading-relaxed text-center mx-auto lg:mx-0">
                         Engineering low-level systems and architecting robust security protocols. Building the next generation of digital infrastructure.
                     </p>
 

@@ -68,11 +68,26 @@ export default function ProjectsOverlay() {
                                             {project.description}
                                         </p>
 
-                                        <div className="mt-auto pt-4 inline-flex items-center gap-3 text-white font-space font-medium group-hover:text-cyber-cyan transition-colors tracking-widest text-sm uppercase">
-                                            Access Terminal
-                                            <svg className="w-5 h-5 transition-transform duration-500 group-hover:translate-x-3 text-cyber-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                            </svg>
+                                        <div className="mt-auto pt-4 flex flex-wrap items-center gap-4">
+                                            <button onClick={(e) => e.preventDefault()} className="px-5 py-2.5 rounded border border-cyber-cyan/40 bg-cyber-cyan/5 text-cyber-cyan hover:bg-cyber-cyan/20 hover:border-cyber-cyan transition-all font-space text-xs tracking-widest uppercase flex items-center gap-2">
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                                </svg>
+                                                View Code
+                                            </button>
+                                            <button onClick={(e) => e.preventDefault()} className="px-5 py-2.5 rounded border border-cyber-violet/40 bg-cyber-violet/5 text-cyber-violet hover:bg-cyber-violet/20 hover:border-cyber-violet transition-all font-space text-xs tracking-widest uppercase flex items-center gap-2">
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                Live Demo
+                                            </button>
+                                            <div className="ml-auto inline-flex items-center gap-2 text-gray-500 font-space font-medium group-hover:text-white transition-colors tracking-widest text-xs uppercase">
+                                                Read Report
+                                                <svg className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-2 text-gray-500 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                </svg>
+                                            </div>
                                         </div>
                                     </div>
 
