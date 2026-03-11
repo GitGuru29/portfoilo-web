@@ -174,11 +174,11 @@ export default function Contact() {
                         <div className="flex flex-col items-center md:items-start text-center md:text-left font-space tracking-widest text-sm">
                             <h4 className="text-white/60 font-bold mb-4 uppercase text-xs">Navigation</h4>
                             <div className="flex flex-col gap-3">
-                                <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Home</a>
-                                <a href="#projects" onClick={(e) => handleNavClick(e, 'projects')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Projects</a>
-                                <a href="#skills" onClick={(e) => handleNavClick(e, 'skills')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Skills</a>
-                                <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all">Contact</a>
-                                <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-violet hover:drop-shadow-[0_0_8px_#b537f2] transition-all">Download CV</a>
+                                <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_var(--theme-primary)] transition-all">Home</a>
+                                <a href="#projects" onClick={(e) => handleNavClick(e, 'projects')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_var(--theme-primary)] transition-all">Projects</a>
+                                <a href="#skills" onClick={(e) => handleNavClick(e, 'skills')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_var(--theme-primary)] transition-all">Skills</a>
+                                <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="text-gray-400 hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_var(--theme-primary)] transition-all">Contact</a>
+                                <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyber-violet hover:drop-shadow-[0_0_8px_var(--theme-secondary)] transition-all">Download CV</a>
                             </div>
                         </div>
 

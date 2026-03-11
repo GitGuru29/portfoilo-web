@@ -30,7 +30,7 @@ export default function ProjectsOverlay() {
             {/* Header */}
             <div className="w-full max-w-6xl mx-auto px-6 mb-24 md:mb-32">
                 <span className="text-sm font-space tracking-widest text-cyber-violet mb-4 uppercase flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-cyber-violet animate-pulse shadow-[0_0_10px_#b537f2]" />
+                    <div className="w-2 h-2 rounded-full bg-cyber-violet animate-pulse shadow-[0_0_10px_var(--theme-secondary)]" />
                     Work Portfolio
                 </span>
                 <h2 className="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500 tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">

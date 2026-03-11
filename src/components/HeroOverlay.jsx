@@ -66,7 +66,7 @@ export default function HeroOverlay() {
                 {/* Center Content Box */}
                 <div ref={textRef} className="w-full flex flex-col items-center justify-center text-center pointer-events-auto h-full pt-20 md:pt-0">
                     <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyber-cyan/30 bg-cyber-cyan/5 backdrop-blur-md shadow-[0_0_15px_rgba(0,247,255,0.1)]">
-                        <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_10px_#00f7ff]" />
+                        <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_10px_var(--theme-primary)]" />
                         <span className="text-xs font-space tracking-widest text-cyber-cyan uppercase">System Status: Online</span>
                     </div>
 
@@ -86,9 +86,9 @@ export default function HeroOverlay() {
 
                     <div className="flex flex-col items-center gap-6 mb-10 w-full">
                         <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 text-xs md:text-sm font-space font-medium text-gray-300 uppercase tracking-widest p-4 rounded-xl bg-black/40 border border-white/5 backdrop-blur-md">
-                            <span className="hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_#00f7ff] transition-all cursor-crosshair">Android</span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_#00f7ff]" />
-                            <span className="hover:text-cyber-violet hover:drop-shadow-[0_0_8px_#b537f2] transition-all cursor-crosshair">Systems</span>
+                            <span className="hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_var(--theme-primary)] transition-all cursor-crosshair">Android</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_var(--theme-primary)]" />
+                            <span className="hover:text-cyber-violet hover:drop-shadow-[0_0_8px_var(--theme-secondary)] transition-all cursor-crosshair">Systems</span>
                             <span className="w-1.5 h-1.5 rounded-full bg-cyber-pink shadow-[0_0_8px_#ff00ff]" />
                             <span className="hover:text-cyber-pink hover:drop-shadow-[0_0_8px_#ff00ff] transition-all cursor-crosshair">Security</span>
                         </div>

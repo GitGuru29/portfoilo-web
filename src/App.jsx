@@ -13,10 +13,11 @@ import ProjectDetails from './pages/ProjectDetails';
 
 function App() {
     const isUnlocked = useStore((state) => state.isUnlocked);
+    const currentTheme = useStore((state) => state.currentTheme);
 
     return (
         <HashRouter>
-            <div className="relative text-white font-sans overflow-clip selection:bg-blue-500/30 min-h-screen bg-[#020202]">
+            <div data-theme={currentTheme === 'default' ? undefined : currentTheme} className="relative text-white font-sans overflow-clip selection:bg-blue-500/30 min-h-screen bg-[#020202]">
 
                 {/* The Boot Screen Terminal */}
                 <TerminalSection />
