@@ -305,18 +305,18 @@ export default function TerminalSection() {
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="fixed inset-0 z-[100] w-full h-screen bg-[#09090b] flex items-center justify-center p-4 md:p-8 pointer-events-auto"
+                    className="fixed inset-0 z-[100] w-full h-[100dvh] bg-[#09090b] flex flex-col items-center justify-center p-4 pb-24 md:p-8 pointer-events-auto"
                 >
                     {/* Terminal Window */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="w-full max-w-5xl h-full max-h-[800px] bg-[#1a1b26] rounded-xl shadow-2xl overflow-hidden font-mono flex flex-col border border-white/5 relative z-10"
+                        className="w-full max-w-5xl h-full max-h-[calc(100vh-120px)] md:max-h-[800px] bg-[#1a1b26] rounded-xl shadow-2xl overflow-hidden font-mono flex flex-col border border-white/5 relative z-10"
                         onClick={() => inputRef.current?.focus()}
                     >
                         {/* Terminal Body */}
-                        <div className="relative p-6 md:p-8 flex-1 overflow-y-auto text-[15px] leading-[1.6] flex flex-col font-mono text-[#a9b1d6]">
+                        <div className="relative p-4 md:p-8 flex-1 overflow-y-auto text-[14px] md:text-[15px] leading-[1.6] flex flex-col font-mono text-[#a9b1d6]">
 
                             {/* Background Image Overlay */}
                             <div
