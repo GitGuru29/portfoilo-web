@@ -93,11 +93,12 @@ export default function TerminalSection() {
                     transition={{ duration: 0.8, ease: "easeInOut" }}
                     className="fixed inset-0 z-[100] w-full h-screen bg-[#09090b] flex items-center justify-center p-4 md:p-8 pointer-events-auto"
                 >
+                    {/* Terminal Window */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="w-full max-w-5xl h-full max-h-[800px] bg-[#1a1b26] rounded-xl shadow-2xl overflow-hidden font-mono flex flex-col border border-white/5"
+                        className="w-full max-w-5xl h-full max-h-[800px] bg-[#1a1b26] rounded-xl shadow-2xl overflow-hidden font-mono flex flex-col border border-white/5 relative z-10"
                         onClick={() => inputRef.current?.focus()}
                     >
                         {/* Terminal Body */}
@@ -189,6 +190,17 @@ export default function TerminalSection() {
                             </div>
                         </div>
                     </motion.div>
+
+                    {/* Skip Button */}
+                    <motion.button
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 1.5 }}
+                        onClick={() => unlockSystem()}
+                        className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-gray-500 hover:text-white font-mono text-sm tracking-widest transition-colors flex items-center gap-2 px-4 py-2 rounded-full hover:bg-white/5"
+                    >
+                        SKIP <span className="text-lg leading-none">→</span>
+                    </motion.button>
                 </motion.section>
             )}
         </AnimatePresence>
