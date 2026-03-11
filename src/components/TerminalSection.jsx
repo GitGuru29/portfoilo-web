@@ -115,35 +115,70 @@ export default function TerminalSection() {
                             />
 
                             {/* Content Layer */}
-                            <div className="relative z-10">
+                            <div className="relative z-10 font-mono">
                                 {history.map((line, i) => (
-                                    <div key={i} className="mb-2">
+                                    <div key={i} className={`${line.type === 'cmd' ? 'mb-4 mt-2' : 'mb-1 leading-snug'}`}>
                                         {line.type === 'cmd' ? (
-                                            <div>
-                                                <CustomPrompt />
-                                                <div className="ml-8 text-white">{line.text}</div>
+                                            <div className="flex flex-col gap-1">
+                                                {/* Pill Row */}
+                                                <div className="flex items-center gap-2 text-[12px] font-bold">
+                                                    <div className="flex items-center gap-1.5 bg-[#74E1A6] text-[#0f172a] px-3 py-0.5 rounded-full">
+                                                        <Clock size={11} strokeWidth={3} />
+                                                        <span>0s</span>
+                                                    </div>
+                                                    <span className="text-gray-400 font-normal">~</span>
+                                                    <div className="flex items-center gap-2 bg-[#74E1A6] text-[#0f172a] px-3 py-0.5 rounded-full">
+                                                        <Folder size={11} strokeWidth={3} />
+                                                        <Home size={11} strokeWidth={3} />
+                                                    </div>
+                                                </div>
+                                                {/* Input Row */}
+                                                <div className="flex items-center gap-2 text-[14px]">
+                                                    <div className="flex items-center gap-1.5 text-[#60A5FA] ml-1">
+                                                        <span className="text-[10px]">•</span>
+                                                        <span className="text-[12px] leading-none mb-[1px]">▶</span>
+                                                    </div>
+                                                    <div className="text-white ml-1">{line.text}</div>
+                                                </div>
                                             </div>
                                         ) : (
                                             <div className={`
-                                                ${line.type === 'sys' ? 'text-[#565f89]' : ''}
-                                                ${line.type === 'out' ? 'text-[#7dcfff]' : ''}
-                                            `}>
+                                                    ${line.type === 'sys' ? 'text-[#565f89]' : ''}
+                                                    ${line.type === 'out' ? 'text-[#7dcfff]' : ''}
+                                                `}>
                                                 {line.text}
                                             </div>
                                         )}
                                     </div>
                                 ))}
 
-                                <div className="flex flex-col">
-                                    <CustomPrompt />
-                                    <div className="flex items-center gap-3 ml-8">
+                                {/* Active Input Line */}
+                                <div className="flex flex-col mt-2 gap-1 mb-4">
+                                    {/* Pill Row */}
+                                    <div className="flex items-center gap-2 text-[12px] font-bold">
+                                        <div className="flex items-center gap-1.5 bg-[#74E1A6] text-[#0f172a] px-3 py-0.5 rounded-full">
+                                            <Clock size={11} strokeWidth={3} />
+                                            <span>0s</span>
+                                        </div>
+                                        <span className="text-gray-400 font-normal">~</span>
+                                        <div className="flex items-center gap-2 bg-[#74E1A6] text-[#0f172a] px-3 py-0.5 rounded-full">
+                                            <Folder size={11} strokeWidth={3} />
+                                            <Home size={11} strokeWidth={3} />
+                                        </div>
+                                    </div>
+                                    {/* Input Row */}
+                                    <div className="flex items-center gap-2 text-[14px]">
+                                        <div className="flex items-center gap-1.5 text-[#60A5FA] ml-1">
+                                            <span className="text-[10px]">•</span>
+                                            <span className="text-[12px] leading-none mb-[1px]">▶</span>
+                                        </div>
                                         <input
                                             ref={inputRef}
                                             type="text"
                                             value={input}
                                             onChange={(e) => setInput(e.target.value)}
                                             onKeyDown={handleCommand}
-                                            className="flex-1 bg-transparent outline-none text-white border-none placeholder-[#565f89]"
+                                            className="flex-1 bg-transparent outline-none text-white border-none placeholder-[#565f89] ml-1"
                                             spellCheck="false"
                                             autoComplete="off"
                                             autoFocus
