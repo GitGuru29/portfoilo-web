@@ -55,7 +55,7 @@ export default function Navigation() {
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-secondary)] transition-all">SN</span>
                 </a>
 
-                <div className="hidden md:flex flex-1 justify-center">
+                <div className="hidden md:flex ml-auto">
                     <div className="flex items-center gap-8 bg-white/[0.04] px-6 py-2 rounded-full border border-white/[0.08] backdrop-blur-md">
                         <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="text-sm font-space font-medium text-gray-300 hover:text-[var(--theme-primary)] transition-all uppercase tracking-widest">Home</a>
                         <a href="#projects" onClick={(e) => handleNavClick(e, 'projects')} className="text-sm font-space font-medium text-gray-300 hover:text-[var(--theme-primary)] transition-all uppercase tracking-widest">Projects</a>
