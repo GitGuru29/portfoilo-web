@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useStore from '../store/useStore';
 
 export default function Navigation() {
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const currentTheme = useStore((state) => state.currentTheme);
-    const setTheme = useStore((state) => state.setTheme);
-
-    const themes = [
-        { id: 'default', color: 'var(--theme-primary)' }, // Cyan
-        { id: 'matrix', color: '#00ff41' },  // Neon Green
-        { id: 'blood', color: '#ff003c' },   // Blood Red
-        { id: 'monochrome', color: '#ffffff' } // White
-    ];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -72,20 +62,6 @@ export default function Navigation() {
                         <a href="#skills" onClick={(e) => handleNavClick(e, 'skills')} className="text-sm font-space font-medium text-gray-300 hover:text-[var(--theme-primary)] transition-all uppercase tracking-widest">Skills</a>
                         <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="text-sm font-space font-medium text-gray-300 hover:text-[var(--theme-primary)] transition-all uppercase tracking-widest">Contact</a>
                     </div>
-                </div>
-
-                {/* Theme Toggles */}
-                <div className="flex items-center gap-3">
-                    {themes.map((theme) => (
-                        <button
-                            key={theme.id}
-                            onClick={() => setTheme(theme.id)}
-                            className={`w-4 h-4 rounded-full transition-all duration-300 ${currentTheme === theme.id ? 'scale-125 ring-2 ring-white/50 ring-offset-2 ring-offset-black' : 'hover:scale-110 opacity-70 hover:opacity-100'}`}
-                            style={{ backgroundColor: theme.color, boxShadow: currentTheme === theme.id ? `0 0 10px ${theme.color}` : 'none' }}
-                            title={`Switch to ${theme.id} theme`}
-                            aria-label={`Switch to ${theme.id} theme`}
-                        />
-                    ))}
                 </div>
             </div>
         </motion.nav>
