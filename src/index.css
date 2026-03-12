@@ -4,12 +4,10 @@
 @import "tailwindcss";
 
 @theme {
-    /* Use our dynamically mapped root variables */
-    --color-cyber-dark: var(--theme-bg);
-    --color-cyber-cyan: var(--theme-primary);
-    --color-cyber-violet: var(--theme-secondary);
-    --color-cyber-pink: var(--theme-accent);
-
+    --color-cyber-dark: #0a0a0a;
+    --color-cyber-cyan: #00f7ff;
+    --color-cyber-violet: #b537f2;
+    --color-cyber-pink: #ff00ff;
     --font-orbitron: "Orbitron", sans-serif;
     --font-space: "Space Grotesk", sans-serif;
     --font-inter: "Inter", sans-serif;
@@ -17,33 +15,6 @@
 
 :root {
     color-scheme: dark;
-
-    /* Default Cyber Theme (Purple/Cyan) */
-    --theme-bg: #0a0a0a;
-    --theme-primary: #00f7ff;
-    --theme-secondary: #b537f2;
-    --theme-accent: #ff00ff;
-}
-
-[data-theme="matrix"] {
-    --theme-bg: #050a05;
-    --theme-primary: #00ff41;
-    --theme-secondary: #008f11;
-    --theme-accent: #003b00;
-}
-
-[data-theme="blood"] {
-    --theme-bg: #0a0505;
-    --theme-primary: #ff003c;
-    --theme-secondary: #8f0000;
-    --theme-accent: #3b0000;
-}
-
-[data-theme="monochrome"] {
-    --theme-bg: #050505;
-    --theme-primary: #ffffff;
-    --theme-secondary: #aaaaaa;
-    --theme-accent: #555555;
 }
 
 body {

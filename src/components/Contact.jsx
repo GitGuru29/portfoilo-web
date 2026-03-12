@@ -206,9 +206,9 @@ export default function Contact() {
                     </div>
 
                     {/* Bottom Row: Copyright */}
-                    <div className="mt-4 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400 border-t border-white/5 font-mono gap-4">
+                    <div className="mt-4 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 border-t border-white/5 font-mono gap-4">
                         <span>© {new Date().getFullYear()} SILUNA NUSAL</span>
-                        <span className="opacity-70">ENCRYPTED // CONNECTION SECURE</span>
+                        <span className="opacity-40">ENCRYPTED // CONNECTION SECURE</span>
                     </div>
 
                 </div>

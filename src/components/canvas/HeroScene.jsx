@@ -2,11 +2,9 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Points, PointMaterial } from '@react-three/drei';
-import useStore from '../../store/useStore';
 
 export default function HeroScene() {
     const pointsRef = useRef();
-    const currentTheme = useStore((state) => state.currentTheme);
 
     // Mobile optimization: reduce particle count drastically to save GPU
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -17,16 +15,14 @@ export default function HeroScene() {
         const positions = new Float32Array(particleCount * 3);
         const colors = new Float32Array(particleCount * 3);
 
-        // Theme Palettes for 3D Engine
-        const themes = {
-            default: ['var(--theme-primary)', 'var(--theme-secondary)', '#ff00ff', '#4287f5', '#ffffff'],
-            matrix: ['#00ff41', '#008f11', '#003b00', '#222222', '#ffffff'],
-            blood: ['#ff003c', '#8f0000', '#3b0000', '#222222', '#ffffff'],
-            monochrome: ['#ffffff', '#aaaaaa', '#555555', '#222222', '#000000']
-        };
-
-        const activePalette = themes[currentTheme] || themes.default;
-        const colorObjects = activePalette.map(c => new THREE.Color(c));
+        // Neon Cyber Palette
+        const colorPalette = [
+            new THREE.Color('#00f7ff'), // cyan (brighter)
+            new THREE.Color('#b537f2'), // violet
+            new THREE.Color('#ff00ff'), // pink
+            new THREE.Color('#4287f5'), // blue
+            new THREE.Color('#ffffff')  // white
+        ];
 
         for (let i = 0; i < particleCount; i++) {
             // Galaxy-like wide distribution
@@ -39,13 +35,13 @@ export default function HeroScene() {
             positions[i * 3 + 2] = r * Math.cos(phi);
 
             // Assign random color from palette
-            const color = colorObjects[Math.floor(Math.random() * colorObjects.length)];
+            const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
             colors[i * 3] = color.r;
             colors[i * 3 + 1] = color.g;
             colors[i * 3 + 2] = color.b;
         }
         return { positions, colors };
-    }, [particleCount, currentTheme]);
+    }, [particleCount]);
 
     // Mouse interaction targets
     const targetRotation = useRef(new THREE.Vector2(0, 0));
