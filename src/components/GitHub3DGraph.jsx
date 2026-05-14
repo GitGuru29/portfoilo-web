@@ -249,10 +249,10 @@ const CameraRig = ({ mode, isLocked }) => {
             const y = 1.0 + Math.sin(state.clock.elapsedTime * 1.5) * 0.1; 
             
             camera.position.lerp(targetPos.current.set(0, y, z), 0.05);
-            // Look slightly up at the giant buildings, offset by mouse position
+            // Look forward, offset by mouse position
             // state.pointer is normalized from -1 to +1
             const lookX = state.pointer.x * 15;
-            const lookY = 3.5 + (state.pointer.y * 5);
+            const lookY = 1.5 + (state.pointer.y * 5); // Base look target lowered to 1.5
             camera.lookAt(lookX, lookY, z - 15);
             
         } else if (mode === "WALK" && isLocked) {
@@ -299,7 +299,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
         if (!data || data.length === 0) return { floors: [], pathZLength: 0, offsetX: 0, offsetZ: 0, streetLights: [], poles: [], heads: [] };
 
         const SPACING = 1.0;
-        const PATH_WIDTH = 2.0;
+        const PATH_WIDTH = 4.0; // Widen the central avenue so it doesn't feel claustrophobic
         
         const numWeeks = data.length;
         const numDays = 7;
@@ -322,7 +322,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                 const style = LEVELS[level] || LEVELS["NONE"];
                 
                 const numFloors = Math.max(1, count);
-                const floorHeight = 0.45; // Balanced skyscraper height
+                const floorHeight = 0.2; // Keep skyscrapers visible on screen
                 
                 for (let f = 0; f < numFloors; f++) {
                     const actualHeight = count === 0 ? 0.05 : floorHeight - 0.02;
