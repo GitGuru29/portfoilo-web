@@ -301,7 +301,7 @@ export default function Contact() {
                                     { label: 'ByBridge', href: '/project/bybridge' },
                                     { label: 'Download Resume', href: '/Siluna_Nusal_CV.pdf' },
                                 ].map(link => (
-                                    <a key={link.label} href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
+                                    <a key={link.label} href={link.href} target={link.href?.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer"
                                         className="text-sm text-gray-500 hover:text-cyber-violet hover:translate-x-1 hover:drop-shadow-[0_0_8px_rgba(181,55,242,0.5)] transition-all font-space tracking-widest uppercase group flex items-center gap-2">
                                         <span className="w-0 group-hover:w-3 h-px bg-cyber-violet transition-all duration-300" />
                                         {link.label}
