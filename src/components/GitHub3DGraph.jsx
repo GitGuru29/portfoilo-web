@@ -25,7 +25,8 @@ const TIMELINE_STATES = {
         dirPosition: [40, 10, -20],
         neonMultiplier: 0.3,
         treeColor: '#FFD700',
-        riverColor: '#00f3ff'
+        riverColor: '#00f3ff',
+        cloudColor: '#FFDAB9'
     },
     DAY: {
         sky: '#4FA8F7',       // Bright clear blue summer sky
@@ -40,7 +41,8 @@ const TIMELINE_STATES = {
         dirPosition: [10, 50, -20],
         neonMultiplier: 0.1, 
         treeColor: '#228B22', // Forest green
-        riverColor: '#0066cc'
+        riverColor: '#0066cc',
+        cloudColor: '#FFFFFF'
     },
     SUNSET: {
         sky: '#6A2A5A',       
@@ -55,7 +57,8 @@ const TIMELINE_STATES = {
         dirPosition: [-40, 5, 20],
         neonMultiplier: 0.8,
         treeColor: '#FF1493',
-        riverColor: '#002244'
+        riverColor: '#002244',
+        cloudColor: '#FF69B4'
     },
     NIGHT: {
         sky: '#030508',       
@@ -70,7 +73,8 @@ const TIMELINE_STATES = {
         dirPosition: [20, 40, -20],
         neonMultiplier: 1.5,
         treeColor: '#00ff66',
-        riverColor: '#001122'
+        riverColor: '#001122',
+        cloudColor: '#0D1B2A'
     }
 };
 
@@ -228,6 +232,59 @@ const usePlayerControls = () => {
     return movement;
 };
 
+
+const VoxelClouds = ({ timeState }) => {
+    const target = TIMELINE_STATES[timeState];
+    const groupRef = useRef();
+
+    const clouds = useMemo(() => {
+        const items = [];
+        for (let i = 0; i < 40; i++) {
+            const clusterX = (Math.random() * 160) - 80;
+            const clusterZ = (Math.random() * 200) - 100;
+            const clusterY = 20 + Math.random() * 10;
+            
+            const numBlocks = 3 + Math.floor(Math.random() * 5);
+            for(let b=0; b<numBlocks; b++) {
+                items.push({
+                    position: [
+                        clusterX + (Math.random() * 4 - 2),
+                        clusterY + (Math.random() * 2 - 1),
+                        clusterZ + (Math.random() * 4 - 2)
+                    ],
+                    scale: [
+                        2 + Math.random() * 4,
+                        1 + Math.random() * 2,
+                        2 + Math.random() * 4
+                    ]
+                });
+            }
+        }
+        return items;
+    }, []);
+
+    useFrame((state, delta) => {
+        if (groupRef.current) {
+            groupRef.current.position.z += delta * 1.5;
+            if (groupRef.current.position.z > 100) {
+                groupRef.current.position.z = -100;
+            }
+        }
+    });
+
+    return (
+        <group ref={groupRef}>
+            <Instances limit={500} range={clouds.length} castShadow receiveShadow>
+                <boxGeometry args={[1, 1, 1]} />
+                <AnimatedMaterial targetColor={target.cloudColor} targetRoughness={1.0} targetMetalness={0.0} transparent opacity={0.9} />
+                {clouds.map((c, i) => (
+                    <Instance key={`cloud-${i}`} position={c.position} scale={c.scale} />
+                ))}
+            </Instances>
+        </group>
+    );
+};
+
 const CameraRig = ({ mode, isLocked }) => {
     const { camera } = useThree();
     const walkControls = usePlayerControls();
@@ -240,19 +297,22 @@ const CameraRig = ({ mode, isLocked }) => {
     }, [mode, camera]);
 
     useFrame((state, delta) => {
-        if (mode === "CINEMATIC") {
+        if (mode === "CINEMATIC" || mode === "DRONE") {
             const loopDuration = 40;
             const t = (state.clock.elapsedTime % loopDuration) / loopDuration;
             const z = 35 - (t * 70);
             
-            // Street-level drone bobbing
-            const y = 1.0 + Math.sin(state.clock.elapsedTime * 1.5) * 0.1; 
+            let y, lookY;
+            if (mode === "DRONE") {
+                y = 12.0 + Math.sin(state.clock.elapsedTime * 0.5) * 0.5;
+                lookY = 0 + (state.pointer.y * 5);
+            } else {
+                y = 1.0 + Math.sin(state.clock.elapsedTime * 1.5) * 0.1; 
+                lookY = 1.5 + (state.pointer.y * 5);
+            }
             
             camera.position.lerp(targetPos.current.set(0, y, z), 0.05);
-            // Look forward, offset by mouse position
-            // state.pointer is normalized from -1 to +1
             const lookX = state.pointer.x * 15;
-            const lookY = 1.5 + (state.pointer.y * 5); // Base look target lowered to 1.5
             camera.lookAt(lookX, lookY, z - 15);
             
         } else if (mode === "WALK" && isLocked) {
@@ -611,15 +671,21 @@ export default function GitHub3DGraph({ username }) {
                             <div className="flex bg-black/50 p-1 rounded backdrop-blur-md border border-white/10 pointer-events-auto shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                                 <button 
                                     onClick={() => setMode('CINEMATIC')}
-                                    className={`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'CINEMATIC' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={`px-3 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'CINEMATIC' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
                                 >
-                                    ◉ CINEMATIC
+                                    ◉ STREET
+                                </button>
+                                <button 
+                                    onClick={() => setMode('DRONE')}
+                                    className={`px-3 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'DRONE' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                >
+                                    ✈ DRONE
                                 </button>
                                 <button 
                                     onClick={handleWalkClick}
-                                    className={`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'WALK' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={`px-3 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'WALK' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
                                 >
-                                    WASD WALK
+                                    🚶 WALK
                                 </button>
                             </div>
                         </div>
@@ -657,6 +723,7 @@ export default function GitHub3DGraph({ username }) {
                             />
                         </mesh>
 
+                        <VoxelClouds timeState={timeState} />
                         <CityScene data={data} setHoveredBox={setHoveredBox} timeState={timeState} activityMultiplier={activityMultiplier} />
                         <CameraRig mode={mode} isLocked={isLocked} />
                         
