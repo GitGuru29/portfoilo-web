@@ -13,18 +13,18 @@ const LEVELS = {
 
 const TIMELINE_STATES = {
     SUNRISE: {
-        sky: '#0B132B',       // Deep indigo dawn
-        ground: '#060A16',
-        ambient: '#4a6b8c',
-        ambientIntensity: 0.7,
-        hemiSky: '#1A2B4C',
-        hemiGround: '#060A16',
-        hemiIntensity: 1.0,
-        dirColor: '#ff7e5f',  // Piercing warm sunrise
-        dirIntensity: 5.0,
-        dirPosition: [50, 5, -50], // Low horizontal dawn
-        neonMultiplier: 0.6,
-        treeColor: '#FF8C00',
+        sky: '#FF9E80',       // Soft warm sunrise sky
+        ground: '#2c3e50',    // Darker cool ground
+        ambient: '#FFA07A',
+        ambientIntensity: 1.2,
+        hemiSky: '#FFB6C1',
+        hemiGround: '#2c3e50',
+        hemiIntensity: 1.5,
+        dirColor: '#FF4500',  
+        dirIntensity: 3.5,
+        dirPosition: [40, 10, -20],
+        neonMultiplier: 0.3,
+        treeColor: '#FFD700',
         riverColor: '#00f3ff'
     },
     DAY: {
@@ -354,54 +354,41 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
     }, [data]);
 
     const bushes = useMemo(() => {
-        if (!data || data.length === 0 || !offsetZ) return [];
+        if (!offsetZ) return [];
         const items = [];
-        const SPACING = 1.0;
-        const PATH_WIDTH = 2.0;
-
-        // Data-Driven Foliage ("Commit Forest")
-        data.forEach((week, wIndex) => {
-            const z = (wIndex * SPACING) - offsetZ;
-            week.forEach((day, dIndex) => {
-                const count = day.contributionCount;
-                if (count > 2) { // Only spawn trees around active days
-                    let x = (dIndex * SPACING);
-                    if (dIndex > 3) x += PATH_WIDTH;
-                    x -= offsetX;
-
-                    const numTrees = Math.min(Math.floor(count / 3) + 1, 4);
-                    for (let t = 0; t < numTrees; t++) {
-                        const tx = x + (Math.random() * 1.2 - 0.6);
-                        const tz = -z + (Math.random() * 1.2 - 0.6);
-                        // Trees get significantly larger based on commit density
-                        const scale = 0.4 + Math.random() * 0.3 + (count * 0.08);
-                        
-                        // Push slightly away from building center so they aren't inside the cube
-                        const finalX = tx > x ? tx + 0.3 : tx - 0.3;
-                        const finalZ = tz > -z ? tz + 0.3 : tz - 0.3;
-
-                        items.push({
-                            position: [finalX, 0.2 * scale, finalZ],
-                            scale: [scale, scale, scale]
-                        });
-                    }
-                }
+        
+        // Avenue trees (along the glowing path)
+        for (let i = 0; i < 80; i++) {
+            const z = (Math.random() * (offsetZ * 2)) - offsetZ;
+            const x = Math.random() > 0.5 ? -1.6 : 1.6; // Edge of the glowing path
+            const scale = 0.4 + Math.random() * 0.4;
+            items.push({
+                position: [x + (Math.random() * 0.4 - 0.2), 0.2 * scale, z],
+                scale: [scale, scale, scale]
             });
-        });
-
-        // Avenue trees strictly along the central glowing path
-        for (let z = offsetZ; z >= -offsetZ; z -= 3) {
-            if (Math.random() > 0.3) {
-                const x = Math.random() > 0.5 ? -1.6 : 1.6;
-                const scale = 0.4 + Math.random() * 0.4;
-                items.push({
-                    position: [x + (Math.random() * 0.2 - 0.1), 0.2 * scale, z],
-                    scale: [scale, scale, scale]
-                });
+        }
+        
+        // Perimeter trees/bushes (scattered randomly outside city and rivers)
+        for (let i = 0; i < 500; i++) {
+            let x = (Math.random() * 80) - 40;
+            // Keep them entirely off the immediate city blocks and roads
+            if (x > -8 && x < 8) {
+                x = x > 0 ? x + 8 : x - 8;
             }
+            // Keep them out of the general river areas
+            if ((x > 10 && x < 20) || (x < -10 && x > -20)) {
+                x = x > 0 ? x + 10 : x - 10;
+            }
+            
+            const z = (Math.random() * 100) - 50;
+            const scale = 0.5 + Math.random() * 1.2;
+            items.push({
+                position: [x, 0.2 * scale, z],
+                scale: [scale, scale, scale]
+            });
         }
         return items;
-    }, [data, offsetX, offsetZ]);
+    }, [offsetZ]);
 
     const { leftRiverCurve, rightRiverCurve } = useMemo(() => {
         if (!offsetZ) return { leftRiverCurve: null, rightRiverCurve: null };
