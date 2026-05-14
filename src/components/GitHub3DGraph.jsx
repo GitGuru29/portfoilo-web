@@ -207,7 +207,7 @@ function CityScene({ data, setHoveredBox, isDay }) {
             items.push({
                 position: [x + (Math.random() * 0.4 - 0.2), 0.2 * scale, z],
                 scale: [scale, scale, scale],
-                color: isDay ? '#32CD32' : '#00ff66' // Natural green in day, neon cyber-green at night
+                color: isDay ? '#00f3ff' : '#00ff66' // Cyan data-trees in day, neon cyber-green at night
             });
         }
         
@@ -228,7 +228,7 @@ function CityScene({ data, setHoveredBox, isDay }) {
             items.push({
                 position: [x, 0.2 * scale, z],
                 scale: [scale, scale, scale],
-                color: isDay ? '#228B22' : '#008833' // Natural dark green in day, neon dark green at night
+                color: isDay ? '#0088cc' : '#008833' // Deep cyan in day, neon dark green at night
             });
         }
         return items;
@@ -294,20 +294,20 @@ function CityScene({ data, setHoveredBox, isDay }) {
             {/* The Glowing Central Path Strip */}
             <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[1.5, pathZLength + 10]} />
-                <meshStandardMaterial color="#00f3ff" emissive="#00f3ff" emissiveIntensity={isDay ? 0 : 0.3} transparent opacity={isDay ? 0.05 : 0.15} toneMapped={false} />
+                <meshStandardMaterial color="#00f3ff" emissive="#00f3ff" emissiveIntensity={isDay ? 0.8 : 0.3} transparent opacity={isDay ? 0.3 : 0.15} toneMapped={false} />
             </mesh>
             
             {/* Winding Cyber-Rivers */}
             {leftRiverCurve && (
                 <mesh position={[0, 0.005, 0]} scale={[1, 0.01, 1]}>
                     <tubeGeometry args={[leftRiverCurve, 100, 3, 12, false]} />
-                    <meshStandardMaterial color={isDay ? "#0055aa" : "#001122"} roughness={0.0} metalness={1.0} emissive="#00f3ff" emissiveIntensity={isDay ? 0 : 0.15} />
+                    <meshStandardMaterial color={isDay ? "#00f3ff" : "#001122"} roughness={0.0} metalness={1.0} emissive="#00f3ff" emissiveIntensity={isDay ? 0.5 : 0.15} />
                 </mesh>
             )}
             {rightRiverCurve && (
                 <mesh position={[0, 0.005, 0]} scale={[1, 0.01, 1]}>
                     <tubeGeometry args={[rightRiverCurve, 100, 3.5, 12, false]} />
-                    <meshStandardMaterial color={isDay ? "#0055aa" : "#001122"} roughness={0.0} metalness={1.0} emissive="#00f3ff" emissiveIntensity={isDay ? 0 : 0.15} />
+                    <meshStandardMaterial color={isDay ? "#00f3ff" : "#001122"} roughness={0.0} metalness={1.0} emissive="#00f3ff" emissiveIntensity={isDay ? 0.5 : 0.15} />
                 </mesh>
             )}
             
@@ -446,23 +446,23 @@ export default function GitHub3DGraph({ username }) {
                         </div>
                     )}
 
-                    <Canvas camera={{ fov: 60 }}>
-                        <color attach="background" args={[isDay ? '#87CEEB' : '#030508']} />
-                        <fog attach="fog" args={[isDay ? '#87CEEB' : '#030508', 10, 60]} />
+                    <Canvas camera={{ fov: 60 }} shadows>
+                        <color attach="background" args={[isDay ? '#eef2f5' : '#030508']} />
+                        <fog attach="fog" args={[isDay ? '#eef2f5' : '#030508', 10, 60]} />
                         
                         {/* Lighting based on time of day */}
-                        <ambientLight intensity={isDay ? 1.5 : 0.8} color={isDay ? "#ffffff" : "#aaccff"} />
-                        <hemisphereLight skyColor="#ffffff" groundColor={isDay ? "#87CEEB" : "#004466"} intensity={isDay ? 1.5 : 1.0} />
-                        <directionalLight position={[20, 50, -20]} intensity={isDay ? 3.0 : 2.0} color={isDay ? "#fff4cc" : "#e0f0ff"} />
-                        <directionalLight position={[-20, 30, 20]} intensity={isDay ? 1.5 : 1.0} color={isDay ? "#ffffff" : "#00f3ff"} />
+                        <ambientLight intensity={isDay ? 1.8 : 0.8} color={isDay ? "#ffffff" : "#aaccff"} />
+                        <hemisphereLight skyColor="#ffffff" groundColor={isDay ? "#d0d8e0" : "#004466"} intensity={isDay ? 2.0 : 1.0} />
+                        <directionalLight position={[20, 50, -20]} intensity={isDay ? 4.0 : 2.0} color={isDay ? "#ffffff" : "#e0f0ff"} />
+                        <directionalLight position={[-20, 30, 20]} intensity={isDay ? 2.5 : 1.0} color={isDay ? "#a2d2ff" : "#00f3ff"} />
                         
                         {/* Night Sky Stars */}
                         {!isDay && <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />}
                         
-                        {/* Dark Reflective Asphalt Ground */}
+                        {/* Dark Reflective Asphalt Ground vs Clean White Corporate Floor */}
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
                             <planeGeometry args={[1000, 1000]} />
-                            <meshStandardMaterial color={isDay ? "#555555" : "#020305"} roughness={isDay ? 0.6 : 0.05} metalness={isDay ? 0.2 : 0.9} />
+                            <meshStandardMaterial color={isDay ? "#ffffff" : "#020305"} roughness={isDay ? 0.2 : 0.05} metalness={isDay ? 0.1 : 0.9} />
                         </mesh>
 
                         <CityScene data={data} setHoveredBox={setHoveredBox} isDay={isDay} />
