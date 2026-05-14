@@ -449,10 +449,10 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                     <tubeGeometry args={[leftRiverCurve, 100, 3, 12, false]} />
                     <AnimatedMaterial 
                         targetColor={target.riverColor}
-                        targetRoughness={0.0} 
-                        targetMetalness={1.0} 
-                        targetEmissive="#00f3ff" 
-                        targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.15} 
+                        targetRoughness={0.1} 
+                        targetMetalness={0.5} 
+                        targetEmissive={target.riverColor} 
+                        targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.5 + 0.2} 
                     />
                 </mesh>
             )}
@@ -461,10 +461,10 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                     <tubeGeometry args={[rightRiverCurve, 100, 3.5, 12, false]} />
                     <AnimatedMaterial 
                         targetColor={target.riverColor}
-                        targetRoughness={0.0} 
-                        targetMetalness={1.0} 
-                        targetEmissive="#00f3ff" 
-                        targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.15} 
+                        targetRoughness={0.1} 
+                        targetMetalness={0.5} 
+                        targetEmissive={target.riverColor} 
+                        targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.5 + 0.2} 
                     />
                 </mesh>
             )}
