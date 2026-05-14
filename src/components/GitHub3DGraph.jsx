@@ -25,7 +25,7 @@ const TIMELINE_STATES = {
         dirPosition: [40, 10, -20],
         neonMultiplier: 0.5,
         treeColor: '#FF8C00',
-        riverColor: '#FF6347'
+        riverColor: '#003366'
     },
     DAY: {
         sky: '#EAF4FF',       
@@ -40,7 +40,7 @@ const TIMELINE_STATES = {
         dirPosition: [10, 50, -20],
         neonMultiplier: 0.1, 
         treeColor: '#32CD32',
-        riverColor: '#00f3ff'
+        riverColor: '#0055aa'
     },
     SUNSET: {
         sky: '#6A2A5A',       
@@ -55,7 +55,7 @@ const TIMELINE_STATES = {
         dirPosition: [-40, 5, 20],
         neonMultiplier: 0.8,
         treeColor: '#FF1493',
-        riverColor: '#FF00FF'
+        riverColor: '#002244'
     },
     NIGHT: {
         sky: '#030508',       
@@ -451,7 +451,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                         targetColor={target.riverColor}
                         targetRoughness={0.1} 
                         targetMetalness={0.5} 
-                        targetEmissive={target.riverColor} 
+                        targetEmissive="#00f3ff" 
                         targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.5 + 0.2} 
                     />
                 </mesh>
@@ -463,7 +463,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                         targetColor={target.riverColor}
                         targetRoughness={0.1} 
                         targetMetalness={0.5} 
-                        targetEmissive={target.riverColor} 
+                        targetEmissive="#00f3ff" 
                         targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.5 + 0.2} 
                     />
                 </mesh>
