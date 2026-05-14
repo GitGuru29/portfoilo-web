@@ -249,8 +249,11 @@ const CameraRig = ({ mode, isLocked }) => {
             const y = 1.0 + Math.sin(state.clock.elapsedTime * 1.5) * 0.1; 
             
             camera.position.lerp(targetPos.current.set(0, y, z), 0.05);
-            // Look slightly up at the giant buildings
-            camera.lookAt(0, 3.5, z - 15);
+            // Look slightly up at the giant buildings, offset by mouse position
+            // state.pointer is normalized from -1 to +1
+            const lookX = state.pointer.x * 15;
+            const lookY = 3.5 + (state.pointer.y * 5);
+            camera.lookAt(lookX, lookY, z - 15);
             
         } else if (mode === "WALK" && isLocked) {
             const speed = 15 * delta;
