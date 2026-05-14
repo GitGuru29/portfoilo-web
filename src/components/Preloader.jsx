@@ -70,12 +70,12 @@ export default function Preloader() {
                 <div className="flex flex-col gap-1.5 opacity-90">
                     {lines.map((line, idx) => (
                         <div key={idx} className="whitespace-pre-wrap">
-                            {line.startsWith('[ OK ]') ? (
+                            {line?.startsWith('[ OK ]') ? (
                                 <span><span className="text-[#74E1A6]">[ OK ]</span>{line.replace('[ OK ]', '')}</span>
-                            ) : line.startsWith('[ INFO]') ? (
+                            ) : line?.startsWith('[ INFO]') ? (
                                 <span><span className="text-[#7dcfff]">[ INFO]</span>{line.replace('[ INFO]', '')}</span>
                             ) : (
-                                line
+                                line || ''
                             )}
                         </div>
                     ))}
