@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+const fs = require('fs');
+
+const content = `import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Instance, Instances, PointerLockControls, Html, Stars } from '@react-three/drei';
 import * as THREE from 'three';
@@ -326,7 +328,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                     const yPos = count === 0 ? actualHeight / 2 : (f * floorHeight) + (actualHeight / 2);
 
                     result.push({
-                        id: `${wIndex}-${dIndex}`,
+                        id: \`\${wIndex}-\${dIndex}\`,
                         date: day.date,
                         count: count,
                         position: [x, yPos, -z],
@@ -447,7 +449,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                 />
                 {floors.map((floor, i) => (
                     <Instance 
-                        key={`${floor.id}-${i}`}
+                        key={\`\${floor.id}-\${i}\`}
                         position={floor.position}
                         scale={floor.scale}
                         color={floor.color}
@@ -499,7 +501,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
             <Instances range={poles.length} limit={100} castShadow>
                 <cylinderGeometry args={[1, 1, 1, 8]} />
                 <AnimatedMaterial targetColor="#111111" targetMetalness={0.8} targetRoughness={0.2} />
-                {poles.map((p, i) => <Instance key={`pole-${i}`} position={p.position} scale={p.scale} />)}
+                {poles.map((p, i) => <Instance key={\`pole-\${i}\`} position={p.position} scale={p.scale} />)}
             </Instances>
 
             {/* Lamppost Heads (Glowing Orange) */}
@@ -511,7 +513,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                     targetIntensity={target.neonMultiplier * 3.0} 
                     toneMapped={false} 
                 />
-                {heads.map((h, i) => <Instance key={`head-${i}`} position={h.position} scale={h.scale} />)}
+                {heads.map((h, i) => <Instance key={\`head-\${i}\`} position={h.position} scale={h.scale} />)}
             </Instances>
 
             {/* Orange Urban Streetlights mapping the path */}
@@ -525,7 +527,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                 <AnimatedMaterial targetColor={target.treeColor} targetRoughness={0.9} />
                 {bushes.map((bush, i) => (
                     <Instance
-                        key={`bush-${i}`}
+                        key={\`bush-\${i}\`}
                         position={bush.position}
                         scale={bush.scale}
                     />
@@ -554,7 +556,7 @@ export default function GitHub3DGraph({ username }) {
     }, []);
 
     useEffect(() => {
-        fetch(`https://github-contributions-api.deno.dev/${username}.json`)
+        fetch(\`https://github-contributions-api.deno.dev/\${username}.json\`)
             .then(res => res.json())
             .then(json => {
                 if (json.contributions) {
@@ -613,7 +615,7 @@ export default function GitHub3DGraph({ username }) {
                             <div className="flex gap-2 items-center bg-black/50 p-3 rounded backdrop-blur-md border border-white/10 pointer-events-auto shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                                 <span className="text-xs text-gray-400 font-mono mr-2">LESS</span>
                                 {Object.values(LEVELS).map((lvl, idx) => (
-                                    <div key={idx} className="w-4 h-4 rounded-sm border border-white/10" style={{ backgroundColor: lvl.intensity > 0 ? lvl.emissive : lvl.color, boxShadow: lvl.intensity > 0 ? `0 0 10px ${lvl.emissive}` : 'none' }} />
+                                    <div key={idx} className="w-4 h-4 rounded-sm border border-white/10" style={{ backgroundColor: lvl.intensity > 0 ? lvl.emissive : lvl.color, boxShadow: lvl.intensity > 0 ? \`0 0 10px \${lvl.emissive}\` : 'none' }} />
                                 ))}
                                 <span className="text-xs text-gray-400 font-mono ml-2">MORE</span>
                             </div>
@@ -621,13 +623,13 @@ export default function GitHub3DGraph({ username }) {
                             <div className="flex bg-black/50 p-1 rounded backdrop-blur-md border border-white/10 pointer-events-auto shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                                 <button 
                                     onClick={() => setMode('CINEMATIC')}
-                                    className={`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'CINEMATIC' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={\`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors \${mode === 'CINEMATIC' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}\`}
                                 >
                                     ◉ CINEMATIC
                                 </button>
                                 <button 
                                     onClick={handleWalkClick}
-                                    className={`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'WALK' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={\`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors \${mode === 'WALK' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}\`}
                                 >
                                     WASD WALK
                                 </button>
@@ -691,3 +693,7 @@ export default function GitHub3DGraph({ username }) {
         </div>
     );
 }
+`
+
+fs.writeFileSync('src/components/GitHub3DGraph.jsx', content);
+console.log('Update successful');
