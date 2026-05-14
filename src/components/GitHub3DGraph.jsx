@@ -100,7 +100,7 @@ const CameraRig = ({ mode, isLocked }) => {
     return null;
 };
 
-function CityScene({ data, setHoveredBox }) {
+function CityScene({ data, setHoveredBox, isDay }) {
     // Generate a window texture for the buildings
     const windowTexture = useMemo(() => {
         const canvas = document.createElement('canvas');
@@ -168,7 +168,7 @@ function CityScene({ data, setHoveredBox }) {
                         scale: [0.8, actualHeight, 0.8],
                         color: style.color,
                         emissive: style.emissive,
-                        emissiveIntensity: style.intensity
+                        emissiveIntensity: isDay ? style.intensity * 0.15 : style.intensity
                     });
                 }
             });
@@ -192,7 +192,7 @@ function CityScene({ data, setHoveredBox }) {
         }
         
         return { floors: result, pathZLength: totalLengthZ, offsetX: offX, offsetZ: offZ, streetLights: lights, poles, heads };
-    }, [data]);
+    }, [data, isDay]);
 
     // Generate trees/bushes scattered around the city
     const bushes = useMemo(() => {
@@ -207,7 +207,7 @@ function CityScene({ data, setHoveredBox }) {
             items.push({
                 position: [x + (Math.random() * 0.4 - 0.2), 0.2 * scale, z],
                 scale: [scale, scale, scale],
-                color: '#00ff66' // Neon cyber-green
+                color: isDay ? '#32CD32' : '#00ff66' // Natural green in day, neon cyber-green at night
             });
         }
         
@@ -228,11 +228,11 @@ function CityScene({ data, setHoveredBox }) {
             items.push({
                 position: [x, 0.2 * scale, z],
                 scale: [scale, scale, scale],
-                color: '#008833' // Darker green for background
+                color: isDay ? '#228B22' : '#008833' // Natural dark green in day, neon dark green at night
             });
         }
         return items;
-    }, [offsetZ]);
+    }, [offsetZ, isDay]);
 
     // Generate winding paths for the Cyber-Rivers
     const { leftRiverCurve, rightRiverCurve } = useMemo(() => {
@@ -294,20 +294,20 @@ function CityScene({ data, setHoveredBox }) {
             {/* The Glowing Central Path Strip */}
             <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[1.5, pathZLength + 10]} />
-                <meshStandardMaterial color="#00f3ff" emissive="#00f3ff" emissiveIntensity={0.3} transparent opacity={0.15} toneMapped={false} />
+                <meshStandardMaterial color="#00f3ff" emissive="#00f3ff" emissiveIntensity={isDay ? 0 : 0.3} transparent opacity={isDay ? 0.05 : 0.15} toneMapped={false} />
             </mesh>
             
             {/* Winding Cyber-Rivers */}
             {leftRiverCurve && (
                 <mesh position={[0, 0.005, 0]} scale={[1, 0.01, 1]}>
                     <tubeGeometry args={[leftRiverCurve, 100, 3, 12, false]} />
-                    <meshStandardMaterial color="#001122" roughness={0.0} metalness={1.0} emissive="#00f3ff" emissiveIntensity={0.15} />
+                    <meshStandardMaterial color={isDay ? "#0055aa" : "#001122"} roughness={0.0} metalness={1.0} emissive="#00f3ff" emissiveIntensity={isDay ? 0 : 0.15} />
                 </mesh>
             )}
             {rightRiverCurve && (
                 <mesh position={[0, 0.005, 0]} scale={[1, 0.01, 1]}>
                     <tubeGeometry args={[rightRiverCurve, 100, 3.5, 12, false]} />
-                    <meshStandardMaterial color="#001122" roughness={0.0} metalness={1.0} emissive="#00f3ff" emissiveIntensity={0.15} />
+                    <meshStandardMaterial color={isDay ? "#0055aa" : "#001122"} roughness={0.0} metalness={1.0} emissive="#00f3ff" emissiveIntensity={isDay ? 0 : 0.15} />
                 </mesh>
             )}
             
@@ -321,13 +321,13 @@ function CityScene({ data, setHoveredBox }) {
             {/* Lamppost Heads (Glowing Orange) */}
             <Instances range={heads.length} limit={100}>
                 <boxGeometry args={[1, 1, 1]} />
-                <meshStandardMaterial color="#ffffff" emissive="#ff8800" emissiveIntensity={5.0} toneMapped={false} />
+                <meshStandardMaterial color="#ffffff" emissive="#ff8800" emissiveIntensity={isDay ? 0 : 5.0} toneMapped={false} />
                 {heads.map((h, i) => <Instance key={`head-${i}`} position={h.position} scale={h.scale} />)}
             </Instances>
 
             {/* Orange Urban Streetlights mapping the path */}
             {streetLights.map((z, i) => (
-                <pointLight key={i} position={[0, 1.0, z]} intensity={1.5} color="#ff8800" distance={8} decay={2} />
+                <pointLight key={i} position={[0, 1.0, z]} intensity={isDay ? 0 : 1.5} color="#ff8800" distance={8} decay={2} />
             ))}
             
             {/* Scattered Urban Bushes / Trees */}
@@ -356,6 +356,11 @@ export default function GitHub3DGraph({ username }) {
     const [mode, setMode] = useState('CINEMATIC'); // CINEMATIC | WALK
     const [isLocked, setIsLocked] = useState(false);
     const [hoveredBox, setHoveredBox] = useState(null);
+
+    const isDay = useMemo(() => {
+        const hour = new Date().getHours();
+        return hour >= 6 && hour < 18; // Day between 6 AM and 6 PM
+    }, []);
 
     useEffect(() => {
         fetch(`https://github-contributions-api.deno.dev/${username}.json`)
@@ -442,25 +447,25 @@ export default function GitHub3DGraph({ username }) {
                     )}
 
                     <Canvas camera={{ fov: 60 }}>
-                        <color attach="background" args={['#030508']} />
-                        <fog attach="fog" args={['#030508', 10, 60]} />
+                        <color attach="background" args={[isDay ? '#87CEEB' : '#030508']} />
+                        <fog attach="fog" args={[isDay ? '#87CEEB' : '#030508', 10, 60]} />
                         
-                        {/* Greatly boosted lighting so the building structures are visible */}
-                        <ambientLight intensity={0.8} color="#aaccff" />
-                        <hemisphereLight skyColor="#ffffff" groundColor="#004466" intensity={1.0} />
-                        <directionalLight position={[20, 50, -20]} intensity={2.0} color="#e0f0ff" />
-                        <directionalLight position={[-20, 30, 20]} intensity={1.0} color="#00f3ff" />
+                        {/* Lighting based on time of day */}
+                        <ambientLight intensity={isDay ? 1.5 : 0.8} color={isDay ? "#ffffff" : "#aaccff"} />
+                        <hemisphereLight skyColor="#ffffff" groundColor={isDay ? "#87CEEB" : "#004466"} intensity={isDay ? 1.5 : 1.0} />
+                        <directionalLight position={[20, 50, -20]} intensity={isDay ? 3.0 : 2.0} color={isDay ? "#fff4cc" : "#e0f0ff"} />
+                        <directionalLight position={[-20, 30, 20]} intensity={isDay ? 1.5 : 1.0} color={isDay ? "#ffffff" : "#00f3ff"} />
                         
                         {/* Night Sky Stars */}
-                        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+                        {!isDay && <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />}
                         
                         {/* Dark Reflective Asphalt Ground */}
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
                             <planeGeometry args={[1000, 1000]} />
-                            <meshStandardMaterial color="#020305" roughness={0.05} metalness={0.9} />
+                            <meshStandardMaterial color={isDay ? "#555555" : "#020305"} roughness={isDay ? 0.6 : 0.05} metalness={isDay ? 0.2 : 0.9} />
                         </mesh>
 
-                        <CityScene data={data} setHoveredBox={setHoveredBox} />
+                        <CityScene data={data} setHoveredBox={setHoveredBox} isDay={isDay} />
                         <CameraRig mode={mode} isLocked={isLocked} />
                         
                         {mode === 'WALK' && (
