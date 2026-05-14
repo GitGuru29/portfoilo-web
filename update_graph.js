@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+const fs = require('fs');
+
+const content = `import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Instance, Instances, PointerLockControls, Html, Stars } from '@react-three/drei';
 import * as THREE from 'three';
@@ -75,6 +77,7 @@ const TIMELINE_STATES = {
 };
 
 const getCurrentTimeState = () => {
+    // We can add a global window variable for testing
     if (window.__TEST_TIME_STATE) return window.__TEST_TIME_STATE;
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 8) return 'SUNRISE';
@@ -101,7 +104,7 @@ const EnvironmentAnimator = ({ timeState }) => {
     const targetDirColor = useMemo(() => new THREE.Color(), []);
 
     useFrame((state, delta) => {
-        const dt = Math.min(delta, 0.1); 
+        const dt = Math.min(delta, 0.1); // cap delta to prevent large jumps
         
         targetSky.set(target.sky);
         targetAmbient.set(target.ambient);
@@ -323,13 +326,15 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                     const yPos = count === 0 ? actualHeight / 2 : (f * floorHeight) + (actualHeight / 2);
 
                     result.push({
-                        id: `${wIndex}-${dIndex}`,
+                        id: \`\${wIndex}-\${dIndex}\`,
                         date: day.date,
                         count: count,
                         position: [x, yPos, -z],
                         scale: [0.8, actualHeight, 0.8],
                         color: style.color,
                         emissive: style.emissive,
+                        // Instances don't smoothly lerp emissive individually in R3F, 
+                        // so we pass the static base intensity to be multiplied globally by the animated material.
                         baseIntensity: style.intensity 
                     });
                 }
@@ -359,7 +364,9 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
             const scale = 0.4 + Math.random() * 0.4;
             items.push({
                 position: [x + (Math.random() * 0.4 - 0.2), 0.2 * scale, z],
-                scale: [scale, scale, scale]
+                scale: [scale, scale, scale],
+                // Just random offset for variety
+                colorOffset: Math.random() * 0.1
             });
         }
         for (let i = 0; i < 300; i++) {
@@ -371,7 +378,8 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
             const scale = 0.5 + Math.random() * 1.2;
             items.push({
                 position: [x, 0.2 * scale, z],
-                scale: [scale, scale, scale]
+                scale: [scale, scale, scale],
+                colorOffset: -0.1
             });
         }
         return items;
@@ -417,14 +425,17 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                     emissiveMap={windowTexture} 
                     targetRoughness={0.2}
                     targetMetalness={0.8}
+                    // Since Instances share material, we dynamically scale the global emissive intensity
                     targetIntensity={target.neonMultiplier * activityMultiplier}
                 />
                 {floors.map((floor, i) => (
                     <Instance 
-                        key={`${floor.id}-${i}`}
+                        key={\`\${floor.id}-\${i}\`}
                         position={floor.position}
                         scale={floor.scale}
                         color={floor.color}
+                        // We use the base intensity as emissive color here since R3F Instance doesn't support emissive intensity directly
+                        // We use the global multiplier in AnimatedMaterial to animate them all up/down
                         emissive={floor.emissive} 
                     />
                 ))}
@@ -473,7 +484,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
             <Instances range={poles.length} limit={100} castShadow>
                 <cylinderGeometry args={[1, 1, 1, 8]} />
                 <AnimatedMaterial targetColor="#111111" targetMetalness={0.8} targetRoughness={0.2} />
-                {poles.map((p, i) => <Instance key={`pole-${i}`} position={p.position} scale={p.scale} />)}
+                {poles.map((p, i) => <Instance key={\`pole-\${i}\`} position={p.position} scale={p.scale} />)}
             </Instances>
 
             {/* Lamppost Heads (Glowing Orange) */}
@@ -485,7 +496,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                     targetIntensity={target.neonMultiplier * 3.0} 
                     toneMapped={false} 
                 />
-                {heads.map((h, i) => <Instance key={`head-${i}`} position={h.position} scale={h.scale} />)}
+                {heads.map((h, i) => <Instance key={\`head-\${i}\`} position={h.position} scale={h.scale} />)}
             </Instances>
 
             {/* Orange Urban Streetlights mapping the path */}
@@ -499,7 +510,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                 <AnimatedMaterial targetColor={target.treeColor} targetRoughness={0.9} />
                 {bushes.map((bush, i) => (
                     <Instance
-                        key={`bush-${i}`}
+                        key={\`bush-\${i}\`}
                         position={bush.position}
                         scale={bush.scale}
                     />
@@ -520,6 +531,7 @@ export default function GitHub3DGraph({ username }) {
     const [hoveredBox, setHoveredBox] = useState(null);
     const [timeState, setTimeState] = useState(getCurrentTimeState());
 
+    // Update time state every minute
     useEffect(() => {
         const interval = setInterval(() => {
             setTimeState(getCurrentTimeState());
@@ -528,7 +540,7 @@ export default function GitHub3DGraph({ username }) {
     }, []);
 
     useEffect(() => {
-        fetch(`https://github-contributions-api.deno.dev/${username}.json`)
+        fetch(\`https://github-contributions-api.deno.dev/\${username}.json\`)
             .then(res => res.json())
             .then(json => {
                 if (json.contributions) {
@@ -541,17 +553,20 @@ export default function GitHub3DGraph({ username }) {
 
     const handleWalkClick = () => setMode('WALK');
 
+    // Calculate dynamic brightness based on user activity.
+    // 0 contributions -> 0.2 multiplier (dim), 2000 contributions -> 2.0 multiplier (blinding neon)
     const activityMultiplier = useMemo(() => {
         return Math.min(Math.max(totalContributions / 500, 0.3), 2.5);
     }, [totalContributions]);
 
+    // Hidden dev tool to manually cycle states by pressing 'T'
     useEffect(() => {
         const handleT = (e) => {
             if (e.key === 't' || e.key === 'T') {
                 const states = ['SUNRISE', 'DAY', 'SUNSET', 'NIGHT'];
                 setTimeState(prev => {
                     const next = states[(states.indexOf(prev) + 1) % states.length];
-                    window.__TEST_TIME_STATE = next; 
+                    window.__TEST_TIME_STATE = next; // override global
                     return next;
                 });
             }
@@ -587,7 +602,7 @@ export default function GitHub3DGraph({ username }) {
                             <div className="flex gap-2 items-center bg-black/50 p-3 rounded backdrop-blur-md border border-white/10 pointer-events-auto shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                                 <span className="text-xs text-gray-400 font-mono mr-2">LESS</span>
                                 {Object.values(LEVELS).map((lvl, idx) => (
-                                    <div key={idx} className="w-4 h-4 rounded-sm border border-white/10" style={{ backgroundColor: lvl.intensity > 0 ? lvl.emissive : lvl.color, boxShadow: lvl.intensity > 0 ? `0 0 10px ${lvl.emissive}` : 'none' }} />
+                                    <div key={idx} className="w-4 h-4 rounded-sm border border-white/10" style={{ backgroundColor: lvl.intensity > 0 ? lvl.emissive : lvl.color, boxShadow: lvl.intensity > 0 ? \`0 0 10px \${lvl.emissive}\` : 'none' }} />
                                 ))}
                                 <span className="text-xs text-gray-400 font-mono ml-2">MORE</span>
                             </div>
@@ -595,13 +610,13 @@ export default function GitHub3DGraph({ username }) {
                             <div className="flex bg-black/50 p-1 rounded backdrop-blur-md border border-white/10 pointer-events-auto shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                                 <button 
                                     onClick={() => setMode('CINEMATIC')}
-                                    className={`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'CINEMATIC' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={\`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors \${mode === 'CINEMATIC' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}\`}
                                 >
                                     ◉ CINEMATIC
                                 </button>
                                 <button 
                                     onClick={handleWalkClick}
-                                    className={`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'WALK' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={\`px-4 py-2 font-mono text-xs tracking-widest rounded transition-colors \${mode === 'WALK' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}\`}
                                 >
                                     WASD WALK
                                 </button>
@@ -628,10 +643,12 @@ export default function GitHub3DGraph({ username }) {
                         
                         <EnvironmentAnimator timeState={timeState} />
                         
+                        {/* Night Sky Stars - Conditionally visible */}
                         {(timeState === 'NIGHT' || timeState === 'SUNSET' || timeState === 'SUNRISE') && (
                             <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
                         )}
                         
+                        {/* Ground */}
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
                             <planeGeometry args={[1000, 1000]} />
                             <AnimatedMaterial 
@@ -665,3 +682,7 @@ export default function GitHub3DGraph({ username }) {
         </div>
     );
 }
+`
+
+fs.writeFileSync('src/components/GitHub3DGraph.jsx', content);
+console.log('Update successful');
