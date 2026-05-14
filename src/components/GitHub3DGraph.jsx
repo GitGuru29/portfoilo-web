@@ -322,7 +322,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                 const style = LEVELS[level] || LEVELS["NONE"];
                 
                 const numFloors = Math.max(1, count);
-                const floorHeight = 0.65; // Massive skyscrapers
+                const floorHeight = 0.45; // Balanced skyscraper height
                 
                 for (let f = 0; f < numFloors; f++) {
                     const actualHeight = count === 0 ? 0.05 : floorHeight - 0.02;
