@@ -16,43 +16,72 @@
 
 :root {
     color-scheme: dark;
+    cursor: default;
 }
 
+/* Custom Cursor */
 body {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300f7ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3C/svg%3E") 12 12, auto;
     margin: 0;
     padding: 0;
-    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--font-inter), sans-serif;
     background-color: var(--color-cyber-dark);
     color: #fafafa;
     overflow-x: hidden;
-    /* Smooth scroll for normal anchors */
     scroll-behavior: smooth;
+    position: relative;
 }
 
-/* Custom Webkit Scrollbar */
+/* Noise Texture Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Text Selection Styling */
+::selection {
+    background: var(--color-cyber-cyan);
+    color: var(--color-cyber-dark);
+}
+
+/* Enhanced Scrollbar */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #030303;
+    background: #050505;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #333;
-    border-radius: 5px;
+    background: linear-gradient(to bottom, var(--color-cyber-cyan), var(--color-cyber-violet));
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #fff;
 }
 
-/* Base utility for glassmorphism */
+/* Premium Glassmorphism */
 .glass {
     background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass:hover {
+    border-color: rgba(0, 247, 255, 0.3);
+    transform: translateY(-2px);
 }
 
 .text-gradient {
@@ -60,6 +89,14 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+/* Gradient Divider */
+.gradient-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-cyber-cyan), transparent);
+    width: 100%;
+    margin: 2rem 0;
 }
 
 /* Hero Glitch Effect */
@@ -99,105 +136,13 @@ body {
 }
 
 @keyframes glitch-anim {
-    0% {
-        clip: rect(20px, 9999px, 85px, 0);
-    }
-
-    1% {
-        clip: rect(44px, 9999px, 86px, 0);
-    }
-
-    2% {
-        clip: rect(15px, 9999px, 4px, 0);
-    }
-
-    3% {
-        clip: rect(61px, 9999px, 89px, 0);
-    }
-
-    4% {
-        clip: rect(96px, 9999px, 7px, 0);
-    }
-
-    5% {
-        clip: rect(31px, 9999px, 60px, 0);
-    }
-
-    6% {
-        clip: rect(47px, 9999px, 53px, 0);
-    }
-
-    7% {
-        clip: rect(51px, 9999px, 12px, 0);
-    }
-
-    8% {
-        clip: rect(72px, 9999px, 52px, 0);
-    }
-
-    9% {
-        clip: rect(12px, 9999px, 83px, 0);
-    }
-
-    10% {
-        clip: rect(98px, 9999px, 6px, 0);
-    }
-
-    11%,
-    100% {
-        clip: rect(0, 0, 0, 0);
-    }
+    0% { clip: rect(20px, 9999px, 85px, 0); }
+    11%, 100% { clip: rect(0, 0, 0, 0); }
 }
 
 @keyframes glitch-anim-2 {
-    0% {
-        clip: rect(15px, 9999px, 99px, 0);
-    }
-
-    1% {
-        clip: rect(58px, 9999px, 14px, 0);
-    }
-
-    2% {
-        clip: rect(8px, 9999px, 72px, 0);
-    }
-
-    3% {
-        clip: rect(29px, 9999px, 41px, 0);
-    }
-
-    4% {
-        clip: rect(91px, 9999px, 64px, 0);
-    }
-
-    5% {
-        clip: rect(12px, 9999px, 88px, 0);
-    }
-
-    6% {
-        clip: rect(77px, 9999px, 5px, 0);
-    }
-
-    7% {
-        clip: rect(41px, 9999px, 92px, 0);
-    }
-
-    8% {
-        clip: rect(18px, 9999px, 20px, 0);
-    }
-
-    9% {
-        clip: rect(66px, 9999px, 55px, 0);
-    }
-
-    10% {
-        clip: rect(33px, 9999px, 81px, 0);
-    }
-
-    11%,
-    100% {
-        clip: rect(0, 0, 0, 0);
-    }
+    0% { clip: rect(15px, 9999px, 99px, 0); }
+    11%, 100% { clip: rect(0, 0, 0, 0); }
 }
 
 /* Typing cursor */
@@ -213,15 +158,8 @@ body {
 }
 
 @keyframes blink {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 /* Kernel Panic Glitch Effect */
@@ -229,14 +167,65 @@ body {
     animation: panic-shake 0.2s infinite;
 }
 
+/* Ambient Glow Utilities */
+.glow-cyan {
+    filter: drop-shadow(0 0 10px var(--color-cyber-cyan));
+}
+
+/* Animations */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
+
+@keyframes scan {
+    0% { transform: translateY(-100%); }
+    50% { transform: translateY(8000%); }
+    100% { transform: translateY(-100%); }
+}
+
+@keyframes panic-shake {
+    0%   { transform: translate(1px, 1px) rotate(0deg); }
+    10%  { transform: translate(-1px, -2px) rotate(-1deg); }
+    20%  { transform: translate(-3px, 0px) rotate(1deg); }
+    30%  { transform: translate(3px, 2px) rotate(0deg); }
+    40%  { transform: translate(1px, -1px) rotate(1deg); }
+    50%  { transform: translate(-1px, 2px) rotate(-1deg); }
+    60%  { transform: translate(-3px, 1px) rotate(0deg); }
+    70%  { transform: translate(3px, 1px) rotate(-1deg); }
+    80%  { transform: translate(-1px, -1px) rotate(1deg); }
+    90%  { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+@keyframes panic-glitch-1 {
+    0%   { clip: rect(20px, 9999px, 85px, 0); }
+    20%  { clip: rect(44px, 9999px, 86px, 0); }
+    40%  { clip: rect(15px, 9999px, 4px, 0); }
+    60%  { clip: rect(61px, 9999px, 89px, 0); }
+    80%  { clip: rect(96px, 9999px, 7px, 0); }
+    100% { clip: rect(31px, 9999px, 60px, 0); }
+}
+
+@keyframes panic-glitch-2 {
+    0%   { clip: rect(15px, 9999px, 99px, 0); }
+    20%  { clip: rect(58px, 9999px, 14px, 0); }
+    40%  { clip: rect(8px, 9999px, 72px, 0); }
+    60%  { clip: rect(29px, 9999px, 41px, 0); }
+    80%  { clip: rect(91px, 9999px, 64px, 0); }
+    100% { clip: rect(12px, 9999px, 88px, 0); }
+}
+
 .glitch-effect::before,
 .glitch-effect::after {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: inherit;
     z-index: -1;
     pointer-events: none;
@@ -254,120 +243,178 @@ body {
     animation: panic-glitch-2 3s infinite linear alternate-reverse;
 }
 
-@keyframes panic-shake {
-    0% {
-        transform: translate(1px, 1px) rotate(0deg);
-    }
+/* ============================================================
+   ✦  PREMIUM LAYER — High-end feel without breaking changes
+   ============================================================ */
 
-    10% {
-        transform: translate(-1px, -2px) rotate(-1deg);
-    }
+/* --- Film-grain noise: raised z-index, using ::after so ::before is free for sections --- */
+body::before {
+    z-index: 99999;
+    opacity: 0.032;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    background-repeat: repeat;
+}
 
-    20% {
-        transform: translate(-3px, 0px) rotate(1deg);
-    }
-
-    30% {
-        transform: translate(3px, 2px) rotate(0deg);
-    }
-
-    40% {
-        transform: translate(1px, -1px) rotate(1deg);
-    }
-
-    50% {
-        transform: translate(-1px, 2px) rotate(-1deg);
-    }
-
-    60% {
-        transform: translate(-3px, 1px) rotate(0deg);
-    }
-
-    70% {
-        transform: translate(3px, 1px) rotate(-1deg);
-    }
-
-    80% {
-        transform: translate(-1px, -1px) rotate(1deg);
-    }
-
-    90% {
-        transform: translate(1px, 2px) rotate(0deg);
-    }
-
-    100% {
-        transform: translate(1px, -2px) rotate(-1deg);
+/* --- Hide default OS cursor on fine-pointer devices --- */
+@media (pointer: fine) {
+    html, body, *, *::before, *::after {
+        cursor: none !important;
     }
 }
 
-@keyframes panic-glitch-1 {
-    0% {
-        clip: rect(20px, 9999px, 85px, 0);
-    }
-
-    20% {
-        clip: rect(44px, 9999px, 86px, 0);
-    }
-
-    40% {
-        clip: rect(15px, 9999px, 4px, 0);
-    }
-
-    60% {
-        clip: rect(61px, 9999px, 89px, 0);
-    }
-
-    80% {
-        clip: rect(96px, 9999px, 7px, 0);
-    }
-
-    100% {
-        clip: rect(31px, 9999px, 60px, 0);
-    }
+/* --- Custom cursor: outer ring --- */
+.cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0, 247, 255, 0.5);
+    background: transparent;
+    pointer-events: none;
+    z-index: 999998;
+    will-change: transform;
+    transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease;
 }
 
-@keyframes panic-glitch-2 {
-    0% {
-        clip: rect(15px, 9999px, 99px, 0);
-    }
-
-    20% {
-        clip: rect(58px, 9999px, 14px, 0);
-    }
-
-    40% {
-        clip: rect(8px, 9999px, 72px, 0);
-    }
-
-    60% {
-        clip: rect(29px, 9999px, 41px, 0);
-    }
-
-    80% {
-        clip: rect(91px, 9999px, 64px, 0);
-    }
-
-    100% {
-        clip: rect(12px, 9999px, 88px, 0);
-    }
+/* --- Custom cursor: inner dot --- */
+.cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #00f7ff;
+    pointer-events: none;
+    z-index: 999999;
+    will-change: transform;
+    box-shadow: 0 0 8px 2px rgba(0, 247, 255, 0.9), 0 0 18px 4px rgba(0, 247, 255, 0.35);
+    transition: width 0.18s ease, height 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* Spin animation for CV modal spinner */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+/* --- Hover state: ring expands, dot turns violet --- */
+.cursor-ring.cursor--hover {
+    width: 46px; height: 46px;
+    border-color: rgba(181, 55, 242, 0.6);
 }
 
-/* Shimmer animation for buttons */
-@keyframes shimmer {
-    100% {
-        transform: translateX(100%);
-    }
+.cursor-dot.cursor--hover {
+    width: 10px; height: 10px;
+    background: #b537f2;
+    box-shadow: 0 0 12px 4px rgba(181, 55, 242, 0.9), 0 0 24px 8px rgba(181, 55, 242, 0.3);
 }
 
-/* Vertical Scan line animation for Biometric HUD */
-@keyframes scan {
-    0% { transform: translateY(-100%); }
-    50% { transform: translateY(8000%); }
-    100% { transform: translateY(-100%); }
+/* --- Glass iridescent shimmer on ::before (does not conflict with existing) --- */
+.glass {
+    isolation: isolate;
+}
+
+.glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 247, 255, 0.035) 0%,
+        transparent 45%,
+        rgba(181, 55, 242, 0.025) 100%
+    );
+    z-index: -1;
+}
+
+/* --- Focus ring: branded, accessible --- */
+:focus-visible {
+    outline: 2px solid rgba(0, 247, 255, 0.65);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* --- Ambient hero right-side glow --- */
+#home {
+    position: relative;
+    overflow: visible;
+}
+
+#home::before {
+    content: '';
+    position: absolute;
+    top: 8%;
+    right: 3%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0, 247, 255, 0.065) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambient-pulse 9s ease-in-out infinite alternate;
+}
+
+/* --- Ambient about section left violet glow --- */
+#about {
+    position: relative;
+}
+
+#about::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: -120px;
+    width: 380px; height: 500px;
+    background: radial-gradient(circle, rgba(181, 55, 242, 0.055) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambient-pulse 11s ease-in-out infinite alternate-reverse;
+}
+
+/* --- Ambient skills section right pink glow --- */
+#skills {
+    position: relative;
+}
+
+#skills::before {
+    content: '';
+    position: absolute;
+    top: 25%;
+    right: -100px;
+    width: 350px; height: 400px;
+    background: radial-gradient(circle, rgba(255, 0, 255, 0.045) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambient-pulse 13s ease-in-out infinite alternate;
+}
+
+@keyframes ambient-pulse {
+    0%   { opacity: 0.55; transform: scale(1); }
+    100% { opacity: 1;    transform: scale(1.14); }
+}
+
+/* --- Section gradient divider lines --- */
+section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 55%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0, 247, 255, 0.1) 35%,
+        rgba(181, 55, 242, 0.1) 65%,
+        transparent
+    );
+    pointer-events: none;
+}
+
+section {
+    position: relative;
+}
+
+/* --- Smooth entrance for glass cards: lift on hover --- */
+.glass:hover {
+    box-shadow:
+        0 0 0 1px rgba(0, 247, 255, 0.1) inset,
+        0 16px 48px rgba(0, 0, 0, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.07) inset,
+        0 0 40px rgba(0, 247, 255, 0.05);
 }

@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import LenisWrapper from './components/LenisWrapper';
 import CanvasScene from './components/canvas/CanvasScene';
 import Navigation from './components/Navigation';
-import NightCodingScene from './components/NightCodingScene';
+
 import TerminalSection from './components/TerminalSection';
 import SystemMetricsWidget from './components/SystemMetricsWidget';
+import CustomCursor from './components/CustomCursor';
 import { Terminal } from 'lucide-react';
 import useStore from './store/useStore';
 
@@ -29,7 +30,9 @@ function App() {
 
     return (
         <HashRouter>
-            <div className="relative text-white font-sans overflow-clip selection:bg-blue-500/30 min-h-screen bg-[#020202]">
+            <div className="relative text-white font-sans overflow-clip min-h-screen bg-[#020202]">
+                {/* Premium custom cursor — always on top */}
+                <CustomCursor />
 
                 {/* The Fast BIOS Boot Preloader */}
                 <AnimatePresence>
@@ -53,7 +56,7 @@ function App() {
 
                                 {/* The permanent WebGL Background */}
                                 <CanvasScene />
-                                <NightCodingScene />
+
 
                                 {/* The Scrollable DOM Content Overlay */}
                                 <Routes>
