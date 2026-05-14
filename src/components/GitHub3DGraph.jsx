@@ -28,19 +28,19 @@ const TIMELINE_STATES = {
         riverColor: '#00f3ff'
     },
     DAY: {
-        sky: '#EAF4FF',       
-        ground: '#DDE7F0',
+        sky: '#4FA8F7',       // Bright clear blue summer sky
+        ground: '#A9C3D9',    // Slightly deeper blue/grey ground
         ambient: '#ffffff',
-        ambientIntensity: 1.8,
-        hemiSky: '#ffffff',
-        hemiGround: '#B0C4DE',
-        hemiIntensity: 2.0,
-        dirColor: '#ffffff',
-        dirIntensity: 4.0,
+        ambientIntensity: 1.5,
+        hemiSky: '#87CEEB',
+        hemiGround: '#8B9BB4',
+        hemiIntensity: 1.5,
+        dirColor: '#FFF4D2',  // Warm yellow/white sun
+        dirIntensity: 4.5,
         dirPosition: [10, 50, -20],
         neonMultiplier: 0.1, 
-        treeColor: '#32CD32',
-        riverColor: '#0055aa'
+        treeColor: '#228B22', // Forest green
+        riverColor: '#0066cc'
     },
     SUNSET: {
         sky: '#6A2A5A',       
