@@ -4,11 +4,11 @@ import { Instance, Instances, PointerLockControls, Html } from '@react-three/dre
 import * as THREE from 'three';
 
 const LEVELS = {
-    'NONE': { color: '#f3f4f6', emissive: '#000000', intensity: 0.0 },
-    'FIRST_QUARTILE': { color: '#d1d5db', emissive: '#d1d5db', intensity: 0.2 },
-    'SECOND_QUARTILE': { color: '#9ca3af', emissive: '#9ca3af', intensity: 0.4 },
-    'THIRD_QUARTILE': { color: '#4b5563', emissive: '#4b5563', intensity: 0.6 },
-    'FOURTH_QUARTILE': { color: '#111827', emissive: '#111827', intensity: 0.8 },
+    'NONE': { color: '#f1f5f9', emissive: '#f8fafc', intensity: 0.1 },
+    'FIRST_QUARTILE': { color: '#bfdbfe', emissive: '#93c5fd', intensity: 0.3 },
+    'SECOND_QUARTILE': { color: '#60a5fa', emissive: '#3b82f6', intensity: 0.5 },
+    'THIRD_QUARTILE': { color: '#2563eb', emissive: '#1d4ed8', intensity: 0.7 },
+    'FOURTH_QUARTILE': { color: '#1e3a8a', emissive: '#1e40af', intensity: 0.9 },
 };
 
 const AnimatedMaterial = ({ targetColor, targetEmissive, targetIntensity, targetRoughness, targetMetalness, ...props }) => {
@@ -202,9 +202,9 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
                 <boxGeometry args={[1, 1, 1]} />
                 <AnimatedMaterial 
                     toneMapped={false} 
-                    targetRoughness={0.8}
-                    targetMetalness={0.1}
-                    targetIntensity={0.5 * activityMultiplier}
+                    targetRoughness={0.6}
+                    targetMetalness={0.2}
+                    targetIntensity={0.6 * activityMultiplier}
                 />
                 {floors.map((floor, i) => (
                     <Instance 
@@ -218,7 +218,7 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
             </Instances>
             
             {/* Ground Grid Lines */}
-            <gridHelper args={[200, 200, '#000000', '#000000']} position={[0, 0.02, 0]} material-opacity={0.05} material-transparent />
+            <gridHelper args={[200, 200, '#94a3b8', '#cbd5e1']} position={[0, 0.02, 0]} material-opacity={0.3} material-transparent />
         </group>
     );
 }
@@ -249,9 +249,9 @@ export default function GitHub3DGraph({ username }) {
     }, [totalContributions]);
 
     return (
-        <div className="w-full h-full min-h-[500px] md:min-h-[600px] relative bg-[var(--color-quantum-black)] overflow-hidden">
+        <div className="w-full h-full min-h-[500px] md:min-h-[600px] relative bg-white overflow-hidden rounded-[24px]">
             {!data && (
-                <div className="absolute inset-0 flex items-center justify-center text-[var(--color-geyser)]/50 text-xs font-space tracking-widest animate-pulse">
+                <div className="absolute inset-0 flex items-center justify-center text-blue-400 text-xs font-space tracking-widest animate-pulse">
                     INITIALIZING URBAN GRID...
                 </div>
             )}
@@ -260,39 +260,39 @@ export default function GitHub3DGraph({ username }) {
                 <>
                     <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-6">
                         <div className="flex justify-between items-start">
-                            <div className="text-[var(--color-geyser)] font-mono text-xs tracking-widest bg-[var(--color-quantum-black)]/80 p-3 backdrop-blur-md border border-[var(--color-geyser)]/10">
-                                <span className="text-[var(--color-geyser)]">{username}</span>'s Contributions — {new Date().getFullYear()}
+                            <div className="text-slate-700 font-mono text-xs tracking-widest bg-white/70 p-3 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm">
+                                <span className="text-blue-600 font-bold">{username}</span>'s Contributions — {new Date().getFullYear()}
                             </div>
-                            <div className="text-[var(--color-geyser)] font-mono text-lg bg-[var(--color-quantum-black)]/80 px-4 py-2 backdrop-blur-md border border-[var(--color-geyser)]/10">
-                                {totalContributions} <span className="text-[10px] text-[var(--color-geyser)]/50 uppercase tracking-widest">TOTAL</span>
+                            <div className="text-slate-800 font-mono text-lg bg-white/70 px-4 py-2 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm flex items-center gap-2">
+                                {totalContributions} <span className="text-[10px] text-slate-500 uppercase tracking-widest">TOTAL</span>
                             </div>
                         </div>
 
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-                            <div className="flex gap-3 items-center bg-[var(--color-quantum-black)]/80 p-4 backdrop-blur-md border border-[var(--color-geyser)]/10 pointer-events-auto">
-                                <span className="text-[10px] text-[var(--color-geyser)]/50 font-mono tracking-widest">LESS</span>
+                            <div className="flex gap-3 items-center bg-white/70 p-3 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm pointer-events-auto">
+                                <span className="text-[10px] text-slate-400 font-mono tracking-widest">LESS</span>
                                 {Object.values(LEVELS).map((lvl, idx) => (
-                                    <div key={idx} className="w-4 h-4 border border-[var(--color-geyser)]/20" style={{ backgroundColor: lvl.intensity > 0.1 ? lvl.color : 'transparent' }} />
+                                    <div key={idx} className="w-4 h-4 rounded-sm border border-blue-200/50" style={{ backgroundColor: lvl.color }} />
                                 ))}
-                                <span className="text-[10px] text-[var(--color-geyser)]/50 font-mono tracking-widest">MORE</span>
+                                <span className="text-[10px] text-slate-400 font-mono tracking-widest">MORE</span>
                             </div>
 
-                            <div className="flex bg-[var(--color-quantum-black)]/80 p-2 backdrop-blur-md border border-[var(--color-geyser)]/10 pointer-events-auto gap-2">
+                            <div className="flex bg-white/70 p-1.5 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm pointer-events-auto gap-1">
                                 <button 
                                     onClick={() => setMode('CINEMATIC')}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors ${mode === 'CINEMATIC' ? 'bg-[var(--color-geyser)] text-[var(--color-quantum-black)]' : 'text-[var(--color-geyser)]/50 hover:text-[var(--color-geyser)]'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'CINEMATIC' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-blue-600 hover:bg-blue-50'}`}
                                 >
                                     ◉ STREET
                                 </button>
                                 <button 
                                     onClick={() => setMode('DRONE')}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors ${mode === 'DRONE' ? 'bg-[var(--color-geyser)] text-[var(--color-quantum-black)]' : 'text-[var(--color-geyser)]/50 hover:text-[var(--color-geyser)]'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'DRONE' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-blue-600 hover:bg-blue-50'}`}
                                 >
                                     ✈ DRONE
                                 </button>
                                 <button 
                                     onClick={handleWalkClick}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors ${mode === 'WALK' ? 'bg-[var(--color-geyser)] text-[var(--color-quantum-black)]' : 'text-[var(--color-geyser)]/50 hover:text-[var(--color-geyser)]'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'WALK' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-blue-600 hover:bg-blue-50'}`}
                                 >
                                     🚶 WALK
                                 </button>
@@ -301,27 +301,27 @@ export default function GitHub3DGraph({ username }) {
                     </div>
 
                     {mode === 'WALK' && !isLocked && (
-                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-[var(--color-quantum-black)]/60 backdrop-blur-sm pointer-events-none">
-                            <div className="text-center font-mono text-[var(--color-geyser)] border border-[var(--color-geyser)]/30 p-8 bg-[var(--color-quantum-black)]/80">
-                                <div className="text-sm mb-4 tracking-[0.2em] uppercase">CLICK TO ENTER</div>
-                                <div className="text-[10px] text-[var(--color-geyser)]/50 uppercase tracking-[0.1em]">[WASD] to move, [MOUSE] to look, [ESC] to exit</div>
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/40 backdrop-blur-md pointer-events-none">
+                            <div className="text-center font-mono text-blue-600 border border-blue-200 p-8 bg-white/90 rounded-2xl shadow-xl">
+                                <div className="text-sm mb-4 tracking-[0.2em] uppercase font-bold">CLICK TO ENTER</div>
+                                <div className="text-[10px] text-slate-500 uppercase tracking-[0.1em]">[WASD] to move, [MOUSE] to look, [ESC] to exit</div>
                             </div>
                         </div>
                     )}
                     
                     {mode === 'WALK' && isLocked && (
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--color-geyser)]/50 text-xl font-light pointer-events-none z-20">+</div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-500 text-xl font-light pointer-events-none z-20">+</div>
                     )}
 
                     <Canvas camera={{ fov: 60 }} shadows>
-                        <color attach="background" args={['#ffffff']} />
-                        <fog attach="fog" args={['#ffffff', 10, 60]} />
+                        <color attach="background" args={['#f8fafc']} />
+                        <fog attach="fog" args={['#f8fafc', 10, 60]} />
                         
-                        <ambientLight intensity={0.5} color="#ffffff" />
-                        <hemisphereLight intensity={0.5} color="#ffffff" groundColor="#000000" />
+                        <ambientLight intensity={0.7} color="#ffffff" />
+                        <hemisphereLight intensity={0.5} color="#ffffff" groundColor="#e2e8f0" />
                         <directionalLight 
                             position={[20, 50, -20]} 
-                            intensity={1.5} 
+                            intensity={1.0} 
                             color="#ffffff"
                             castShadow
                             shadow-mapSize-width={2048}
@@ -331,9 +331,9 @@ export default function GitHub3DGraph({ username }) {
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
                             <planeGeometry args={[1000, 1000]} />
                             <AnimatedMaterial 
-                                targetColor="#050505" 
-                                targetRoughness={0.9} 
-                                targetMetalness={0.1} 
+                                targetColor="#f1f5f9" 
+                                targetRoughness={1.0} 
+                                targetMetalness={0.0} 
                             />
                         </mesh>
 
@@ -349,8 +349,8 @@ export default function GitHub3DGraph({ username }) {
 
                         {hoveredBox && (
                             <Html position={[hoveredBox.position[0], hoveredBox.position[1] + 0.5, hoveredBox.position[2]]} center className="pointer-events-none z-50">
-                                <div className="bg-[var(--color-quantum-black)]/90 border border-[var(--color-geyser)]/30 text-[var(--color-geyser)] font-mono text-[10px] tracking-widest p-3 shadow-lg whitespace-nowrap backdrop-blur-md uppercase">
-                                    <span className="text-[var(--color-geyser)] mb-1 block">{hoveredBox.date}</span>
+                                <div className="bg-white border border-blue-200 text-slate-800 font-mono text-[10px] tracking-widest p-3 rounded-lg shadow-[0_8px_30px_rgba(37,99,235,0.12)] whitespace-nowrap uppercase">
+                                    <span className="text-blue-600 mb-1 block font-bold">{hoveredBox.date}</span>
                                     {hoveredBox.count} contributions
                                 </div>
                             </Html>

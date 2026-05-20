@@ -134,10 +134,10 @@ export default function Contact() {
                             </div>
                         </motion.div>
 
-                        {/* Right — light blue form card */}
+                        {/* Right — light gray form card */}
                         <motion.div
                             variants={itemVariants}
-                            className="bg-[#EFF6FF] rounded-[28px] md:rounded-[36px] p-8 md:p-12 xl:p-16 relative overflow-hidden border border-blue-200/60 shadow-[0_8px_40px_rgba(59,130,246,0.06)]"
+                            className="bg-[#F5F5F7] rounded-[28px] md:rounded-[36px] p-8 md:p-12 xl:p-16 relative overflow-hidden border border-slate-200/60 shadow-[0_8px_40px_rgba(59,130,246,0.06)]"
                         >
                             {/* Ambient glow */}
                             <div className="absolute top-0 left-0 w-80 h-80 bg-blue-400/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />

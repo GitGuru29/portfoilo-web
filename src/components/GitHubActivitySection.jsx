@@ -58,9 +58,9 @@ export default function GitHubActivitySection() {
                 viewport={{ once: true }}
                 transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
                 data-cursor="Orbit Model"
-                className="w-full h-[500px] md:h-[600px] border border-[var(--color-geyser)]/10 relative overflow-hidden bg-[var(--color-quantum-black)]"
+                className="w-full h-[500px] md:h-[600px] border border-blue-200/50 rounded-3xl relative overflow-hidden bg-transparent shadow-[0_8px_30px_rgba(59,130,246,0.06)]"
             >
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-quantum-black)] via-transparent to-transparent pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent pointer-events-none z-10" />
                 <GitHub3DGraph username="GitGuru29" />
                 <div className="absolute bottom-4 left-4 p-4 text-[10px] tracking-[0.2em] font-space uppercase text-[var(--color-geyser)]/40 z-20">
                     Data Source: GitHub API

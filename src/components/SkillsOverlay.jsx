@@ -87,7 +87,7 @@ export default function SkillsOverlay() {
     }, []);
 
     // Shared card class
-    const card = "rounded-3xl p-8 md:p-12 border border-blue-200/60 relative overflow-hidden flex flex-col justify-between group hover:border-blue-300/80 hover:shadow-[0_8px_40px_rgba(59,130,246,0.08)] transition-all duration-500 bg-[#EFF6FF]";
+    const card = "rounded-3xl p-8 md:p-12 border border-slate-200/60 relative overflow-hidden flex flex-col justify-between group hover:border-blue-300/80 hover:shadow-[0_8px_40px_rgba(59,130,246,0.08)] transition-all duration-500 bg-[#F5F5F7]";
 
     return (
         <section id="skills" ref={containerRef} className="w-full py-32 px-6 flex flex-col items-center bg-transparent relative z-10">
