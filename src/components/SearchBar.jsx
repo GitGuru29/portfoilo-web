@@ -1,20 +1,20 @@
 import React from 'react';
-import { TerminalSquare, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const SearchBar = ({ searchQuery, setSearchQuery }) => {
     return (
-        <div className="w-full flex justify-center pb-8 z-10 relative">
-            <div className="relative w-full max-w-xl mx-4 group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <TerminalSquare className="h-5 w-5 text-cyber-cyan opacity-80 group-focus-within:opacity-100 transition-opacity" />
+        <div className="w-full flex justify-start pb-8 z-10 relative">
+            <div className="relative w-full group">
+                <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+                    <Search className="h-4 w-4 text-[var(--color-geyser)]/30 group-focus-within:text-[var(--color-geyser)] transition-colors" />
                 </div>
                 <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder='grep -i "query" ./projects'
-                    className="block w-full pl-12 pr-10 py-4 bg-[#050505]/90 border border-cyber-cyan/30 rounded-lg text-white font-mono placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-cyber-cyan focus:border-cyber-cyan transition-all duration-300 backdrop-blur-md shadow-[0_0_15px_rgba(0,243,255,0.1)] focus:shadow-[0_0_25px_rgba(0,243,255,0.2)]"
+                    placeholder='Search systems...'
+                    className="block w-full pl-8 pr-10 py-3 bg-transparent border-b border-[var(--color-geyser)]/10 text-[var(--color-geyser)] font-inter text-sm md:text-base font-light placeholder-[var(--color-geyser)]/30 focus:outline-none focus:border-[var(--color-geyser)] transition-colors duration-300 rounded-none"
                 />
                 <AnimatePresence>
                     {searchQuery && (
@@ -23,9 +23,9 @@ const SearchBar = ({ searchQuery, setSearchQuery }) => {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.8 }}
                             onClick={() => setSearchQuery('')}
-                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-white transition-colors"
+                            className="absolute inset-y-0 right-0 flex items-center text-[var(--color-geyser)]/40 hover:text-[var(--color-geyser)] transition-colors"
                         >
-                            <X className="h-5 w-5" />
+                            <X className="h-4 w-4" />
                         </motion.button>
                     )}
                 </AnimatePresence>

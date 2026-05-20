@@ -1,164 +1,14 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Instance, Instances, PointerLockControls, Html, Stars } from '@react-three/drei';
+import { Instance, Instances, PointerLockControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 const LEVELS = {
-    'NONE': { color: '#00111a', emissive: '#004466', intensity: 0.4 },
-    'FIRST_QUARTILE': { color: '#002a3a', emissive: '#0088cc', intensity: 1.5 },
-    'SECOND_QUARTILE': { color: '#005577', emissive: '#00d4ff', intensity: 2.5 },
-    'THIRD_QUARTILE': { color: '#0088cc', emissive: '#00f3ff', intensity: 3.5 },
-    'FOURTH_QUARTILE': { color: '#00f3ff', emissive: '#ffffff', intensity: 5.0 },
-};
-
-const TIMELINE_STATES = {
-    SUNRISE: {
-        sky: '#FF9E80',       // Soft warm sunrise sky
-        ground: '#2c3e50',    // Darker cool ground
-        ambient: '#FFA07A',
-        ambientIntensity: 1.2,
-        hemiSky: '#FFB6C1',
-        hemiGround: '#2c3e50',
-        hemiIntensity: 1.5,
-        dirColor: '#FF4500',  
-        dirIntensity: 3.5,
-        dirPosition: [40, 10, -20],
-        neonMultiplier: 0.3,
-        treeColor: '#FFD700',
-        riverColor: '#00f3ff',
-        cloudColor: '#FFDAB9'
-    },
-    DAY: {
-        sky: '#4FA8F7',       // Bright clear blue summer sky
-        ground: '#A9C3D9',    // Slightly deeper blue/grey ground
-        ambient: '#ffffff',
-        ambientIntensity: 1.5,
-        hemiSky: '#87CEEB',
-        hemiGround: '#8B9BB4',
-        hemiIntensity: 1.5,
-        dirColor: '#FFF4D2',  // Warm yellow/white sun
-        dirIntensity: 4.5,
-        dirPosition: [10, 50, -20],
-        neonMultiplier: 0.1, 
-        treeColor: '#228B22', // Forest green
-        riverColor: '#0066cc',
-        cloudColor: '#FFFFFF'
-    },
-    SUNSET: {
-        sky: '#6A2A5A',       
-        ground: '#2A1625',
-        ambient: '#FFA07A',
-        ambientIntensity: 0.8,
-        hemiSky: '#9932CC',
-        hemiGround: '#8B0000',
-        hemiIntensity: 1.5,
-        dirColor: '#FF4500',
-        dirIntensity: 4.5,
-        dirPosition: [-40, 5, 20],
-        neonMultiplier: 0.8,
-        treeColor: '#FF1493',
-        riverColor: '#002244',
-        cloudColor: '#FF69B4'
-    },
-    NIGHT: {
-        sky: '#030508',       
-        ground: '#020305',
-        ambient: '#aaccff',
-        ambientIntensity: 0.5,
-        hemiSky: '#ffffff',
-        hemiGround: '#004466',
-        hemiIntensity: 0.8,
-        dirColor: '#e0f0ff',
-        dirIntensity: 1.5,
-        dirPosition: [20, 40, -20],
-        neonMultiplier: 1.5,
-        treeColor: '#00ff66',
-        riverColor: '#001122',
-        cloudColor: '#0D1B2A'
-    }
-};
-
-const getCurrentTimeState = () => {
-    if (window.__TEST_TIME_STATE) return window.__TEST_TIME_STATE;
-    const hour = new Date().getHours();
-    if (hour >= 5 && hour < 8) return 'SUNRISE';
-    if (hour >= 8 && hour < 17) return 'DAY';
-    if (hour >= 17 && hour < 20) return 'SUNSET';
-    return 'NIGHT';
-};
-
-// --- ANIMATION COMPONENTS ---
-
-const EnvironmentAnimator = ({ timeState }) => {
-    const { scene } = useThree();
-    const target = TIMELINE_STATES[timeState];
-    
-    const ambientRef = useRef();
-    const hemiRef = useRef();
-    const dirMainRef = useRef();
-    const dirSecondaryRef = useRef();
-
-    const targetSky = useMemo(() => new THREE.Color(), []);
-    const targetAmbient = useMemo(() => new THREE.Color(), []);
-    const targetHemiSky = useMemo(() => new THREE.Color(), []);
-    const targetHemiGround = useMemo(() => new THREE.Color(), []);
-    const targetDirColor = useMemo(() => new THREE.Color(), []);
-
-    useFrame((state, delta) => {
-        const dt = Math.min(delta, 0.1); 
-        
-        targetSky.set(target.sky);
-        targetAmbient.set(target.ambient);
-        targetHemiSky.set(target.hemiSky);
-        targetHemiGround.set(target.hemiGround);
-        targetDirColor.set(target.dirColor);
-
-        if (scene.background) scene.background.lerp(targetSky, dt * 1.5);
-        if (scene.fog) scene.fog.color.lerp(targetSky, dt * 1.5);
-
-        if (ambientRef.current) {
-            ambientRef.current.color.lerp(targetAmbient, dt * 1.5);
-            ambientRef.current.intensity = THREE.MathUtils.lerp(ambientRef.current.intensity, target.ambientIntensity, dt * 1.5);
-        }
-        if (hemiRef.current) {
-            hemiRef.current.color.lerp(targetHemiSky, dt * 1.5);
-            hemiRef.current.groundColor.lerp(targetHemiGround, dt * 1.5);
-            hemiRef.current.intensity = THREE.MathUtils.lerp(hemiRef.current.intensity, target.hemiIntensity, dt * 1.5);
-        }
-        if (dirMainRef.current) {
-            dirMainRef.current.color.lerp(targetDirColor, dt * 1.5);
-            dirMainRef.current.intensity = THREE.MathUtils.lerp(dirMainRef.current.intensity, target.dirIntensity, dt * 1.5);
-            dirMainRef.current.position.lerp(new THREE.Vector3(...target.dirPosition), dt * 0.5);
-        }
-        if (dirSecondaryRef.current) {
-            const secIntensity = timeState === "NIGHT" ? 1.0 : 0.2;
-            dirSecondaryRef.current.intensity = THREE.MathUtils.lerp(dirSecondaryRef.current.intensity, secIntensity, dt * 1.5);
-        }
-    });
-
-    return (
-        <>
-            <ambientLight ref={ambientRef} intensity={0} color="#000" />
-            <hemisphereLight ref={hemiRef} intensity={0} color="#000" groundColor="#000" />
-            <directionalLight 
-                ref={dirMainRef} 
-                position={[0, 50, 0]} 
-                intensity={0} 
-                color="#000"
-                castShadow
-                shadow-mapSize-width={2048}
-                shadow-mapSize-height={2048}
-                shadow-camera-near={0.5}
-                shadow-camera-far={150}
-                shadow-camera-left={-50}
-                shadow-camera-right={50}
-                shadow-camera-top={50}
-                shadow-camera-bottom={-50}
-                shadow-bias={-0.0005}
-            />
-            <directionalLight ref={dirSecondaryRef} position={[-20, 30, 20]} intensity={0} color="#00f3ff" />
-        </>
-    );
+    'NONE': { color: '#f3f4f6', emissive: '#000000', intensity: 0.0 },
+    'FIRST_QUARTILE': { color: '#d1d5db', emissive: '#d1d5db', intensity: 0.2 },
+    'SECOND_QUARTILE': { color: '#9ca3af', emissive: '#9ca3af', intensity: 0.4 },
+    'THIRD_QUARTILE': { color: '#4b5563', emissive: '#4b5563', intensity: 0.6 },
+    'FOURTH_QUARTILE': { color: '#111827', emissive: '#111827', intensity: 0.8 },
 };
 
 const AnimatedMaterial = ({ targetColor, targetEmissive, targetIntensity, targetRoughness, targetMetalness, ...props }) => {
@@ -191,8 +41,6 @@ const AnimatedMaterial = ({ targetColor, targetEmissive, targetIntensity, target
     
     return <meshStandardMaterial ref={ref} {...props} />
 };
-
-// --- LOGIC ---
 
 const usePlayerControls = () => {
     const [movement, setMovement] = useState({ forward: false, backward: false, left: false, right: false });
@@ -230,59 +78,6 @@ const usePlayerControls = () => {
         };
     }, []);
     return movement;
-};
-
-
-const VoxelClouds = ({ timeState }) => {
-    const target = TIMELINE_STATES[timeState];
-    const groupRef = useRef();
-
-    const clouds = useMemo(() => {
-        const items = [];
-        for (let i = 0; i < 40; i++) {
-            const clusterX = (Math.random() * 160) - 80;
-            const clusterZ = (Math.random() * 200) - 100;
-            const clusterY = 20 + Math.random() * 10;
-            
-            const numBlocks = 3 + Math.floor(Math.random() * 5);
-            for(let b=0; b<numBlocks; b++) {
-                items.push({
-                    position: [
-                        clusterX + (Math.random() * 4 - 2),
-                        clusterY + (Math.random() * 2 - 1),
-                        clusterZ + (Math.random() * 4 - 2)
-                    ],
-                    scale: [
-                        2 + Math.random() * 4,
-                        1 + Math.random() * 2,
-                        2 + Math.random() * 4
-                    ]
-                });
-            }
-        }
-        return items;
-    }, []);
-
-    useFrame((state, delta) => {
-        if (groupRef.current) {
-            groupRef.current.position.z += delta * 1.5;
-            if (groupRef.current.position.z > 100) {
-                groupRef.current.position.z = -100;
-            }
-        }
-    });
-
-    return (
-        <group ref={groupRef}>
-            <Instances limit={500} range={clouds.length} castShadow receiveShadow>
-                <boxGeometry args={[1, 1, 1]} />
-                <AnimatedMaterial targetColor={target.cloudColor} targetRoughness={1.0} targetMetalness={0.0} transparent opacity={0.9} />
-                {clouds.map((c, i) => (
-                    <Instance key={`cloud-${i}`} position={c.position} scale={c.scale} />
-                ))}
-            </Instances>
-        </group>
-    );
 };
 
 const CameraRig = ({ mode, isLocked }) => {
@@ -329,37 +124,19 @@ const CameraRig = ({ mode, isLocked }) => {
             direction.applyEuler(euler);
             
             camera.position.add(direction);
-            camera.position.y = 1.0; // Locked to street eye level
+            camera.position.y = 1.0; 
         }
     });
     return null;
 };
 
-function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
-    const target = TIMELINE_STATES[timeState];
-
-    const windowTexture = useMemo(() => {
-        const canvas = document.createElement("canvas");
-        canvas.width = 64;
-        canvas.height = 32;
-        const ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#000000";
-        ctx.fillRect(0, 0, 64, 32);
-        ctx.fillStyle = "#ffffff";
-        for(let i=0; i<4; i++) {
-            ctx.fillRect(4 + (i * 15), 6, 10, 20);
-        }
-        const tex = new THREE.CanvasTexture(canvas);
-        tex.magFilter = THREE.NearestFilter;
-        return tex;
-    }, []);
-
-    const { floors, pathZLength, offsetX, offsetZ, streetLights, poles, heads } = useMemo(() => {
+function CityScene({ data, setHoveredBox, activityMultiplier }) {
+    const { floors } = useMemo(() => {
         const result = [];
-        if (!data || data.length === 0) return { floors: [], pathZLength: 0, offsetX: 0, offsetZ: 0, streetLights: [], poles: [], heads: [] };
+        if (!data || data.length === 0) return { floors: [] };
 
         const SPACING = 1.0;
-        const PATH_WIDTH = 4.0; // Widen the central avenue so it doesn't feel claustrophobic
+        const PATH_WIDTH = 4.0; 
         
         const numWeeks = data.length;
         const numDays = 7;
@@ -382,7 +159,7 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                 const style = LEVELS[level] || LEVELS["NONE"];
                 
                 const numFloors = Math.max(1, count);
-                const floorHeight = 0.2; // Keep skyscrapers visible on screen
+                const floorHeight = 0.2; 
                 
                 for (let f = 0; f < numFloors; f++) {
                     const actualHeight = count === 0 ? 0.05 : floorHeight - 0.02;
@@ -402,78 +179,13 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
             });
         });
         
-        const lights = [];
-        const poles = [];
-        const heads = [];
-        for (let z = -offZ; z <= offZ; z += 8) {
-            lights.push(-z);
-            poles.push({ position: [-1.2, 0.5, -z], scale: [0.05, 1, 0.05], color: "#222222" });
-            heads.push({ position: [-1.2, 1.05, -z], scale: [0.3, 0.1, 0.3] });
-            poles.push({ position: [1.2, 0.5, -z], scale: [0.05, 1, 0.05], color: "#222222" });
-            heads.push({ position: [1.2, 1.05, -z], scale: [0.3, 0.1, 0.3] });
-        }
-        
-        return { floors: result, pathZLength: totalLengthZ, offsetX: offX, offsetZ: offZ, streetLights: lights, poles, heads };
+        return { floors: result };
     }, [data]);
-
-    const bushes = useMemo(() => {
-        if (!offsetZ) return [];
-        const items = [];
-        
-        // Avenue trees (along the glowing path)
-        for (let i = 0; i < 80; i++) {
-            const z = (Math.random() * (offsetZ * 2)) - offsetZ;
-            const x = Math.random() > 0.5 ? -1.6 : 1.6; // Edge of the glowing path
-            const scale = 0.4 + Math.random() * 0.4;
-            items.push({
-                position: [x + (Math.random() * 0.4 - 0.2), 0.2 * scale, z],
-                scale: [scale, scale, scale]
-            });
-        }
-        
-        // Perimeter trees/bushes (scattered randomly outside city and rivers)
-        for (let i = 0; i < 500; i++) {
-            let x = (Math.random() * 80) - 40;
-            // Keep them entirely off the immediate city blocks and roads
-            if (x > -8 && x < 8) {
-                x = x > 0 ? x + 8 : x - 8;
-            }
-            // Keep them out of the general river areas
-            if ((x > 10 && x < 20) || (x < -10 && x > -20)) {
-                x = x > 0 ? x + 10 : x - 10;
-            }
-            
-            const z = (Math.random() * 100) - 50;
-            const scale = 0.5 + Math.random() * 1.2;
-            items.push({
-                position: [x, 0.2 * scale, z],
-                scale: [scale, scale, scale]
-            });
-        }
-        return items;
-    }, [offsetZ]);
-
-    const { leftRiverCurve, rightRiverCurve } = useMemo(() => {
-        if (!offsetZ) return { leftRiverCurve: null, rightRiverCurve: null };
-        const leftPoints = [];
-        const rightPoints = [];
-        for (let z = offsetZ + 40; z >= -offsetZ - 40; z -= 5) {
-            const xLeft = -15 + Math.sin(z * 0.15) * 4 + (Math.random() * 1);
-            const xRight = 15 + Math.sin(z * 0.12 + Math.PI) * 5 + (Math.random() * 1);
-            leftPoints.push(new THREE.Vector3(xLeft, 0, z));
-            rightPoints.push(new THREE.Vector3(xRight, 0, z));
-        }
-        return {
-            leftRiverCurve: new THREE.CatmullRomCurve3(leftPoints),
-            rightRiverCurve: new THREE.CatmullRomCurve3(rightPoints)
-        };
-    }, [offsetZ]);
 
     if (floors.length === 0) return null;
 
     return (
         <group>
-            {/* Skyscraper Blocks */}
             <Instances 
                 limit={15000} 
                 range={floors.length}
@@ -490,10 +202,9 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                 <boxGeometry args={[1, 1, 1]} />
                 <AnimatedMaterial 
                     toneMapped={false} 
-                    emissiveMap={windowTexture} 
-                    targetRoughness={0.2}
-                    targetMetalness={0.8}
-                    targetIntensity={target.neonMultiplier * activityMultiplier}
+                    targetRoughness={0.8}
+                    targetMetalness={0.1}
+                    targetIntensity={0.5 * activityMultiplier}
                 />
                 {floors.map((floor, i) => (
                     <Instance 
@@ -506,84 +217,8 @@ function CityScene({ data, setHoveredBox, timeState, activityMultiplier }) {
                 ))}
             </Instances>
             
-            {/* The Glowing Central Path Strip */}
-            <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                <planeGeometry args={[1.5, pathZLength + 10]} />
-                <AnimatedMaterial 
-                    targetColor="#00f3ff" 
-                    targetEmissive="#00f3ff" 
-                    targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.2} 
-                    transparent 
-                    opacity={0.15} 
-                    toneMapped={false} 
-                />
-            </mesh>
-            
-            {/* Winding Cyber-Rivers */}
-            {leftRiverCurve && (
-                <mesh position={[0, 0.005, 0]} scale={[1, 0.01, 1]} receiveShadow>
-                    <tubeGeometry args={[leftRiverCurve, 100, 3, 12, false]} />
-                    <AnimatedMaterial 
-                        targetColor={target.riverColor}
-                        targetRoughness={0.1} 
-                        targetMetalness={0.5} 
-                        targetEmissive="#00f3ff" 
-                        targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.5 + 0.2} 
-                    />
-                </mesh>
-            )}
-            {rightRiverCurve && (
-                <mesh position={[0, 0.005, 0]} scale={[1, 0.01, 1]} receiveShadow>
-                    <tubeGeometry args={[rightRiverCurve, 100, 3.5, 12, false]} />
-                    <AnimatedMaterial 
-                        targetColor={target.riverColor}
-                        targetRoughness={0.1} 
-                        targetMetalness={0.5} 
-                        targetEmissive="#00f3ff" 
-                        targetIntensity={(target.neonMultiplier * activityMultiplier) * 0.5 + 0.2} 
-                    />
-                </mesh>
-            )}
-            
-            {/* Lamppost Poles */}
-            <Instances range={poles.length} limit={100} castShadow>
-                <cylinderGeometry args={[1, 1, 1, 8]} />
-                <AnimatedMaterial targetColor="#111111" targetMetalness={0.8} targetRoughness={0.2} />
-                {poles.map((p, i) => <Instance key={`pole-${i}`} position={p.position} scale={p.scale} />)}
-            </Instances>
-
-            {/* Lamppost Heads (Glowing Orange) */}
-            <Instances range={heads.length} limit={100}>
-                <boxGeometry args={[1, 1, 1]} />
-                <AnimatedMaterial 
-                    targetColor="#ffffff" 
-                    targetEmissive="#ff8800" 
-                    targetIntensity={target.neonMultiplier * 3.0} 
-                    toneMapped={false} 
-                />
-                {heads.map((h, i) => <Instance key={`head-${i}`} position={h.position} scale={h.scale} />)}
-            </Instances>
-
-            {/* Orange Urban Streetlights mapping the path */}
-            {streetLights.map((z, i) => (
-                <pointLight key={i} position={[0, 1.0, z]} intensity={target.neonMultiplier * 1.5} color="#ff8800" distance={8} decay={2} />
-            ))}
-            
-            {/* Scattered Urban Bushes / Trees */}
-            <Instances range={bushes.length} limit={2000} castShadow receiveShadow>
-                <icosahedronGeometry args={[0.4, 1]} />
-                <AnimatedMaterial targetColor={target.treeColor} targetRoughness={0.9} />
-                {bushes.map((bush, i) => (
-                    <Instance
-                        key={`bush-${i}`}
-                        position={bush.position}
-                        scale={bush.scale}
-                    />
-                ))}
-            </Instances>
-
             {/* Ground Grid Lines */}
-            <gridHelper args={[200, 200, '#00f3ff', '#00f3ff']} position={[0, 0.02, 0]} material-opacity={0.05} material-transparent />
+            <gridHelper args={[200, 200, '#000000', '#000000']} position={[0, 0.02, 0]} material-opacity={0.05} material-transparent />
         </group>
     );
 }
@@ -594,14 +229,6 @@ export default function GitHub3DGraph({ username }) {
     const [mode, setMode] = useState('CINEMATIC'); 
     const [isLocked, setIsLocked] = useState(false);
     const [hoveredBox, setHoveredBox] = useState(null);
-    const [timeState, setTimeState] = useState(getCurrentTimeState());
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTimeState(getCurrentTimeState());
-        }, 60000);
-        return () => clearInterval(interval);
-    }, []);
 
     useEffect(() => {
         fetch(`https://github-contributions-api.deno.dev/${username}.json`)
@@ -621,27 +248,10 @@ export default function GitHub3DGraph({ username }) {
         return Math.min(Math.max(totalContributions / 500, 0.3), 2.5);
     }, [totalContributions]);
 
-    useEffect(() => {
-        const handleT = (e) => {
-            if (e.key === 't' || e.key === 'T') {
-                const states = ['SUNRISE', 'DAY', 'SUNSET', 'NIGHT'];
-                setTimeState(prev => {
-                    const next = states[(states.indexOf(prev) + 1) % states.length];
-                    window.__TEST_TIME_STATE = next; 
-                    return next;
-                });
-            }
-        };
-        window.addEventListener('keydown', handleT);
-        return () => window.removeEventListener('keydown', handleT);
-    }, []);
-
-    const currentTarget = TIMELINE_STATES[timeState];
-
     return (
-        <div className="w-full h-full min-h-[500px] md:min-h-[600px] relative rounded-lg overflow-hidden bg-[#030508] border border-white/5">
+        <div className="w-full h-full min-h-[500px] md:min-h-[600px] relative bg-[var(--color-quantum-black)] overflow-hidden">
             {!data && (
-                <div className="absolute inset-0 flex items-center justify-center text-cyber-cyan text-xs font-space animate-pulse">
+                <div className="absolute inset-0 flex items-center justify-center text-[var(--color-geyser)]/50 text-xs font-space tracking-widest animate-pulse">
                     INITIALIZING URBAN GRID...
                 </div>
             )}
@@ -650,40 +260,39 @@ export default function GitHub3DGraph({ username }) {
                 <>
                     <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-6">
                         <div className="flex justify-between items-start">
-                            <div className="text-white font-mono text-sm tracking-widest bg-black/50 p-2 rounded backdrop-blur-md border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-                                <span className="text-cyber-cyan">{username}</span>'s Contributions — {new Date().getFullYear()}
-                                <span className="ml-4 text-xs opacity-50">[{timeState}] (Press T)</span>
+                            <div className="text-[var(--color-geyser)] font-mono text-xs tracking-widest bg-[var(--color-quantum-black)]/80 p-3 backdrop-blur-md border border-[var(--color-geyser)]/10">
+                                <span className="text-[var(--color-geyser)]">{username}</span>'s Contributions — {new Date().getFullYear()}
                             </div>
-                            <div className="text-white font-mono text-xl font-bold bg-black/50 px-4 py-2 rounded backdrop-blur-md border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-                                {totalContributions} <span className="text-xs text-gray-400 font-normal">TOTAL</span>
+                            <div className="text-[var(--color-geyser)] font-mono text-lg bg-[var(--color-quantum-black)]/80 px-4 py-2 backdrop-blur-md border border-[var(--color-geyser)]/10">
+                                {totalContributions} <span className="text-[10px] text-[var(--color-geyser)]/50 uppercase tracking-widest">TOTAL</span>
                             </div>
                         </div>
 
-                        <div className="flex justify-between items-end">
-                            <div className="flex gap-2 items-center bg-black/50 p-3 rounded backdrop-blur-md border border-white/10 pointer-events-auto shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-                                <span className="text-xs text-gray-400 font-mono mr-2">LESS</span>
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                            <div className="flex gap-3 items-center bg-[var(--color-quantum-black)]/80 p-4 backdrop-blur-md border border-[var(--color-geyser)]/10 pointer-events-auto">
+                                <span className="text-[10px] text-[var(--color-geyser)]/50 font-mono tracking-widest">LESS</span>
                                 {Object.values(LEVELS).map((lvl, idx) => (
-                                    <div key={idx} className="w-4 h-4 rounded-sm border border-white/10" style={{ backgroundColor: lvl.intensity > 0 ? lvl.emissive : lvl.color, boxShadow: lvl.intensity > 0 ? `0 0 10px ${lvl.emissive}` : 'none' }} />
+                                    <div key={idx} className="w-4 h-4 border border-[var(--color-geyser)]/20" style={{ backgroundColor: lvl.intensity > 0.1 ? lvl.color : 'transparent' }} />
                                 ))}
-                                <span className="text-xs text-gray-400 font-mono ml-2">MORE</span>
+                                <span className="text-[10px] text-[var(--color-geyser)]/50 font-mono tracking-widest">MORE</span>
                             </div>
 
-                            <div className="flex bg-black/50 p-1 rounded backdrop-blur-md border border-white/10 pointer-events-auto shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                            <div className="flex bg-[var(--color-quantum-black)]/80 p-2 backdrop-blur-md border border-[var(--color-geyser)]/10 pointer-events-auto gap-2">
                                 <button 
                                     onClick={() => setMode('CINEMATIC')}
-                                    className={`px-3 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'CINEMATIC' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors ${mode === 'CINEMATIC' ? 'bg-[var(--color-geyser)] text-[var(--color-quantum-black)]' : 'text-[var(--color-geyser)]/50 hover:text-[var(--color-geyser)]'}`}
                                 >
                                     ◉ STREET
                                 </button>
                                 <button 
                                     onClick={() => setMode('DRONE')}
-                                    className={`px-3 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'DRONE' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors ${mode === 'DRONE' ? 'bg-[var(--color-geyser)] text-[var(--color-quantum-black)]' : 'text-[var(--color-geyser)]/50 hover:text-[var(--color-geyser)]'}`}
                                 >
                                     ✈ DRONE
                                 </button>
                                 <button 
                                     onClick={handleWalkClick}
-                                    className={`px-3 py-2 font-mono text-xs tracking-widest rounded transition-colors ${mode === 'WALK' ? 'bg-cyber-cyan text-black font-bold shadow-[0_0_15px_rgba(0,243,255,0.5)]' : 'text-gray-400 hover:text-white'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors ${mode === 'WALK' ? 'bg-[var(--color-geyser)] text-[var(--color-quantum-black)]' : 'text-[var(--color-geyser)]/50 hover:text-[var(--color-geyser)]'}`}
                                 >
                                     🚶 WALK
                                 </button>
@@ -692,39 +301,43 @@ export default function GitHub3DGraph({ username }) {
                     </div>
 
                     {mode === 'WALK' && !isLocked && (
-                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-sm pointer-events-none">
-                            <div className="text-center font-mono text-cyber-cyan border border-cyber-cyan/30 p-6 rounded bg-black/80 shadow-[0_0_30px_rgba(0,243,255,0.2)]">
-                                <div className="text-lg mb-2 tracking-widest font-bold">CLICK TO ENTER</div>
-                                <div className="text-xs text-gray-400">[WASD] to move, [MOUSE] to look, [ESC] to exit</div>
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-[var(--color-quantum-black)]/60 backdrop-blur-sm pointer-events-none">
+                            <div className="text-center font-mono text-[var(--color-geyser)] border border-[var(--color-geyser)]/30 p-8 bg-[var(--color-quantum-black)]/80">
+                                <div className="text-sm mb-4 tracking-[0.2em] uppercase">CLICK TO ENTER</div>
+                                <div className="text-[10px] text-[var(--color-geyser)]/50 uppercase tracking-[0.1em]">[WASD] to move, [MOUSE] to look, [ESC] to exit</div>
                             </div>
                         </div>
                     )}
                     
                     {mode === 'WALK' && isLocked && (
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/50 text-xl font-light pointer-events-none z-20">+</div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--color-geyser)]/50 text-xl font-light pointer-events-none z-20">+</div>
                     )}
 
                     <Canvas camera={{ fov: 60 }} shadows>
-                        <color attach="background" args={['#000']} />
-                        <fog attach="fog" args={['#000', 10, 60]} />
+                        <color attach="background" args={['#ffffff']} />
+                        <fog attach="fog" args={['#ffffff', 10, 60]} />
                         
-                        <EnvironmentAnimator timeState={timeState} />
-                        
-                        {(timeState === 'NIGHT' || timeState === 'SUNSET' || timeState === 'SUNRISE') && (
-                            <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-                        )}
+                        <ambientLight intensity={0.5} color="#ffffff" />
+                        <hemisphereLight intensity={0.5} color="#ffffff" groundColor="#000000" />
+                        <directionalLight 
+                            position={[20, 50, -20]} 
+                            intensity={1.5} 
+                            color="#ffffff"
+                            castShadow
+                            shadow-mapSize-width={2048}
+                            shadow-mapSize-height={2048}
+                        />
                         
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
                             <planeGeometry args={[1000, 1000]} />
                             <AnimatedMaterial 
-                                targetColor={currentTarget.ground} 
-                                targetRoughness={0.2} 
+                                targetColor="#050505" 
+                                targetRoughness={0.9} 
                                 targetMetalness={0.1} 
                             />
                         </mesh>
 
-                        <VoxelClouds timeState={timeState} />
-                        <CityScene data={data} setHoveredBox={setHoveredBox} timeState={timeState} activityMultiplier={activityMultiplier} />
+                        <CityScene data={data} setHoveredBox={setHoveredBox} activityMultiplier={activityMultiplier} />
                         <CameraRig mode={mode} isLocked={isLocked} />
                         
                         {mode === 'WALK' && (
@@ -736,8 +349,8 @@ export default function GitHub3DGraph({ username }) {
 
                         {hoveredBox && (
                             <Html position={[hoveredBox.position[0], hoveredBox.position[1] + 0.5, hoveredBox.position[2]]} center className="pointer-events-none z-50">
-                                <div className="bg-black/90 border border-cyber-cyan text-white font-mono text-xs p-2 rounded shadow-[0_0_15px_rgba(0,243,255,0.4)] whitespace-nowrap backdrop-blur-md">
-                                    <span className="text-cyber-cyan font-bold">{hoveredBox.date}</span><br />
+                                <div className="bg-[var(--color-quantum-black)]/90 border border-[var(--color-geyser)]/30 text-[var(--color-geyser)] font-mono text-[10px] tracking-widest p-3 shadow-lg whitespace-nowrap backdrop-blur-md uppercase">
+                                    <span className="text-[var(--color-geyser)] mb-1 block">{hoveredBox.date}</span>
                                     {hoveredBox.count} contributions
                                 </div>
                             </Html>

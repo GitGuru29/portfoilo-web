@@ -1,150 +1,221 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useStore, { MOODS } from '../store/useStore';
-import { SiKotlin, SiFlutter, SiDjango, SiDocker, SiLinux } from 'react-icons/si';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroOverlay() {
     const heroRef = useRef(null);
-    const textRef = useRef(null);
+    const containerRef = useRef(null);
+    const imageRef = useRef(null);
+    const nameRef = useRef(null);
+    const subTextRef = useRef(null);
+    const rightTextRef = useRef(null);
+    const verticalTextRef = useRef(null);
+    const aboutContentRef = useRef(null);
     const setMood = useStore((state) => state.setMood);
 
-    const [typedText, setTypedText] = useState('');
-    const fullText = "System Software Engineer (Android + Linux)";
-
     useEffect(() => {
-        // Typing Effect
-        let i = 0;
-        const typingInterval = setInterval(() => {
-            if (i < fullText.length) {
-                setTypedText(fullText.substring(0, i + 1));
-                i++;
-            } else {
-                clearInterval(typingInterval);
-            }
-        }, 100);
+        const ctx = gsap.context(() => {
+            // Initial Entry Animation
+            const tl = gsap.timeline({ delay: 0.2 });
 
-        // 1. Text fade out on scroll
-        gsap.to(textRef.current, {
-            opacity: 0,
-            y: -50,
-            scrollTrigger: {
+            // Fade in and slightly scale down the background image for a cinematic reveal
+            tl.fromTo(imageRef.current,
+                { opacity: 0, scale: 1.05 },
+                { opacity: 1, scale: 1, duration: 2, ease: "power3.out" }
+            );
+
+            // Stagger text reveals
+            tl.fromTo([nameRef.current?.children, subTextRef.current, rightTextRef.current, verticalTextRef.current],
+                { opacity: 0, y: 30, skewY: 2 },
+                { opacity: 1, y: 0, skewY: 0, duration: 1.2, stagger: 0.1, ease: "power4.out" },
+                "-=1.2"
+            );
+
+            // Parallax scroll effect for the image
+            gsap.to(imageRef.current, {
+                y: "20%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: heroRef.current,
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            // Cinematic Scrub Timeline (Based on sticky scroll)
+            const scrubTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: heroRef.current,
+                    start: "top top",
+                    end: "bottom bottom", // Runs through the entire 200vh section
+                    scrub: 1.2,
+                }
+            });
+
+            // 1. Fade out right elements to make room
+            scrubTl.to([rightTextRef.current, verticalTextRef.current], {
+                opacity: 0,
+                x: 20,
+                duration: 1
+            }, 0);
+
+            // 2. Fade in About Content on the right
+            scrubTl.fromTo(aboutContentRef.current,
+                { autoAlpha: 0, x: 30, filter: 'blur(4px)' },
+                { autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: 1.5, ease: "power2.out" },
+                0.5
+            );
+
+            // 3. Hold About content for reading
+            scrubTl.to({}, { duration: 1.5 });
+
+            // Mood Management
+            ScrollTrigger.create({
                 trigger: heroRef.current,
-                start: "top top",
-                end: "center top",
-                scrub: true,
-            }
-        });
+                start: 'top bottom',
+                end: 'bottom center',
+                onEnter: () => setMood(MOODS.HERO),
+                onEnterBack: () => setMood(MOODS.HERO),
+            });
+        }, heroRef);
 
-        // 2. Mood state sync
-        ScrollTrigger.create({
-            trigger: heroRef.current,
-            start: "top bottom",
-            end: "bottom center",
-            onEnter: () => setMood(MOODS.HERO),
-            onEnterBack: () => setMood(MOODS.HERO),
-        });
-
-        return () => {
-            clearInterval(typingInterval);
-            ScrollTrigger.getAll().forEach(t => t.kill());
-        };
+        return () => ctx.revert();
     }, [setMood]);
 
-    const handleScrollClick = (e, id) => {
-        e.preventDefault();
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
     return (
-        <React.Fragment>
-            <section id="home" ref={heroRef} className="min-h-screen w-full flex flex-col justify-center pointer-events-none relative z-10 pt-32 pb-20">
-                <div className="w-full max-w-7xl mx-auto px-6 md:px-12 relative">
+        <section 
+            id="home" 
+            ref={heroRef} 
+            className="w-full h-[250vh] bg-[var(--color-quantum-black)] relative z-10"
+        >
+            {/* The Sticky Container */}
+            <div className="w-full h-[100dvh] sticky top-0 p-2 md:p-4 perspective-[1200px]">
+                {/* The Rounded Cinematic Card */}
+                <div 
+                    ref={containerRef}
+                    className="w-full h-full relative rounded-2xl md:rounded-[32px] overflow-hidden border border-[var(--color-geyser)]/10 bg-[#2b2b2b]"
+                >
+                
+                {/* 1. Background Image with Vignette */}
+                <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#2b2b2b]">
+                    {/* Dark gradient vignette over the image to ensure text readability */}
+                    <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-transparent to-[#111]/90 pointer-events-none" />
+                    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#2b2b2b] via-transparent to-[#2b2b2b] pointer-events-none" />
+                    
+                    <img 
+                        ref={imageRef}
+                        src="/assets/profile.png"
+                        alt="Siluna N. Dangalla"
+                        className="w-full max-w-[900px] h-[110%] absolute -top-[5%] left-1/2 -translate-x-1/2 object-cover object-[50%_15%] grayscale contrast-125 opacity-0 will-change-transform"
+                    />
+                </div>
 
-                    {/* 2-Column Content Box */}
-                    <div ref={textRef} className="w-full flex flex-col md:flex-row items-center justify-between text-center md:text-left pointer-events-auto gap-8 lg:gap-16">
+                {/* 2. Top Left Logo/Name */}
+                <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20 mix-blend-difference">
+                    <span className="text-xs md:text-sm font-space tracking-[0.2em] uppercase text-white font-medium">
+                        SIDANG ©
+                    </span>
+                </div>
 
-                        {/* Left Side: Text */}
-                        <div className="flex flex-col items-center md:items-start flex-1 order-2 md:order-1">
-                            
-                            <div className="glitch-wrapper mb-2 mt-4 md:mt-0">
-                                <h1 className="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] glitch leading-[1]" data-text="Siluna Nusal">
-                                    Siluna<br className="hidden md:block" /> Nusal
-                                </h1>
-                            </div>
+                {/* 3. Bottom Left: Massive Typography */}
+                <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20 max-w-4xl">
+                    <div ref={nameRef} className="flex flex-col mb-6 pointer-events-none">
+                        <h1 className="text-[12vw] md:text-[8vw] lg:text-[7rem] leading-[0.85] font-sans font-bold tracking-tight text-white uppercase m-0 p-0 opacity-0 will-change-transform">
+                            SILUNA N.
+                        </h1>
+                        <h1 className="text-[12vw] md:text-[8vw] lg:text-[7rem] leading-[0.85] font-sans font-bold tracking-tight text-white uppercase m-0 p-0 opacity-0 will-change-transform">
+                            DANGALLA
+                        </h1>
+                    </div>
+                    <p ref={subTextRef} className="text-xs md:text-sm font-inter text-white/70 max-w-md leading-relaxed font-light opacity-0 will-change-transform">
+                        Engineering digital experiences and low-level systems that don't just function flawlessly, but are optimized to scale and outperform.
+                    </p>
+                </div>
 
-                            <h2 className="text-lg md:text-xl lg:text-2xl font-space text-cyber-cyan font-light tracking-widest mb-6 drop-shadow-[0_0_12px_rgba(0,247,255,0.3)] min-h-[4rem] md:min-h-[2rem] w-full text-center md:text-left leading-relaxed">
-                                {typedText}
-                                <span className="inline-block w-2.5 h-[1.1em] bg-cyber-cyan ml-2 align-text-bottom animate-pulse shadow-[0_0_12px_rgba(0,243,255,0.8)]" />
-                            </h2>
+                {/* 4. Bottom Right: Role Descriptions */}
+                <div 
+                    ref={rightTextRef}
+                    className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-20 flex flex-col items-end text-right opacity-0 will-change-transform hidden sm:flex"
+                >
+                    <h2 className="text-lg md:text-2xl font-space font-medium text-white tracking-wide uppercase mb-1">
+                        SOFTWARE ENGINEER
+                    </h2>
+                    <h3 className="text-xs md:text-sm font-space text-white/50 tracking-[0.2em] uppercase">
+                        SYSTEMS & ANDROID
+                    </h3>
+                </div>
 
-                            <p className="max-w-[500px] text-sm md:text-base lg:text-lg text-gray-400 font-inter font-light tracking-wide mb-8 leading-relaxed text-center md:text-left mx-auto md:mx-0">
-                                Building low-level tools, mobile systems, and developer infrastructure.
-                            </p>
+                {/* 5. Right Edge Vertical Text */}
+                <div 
+                    ref={verticalTextRef}
+                    className="absolute top-1/2 right-4 md:right-8 -translate-y-1/2 z-20 flex flex-col items-center gap-12 opacity-0 will-change-transform hidden md:flex"
+                >
+                    <div 
+                        className="text-[9px] md:text-[10px] font-space tracking-[0.4em] text-white/40 uppercase"
+                        style={{ writingMode: 'vertical-rl' }}
+                    >
+                        A E G I S  S Y S
+                    </div>
+                    <div className="text-[9px] md:text-[10px] font-space tracking-[0.2em] text-white/40">
+                        20<br/>26
+                    </div>
+                </div>
 
-                            <div className="flex flex-col items-center md:items-start mb-10 w-full">
-                                <div className="flex flex-wrap justify-center md:justify-start items-center gap-3 md:gap-4 text-[10px] md:text-xs font-space font-medium text-gray-300 uppercase tracking-widest p-3 md:p-4 rounded-xl bg-black/40 border border-white/5 backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-                                    <span className="hover:text-cyber-cyan hover:drop-shadow-[0_0_8px_var(--theme-primary)] transition-all cursor-crosshair">Android</span>
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan shadow-[0_0_8px_var(--theme-primary)]" />
-                                    <span className="hover:text-cyber-violet hover:drop-shadow-[0_0_8px_var(--theme-secondary)] transition-all cursor-crosshair">Systems</span>
-                                    <span className="w-1.5 h-1.5 rounded-full bg-cyber-pink shadow-[0_0_8px_#ff00ff]" />
-                                    <span className="hover:text-cyber-pink hover:drop-shadow-[0_0_8px_#ff00ff] transition-all cursor-crosshair">Security</span>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 mx-auto md:mx-0 pointer-events-auto w-full font-mono text-sm md:text-base">
-                                <a href="#projects" onClick={(e) => handleScrollClick(e, 'projects')} className="group flex items-center gap-2 bg-[#050505]/80 backdrop-blur-md border border-white/10 px-6 py-4 rounded-xl hover:border-cyber-cyan/50 hover:bg-cyber-cyan/10 hover:shadow-[0_0_20px_rgba(0,243,255,0.15)] transition-all w-full sm:w-auto">
-                                    <span className="text-cyber-cyan font-bold">~</span>
-                                    <span className="text-gray-500">$</span>
-                                    <span className="text-gray-300 group-hover:text-cyber-cyan transition-colors">./execute_projects.sh</span>
-                                    <span className="w-2 h-4 bg-cyber-cyan opacity-0 group-hover:opacity-100 group-hover:animate-pulse" />
-                                </a>
-                                <a href="/Siluna_Nusal_CV.pdf" download="Siluna_Nusal_CV.pdf" className="group flex items-center gap-2 bg-[#050505]/80 backdrop-blur-md border border-white/10 px-6 py-4 rounded-xl hover:border-cyber-violet/50 hover:bg-cyber-violet/10 hover:shadow-[0_0_20px_rgba(181,55,242,0.15)] transition-all w-full sm:w-auto">
-                                    <span className="text-cyber-violet font-bold">~</span>
-                                    <span className="text-gray-500">$</span>
-                                    <span className="text-gray-300 group-hover:text-cyber-violet transition-colors">./download_resume.sh</span>
-                                    <span className="w-2 h-4 bg-cyber-violet opacity-0 group-hover:opacity-100 group-hover:animate-pulse" />
-                                </a>
-                            </div>
-                        </div>
-
-                        {/* Right Side: Profile Photo */}
-                        <div className="flex-1 order-1 md:order-2 flex justify-center items-center relative group w-full max-w-[280px] md:max-w-none mt-8 md:mt-0">
-                            <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full border border-cyber-cyan/20 p-2 shadow-[0_0_30px_rgba(0,247,255,0.1)] group-hover:shadow-[0_0_50px_rgba(0,247,255,0.3)] group-hover:border-cyber-cyan/50 transition-all duration-700">
-                                {/* Animated Rings */}
-                                <div className="absolute inset-0 rounded-full border-t border-r border-cyber-violet/40 animate-[spin_10s_linear_infinite]" />
-                                <div className="absolute inset-2 rounded-full border-b border-l border-cyber-cyan/40 animate-[spin_15s_linear_infinite_reverse]" />
-                                <div className="absolute inset-[-10px] rounded-full border border-white/5 bg-cyber-dark/40 backdrop-blur-sm -z-10" />
-
-                                {/* Image Container with Hologram FX */}
-                                <div className="w-full h-full rounded-full overflow-hidden relative group-hover:animate-pulse">
-                                    <img
-                                        src="/assets/profile.png"
-                                        alt="Siluna Nusal"
-                                        className="w-full h-full object-cover grayscale brightness-90 contrast-125 mix-blend-luminosity group-hover:mix-blend-normal group-hover:grayscale-0 group-hover:brightness-110 transition-all duration-700"
-                                    />
-                                    {/* Scanlines Hologram Overlay */}
-                                    <div className="absolute inset-0 z-20 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,243,255,0.05)_50%)] bg-[length:100%_4px] opacity-30 group-hover:opacity-50 transition-opacity" />
-                                    {/* Overlay gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-cyber-cyan/20 to-transparent mix-blend-overlay group-hover:opacity-0 transition-opacity duration-700" />
-                                </div>
-                            </div>
-                        </div>
+                {/* 6. Condensed About Section (Reveals on scroll) */}
+                <div 
+                    ref={aboutContentRef}
+                    className="absolute top-1/2 right-6 md:right-16 -translate-y-1/2 z-30 flex flex-col gap-5 max-w-[280px] md:max-w-[400px] invisible opacity-0 will-change-[opacity,visibility,transform,filter]"
+                >
+                    <h3 className="text-[10px] md:text-xs font-space tracking-[0.4em] uppercase text-[var(--color-geyser)]/50">
+                        About Me
+                    </h3>
+                    
+                    <div className="flex flex-col gap-4 font-inter text-white font-semibold leading-[1.7] text-[11px] md:text-[13px]">
+                        <p>
+                            I’m a final-year Software Engineering undergraduate focused on building high-performance, system-level software.
+                        </p>
+                        <p>
+                            My work spans native Android development, Linux-based tooling, and low-level system behavior — with an emphasis on efficiency, control, and reliability. I approach development from the inside out, understanding how systems operate at their core before shaping the user experience on top.
+                        </p>
+                        <p className="text-white/80">
+                            I’ve built projects ranging from custom Android launchers with system-aware features to Linux-based utilities and experimental interaction systems. My goal is simple: engineer software that doesn’t just work, but performs predictably and scales under pressure.
+                        </p>
                     </div>
 
+                    {/* Action Links */}
+                    <div className="flex items-center gap-6 mt-2 pt-5 border-t border-white/10">
+                        <a 
+                            href="#projects"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const el = document.getElementById('portfolio-filters');
+                                if (el && window.lenis) {
+                                    window.lenis.scrollTo(el, { offset: -50, duration: 1.2 });
+                                } else {
+                                    window.location.hash = '#projects';
+                                }
+                            }}
+                            className="text-[9px] md:text-[10px] font-space tracking-[0.3em] uppercase text-white/70 hover:text-white transition-colors flex items-center gap-2 group cursor-pointer"
+                        >
+                            View Projects <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                        <a 
+                            href="/Siluna_Nusal_CV.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[9px] md:text-[10px] font-space tracking-[0.3em] uppercase text-white/70 hover:text-white transition-colors flex items-center gap-2 group"
+                        >
+                            Download CV <span className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform">↗</span>
+                        </a>
+                    </div>
                 </div>
 
-                {/* Scroll Indicator */}
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce opacity-70 pointer-events-none">
-                    <span className="text-cyber-cyan text-[10px] font-space tracking-[0.3em] mb-2 uppercase">Scroll</span>
-                    <svg className="w-4 h-4 text-cyber-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
                 </div>
-            </section>
-        </React.Fragment>
+            </div>
+        </section>
     );
 }

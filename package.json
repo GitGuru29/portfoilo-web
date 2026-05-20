@@ -10,6 +10,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@emailjs/browser": "^4.4.1",
         "@fontsource/inter": "^5.2.8",
         "@fontsource/orbitron": "^5.2.8",
         "@fontsource/space-grotesk": "^5.2.10",

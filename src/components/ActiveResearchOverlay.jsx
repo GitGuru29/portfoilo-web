@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { GitBranch, Activity, Terminal } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -34,11 +33,13 @@ export default function ActiveResearchOverlay() {
     useEffect(() => {
         const ctx = gsap.context(() => {
             gsap.fromTo('.header-fade',
-                { opacity: 0, y: 30 },
+                { opacity: 0, y: 50, skewY: 2 },
                 {
-                    opacity: 1, y: 0,
-                    duration: 1,
-                    stagger: 0.2,
+                    opacity: 1, y: 0, skewY: 0,
+                    duration: 1.2,
+                    stagger: 0.15,
+                    ease: "power4.out",
+                    force3D: true,
                     scrollTrigger: {
                         trigger: sectionRef.current,
                         start: "top 80%",
@@ -46,102 +47,80 @@ export default function ActiveResearchOverlay() {
                 }
             );
 
-            // Animate cards
-            gsap.set(cardsRef.current, { opacity: 0, x: -50 });
+            gsap.set(cardsRef.current, { opacity: 0, y: 50, scale: 0.98 });
             ScrollTrigger.batch(cardsRef.current, {
                 start: "top 85%",
-                onEnter: (batch) => gsap.to(batch, { opacity: 1, x: 0, stagger: 0.15, duration: 0.8, ease: "power3.out", overwrite: true }),
+                onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, scale: 1, stagger: 0.15, duration: 1.2, ease: "power3.out", overwrite: true, force3D: true }),
             });
         }, sectionRef);
 
         return () => ctx.revert();
     }, []);
 
-    const renderProgressBar = (percentage) => {
-        const totalBlocks = 20;
-        const filledBlocks = Math.round((percentage / 100) * totalBlocks);
-        const emptyBlocks = totalBlocks - filledBlocks;
-        
-        return (
-            <div className="flex flex-col gap-2 font-mono text-xs w-full">
-                <div className="flex justify-between items-center text-cyber-cyan">
-                    <span>BUILD_PROGRESS</span>
-                    <span>{percentage}%</span>
-                </div>
-                <div className="text-gray-500 tracking-[0.2em] w-full break-all">
-                    [{'█'.repeat(filledBlocks)}{'░'.repeat(emptyBlocks)}]
-                </div>
-            </div>
-        );
-    };
-
     return (
-        <section ref={sectionRef} className="relative w-full max-w-6xl mx-auto px-6 py-24 md:py-32 z-10 flex flex-col">
+        <section ref={sectionRef} className="relative w-full max-w-7xl mx-auto px-6 py-24 md:py-32 z-10 flex flex-col">
             
+            {/* Structural line */}
+            <div className="structural-line structural-line-h top-0 left-0 w-full hidden lg:block" />
+
             {/* Header */}
-            <div className="mb-16 md:mb-24">
-                <span className="header-fade text-sm font-space tracking-widest text-cyber-violet mb-4 uppercase flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-cyber-violet animate-pulse shadow-[0_0_10px_var(--theme-secondary)]" />
+            <div className="mb-16 md:mb-24 flex flex-col items-center text-center">
+                <span className="header-fade text-xs md:text-sm tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
                     Current Directives
                 </span>
-                <h2 className="header-fade text-4xl md:text-6xl lg:text-7xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500 tracking-tight">
-                    ACTIVE <span className="text-cyber-cyan drop-shadow-[0_0_20px_rgba(0,243,255,0.4)]">R&D</span>
+                <h2 className="header-fade text-3xl md:text-5xl lg:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight">
+                    Active Research.
                 </h2>
-                <div className="header-fade w-24 h-1 bg-gradient-to-r from-cyber-cyan to-transparent mt-8 rounded-full" />
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 w-full">
                 {ongoingProjects.map((project, idx) => (
                     <div 
                         key={idx}
                         ref={el => el && !cardsRef.current.includes(el) && cardsRef.current.push(el)}
-                        className="glass p-8 md:p-10 rounded-3xl border border-white/5 bg-[#050505]/80 backdrop-blur-xl hover:border-cyber-cyan/30 transition-all duration-500 flex flex-col relative group overflow-hidden"
+                        data-cursor="Research Node"
+                        className="group p-8 md:p-12 border border-[var(--color-geyser)]/10 flex flex-col hover:border-[var(--color-geyser)]/30 transition-colors duration-500 bg-[var(--color-quantum-black)] hover:bg-[var(--color-geyser)]/[0.02] relative overflow-hidden will-change-all"
                     >
-                        {/* Ambient Glow */}
-                        <div className="absolute -inset-4 bg-gradient-to-br from-cyber-cyan/10 to-transparent opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-700 pointer-events-none" />
+                        <div className="absolute top-0 left-0 w-[2px] h-full bg-[var(--color-geyser)] scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
                         
-                        {/* Top Bar */}
-                        <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4 relative z-10">
-                            <div className="flex items-center gap-2 text-xs font-space tracking-widest text-gray-400">
-                                <Terminal className="w-3.5 h-3.5" />
-                                <span>{project.type}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_8px_#00f3ff]" />
-                                <span className="text-xs font-space tracking-widest text-cyber-cyan uppercase">{project.status}</span>
-                            </div>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 border-b border-[var(--color-geyser)]/10 pb-4 gap-4">
+                            <span className="text-[10px] tracking-[0.2em] font-space uppercase text-[var(--color-geyser)]/50">{project.type}</span>
+                            <span className="text-[10px] tracking-[0.2em] font-space uppercase text-[var(--color-geyser)]">{project.status}</span>
                         </div>
 
-                        {/* Title & Desc */}
-                        <div className="relative z-10 mb-8">
-                            <h3 className="text-2xl md:text-3xl font-orbitron font-bold text-white mb-4 group-hover:text-cyber-cyan transition-colors">
+                        <div className="mb-8 z-10">
+                            <h3 className="text-2xl md:text-3xl font-space font-light text-[var(--color-geyser)] mb-4">
                                 {project.title}
                             </h3>
-                            <div className="flex items-center gap-2 text-xs font-mono text-[#7dcfff] bg-[#7dcfff]/10 w-max px-3 py-1 rounded mb-6">
-                                <GitBranch className="w-3.5 h-3.5" />
-                                {project.branch}
+                            <div className="text-[10px] font-mono tracking-widest text-[var(--color-geyser)]/40 uppercase mb-6">
+                                Branch: {project.branch}
                             </div>
-                            <p className="text-gray-400 font-inter font-light leading-relaxed text-sm">
+                            <p className="text-sm md:text-base text-[var(--color-geyser)]/60 font-inter font-light leading-relaxed">
                                 {project.description}
                             </p>
                         </div>
 
-                        {/* Tasks Checklist */}
-                        <div className="relative z-10 mb-8 flex flex-col gap-2">
+                        <div className="mb-8 flex flex-col gap-3 z-10">
                             {project.tasks.map((task, i) => (
-                                <div key={i} className="flex items-center gap-3 text-sm font-inter text-gray-300">
-                                    <div className="w-3 h-3 border border-cyber-violet rounded-sm flex items-center justify-center">
-                                        {i === 0 && <div className="w-1.5 h-1.5 bg-cyber-violet rounded-sm" />}
-                                    </div>
-                                    <span className={i === 0 ? "text-white" : "opacity-60"}>{task}</span>
+                                <div key={i} className="flex items-center gap-4 text-sm font-inter text-[var(--color-geyser)]/60 font-light">
+                                    <div className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-[var(--color-geyser)]' : 'border border-[var(--color-geyser)]/30'}`} />
+                                    <span className={i === 0 ? "text-[var(--color-geyser)]" : ""}>{task}</span>
                                 </div>
                             ))}
                         </div>
 
-                        {/* Terminal Progress Bar */}
-                        <div className="mt-auto pt-6 border-t border-white/5 relative z-10">
-                            {renderProgressBar(project.progress)}
+                        <div className="mt-auto pt-6 border-t border-[var(--color-geyser)]/10 flex flex-col gap-2 z-10">
+                            <div className="flex justify-between text-[10px] font-space tracking-[0.2em] uppercase text-[var(--color-geyser)]/50">
+                                <span>Completion</span>
+                                <span>{project.progress}%</span>
+                            </div>
+                            <div className="w-full h-[1px] bg-[var(--color-geyser)]/10 relative mt-2">
+                                <div 
+                                    className="absolute top-0 left-0 h-full bg-[var(--color-geyser)] transition-all duration-1000 ease-[0.16,1,0.3,1]"
+                                    style={{ width: `${project.progress}%` }}
+                                />
+                            </div>
                         </div>
 
                     </div>

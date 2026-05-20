@@ -30,10 +30,10 @@ export default function ProjectDetails() {
     if (!project) {
         return (
             <div className="relative z-10 w-full min-h-screen flex items-center justify-center flex-col gap-6">
-                <h1 className="text-4xl text-white font-bold">Project Not Found</h1>
+                <h1 className="text-4xl text-[var(--color-geyser)] font-space font-light">Project Not Found</h1>
                 <button
                     onClick={() => navigate('/')}
-                    className="text-[#a855f7] hover:text-white transition-colors flex items-center gap-2"
+                    className="text-[var(--color-geyser)]/60 hover:text-[var(--color-geyser)] transition-colors flex items-center gap-2 font-space text-sm tracking-widest uppercase"
                 >
                     <ArrowLeft className="w-5 h-5" /> Back to Home
                 </button>
@@ -48,22 +48,22 @@ export default function ProjectDetails() {
             {/* Back Button */}
             <Link
                 to="/"
-                className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-12 transition-colors group"
+                className="inline-flex items-center gap-2 text-[var(--color-geyser)]/60 hover:text-[var(--color-geyser)] mb-12 transition-colors group font-space text-xs tracking-widest uppercase"
             >
-                <div className="p-2 rounded-full border border-white/10 group-hover:border-white/30 group-hover:bg-white/5 transition-all">
-                    <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                <div className="p-2 rounded-full border border-[var(--color-geyser)]/10 group-hover:border-[var(--color-geyser)]/30 group-hover:bg-[var(--color-geyser)]/5 transition-all">
+                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                 </div>
                 Return to Portfolio
             </Link>
 
             {/* Project Header Info */}
             <div className="max-w-4xl mb-16">
-                <span className="text-sm font-space tracking-widest text-cyber-cyan mb-6 uppercase flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-cyber-cyan animate-pulse shadow-[0_0_10px_#00f3ff]" />
+                <span className="text-[10px] md:text-xs font-space tracking-[0.3em] text-[var(--color-geyser)]/50 mb-6 uppercase flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-geyser)] animate-pulse" />
                     {project.role}
                 </span>
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl pb-2 font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-cyber-violet tracking-tight drop-shadow-[0_0_10px_rgba(181,55,242,0.3)]">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl pb-2 font-space font-light text-[var(--color-geyser)] tracking-tight">
                         {project.title}
                     </h1>
                     
@@ -72,7 +72,7 @@ export default function ProjectDetails() {
                             href={project.link} 
                             target="_blank" 
                             rel="noopener noreferrer" 
-                            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-cyber-violet/10 border border-cyber-violet/40 hover:bg-cyber-violet/20 hover:border-cyber-violet hover:shadow-[0_0_20px_rgba(181,55,242,0.2)] text-cyber-violet transition-all font-space text-sm tracking-widest uppercase flex-shrink-0"
+                            className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[var(--color-geyser)]/20 hover:bg-[var(--color-geyser)]/5 hover:border-[var(--color-geyser)]/40 text-[var(--color-geyser)] transition-all font-space text-[10px] md:text-xs tracking-widest uppercase flex-shrink-0"
                         >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -84,15 +84,15 @@ export default function ProjectDetails() {
 
                 {/* Project Description or Markdown Content */}
                 {project.content ? (
-                    <div className="mt-12 bg-cyber-dark/60 border border-white/5 rounded-3xl p-8 md:p-12 backdrop-blur-xl transition-all shadow-xl">
-                        <article className="prose prose-invert prose-lg max-w-none prose-headings:font-orbitron prose-headings:text-cyber-cyan prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-a:text-cyber-violet hover:prose-a:text-white prose-pre:bg-[#050505] prose-pre:border prose-pre:border-cyber-cyan/20 prose-pre:shadow-[inset_0_0_20px_rgba(0,243,255,0.05)] prose-code:text-cyber-pink">
+                    <div className="mt-12 bg-transparent border-t border-[var(--color-geyser)]/10 pt-8 transition-all">
+                        <article className="prose prose-lg max-w-none prose-headings:font-space prose-headings:font-light prose-headings:text-[var(--color-geyser)] prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-p:text-[var(--color-geyser)]/70 prose-p:font-inter prose-a:text-[var(--color-geyser)] hover:prose-a:opacity-70 prose-pre:bg-[var(--color-quantum-black)] prose-pre:border prose-pre:border-[var(--color-geyser)]/10 prose-code:text-[var(--color-geyser)]">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {project.content}
                             </ReactMarkdown>
                         </article>
                     </div>
                 ) : (
-                    <p className="text-base md:text-lg lg:text-xl text-gray-400 font-light leading-relaxed max-w-4xl whitespace-pre-line mt-8">
+                    <p className="text-base md:text-lg lg:text-xl text-[var(--color-geyser)]/60 font-inter font-light leading-relaxed max-w-4xl whitespace-pre-line mt-8 border-t border-[var(--color-geyser)]/10 pt-8">
                         {project.description}
                     </p>
                 )}
@@ -110,11 +110,11 @@ export default function ProjectDetails() {
                                 zIndex: i + 10,
                             }}
                         >
-                            <div className="w-full h-full rounded-2xl md:rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_-30px_60px_rgba(0,0,0,0.8)] bg-[#050505] flex items-center justify-center p-4 md:p-12 transition-transform duration-500 will-change-transform">
+                            <div className="w-full h-full border border-[var(--color-geyser)]/10 bg-[var(--color-quantum-black)] flex items-center justify-center p-4 md:p-12 transition-transform duration-500 will-change-transform shadow-2xl shadow-black/5">
                                 <img
                                     src={img}
                                     alt={`${project.title} detailed screenshot ${i + 1}`}
-                                    className="max-w-full max-h-full object-scale-down transition-transform duration-700 rounded-xl hover:scale-[1.02]"
+                                    className="max-w-full max-h-full object-scale-down transition-transform duration-700 hover:scale-[1.02]"
                                     loading="lazy"
                                 />
                             </div>
@@ -124,12 +124,12 @@ export default function ProjectDetails() {
             )}
 
             {/* Bottom Back Button */}
-            <div className="mt-32 border-t border-white/10 pt-12 flex justify-center">
+            <div className="mt-32 border-t border-[var(--color-geyser)]/10 pt-12 flex justify-center">
                 <Link
                     to="/"
-                    className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all font-medium text-lg"
+                    className="inline-flex items-center gap-3 px-8 py-4 border border-[var(--color-geyser)]/20 hover:bg-[var(--color-geyser)] hover:text-[var(--color-quantum-black)] text-[var(--color-geyser)] transition-all font-space text-xs tracking-widest uppercase"
                 >
-                    <ArrowLeft className="w-5 h-5" />
+                    <ArrowLeft className="w-4 h-4" />
                     Back to Timeline
                 </Link>
             </div>

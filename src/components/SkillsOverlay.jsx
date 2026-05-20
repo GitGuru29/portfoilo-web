@@ -1,99 +1,185 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Cpu, Smartphone, Database, Network, Settings, Globe, Server } from 'lucide-react';
-import {
-    SiKotlin, SiPython, SiCplusplus, SiJavascript, SiDart,
-    SiAndroid, SiFirebase, SiApachespark, SiMongodb, SiLinux, SiXcode,
-    SiGooglecolab, SiCloudinary, SiPostgresql, SiPhp,
-    SiGnubash, SiFishshell, SiSwift
-} from 'react-icons/si';
-import { FaJava, FaAws } from 'react-icons/fa';
 
-const techStack = [
-    {
-        category: "Languages",
-        items: [
-            { name: "C/C++", icon: <SiCplusplus className="text-[#00599C] w-6 h-6" /> },
-            { name: "Kotlin", icon: <SiKotlin className="text-[#7F52FF] w-6 h-6" /> },
-            { name: "Java", icon: <FaJava className="text-[#007396] w-6 h-6" /> },
-            { name: "Python", icon: <SiPython className="text-[#3776AB] w-6 h-6" /> },
-            { name: "Bash", icon: <SiGnubash className="text-[#4EAA25] w-6 h-6" /> },
-            { name: "Fish", icon: <SiFishshell className="text-[#4EAA25] w-6 h-6" /> },
-            { name: "Swift", icon: <SiSwift className="text-[#F05138] w-6 h-6" /> }
-        ]
-    },
-    {
-        category: "System & Mobile Architecture",
-        items: [
-            { name: "Android SDK", icon: <SiAndroid className="text-[#3DDC84] w-6 h-6" /> },
-            { name: "Android NDK", icon: <Cpu className="text-[#3DDC84] w-6 h-6" /> },
-            { name: "Jetpack Compose", icon: <SiAndroid className="text-[#4285F4] w-6 h-6" /> },
-            { name: "Linux Internals", icon: <SiLinux className="text-[#FCC624] w-6 h-6" /> }
-        ]
-    },
-    {
-        category: "Infrastructure & Data",
-        items: [
-            { name: "AWS", icon: <FaAws className="text-[#232F3E] w-6 h-6" /> },
-            { name: "PostgreSQL", icon: <SiPostgresql className="text-[#336791] w-6 h-6" /> },
-            { name: "MongoDB", icon: <SiMongodb className="text-[#47A248] w-6 h-6" /> },
-            { name: "PySpark", icon: <SiApachespark className="text-[#E25A1C] w-6 h-6" /> }
-        ]
-    },
-    {
-        category: "Core Competencies",
-        items: [
-            { name: "System Design", icon: <Server className="text-gray-400 w-6 h-6" /> },
-            { name: "Kernel Modules", icon: <Settings className="text-gray-400 w-6 h-6" /> },
-            { name: "Performance Optimization", icon: <Cpu className="text-gray-400 w-6 h-6" /> },
-            { name: "Distributed Systems", icon: <Network className="text-gray-400 w-6 h-6" /> },
-            { name: "Security & Privacy", icon: <Database className="text-gray-400 w-6 h-6" /> }
-        ]
-    }
-];
+gsap.registerPlugin(ScrollTrigger);
+
+// Custom Segmented LED Bar — light blue variant
+function SegmentedBar({ label, value, max = 12 }) {
+    const segments = Math.floor((value / 100) * max);
+
+    return (
+        <div className="flex flex-col gap-2 group cursor-default">
+            <div className="flex justify-between items-center text-[10px] font-space uppercase tracking-[0.2em] text-slate-500 group-hover:text-slate-700 transition-colors">
+                <span>{label}</span>
+                <span className="text-[9px] tabular-nums">{value}%</span>
+            </div>
+            <div className="flex gap-1">
+                {Array.from({ length: max }).map((_, i) => (
+                    <div
+                        key={i}
+                        className={`h-1.5 flex-1 rounded-sm transition-colors duration-500 ${
+                            i < segments
+                                ? 'bg-blue-500 shadow-[0_0_6px_rgba(59,130,246,0.35)]'
+                                : 'bg-blue-200/60'
+                        }`}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+}
+
+// Circular Telemetry Ring — light blue variant
+function TelemetryRing({ label, percentage }) {
+    const radius = 30;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+    return (
+        <div className="flex flex-col items-center gap-3">
+            <div className="relative w-20 h-20 flex items-center justify-center cursor-default">
+                <svg className="w-full h-full transform -rotate-90 absolute inset-0">
+                    <circle cx="40" cy="40" r={radius} stroke="rgba(147,197,253,0.4)" strokeWidth="3" fill="none" />
+                    <circle
+                        cx="40" cy="40" r={radius}
+                        stroke="rgba(59,130,246,0.85)"
+                        strokeWidth="3" fill="none"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={strokeDashoffset}
+                        strokeLinecap="round"
+                        className="drop-shadow-[0_0_6px_rgba(59,130,246,0.4)] transition-all duration-1000 ease-out"
+                    />
+                </svg>
+                <span className="text-xs font-space font-semibold text-blue-700 tracking-widest">{percentage}</span>
+            </div>
+            <span className="text-[9px] font-space uppercase tracking-[0.2em] text-slate-500 text-center max-w-[80px]">
+                {label}
+            </span>
+        </div>
+    );
+}
 
 export default function SkillsOverlay() {
     const containerRef = useRef(null);
-    const techRefs = useRef([]);
+    const titleRef = useRef(null);
+    const cardsRef = useRef([]);
 
     useEffect(() => {
-        gsap.fromTo(techRefs.current,
-            { opacity: 0, x: 50, filter: 'blur(5px)' },
-            {
-                opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.8, stagger: 0.2, ease: "power2.out",
-                scrollTrigger: { trigger: containerRef.current, start: "top 75%" }
-            }
-        );
-
-        return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill());
-        };
+        const ctx = gsap.context(() => {
+            gsap.fromTo(titleRef.current,
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
+                    scrollTrigger: { trigger: containerRef.current, start: "top 80%" }
+                }
+            );
+            gsap.fromTo(cardsRef.current,
+                { opacity: 0, y: 50, scale: 0.98 },
+                {
+                    opacity: 1, y: 0, scale: 1, duration: 1.2, stagger: 0.1, ease: "power3.out",
+                    force3D: true,
+                    scrollTrigger: { trigger: containerRef.current, start: "top 75%" }
+                }
+            );
+        }, containerRef);
+        return () => ctx.revert();
     }, []);
 
+    // Shared card class
+    const card = "rounded-3xl p-8 md:p-12 border border-blue-200/60 relative overflow-hidden flex flex-col justify-between group hover:border-blue-300/80 hover:shadow-[0_8px_40px_rgba(59,130,246,0.08)] transition-all duration-500 bg-[#EFF6FF]";
+
     return (
-        <section id="skills" ref={containerRef} className="w-full py-20 px-6 flex flex-col items-center pointer-events-none">
-            <div className="max-w-5xl w-full pointer-events-auto flex flex-col items-center">
-                <h2 className="text-4xl md:text-5xl font-orbitron font-bold mb-12 text-center text-transparent bg-clip-text bg-gradient-to-r from-white to-cyber-pink tracking-tight drop-shadow-[0_0_15px_rgba(255,0,255,0.2)]">
-                    CORE <span className="text-cyber-cyan drop-shadow-[0_0_20px_rgba(0,243,255,0.4)]">CAPABILITIES</span>
+        <section id="skills" ref={containerRef} className="w-full py-32 px-6 flex flex-col items-center bg-transparent relative z-10">
+
+            {/* Header */}
+            <div ref={titleRef} className="w-full max-w-7xl mx-auto flex flex-col mb-16 md:mb-20 px-4">
+                <span className="text-[10px] md:text-xs tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4">
+                    Technical Specifications
+                </span>
+                <h2 className="text-3xl md:text-5xl lg:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight">
+                    Systems & Capabilities.
                 </h2>
-                
-                <div className="flex flex-col gap-12 w-full">
-                    {techStack.map((category, idx) => (
-                        <div key={idx} ref={el => techRefs.current[idx] = el} className="glass p-8 rounded-3xl border border-white/5 bg-cyber-dark/60 backdrop-blur-xl hover:border-cyber-pink/20 transition-colors duration-500 shadow-lg">
-                            <h3 className="text-2xl font-space font-semibold mb-8 text-cyber-pink/90 border-b border-white/10 pb-4">{category.category}</h3>
-                            <div className="flex flex-wrap gap-4">
-                                {category.items.map((tech, tIdx) => (
-                                    <div key={tIdx} className="flex items-center gap-3 bg-black/40 border border-white/5 rounded-xl px-5 py-3 hover:bg-cyber-pink/10 hover:scale-105 hover:border-cyber-pink/30 hover:shadow-[0_0_15px_rgba(255,0,255,0.2)] transition-all cursor-default relative overflow-hidden group/tech">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/tech:translate-x-full transition-transform duration-1000" />
-                                        {tech.icon}
-                                        <span className="text-gray-200 font-inter font-medium tracking-wide">{tech.name}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+            </div>
+
+            {/* Bento Grid */}
+            <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 px-4">
+
+                {/* 1. Core Languages (Span 2) */}
+                <div ref={el => cardsRef.current[0] = el} className={`md:col-span-2 ${card}`}>
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-300/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
+                    <div className="mb-12 relative z-10">
+                        <h3 className="text-slate-800 text-xl md:text-2xl font-space font-light mb-2">Core Languages</h3>
+                        <p className="text-slate-500 text-xs font-inter max-w-sm">
+                            High-performance compilation targets and deterministic execution.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 relative z-10">
+                        <SegmentedBar label="C / C++" value={95} max={12} />
+                        <SegmentedBar label="Kotlin / Java" value={90} max={12} />
+                        <SegmentedBar label="Python" value={80} max={12} />
+                        <SegmentedBar label="Bash / Shell" value={85} max={12} />
+                    </div>
                 </div>
+
+                {/* 2. OS & Kernel (Span 1) */}
+                <div ref={el => cardsRef.current[1] = el} className={`md:col-span-1 ${card}`}>
+                    <div className="mb-10 relative z-10">
+                        <h3 className="text-slate-800 text-xl md:text-2xl font-space font-light mb-2">OS & Kernel</h3>
+                        <p className="text-slate-500 text-xs font-inter">
+                            Low-level systems and embedded architectures.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-6 justify-center relative z-10">
+                        <TelemetryRing label="Linux Internals" percentage={92} />
+                        <TelemetryRing label="Android NDK" percentage={88} />
+                    </div>
+                </div>
+
+                {/* 3. Methodology (Span 1) */}
+                <div ref={el => cardsRef.current[2] = el} className={`md:col-span-1 ${card}`}>
+                    <h3 className="text-[10px] uppercase tracking-[0.3em] font-space text-slate-400 mb-10">
+                        Methodology
+                    </h3>
+
+                    <div className="flex flex-col gap-8 mt-auto relative z-10">
+                        <div>
+                            <div className="text-4xl md:text-5xl font-space text-blue-600 font-light mb-1">O(1)</div>
+                            <div className="text-[10px] uppercase tracking-widest text-slate-400">Algorithmic Efficiency</div>
+                        </div>
+                        <div>
+                            <div className="text-4xl md:text-5xl font-space text-blue-600 font-light mb-1">&lt;1ms</div>
+                            <div className="text-[10px] uppercase tracking-widest text-slate-400">Latency Targets</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 4. Architecture & Tooling (Span 2) */}
+                <div ref={el => cardsRef.current[3] = el} className={`md:col-span-2 ${card}`}>
+                    <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-300/10 rounded-full blur-3xl translate-y-1/2 translate-x-1/4 pointer-events-none" />
+
+                    <div className="mb-10 relative z-10">
+                        <h3 className="text-slate-800 text-xl md:text-2xl font-space font-light mb-2">Architecture & Tooling</h3>
+                        <p className="text-slate-500 text-xs font-inter max-w-sm">
+                            Compilers, native deployment, and distributed systems.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 md:gap-3 relative z-10 mt-auto">
+                        {['LLVM IR', 'Compiler Design', 'System Design', 'Reverse Engineering', 'POSIX', 'CMake / GCC', 'Docker', 'AWS'].map((tool, i) => (
+                            <span
+                                key={i}
+                                className="px-4 py-2 rounded-full border border-blue-200 text-blue-700 text-[10px] md:text-xs font-space tracking-[0.1em] uppercase hover:bg-blue-100 hover:border-blue-300 transition-colors cursor-default"
+                            >
+                                {tool}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
             </div>
         </section>
     );

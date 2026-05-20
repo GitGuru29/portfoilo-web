@@ -1,6 +1,5 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
 import useStore from '../../store/useStore';
 import HeroScene from './HeroScene';
 
@@ -8,17 +7,14 @@ export default function CanvasScene() {
     const currentMood = useStore((state) => state.currentMood);
 
     return (
-        <div className="fixed inset-0 z-0 pointer-events-none bg-black">
+        <div className="fixed inset-0 z-0 pointer-events-none bg-[var(--color-quantum-black)]">
             <Canvas
                 camera={{ position: [0, 0, 5], fov: 75 }}
-                dpr={[1, 1.5]} // Cap pixel ratio for mobile performance
-                gl={{ antialias: false }} // Also disable antialiasing on low performance
+                dpr={[1, 1.5]}
+                gl={{ antialias: false }}
             >
-                <color attach="background" args={['#020202']} />
-
-                {/* We will conditionally render or blend environments based on mood */}
-                {currentMood === 'HERO' && <HeroScene />}
-
+                <color attach="background" args={['#ffffff']} />
+                {/* HeroScene removed to fix lag and "snowy" effect */}
                 <ambientLight intensity={0.5} />
             </Canvas>
         </div>

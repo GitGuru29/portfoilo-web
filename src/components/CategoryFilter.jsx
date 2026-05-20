@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { categoriesArray } from '../data/categories';
 import useStore from '../store/useStore';
 
@@ -12,27 +11,22 @@ const CategoryFilter = ({ activeCategory, setActiveCategory }) => {
     };
 
     return (
-        <div className="w-full flex justify-center py-8 z-10 relative">
-            <div className="flex flex-wrap justify-center gap-3 px-4 max-w-5xl">
+        <div className="w-full flex justify-start py-8 z-10 relative border-t border-[var(--color-geyser)]/10 mt-4 pt-8">
+            <div className="flex flex-wrap items-center gap-6 md:gap-8">
                 {categoriesArray.map((category) => {
                     const isActive = activeCategory === category.id;
-                    const Icon = category.icon;
-
                     return (
-                        <motion.button
+                        <button
                             key={category.id}
                             onClick={() => handleCategoryClick(category)}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 backdrop-blur-md border ${
+                            className={`text-[10px] md:text-xs tracking-[0.2em] font-space uppercase transition-all duration-300 pb-1 ${
                                 isActive
-                                    ? 'bg-blue-500/20 border-blue-400/50 text-blue-200 shadow-[0_0_15px_rgba(59,130,246,0.3)]'
-                                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+                                    ? 'text-[var(--color-geyser)] border-b border-[var(--color-geyser)]'
+                                    : 'text-[var(--color-geyser)]/40 hover:text-[var(--color-geyser)]/80 border-b border-transparent'
                             }`}
                         >
-                            {Icon && <Icon size={16} className={isActive ? 'text-blue-400' : 'text-gray-500'} />}
                             {category.label}
-                        </motion.button>
+                        </button>
                     );
                 })}
             </div>

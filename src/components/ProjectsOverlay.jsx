@@ -4,78 +4,51 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useStore, { MOODS } from '../store/useStore';
 
+gsap.registerPlugin(ScrollTrigger);
+
+// Maps categoryId to a short label shown on the card
+const CATEGORY_LABELS = {
+    'android-sys': 'Android Systems',
+    'linux-sys': 'Linux Systems',
+    'os-dev': 'OS / Compiler',
+    'ai': 'AI / Quantitative',
+    'cyber-sec': 'Cyber Security',
+    'web': 'Web',
+};
+
 export default function ProjectsOverlay({ projects = [], isFiltered = false, children }) {
     const containerRef = useRef(null);
     const projectRefs = useRef([]);
     const setMood = useStore((state) => state.setMood);
 
     const [showAll, setShowAll] = useState(false);
-    const DISPLAY_LIMIT = 4;
+    const DISPLAY_LIMIT = 5;
     const shouldLimit = !isFiltered && projects.length > DISPLAY_LIMIT;
     const displayedProjects = shouldLimit && !showAll ? projects.slice(0, DISPLAY_LIMIT) : projects;
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Trigger Owl Mode when reaching projects
             ScrollTrigger.create({
                 trigger: containerRef.current,
-                start: "top center",
-                end: "bottom top",
+                start: 'top center',
+                end: 'bottom top',
                 onEnter: () => setMood(MOODS.OWL_MODE),
                 onEnterBack: () => setMood(MOODS.OWL_MODE),
             });
 
-            // We will create individual timelines for each project to handle the complex raindrop sequence
-            projectRefs.current.forEach((el, index) => {
+            projectRefs.current.forEach((el) => {
                 if (!el) return;
-
-                const raindrop = el.querySelector('.raindrop');
-                const cardContainer = el.querySelector('.card-container');
-                const cardContent = el.querySelector('.card-content');
-
-                // Set initial states
-                gsap.set(raindrop, { y: -800, scale: 1, opacity: 0 });
-                gsap.set(cardContainer, { opacity: 0, scale: 0.95 });
-                gsap.set(cardContent, { opacity: 0, y: 30 });
-
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top 80%", // Trigger when project wrapper enters
-                        toggleActions: "play none none reverse"
+                gsap.fromTo(el,
+                    { opacity: 0, y: 50, scale: 0.98 },
+                    {
+                        opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power3.out",
+                        force3D: true,
+                        scrollTrigger: {
+                            trigger: el,
+                            start: 'top 85%',
+                        }
                     }
-                });
-
-                // The Sequence
-                // 1. Raindrop appears and falls
-                tl.to(raindrop, { opacity: 1, duration: 0.1 })
-                  .to(raindrop, { 
-                      y: 0, 
-                      duration: 0.6, 
-                      ease: "power2.in" 
-                  })
-                  // 2. Raindrop hits and splashes (scales horizontally fast)
-                  .to(raindrop, {
-                      scaleX: 100,
-                      scaleY: 0.5,
-                      opacity: 0,
-                      duration: 0.4,
-                      ease: "power3.out"
-                  })
-                  // 3. Card glass container appears instantly as the splash happens
-                  .to(cardContainer, {
-                      opacity: 1,
-                      scale: 1,
-                      duration: 0.5,
-                      ease: "back.out(1.2)"
-                  }, "-=0.3") // Start slightly before raindrop fades out
-                  // 4. Content inside fades up
-                  .to(cardContent, {
-                      opacity: 1,
-                      y: 0,
-                      duration: 0.5,
-                      ease: "power3.out"
-                  }, "-=0.2");
+                );
             });
         }, containerRef);
 
@@ -86,107 +59,92 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
         <section id="projects" ref={containerRef} className="relative w-full min-h-screen bg-transparent py-32 flex flex-col items-center">
 
             {/* Header */}
-            <div className="w-full max-w-6xl mx-auto px-6 mb-12 md:mb-16">
-                <span className="text-sm font-space tracking-widest text-cyber-violet mb-4 uppercase flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-cyber-violet animate-pulse shadow-[0_0_10px_var(--theme-secondary)]" />
-                    Work Portfolio
-                </span>
-                <h2 className="text-5xl md:text-7xl lg:text-8xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500 tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-                    FEATURED <span className="text-cyber-cyan drop-shadow-[0_0_20px_rgba(0,243,255,0.4)]">SYSTEMS</span>
-                </h2>
-                <div className="w-24 h-1 bg-gradient-to-r from-cyber-cyan to-cyber-violet mt-8 rounded-full shadow-[0_0_15px_#00f3ff]" />
+            <div className="w-full max-w-7xl mx-auto px-6 mb-8 flex flex-col md:flex-row justify-between items-end gap-12 lg:gap-8">
+                <div>
+                    <h2 className="text-[10px] md:text-xs tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
+                        System Architecture
+                    </h2>
+                    <h3 className="text-4xl md:text-5xl lg:text-6xl font-space font-light leading-tight text-[var(--color-geyser)]">
+                        Featured Systems.
+                    </h3>
+                </div>
             </div>
 
-            {/* Filter Section */}
-            {children}
+            {/* Filters */}
+            <div className="w-full max-w-7xl mx-auto px-6 mb-16">
+                {children}
+            </div>
 
-            {/* Standard Flow Cards */}
-            <div className="w-full max-w-6xl mx-auto px-6 pb-24 relative flex flex-col">
-                {displayedProjects.map((project, index) => {
-                    return (
-                        <div
-                            key={index}
-                            ref={el => el && !projectRefs.current.includes(el) && projectRefs.current.push(el)}
-                            className="w-full mb-16 md:mb-32 last:mb-0"
-                        >
-                            <div className="relative block w-full group cursor-pointer pt-20">
-                                {/* The Raindrop */}
-                                <div className="raindrop absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-12 bg-cyber-cyan rounded-full shadow-[0_0_20px_#00f3ff,0_0_40px_#00f3ff] z-50 pointer-events-none" />
+            {/* Project Cards */}
+            <div className="w-full max-w-7xl mx-auto px-4 md:px-6 pb-24 relative flex flex-col gap-6 md:gap-8">
+                {displayedProjects.map((project, index) => (
+                    <div
+                        key={project.id}
+                        ref={el => {
+                            if (el && !projectRefs.current.includes(el)) projectRefs.current.push(el);
+                        }}
+                        className="w-full group will-change-all"
+                    >
+                        <Link to={`/project/${project.id}`} data-cursor="View Project" className="block w-full">
+                            <div className="w-full bg-[#EFF6FF] rounded-[24px] md:rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative overflow-hidden border border-blue-200/60 hover:border-blue-300/80 transition-all duration-500 shadow-xl shadow-blue-900/5 hover:shadow-[0_8px_40px_rgba(59,130,246,0.08)]">
 
-                                <Link to={`/project/${project.id}`} className="block w-full">
-                                    {/* The Card Container */}
-                                    <div className="card-container w-full glass p-8 md:p-14 rounded-[2.5rem] border border-white/5 bg-[#050505]/90 backdrop-blur-2xl transition-colors duration-700 hover:border-cyber-violet/40 hover:shadow-[0_-15px_60px_rgba(181,55,242,0.2)] flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
+                                {/* Hover ambient glow */}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/10 to-blue-200/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                                <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-blue-300/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
-                                        {/* Hover Ambient Glow */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-cyber-violet/10 via-transparent to-cyber-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none mix-blend-screen" />
+                                {/* Left content */}
+                                <div className="flex flex-col z-10 flex-1 min-w-0 pr-0 md:pr-12">
+                                    <div className="flex items-center gap-4 mb-5">
+                                        <span className="text-[10px] md:text-xs font-mono text-blue-400 tracking-widest tabular-nums border border-blue-200 px-2 py-1 rounded">
+                                            SYS.{String(index + 1).padStart(2, '0')}
+                                        </span>
+                                        <span className="text-[9px] md:text-[10px] tracking-[0.3em] font-space text-slate-400 uppercase">
+                                            {CATEGORY_LABELS[project.categoryId] || project.role}
+                                        </span>
+                                    </div>
+                                    <h3 className="text-2xl md:text-4xl lg:text-5xl font-space font-light mb-4 text-slate-800 group-hover:text-slate-900 transition-colors duration-300 leading-tight">
+                                        {project.title}
+                                    </h3>
+                                    <p className="text-sm md:text-base text-slate-500 font-inter font-light leading-relaxed max-w-2xl">
+                                        {project.description}
+                                    </p>
+                                </div>
 
-                                        {/* The Card Content */}
-                                        <div className="card-content w-full flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
-                                            <div className="w-full md:w-[65%] flex flex-col relative z-10">
-                                                <span className="text-xs md:text-sm font-space tracking-widest text-cyber-violet mb-6 uppercase flex items-center gap-2">
-                                                    {project.role}
-                                                </span>
-                                                <h3 className="text-4xl md:text-5xl lg:text-6xl font-orbitron font-black mb-8 text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 group-hover:to-cyber-cyan transition-colors duration-500 pb-2">
-                                                    {project.title}
-                                                </h3>
-                                                <p className="text-lg md:text-xl text-gray-400 font-inter font-light leading-relaxed mb-10 max-w-2xl">
-                                                    {project.description}
-                                                </p>
+                                {/* Right content */}
+                                <div className="flex flex-col items-start md:items-end z-10 gap-6 shrink-0 w-full md:w-auto mt-2 md:mt-0 pt-6 md:pt-0 border-t md:border-t-0 border-blue-200/50 md:border-transparent">
+                                    {/* Tech tags */}
+                                    <div className="flex flex-wrap gap-2 justify-start md:justify-end max-w-[280px]">
+                                        {project.role.split(' / ').slice(0, 3).map((tag, ti) => (
+                                            <span
+                                                key={ti}
+                                                className="text-[9px] font-space tracking-[0.15em] uppercase text-blue-700 border border-blue-200 px-3 py-1.5 rounded-full group-hover:border-blue-300 group-hover:text-blue-800 hover:bg-blue-100 transition-colors duration-300"
+                                            >
+                                                {tag.trim()}
+                                            </span>
+                                        ))}
+                                    </div>
 
-                                                <div className="mt-auto pt-4 flex flex-wrap items-center gap-4">
-                                                    {project.github && (
-                                                        <a href={project.github} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded border border-cyber-cyan/40 bg-cyber-cyan/5 text-cyber-cyan hover:bg-cyber-cyan/20 hover:border-cyber-cyan transition-all font-space text-xs tracking-widest uppercase flex items-center gap-2">
-                                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                                                            </svg>
-                                                            View Code
-                                                        </a>
-                                                    )}
-                                                    {project.link && (
-                                                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded border border-cyber-violet/40 bg-cyber-violet/5 text-cyber-violet hover:bg-cyber-violet/20 hover:border-cyber-violet transition-all font-space text-xs tracking-widest uppercase flex items-center gap-2">
-                                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                            </svg>
-                                                            Live Demo
-                                                        </a>
-                                                    )}
-                                                    <div className="ml-auto inline-flex items-center gap-2 text-gray-500 font-space font-medium group-hover:text-white transition-colors tracking-widest text-xs uppercase">
-                                                        Read Report
-                                                        <svg className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-2 text-gray-500 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Minimalist Tech Representation Line */}
-                                            <div className="w-full md:w-[30%] flex-col items-end justify-center relative z-10 hidden md:flex border-r border-cyber-cyan/10 pr-8 transition-all duration-500 group-hover:border-cyber-cyan/40">
-                                                <div className="flex flex-col gap-4 items-end opacity-50 group-hover:opacity-100 transition-opacity duration-500">
-                                                    {['SYSTEM', 'ARCHITECTURE', 'DEPLOYMENT', 'ANALYSIS'].slice(0, index + 2).map((tech, i) => (
-                                                        <span key={i} className="font-space text-xs tracking-[0.3em] text-cyber-cyan uppercase">{tech}</span>
-                                                    ))}
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-cyber-pink shadow-[0_0_8px_#ff00ff] mt-4" />
-                                                </div>
-                                            </div>
+                                    {/* Explore CTA */}
+                                    <div className="flex items-center gap-3 text-slate-400 font-space text-[11px] md:text-xs tracking-[0.2em] uppercase group-hover:text-blue-600 transition-all duration-300 mt-2 md:mt-auto">
+                                        Explore Architecture
+                                        <div className="w-8 h-8 rounded-full border border-blue-200 flex items-center justify-center group-hover:border-blue-500 group-hover:bg-blue-500 transition-all duration-300">
+                                            <span className="inline-block transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-blue-400 group-hover:text-white transition-transform duration-300">↗</span>
                                         </div>
                                     </div>
-                                </Link>
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        </Link>
+                    </div>
+                ))}
 
+                {/* Show all / collapse */}
                 {shouldLimit && (
                     <div className="w-full flex justify-center mt-12 relative z-20">
-                        <button 
-                            onClick={() => setShowAll(!showAll)}
-                            className="px-8 py-4 rounded-full border border-cyber-cyan/50 bg-cyber-dark/80 text-cyber-cyan font-space tracking-widest text-sm uppercase hover:bg-cyber-cyan/10 hover:shadow-[0_0_20px_rgba(0,243,255,0.4)] transition-all flex items-center gap-3 backdrop-blur-md"
+                        <button
+                            onClick={() => setShowAll(v => !v)}
+                            className="group flex items-center gap-6 text-[10px] md:text-xs tracking-[0.3em] font-space uppercase text-[var(--color-geyser)]/50 hover:text-[var(--color-geyser)] transition-colors duration-300 px-8 py-4 border border-[var(--color-geyser)]/10 hover:border-[var(--color-geyser)]/30 rounded-full bg-[#EFF6FF]"
                         >
-                            {showAll ? 'Collapse Stack' : `View All ${projects.length} Systems`}
-                            <svg className={`w-4 h-4 transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
+                            {showAll ? 'Collapse Systems' : `View all ${projects.length} systems`}
                         </button>
                     </div>
                 )}
