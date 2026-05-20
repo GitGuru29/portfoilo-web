@@ -117,8 +117,8 @@ export default function HeroOverlay() {
                 {/* 2. Top Left Logo/Name */}
                 <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20 mix-blend-difference">
                     <span className="text-xs md:text-sm font-space tracking-[0.2em] uppercase text-white font-medium">
-                        SIDANG ©
-                    </span>
+                        SIDAN ©
+                    </span>ß
                 </div>
 
                 {/* 3. Bottom Left: Massive Typography */}

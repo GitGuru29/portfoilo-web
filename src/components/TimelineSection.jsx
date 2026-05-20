@@ -6,7 +6,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const milestones = [
     {
-        year: '2022',
+        year: '2023',
         quarter: 'Q3',
         title: 'Started Computer Engineering',
         type: 'EDUCATION',
@@ -14,16 +14,15 @@ const milestones = [
         tags: ['C/C++', 'University', 'Linux'],
     },
     {
-        year: '2023',
-        quarter: 'Q1',
-        title: 'AeroLang — Language Design Begins',
+        year: '2024',
+        quarter: 'Q4',
+        title: 'AutoGpuSwitcher for Arch Linux',
         type: 'PROJECT',
-        description: 'Architected the lexer, parser, and AST pipeline for a custom programming language targeting native Android binaries via the NDK. Built from scratch in C++.',
-        tags: ['C++', 'LLVM', 'Compiler Design'],
-        highlight: true,
+        description: 'Automated NVIDIA/AMD GPU switching via ELF binary analysis and pacman hooks — eliminating manual prime-run prefixes system-wide.',
+        tags: ['Bash', 'ELF', 'Arch Linux', 'pacman'],
     },
     {
-        year: '2023',
+        year: '2024',
         quarter: 'Q3',
         title: 'NeonMonitor & Linux CLI Tooling',
         type: 'PROJECT',
@@ -40,7 +39,16 @@ const milestones = [
         highlight: true,
     },
     {
-        year: '2024',
+        year: '2025',
+        quarter: 'Q1',
+        title: 'AeroLang — Language Design Begins',
+        type: 'PROJECT',
+        description: 'Architected the lexer, parser, and AST pipeline for a custom programming language targeting native Android binaries via the NDK. Built from scratch in C++.',
+        tags: ['C++', 'LLVM', 'Compiler Design'],
+        highlight: true,
+    },
+    {
+        year: '2026',
         quarter: 'Q2',
         title: 'AegisLayer — On-Device ML Daemon',
         type: 'PROJECT',
@@ -48,15 +56,7 @@ const milestones = [
         tags: ['Kotlin', 'Android', 'ML', 'Coroutines'],
     },
     {
-        year: '2024',
-        quarter: 'Q4',
-        title: 'AutoGpuSwitcher for Arch Linux',
-        type: 'PROJECT',
-        description: 'Automated NVIDIA/AMD GPU switching via ELF binary analysis and pacman hooks — eliminating manual prime-run prefixes system-wide.',
-        tags: ['Bash', 'ELF', 'Arch Linux', 'pacman'],
-    },
-    {
-        year: '2025',
+        year: '2026',
         quarter: 'Q1',
         title: 'Market Regime Intelligence System',
         type: 'PROJECT',
@@ -65,7 +65,7 @@ const milestones = [
         highlight: true,
     },
     {
-        year: '2025',
+        year: '2026',
         quarter: 'NOW',
         title: 'Final Year Project & LLVM Backend',
         type: 'ACTIVE',
