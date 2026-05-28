@@ -34,9 +34,9 @@ export default function HeroOverlay() {
                 "-=1.2"
             );
 
-            // Parallax scroll effect for the image
+            // Parallax scroll effect for the image — move UP for a natural depth feel
             gsap.to(imageRef.current, {
-                y: "20%",
+                y: "-12%",
                 ease: "none",
                 scrollTrigger: {
                     trigger: heroRef.current,
@@ -51,27 +51,34 @@ export default function HeroOverlay() {
                 scrollTrigger: {
                     trigger: heroRef.current,
                     start: "top top",
-                    end: "bottom bottom", // Runs through the entire 200vh section
-                    scrub: 1.2,
+                    end: "bottom bottom",
+                    scrub: 1.5,
                 }
             });
 
-            // 1. Fade out right elements to make room
+            // 1. Fade out hero text elements first (name, subtitle, role)
+            scrubTl.to([nameRef.current, subTextRef.current], {
+                opacity: 0,
+                y: -30,
+                duration: 1,
+            }, 0);
+
+            // 2. Fade out right elements to make room
             scrubTl.to([rightTextRef.current, verticalTextRef.current], {
                 opacity: 0,
                 x: 20,
                 duration: 1
             }, 0);
 
-            // 2. Fade in About Content on the right
+            // 3. Fade in About Content AFTER hero text is gone
             scrubTl.fromTo(aboutContentRef.current,
-                { autoAlpha: 0, x: 30, filter: 'blur(4px)' },
+                { autoAlpha: 0, x: 40, filter: 'blur(6px)' },
                 { autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: 1.5, ease: "power2.out" },
-                0.5
+                1.2
             );
 
-            // 3. Hold About content for reading
-            scrubTl.to({}, { duration: 1.5 });
+            // 4. Hold About content for reading
+            scrubTl.to({}, { duration: 2 });
 
             // Mood Management
             ScrollTrigger.create({
@@ -102,15 +109,17 @@ export default function HeroOverlay() {
                 
                 {/* 1. Background Image with Vignette */}
                 <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#2b2b2b]">
-                    {/* Dark gradient vignette over the image to ensure text readability */}
-                    <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-transparent to-[#111]/90 pointer-events-none" />
-                    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#2b2b2b] via-transparent to-[#2b2b2b] pointer-events-none" />
+                    {/* Multi-layer vignette to seamlessly blend image into dark card */}
+                    <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#2b2b2b]/80 via-transparent to-[#111] pointer-events-none" />
+                    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#2b2b2b] via-[#2b2b2b]/20 to-[#2b2b2b] pointer-events-none" />
+                    <div className="absolute inset-0 z-10 bg-[#2b2b2b]/25 pointer-events-none" />
                     
                     <img 
                         ref={imageRef}
                         src="/assets/profile.png"
                         alt="Siluna N. Dangalla"
-                        className="w-full max-w-[900px] h-[110%] absolute -top-[5%] left-1/2 -translate-x-1/2 object-cover object-[50%_15%] grayscale contrast-125 opacity-0 will-change-transform"
+                        style={{ mixBlendMode: 'luminosity' }}
+                        className="w-full max-w-[900px] h-[110%] absolute -top-[5%] left-1/2 -translate-x-1/2 object-cover object-[50%_15%] grayscale contrast-125 brightness-75 opacity-0 will-change-transform"
                     />
                 </div>
 
@@ -118,7 +127,7 @@ export default function HeroOverlay() {
                 <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20 mix-blend-difference">
                     <span className="text-xs md:text-sm font-space tracking-[0.2em] uppercase text-white font-medium">
                         SIDAN ©
-                    </span>ß
+                    </span>
                 </div>
 
                 {/* 3. Bottom Left: Massive Typography */}
