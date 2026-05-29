@@ -27,6 +27,8 @@ export default function TerminalSection() {
     const [viewMode, setViewMode] = useState('terminal'); // 'terminal', 'htop', 'vim', 'panic'
     const [vimFile, setVimFile] = useState('');
     const [isAwaitingPassword, setIsAwaitingPassword] = useState(false);
+    const [commandHistoryList, setCommandHistoryList] = useState([]);
+    const [historyIndex, setHistoryIndex] = useState(-1);
 
     const inputRef = useRef(null);
     const terminalBodyRef = useRef(null);
@@ -50,27 +52,56 @@ export default function TerminalSection() {
         '~': {
             type: 'dir',
             content: {
-                'projects': { type: 'dir', content: ['aerolang.c', 'neon_monitor.cpp', 'sightlock.kt'] },
+                'projects': {
+                    type: 'dir',
+                    content: {
+                        'aerolang.c': { type: 'file', content: "#include <stdio.h>\n\nint main() {\n    printf(\"Initializing Lexer...\\n\");\n    return 0;\n}" },
+                        'neon_monitor.cpp': { type: 'file', content: "#include <iostream>\n\nvoid getCpuStats() {\n    std::cout << \"Parsing /proc/stat...\" << std::endl;\n}" },
+                        'sightlock.kt': { type: 'file', content: "class BiometricScanner {\n    fun verifyLiveness(): Boolean = true\n}" }
+                    }
+                },
+                'config': {
+                    type: 'dir',
+                    content: {
+                        'bashrc': { type: 'file', content: "alias ll='ls -la'\nalias gs='git status'" },
+                        'vimrc': { type: 'file', content: "set number\nsyntax on\nset tabstop=4" }
+                    }
+                },
                 'about.txt': { type: 'file', content: "Systems Developer and reverse engineering enthusiast.\nBuilding high-performance tools for bare metal and OS layers." },
-                'resume.md': { type: 'file', content: "# Siluna Nusal Dangalla\n\n## Experience\n- Systems Development\n- Android Engine Architecture\n- Compiler Design" },
-                'config': { type: 'dir', content: ['bashrc', 'vimrc'] }
-            }
-        },
-        '~/projects': {
-            type: 'dir',
-            content: {
-                'aerolang.c': { type: 'file', content: "#include <stdio.h>\n\nint main() {\n    printf(\"Initializing Lexer...\\n\");\n    return 0;\n}" },
-                'neon_monitor.cpp': { type: 'file', content: "#include <iostream>\n\nvoid getCpuStats() {\n    std::cout << \"Parsing /proc/stat...\" << std::endl;\n}" },
-                'sightlock.kt': { type: 'file', content: "class BiometricScanner {\n    fun verifyLiveness(): Boolean = true\n}" }
-            }
-        },
-        '~/config': {
-            type: 'dir',
-            content: {
-                'bashrc': { type: 'file', content: "alias ll='ls -la'\nalias gs='git status'" },
-                'vimrc': { type: 'file', content: "set number\nsyntax on\nset tabstop=4" }
+                'resume.md': { type: 'file', content: "# Siluna Nusal Dangalla\n\n## Experience\n- Systems Development\n- Android Engine Architecture\n- Compiler Design" }
             }
         }
+    };
+
+    const resolvePath = (currentCwd, targetPath) => {
+        if (!targetPath || targetPath === '~') return { node: fileSystem['~'], path: '~' };
+        
+        let currPathParts = targetPath.startsWith('~') ? [] : currentCwd.split('/').filter(Boolean);
+        let parts = targetPath.split('/').filter(Boolean);
+        
+        if (targetPath.startsWith('~')) {
+            parts.shift();
+            currPathParts = ['~'];
+        }
+
+        for (const p of parts) {
+            if (p === '.') continue;
+            if (p === '..') {
+                if (currPathParts.length > 1) currPathParts.pop();
+            } else {
+                currPathParts.push(p);
+            }
+        }
+        
+        let node = fileSystem['~'];
+        for (let i = 1; i < currPathParts.length; i++) {
+            if (node && node.type === 'dir' && node.content[currPathParts[i]]) {
+                node = node.content[currPathParts[i]];
+            } else {
+                return null;
+            }
+        }
+        return { node, path: currPathParts.join('/') };
     };
 
     // Global keydown for Vim/Htop when input loses focus
@@ -114,11 +145,62 @@ export default function TerminalSection() {
             return;
         }
 
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (commandHistoryList.length > 0) {
+                const newIdx = historyIndex < commandHistoryList.length - 1 ? historyIndex + 1 : historyIndex;
+                setHistoryIndex(newIdx);
+                setInput(commandHistoryList[commandHistoryList.length - 1 - newIdx]);
+            }
+            return;
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                const newIdx = historyIndex - 1;
+                setHistoryIndex(newIdx);
+                setInput(commandHistoryList[commandHistoryList.length - 1 - newIdx]);
+            } else if (historyIndex === 0) {
+                setHistoryIndex(-1);
+                setInput('');
+            }
+            return;
+        } else if (e.key === 'Tab') {
+            e.preventDefault();
+            const parts = input.split(' ');
+            if (parts.length === 1) {
+                const cmds = Object.keys(commands).concat(['sudo', 'clear', 'start', 'ls', 'cd', 'cat', 'htop', 'vim', 'open', 'repo']);
+                const matches = cmds.filter(c => c.startsWith(input));
+                if (matches.length === 1) setInput(matches[0] + ' ');
+            } else {
+                const target = parts[parts.length - 1];
+                const lastSlashIdx = target.lastIndexOf('/');
+                const targetDirStr = lastSlashIdx !== -1 ? target.substring(0, lastSlashIdx) : '';
+                const partialName = lastSlashIdx !== -1 ? target.substring(lastSlashIdx + 1) : target;
+                
+                const resolvedDir = resolvePath(cwd, targetDirStr || '.');
+                if (resolvedDir && resolvedDir.node.type === 'dir') {
+                    const matches = Object.keys(resolvedDir.node.content).filter(k => k.startsWith(partialName));
+                    if (matches.length === 1) {
+                        const isDir = resolvedDir.node.content[matches[0]].type === 'dir';
+                        const prefix = targetDirStr ? targetDirStr + '/' : '';
+                        parts[parts.length - 1] = prefix + matches[0] + (isDir ? '/' : '');
+                        setInput(parts.join(' '));
+                    }
+                }
+            }
+            return;
+        }
+
         if (e.key === 'Enter') {
             e.preventDefault();
             let cmd = input.trim();
             const originalInput = input;
             setInput('');
+            
+            if (cmd) {
+                setCommandHistoryList(prev => [...prev, cmd]);
+            }
+            setHistoryIndex(-1);
             let responseItems = [];
 
             if (isAwaitingPassword) {
@@ -165,46 +247,41 @@ export default function TerminalSection() {
                 setViewMode('htop');
                 return;
             } else if (cmd.startsWith('vim ')) {
-                const target = cmd.split(' ')[1];
-                setVimFile(target || '');
-                setViewMode('vim');
-                setInput('');
-                return;
+                const target = cmd.split(' ').slice(1).join(' ');
+                const resolved = resolvePath(cwd, target);
+                if (resolved && resolved.node.type === 'dir') {
+                    responseItems.push({ text: `vim: ${target}: Is a directory`, type: 'out' });
+                } else {
+                    setVimFile(target || '');
+                    setViewMode('vim');
+                    setInput('');
+                    return;
+                }
             } else if (cmd === 'ls') {
-                const currentDir = fileSystem[cwd];
-                if (currentDir && currentDir.type === 'dir') {
-                    const files = Object.keys(currentDir.content).map(k => {
-                        const isDir = typeof currentDir.content[k] === 'object' && !currentDir.content[k].content;
-                        return isDir || currentDir.content[k]?.type === 'dir' ? `<span class="text-blue-400 font-bold">${k}/</span>` : k;
+                const resolved = resolvePath(cwd, '.');
+                if (resolved && resolved.node.type === 'dir') {
+                    const files = Object.keys(resolved.node.content).map(k => {
+                        const isDir = resolved.node.content[k].type === 'dir';
+                        return isDir ? `<span class="text-blue-400 font-bold">${k}/</span>` : k;
                     }).join('  ');
                     responseItems.push({ text: files, type: 'html' });
                 }
             } else if (cmd.startsWith('cd ')) {
-                const target = cmd.split(' ')[1];
-                if (target === '..') {
-                    if (cwd !== '~') {
-                        const parts = cwd.split('/');
-                        parts.pop();
-                        setCwd(parts.length === 0 ? '~' : parts.join('/'));
-                    }
-                } else if (target === '~' || target === '') {
-                    setCwd('~');
+                const target = cmd.split(' ').slice(1).join(' ');
+                const resolved = resolvePath(cwd, target);
+                if (resolved && resolved.node.type === 'dir') {
+                    setCwd(resolved.path);
                 } else {
-                    const newPath = cwd === '~' ? `~/${target}` : `${cwd}/${target}`;
-                    if (fileSystem[newPath] && fileSystem[newPath].type === 'dir') {
-                        setCwd(newPath);
-                    } else if (fileSystem[cwd]?.content[target] && fileSystem[cwd].content[target].type === 'dir') {
-                        setCwd(cwd === '~' ? `~/${target}` : `${cwd}/${target}`);
-                    } else {
-                        responseItems.push({ text: `cd: ${target}: No such file or directory`, type: 'out' });
-                    }
+                    responseItems.push({ text: `cd: ${target}: No such file or directory`, type: 'out' });
                 }
+            } else if (cmd === 'cd') {
+                setCwd('~');
             } else if (cmd.startsWith('cat ')) {
-                const target = cmd.split(' ')[1];
-                const currentDir = fileSystem[cwd];
-                if (currentDir && currentDir.content[target]) {
-                    if (currentDir.content[target].type === 'file') {
-                        responseItems.push({ text: currentDir.content[target].content, type: 'out' });
+                const target = cmd.split(' ').slice(1).join(' ');
+                const resolved = resolvePath(cwd, target);
+                if (resolved) {
+                    if (resolved.node.type === 'file') {
+                        responseItems.push({ text: resolved.node.content, type: 'out' });
                     } else {
                         responseItems.push({ text: `cat: ${target}: Is a directory`, type: 'out' });
                     }
@@ -404,16 +481,18 @@ export default function TerminalSection() {
                             {viewMode === 'vim' && (
                                 <div className="absolute inset-0 z-40 bg-[#1a1b26] text-[#a9b1d6] p-2 font-mono flex flex-col">
                                     <div className="flex-1 overflow-hidden pl-4 pr-2 pt-2 whitespace-pre-wrap flex flex-col gap-1">
-                                        <div className="flex text-blue-400">
-                                            <span className="w-8 text-right text-[#565f89] mr-4">1</span>
-                                            {fileSystem[cwd]?.content[vimFile]?.content?.split('\n')[0] || `"${vimFile}" [New File]`}
+                                        <div className="flex flex-col flex-1">
+                                            {(() => {
+                                                const r = resolvePath(cwd, vimFile);
+                                                const lines = (r && r.node.type === 'file' ? r.node.content : `"${vimFile}" [New File]`).split('\n');
+                                                return lines.map((line, idx) => (
+                                                    <div key={idx} className="flex text-blue-400">
+                                                        <span className="w-8 text-right text-[#565f89] mr-4">{idx + 1}</span>
+                                                        {line}
+                                                    </div>
+                                                ));
+                                            })()}
                                         </div>
-                                        {fileSystem[cwd]?.content[vimFile]?.content?.split('\n').slice(1).map((line, idx) => (
-                                            <div key={idx} className="flex text-blue-400">
-                                                <span className="w-8 text-right text-[#565f89] mr-4">{idx + 2}</span>
-                                                {line}
-                                            </div>
-                                        ))}
                                         {Array.from({ length: 15 }).map((_, i) => <div key={i} className="text-[#565f89]">~</div>)}
                                     </div>
                                     <div className="bg-[#74E1A6] text-[#1a1b26] px-2 py-0.5 mt-auto flex justify-between">
@@ -476,7 +555,7 @@ export default function TerminalSection() {
                                                 value={input}
                                                 onChange={(e) => setInput(e.target.value)}
                                                 onKeyDown={handleCommand}
-                                                className="flex-1 bg-transparent outline-none text-white border-none placeholder-[#565f89] ml-1"
+                                                className="flex-1 bg-transparent outline-none text-[16px] md:text-[14px] text-white border-none placeholder-[#565f89] ml-1"
                                                 spellCheck="false"
                                                 autoComplete="off"
                                                 autoFocus
