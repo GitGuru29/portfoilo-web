@@ -72,8 +72,8 @@ export default function HeroOverlay() {
 
             // 3. Fade in About Content AFTER hero text is gone
             scrubTl.fromTo(aboutContentRef.current,
-                { autoAlpha: 0, x: 40, filter: 'blur(6px)' },
-                { autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: 1.5, ease: "power2.out" },
+                { autoAlpha: 0, x: 40 },
+                { autoAlpha: 1, x: 0, duration: 1.5, ease: "power2.out" },
                 1.2
             );
 

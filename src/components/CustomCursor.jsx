@@ -8,8 +8,15 @@ export default function CustomCursor() {
     const ring = useRef({ x: -100, y: -100 });
     const raf = useRef(null);
     const [label, setLabel] = useState('');
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     useEffect(() => {
+        // Detect if the device has a fine pointer (mouse). If not, disable the custom cursor logic to save battery on mobile.
+        if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+            setIsTouchDevice(true);
+            return;
+        }
+
         const onMove = (e) => {
             pos.current = { x: e.clientX, y: e.clientY };
         };
@@ -79,6 +86,8 @@ export default function CustomCursor() {
             cancelAnimationFrame(raf.current);
         };
     }, []);
+
+    if (isTouchDevice) return null;
 
     return (
         <>
