@@ -67,7 +67,7 @@ export default function Contact() {
     return (
         <>
             {/* ── Contact Section ─────────────────────────────────── */}
-            <section id="contact" className="w-full py-32 px-4 md:px-6 flex flex-col items-center relative z-10 overflow-hidden bg-transparent">
+            <section id="contact" className="w-full pt-32 pb-16 px-4 md:px-6 flex flex-col items-center relative z-10 overflow-hidden bg-transparent">
 
                 {/* Structural line */}
                 <div className="structural-line structural-line-h top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl hidden lg:block" />
@@ -274,12 +274,12 @@ export default function Contact() {
             </section>
 
             {/* ── Footer ──────────────────────────────────────────── */}
-            <footer className="w-full relative z-20 bg-transparent border-t border-[var(--color-geyser)]/10 pb-10">
-                <div className="w-full max-w-7xl mx-auto px-6 py-16 relative">
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+            <footer className="w-full relative z-20 bg-[#dbe9fc] border-t border-[#b8d4f8]/40 pb-10 rounded-t-[32px]">
+                <div className="w-full max-w-7xl mx-auto px-6 pt-14 pb-8 relative">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-10">
                         <div className="md:col-span-6 flex flex-col items-start">
-                            <h3 className="text-lg font-space font-medium tracking-[0.35em] text-[var(--color-geyser)] mb-5">SN.</h3>
-                            <p className="text-sm font-inter font-light text-[var(--color-geyser)]/45 max-w-sm leading-relaxed mb-8">
+                            <img src="/favicon.png" alt="SIDAN Logo" className="h-14 w-14 object-contain mb-3" />
+                            <p className="text-sm font-inter font-light text-slate-600 max-w-sm leading-relaxed mb-8">
                                 Engineering low-level systems, native Android tooling, and robust developer infrastructure from the ground up.
                             </p>
                             <div className="flex items-center gap-6">
@@ -294,7 +294,7 @@ export default function Contact() {
                                         href={href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-[9px] font-space tracking-[0.25em] uppercase text-[var(--color-geyser)]/40 hover:text-[var(--color-geyser)] transition-colors border-b border-transparent hover:border-[var(--color-geyser)]/30 pb-0.5"
+                                        className="text-[9px] font-space tracking-[0.25em] uppercase text-slate-500 hover:text-slate-900 transition-colors border-b border-transparent hover:border-slate-400 pb-0.5"
                                     >
                                         {label}
                                     </a>
@@ -303,14 +303,14 @@ export default function Contact() {
                         </div>
 
                         <div className="md:col-span-3 flex flex-col items-center md:items-start">
-                            <h4 className="text-[10px] font-space tracking-[0.3em] text-[var(--color-geyser)]/40 uppercase mb-6">Navigation</h4>
+                            <h4 className="text-[10px] font-space tracking-[0.3em] text-slate-500 uppercase mb-6">Navigation</h4>
                             <div className="flex flex-col gap-4">
                                 {['home', 'projects', 'skills', 'contact'].map(id => (
                                     <a
                                         key={id}
                                         href={`#${id}`}
                                         onClick={e => handleNavClick(e, id)}
-                                        className="text-xs text-[var(--color-geyser)]/60 hover:text-[var(--color-geyser)] transition-colors font-space tracking-[0.2em] uppercase"
+                                        className="text-xs text-slate-600 hover:text-slate-900 transition-colors font-space tracking-[0.2em] uppercase"
                                     >
                                         {id}
                                     </a>
@@ -319,7 +319,7 @@ export default function Contact() {
                         </div>
 
                         <div className="md:col-span-3 flex flex-col items-center md:items-start">
-                            <h4 className="text-[10px] font-space tracking-[0.3em] text-[var(--color-geyser)]/40 uppercase mb-6">Systems</h4>
+                            <h4 className="text-[10px] font-space tracking-[0.3em] text-slate-500 uppercase mb-6">Systems</h4>
                             <div className="flex flex-col gap-4">
                                 {[
                                     { label: 'AeroLang', href: 'https://aero-lang-web.vercel.app/' },
@@ -332,7 +332,7 @@ export default function Contact() {
                                         href={href}
                                         target={href?.startsWith('http') ? '_blank' : undefined}
                                         rel="noopener noreferrer"
-                                        className="text-xs text-[var(--color-geyser)]/60 hover:text-[var(--color-geyser)] transition-colors font-space tracking-[0.2em] uppercase"
+                                        className="text-xs text-slate-600 hover:text-slate-900 transition-colors font-space tracking-[0.2em] uppercase"
                                     >
                                         {label}
                                     </a>
@@ -341,13 +341,13 @@ export default function Contact() {
                         </div>
                     </div>
 
-                    <div className="border-t border-[var(--color-geyser)]/8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <span className="font-space text-[9px] tracking-[0.25em] text-[var(--color-geyser)]/30 uppercase">
+                    <div className="border-t border-slate-400/20 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <span className="font-space text-[9px] tracking-[0.25em] text-slate-400 uppercase">
                             © {new Date().getFullYear()} Siluna Nusal Dangalla · All Rights Reserved
                         </span>
                         <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                            <span className="font-space text-[9px] tracking-[0.25em] text-[var(--color-geyser)]/30 uppercase">Operative State: Nominal</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="font-space text-[9px] tracking-[0.25em] text-slate-400 uppercase">Operative State: Nominal</span>
                         </div>
                     </div>
                 </div>
