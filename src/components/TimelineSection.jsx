@@ -8,9 +8,9 @@ const milestones = [
     {
         year: '2023',
         quarter: 'Q3',
-        title: 'Started Computer Engineering',
+        title: 'Started Software Engineering',
         type: 'EDUCATION',
-        description: 'Began BSc in Computer Engineering, immediately diving into low-level systems, C/C++, and Android development as personal projects outside the curriculum.',
+        description: 'Began BSc in Software Engineering, immediately diving into low-level systems, C/C++, and Android development as personal projects outside the curriculum.',
         tags: ['C/C++', 'University', 'Linux'],
     },
     {
