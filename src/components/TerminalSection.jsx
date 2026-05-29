@@ -390,16 +390,20 @@ export default function TerminalSection() {
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
                     className="fixed inset-0 z-[100] w-full h-[100dvh] bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center p-4 pb-24 md:p-8 pointer-events-auto"
+                    onClick={() => toggleTerminal()}
                 >
                     {/* Terminal Window */}
                     <motion.div
                         className="w-full max-w-5xl h-full max-h-[calc(100vh-120px)] md:max-h-[800px] bg-[#1a1b26] rounded-xl shadow-2xl overflow-hidden font-mono flex flex-col border border-white/10 relative z-10"
-                        onClick={() => inputRef.current?.focus()}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            inputRef.current?.focus();
+                        }}
                     >
                         {/* Terminal Window Header */}
                         <div className="w-full h-10 bg-[#16161e] border-b border-white/5 flex items-center px-4 justify-between select-none">
                             <div className="flex gap-2">
-                                <div className="w-3 h-3 rounded-full bg-red-500/80 cursor-pointer hover:bg-red-500 transition-colors" onClick={() => toggleTerminal()} />
+                                <div className="w-3 h-3 rounded-full bg-red-500/80 cursor-pointer hover:bg-red-500 transition-colors" onClick={(e) => { e.stopPropagation(); toggleTerminal(); }} />
                                 <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                                 <div className="w-3 h-3 rounded-full bg-green-500/80" />
                             </div>
