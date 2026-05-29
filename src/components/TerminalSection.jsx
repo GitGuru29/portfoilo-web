@@ -29,7 +29,7 @@ export default function TerminalSection() {
     const [isAwaitingPassword, setIsAwaitingPassword] = useState(false);
 
     const inputRef = useRef(null);
-    const bottomRef = useRef(null);
+    const terminalBodyRef = useRef(null);
 
     const commands = {
         'help': "Available commands: whoami, about, skills, projects, github, resume, system, contact, clear, start, sudo unlock, ls, cd, cat",
@@ -115,6 +115,7 @@ export default function TerminalSection() {
         }
 
         if (e.key === 'Enter') {
+            e.preventDefault();
             let cmd = input.trim();
             const originalInput = input;
             setInput('');
@@ -271,8 +272,8 @@ export default function TerminalSection() {
     };
 
     useEffect(() => {
-        if (bottomRef.current) {
-            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+        if (terminalBodyRef.current) {
+            terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
         }
     }, [history]);
 
@@ -333,7 +334,7 @@ export default function TerminalSection() {
                         </div>
 
                         {/* Terminal Body */}
-                        <div className="relative p-4 md:p-8 flex-1 overflow-y-auto text-[14px] md:text-[15px] leading-[1.6] flex flex-col font-mono text-[#a9b1d6]">
+                        <div ref={terminalBodyRef} className="relative p-4 md:p-8 flex-1 overflow-y-auto text-[14px] md:text-[15px] leading-[1.6] flex flex-col font-mono text-[#a9b1d6]">
 
                             {/* Background Image Overlay */}
                             <div
@@ -482,7 +483,6 @@ export default function TerminalSection() {
                                             />
                                         </div>
                                     </div>
-                                    <div ref={bottomRef} className="pb-4" />
                                 </div>
                             )}
                         </div>
