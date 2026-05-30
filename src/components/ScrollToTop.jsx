@@ -38,7 +38,7 @@ export default function ScrollToTop() {
             ref={btnRef}
             onClick={handleClick}
             aria-label="Scroll to top"
-            className="fixed bottom-10 right-6 md:right-8 z-[89] w-10 h-10 flex items-center justify-center border border-[var(--color-geyser)]/15 bg-[var(--color-quantum-black)]/98 hover:border-[var(--color-geyser)]/40 hover:bg-[var(--color-geyser)]/[0.03] transition-colors duration-300 group opacity-0"
+            className="fixed bottom-12 right-6 md:right-8 z-[89] w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 bg-[#0A0F1C]/80 backdrop-blur-md hover:border-white/20 hover:bg-[#0A0F1C] transition-all duration-300 shadow-[0_4px_20px_rgba(59,130,246,0.15)] group opacity-0"
             style={{ willChange: 'transform, opacity' }}
         >
             <svg
@@ -46,7 +46,7 @@ export default function ScrollToTop() {
                 height="12"
                 viewBox="0 0 12 12"
                 fill="none"
-                className="text-[var(--color-geyser)]/40 group-hover:text-[var(--color-geyser)]/80 transition-colors group-hover:-translate-y-0.5 transition-transform duration-300"
+                className="text-slate-400 group-hover:text-white transition-all group-hover:-translate-y-0.5 duration-300"
             >
                 <path d="M6 10V2M2 6l4-4 4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
