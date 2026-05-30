@@ -157,7 +157,7 @@ export default function TimelineSection() {
                                 className={`relative w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-0 mb-12 md:mb-16 will-change-all`}
                             >
                                 {/* Left side — even cards */}
-                                <div className={`${isLeft ? 'md:pr-12 md:text-right flex flex-col md:items-end' : 'hidden md:block'}`}>
+                                <div className={`${isLeft ? 'hidden md:flex md:pr-12 md:text-right flex-col md:items-end' : 'hidden md:block'}`}>
                                     {isLeft && (
                                         <TimelineCard milestone={m} />
                                     )}
@@ -169,7 +169,7 @@ export default function TimelineSection() {
                                 </div>
 
                                 {/* Right side — odd cards */}
-                                <div className={`${!isLeft ? 'md:pl-12 flex flex-col md:items-start' : 'hidden md:block'}`}>
+                                <div className={`${!isLeft ? 'hidden md:flex md:pl-12 flex-col md:items-start' : 'hidden md:block'}`}>
                                     {!isLeft && (
                                         <TimelineCard milestone={m} />
                                     )}
