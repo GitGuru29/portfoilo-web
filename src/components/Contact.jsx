@@ -274,12 +274,12 @@ export default function Contact() {
             </section>
 
             {/* ── Footer ──────────────────────────────────────────── */}
-            <footer className="w-full relative z-20 bg-[#dbe9fc] border-t border-[#b8d4f8]/40 pb-10 rounded-t-[32px]">
+            <footer className="w-full relative z-20 bg-[#0A0F1C] border-t border-blue-500/10 pb-10 rounded-t-[32px]">
                 <div className="w-full max-w-7xl mx-auto px-6 pt-14 pb-8 relative">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-10">
                         <div className="md:col-span-6 flex flex-col items-start">
-                            <img src="/favicon.png" alt="SIDAN Logo" className="h-14 w-14 object-contain mb-3" />
-                            <p className="text-sm font-inter font-light text-slate-600 max-w-sm leading-relaxed mb-8">
+                            <img src="/favicon.png" alt="SIDAN Logo" className="h-14 w-14 object-contain mb-3 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]" />
+                            <p className="text-sm font-inter font-light text-[var(--color-geyser)]/60 max-w-sm leading-relaxed mb-8">
                                 Engineering low-level systems, native Android tooling, and robust developer infrastructure from the ground up.
                             </p>
                             <div className="flex items-center gap-6">
@@ -294,7 +294,7 @@ export default function Contact() {
                                         href={href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-[9px] font-space tracking-[0.25em] uppercase text-slate-500 hover:text-slate-900 transition-colors border-b border-transparent hover:border-slate-400 pb-0.5"
+                                        className="text-[9px] font-space tracking-[0.25em] uppercase text-[var(--color-geyser)]/50 hover:text-white transition-colors border-b border-transparent hover:border-white/50 pb-0.5"
                                     >
                                         {label}
                                     </a>
@@ -303,14 +303,14 @@ export default function Contact() {
                         </div>
 
                         <div className="md:col-span-3 flex flex-col items-center md:items-start">
-                            <h4 className="text-[10px] font-space tracking-[0.3em] text-slate-500 uppercase mb-6">Navigation</h4>
+                            <h4 className="text-[10px] font-space tracking-[0.3em] text-[var(--color-geyser)]/40 uppercase mb-6">Navigation</h4>
                             <div className="flex flex-col gap-4">
                                 {['home', 'projects', 'skills', 'contact'].map(id => (
                                     <a
                                         key={id}
                                         href={`#${id}`}
                                         onClick={e => handleNavClick(e, id)}
-                                        className="text-xs text-slate-600 hover:text-slate-900 transition-colors font-space tracking-[0.2em] uppercase"
+                                        className="text-xs text-[var(--color-geyser)]/60 hover:text-white transition-colors font-space tracking-[0.2em] uppercase"
                                     >
                                         {id}
                                     </a>
@@ -319,7 +319,7 @@ export default function Contact() {
                         </div>
 
                         <div className="md:col-span-3 flex flex-col items-center md:items-start">
-                            <h4 className="text-[10px] font-space tracking-[0.3em] text-slate-500 uppercase mb-6">Systems</h4>
+                            <h4 className="text-[10px] font-space tracking-[0.3em] text-[var(--color-geyser)]/40 uppercase mb-6">Systems</h4>
                             <div className="flex flex-col gap-4">
                                 {[
                                     { label: 'AeroLang', href: 'https://aero-lang-web.vercel.app/' },
@@ -332,7 +332,7 @@ export default function Contact() {
                                         href={href}
                                         target={href?.startsWith('http') ? '_blank' : undefined}
                                         rel="noopener noreferrer"
-                                        className="text-xs text-slate-600 hover:text-slate-900 transition-colors font-space tracking-[0.2em] uppercase"
+                                        className="text-xs text-[var(--color-geyser)]/60 hover:text-white transition-colors font-space tracking-[0.2em] uppercase"
                                     >
                                         {label}
                                     </a>
@@ -341,13 +341,13 @@ export default function Contact() {
                         </div>
                     </div>
 
-                    <div className="border-t border-slate-400/20 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <span className="font-space text-[9px] tracking-[0.25em] text-slate-400 uppercase">
+                    <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <span className="font-space text-[9px] tracking-[0.25em] text-[var(--color-geyser)]/40 uppercase text-center md:text-left">
                             © {new Date().getFullYear()} Siluna Nusal Dangalla · All Rights Reserved
                         </span>
                         <div className="flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="font-space text-[9px] tracking-[0.25em] text-slate-400 uppercase">Operative State: Nominal</span>
+                            <span className="font-space text-[9px] tracking-[0.25em] text-[var(--color-geyser)]/40 uppercase">Operative State: Nominal</span>
                         </div>
                     </div>
                 </div>
