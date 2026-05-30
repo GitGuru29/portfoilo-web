@@ -274,7 +274,7 @@ export default function Contact() {
             </section>
 
             {/* ── Footer ──────────────────────────────────────────── */}
-            <footer className="w-full relative z-20 bg-[#0A0F1C] border-t border-blue-500/10 pb-10 rounded-t-[32px]">
+            <footer className="w-full relative z-20 bg-[#0A0F1C] border-t border-blue-500/10 pb-20 md:pb-24 rounded-t-[32px]">
                 <div className="w-full max-w-7xl mx-auto px-6 pt-14 pb-8 relative">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-10">
                         <div className="md:col-span-6 flex flex-col items-start">

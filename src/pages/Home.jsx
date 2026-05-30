@@ -31,7 +31,7 @@ export default function Home() {
     const isFiltered = activeCategory !== CATEGORIES.ALL.id || searchQuery.trim() !== '';
 
     return (
-        <div className="relative z-10 w-full pb-12">
+        <div className="relative z-10 w-full">
 
             {/* ── Hero ── */}
             <HeroOverlay />
