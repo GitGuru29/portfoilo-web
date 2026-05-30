@@ -341,8 +341,8 @@ export default function Contact() {
                         </div>
                     </div>
 
-                    <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <span className="font-space text-[9px] tracking-[0.25em] text-slate-500 uppercase text-center md:text-left">
+                    <div className="border-t border-white/10 pt-8 flex flex-col items-center justify-center gap-4">
+                        <span className="font-space text-[9px] tracking-[0.25em] text-slate-500 uppercase text-center">
                             © {new Date().getFullYear()} Siluna Nusal Dangalla · All Rights Reserved
                         </span>
                         <div className="flex items-center gap-2">
