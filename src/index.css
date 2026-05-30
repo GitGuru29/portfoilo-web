@@ -117,7 +117,8 @@ p {
     top: 0; left: 0;
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--color-geyser);
+    background: #ffffff;
+    mix-blend-mode: difference;
     pointer-events: none;
     z-index: 999999;
     will-change: transform;
@@ -132,8 +133,9 @@ p {
     top: 0; left: 0;
     width: 36px; height: 36px;
     border-radius: 50%;
-    border: 1px solid rgba(17, 24, 39, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     background: transparent;
+    mix-blend-mode: difference;
     pointer-events: none;
     z-index: 999998;
     will-change: transform;
@@ -150,8 +152,8 @@ p {
 
 .cursor-ring.cursor--hover {
     width: 56px; height: 56px;
-    border-color: rgba(17, 24, 39, 0.4);
-    background: rgba(17, 24, 39, 0.04);
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* ─────────────────────────────────────────────────
