@@ -47,44 +47,44 @@ export default function SystemMetricsWidget() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-0 left-0 right-0 z-[90] flex items-center justify-between px-4 md:px-8 py-2 bg-[var(--color-quantum-black)]/98 border-t border-[var(--color-geyser)]/8 select-none"
+            className="fixed bottom-0 left-0 right-0 z-[90] flex items-center justify-between px-4 md:px-8 py-2 bg-[#0A0F1C] border-t border-blue-500/10 select-none"
         >
             {/* Left: CPU + status */}
             <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex items-center gap-1.5">
-                    <Cpu className="w-3 h-3 text-[var(--color-geyser)]/30" />
-                    <span className="text-[9px] font-space tracking-[0.2em] text-[var(--color-geyser)]/40 tabular-nums">
+                    <Cpu className="w-3 h-3 text-slate-500" />
+                    <span className="text-[9px] font-space tracking-[0.2em] text-slate-400 tabular-nums">
                         CPU {cpuLoad.toFixed(0)}%
                     </span>
                 </div>
                 <div className="hidden sm:flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[9px] font-space tracking-[0.2em] text-[var(--color-geyser)]/35 uppercase">
+                    <span className="text-[9px] font-space tracking-[0.2em] text-slate-400 uppercase">
                         Nominal
                     </span>
                 </div>
             </div>
 
             {/* Center: signature */}
-            <div className="text-[9px] font-space tracking-[0.4em] text-[var(--color-geyser)]/25 uppercase hidden md:block">
+            <div className="text-[9px] font-space tracking-[0.4em] text-slate-500 uppercase hidden md:block">
                 SilunaOS v3.0 — Sri Lanka
             </div>
 
             {/* Right: GitHub + clock */}
             <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex items-center gap-1.5">
-                    <Github className="w-3 h-3 text-[var(--color-geyser)]/30" />
-                    <span className="text-[9px] font-space tracking-[0.2em] text-[var(--color-geyser)]/40">
+                    <Github className="w-3 h-3 text-slate-500" />
+                    <span className="text-[9px] font-space tracking-[0.2em] text-slate-400">
                         {githubData.repos} repos
                     </span>
                 </div>
                 <div className="hidden sm:flex items-center gap-1.5">
-                    <Activity className="w-3 h-3 text-[var(--color-geyser)]/30" />
-                    <span className="text-[9px] font-space tracking-[0.2em] text-[var(--color-geyser)]/40">
+                    <Activity className="w-3 h-3 text-slate-500" />
+                    <span className="text-[9px] font-space tracking-[0.2em] text-slate-400">
                         {githubData.followers} followers
                     </span>
                 </div>
-                <span className="text-[9px] font-mono tracking-widest text-[var(--color-geyser)]/30 tabular-nums">
+                <span className="text-[9px] font-mono tracking-widest text-slate-500 tabular-nums">
                     {time}
                 </span>
             </div>
