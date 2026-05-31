@@ -437,6 +437,25 @@ function displayPath(path) {
     return path === '~' ? '~' : path.startsWith('~/') ? path : `~/${path}`;
 }
 
+// ─── Prompt component ──────────────────────────────────────────────────────────
+const Prompt = ({ c = '~', root = false, active = false }) => {
+    const pathDisplay = c === '~' ? '~' : c;
+    return (
+        <div className="flex items-center gap-0 flex-wrap leading-tight select-none">
+            <span style={{ color: root ? '#f87171' : '#4ade80' }}>
+                {root ? 'root' : 'siluna'}
+            </span>
+            <span style={{ color: '#94a3b8' }}>@</span>
+            <span style={{ color: '#60a5fa' }}>silunaos</span>
+            <span style={{ color: '#64748b' }}> </span>
+            <span style={{ color: '#c4b5fd' }}>{pathDisplay}</span>
+            <span style={{ color: '#64748b' }}> </span>
+            <span style={{ color: root ? '#f87171' : '#4ade80' }}>❯</span>
+            {active && <span style={{ color: '#64748b' }}>&nbsp;</span>}
+        </div>
+    );
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function TerminalSection() {
     const isTerminalOpen = useStore((state) => state.isTerminalOpen);
@@ -1224,24 +1243,7 @@ export default function TerminalSection() {
         }
     }, [input, historyIdx, cmdHistory, handleEnter, cwd, isRoot, cwdNode]);
 
-    // ── Prompt component ─────────────────────────────────────────────────────
-    const Prompt = ({ c = cwd, root = isRoot, active = false }) => {
-        const pathDisplay = c === '~' ? '~' : c;
-        return (
-            <div className="flex items-center gap-0 flex-wrap leading-tight select-none">
-                <span style={{ color: root ? '#f87171' : '#4ade80' }}>
-                    {root ? 'root' : 'siluna'}
-                </span>
-                <span style={{ color: '#94a3b8' }}>@</span>
-                <span style={{ color: '#60a5fa' }}>silunaos</span>
-                <span style={{ color: '#64748b' }}> </span>
-                <span style={{ color: '#c4b5fd' }}>{pathDisplay}</span>
-                <span style={{ color: '#64748b' }}> </span>
-                <span style={{ color: root ? '#f87171' : '#4ade80' }}>❯</span>
-                {active && <span style={{ color: '#64748b' }}>&nbsp;</span>}
-            </div>
-        );
-    };
+
 
     // ── Render history entry ─────────────────────────────────────────────────
     const renderEntry = (entry, idx) => {
@@ -1461,7 +1463,7 @@ export default function TerminalSection() {
 
                             {/* Active input row */}
                             <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                <Prompt active />
+                                <Prompt active c={cwd} root={isRoot} />
                                 {isAwaitingPassword ? (
                                     <input
                                         ref={inputRef}
