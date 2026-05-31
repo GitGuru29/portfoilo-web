@@ -1228,7 +1228,7 @@ export default function TerminalSection() {
     const Prompt = ({ c = cwd, root = isRoot, active = false }) => {
         const pathDisplay = c === '~' ? '~' : c;
         return (
-            <div className="flex items-center gap-0 flex-wrap leading-tight select-none">
+            <div className="flex items-center gap-0 flex-wrap leading-tight select-none whitespace-pre">
                 <span style={{ color: root ? '#f87171' : '#4ade80' }}>
                     {root ? 'root' : 'siluna'}
                 </span>
@@ -1346,7 +1346,7 @@ export default function TerminalSection() {
                 return (
                     <div key={idx} className="mb-2 font-mono text-[12px] md:text-[13px] leading-snug">
                         {NEOFETCH_OUTPUT.map((row, i) => (
-                            <div key={i} className="flex gap-2">
+                            <div key={i} className="flex gap-2 whitespace-pre">
                                 <span style={{ color: row.color }}>{row.text}</span>
                                 {row.suffix && (
                                     <span>
