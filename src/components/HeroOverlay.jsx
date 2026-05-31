@@ -21,10 +21,10 @@ export default function HeroOverlay() {
             // Initial Entry Animation
             const tl = gsap.timeline({ delay: 0.2 });
 
-            // Fade in and slightly scale down the background image for a cinematic reveal
+            // Fade in the background image without any scale movement
             tl.fromTo(imageRef.current,
-                { opacity: 0, scale: 1.05 },
-                { opacity: 1, scale: 1, duration: 2, ease: "power3.out" }
+                { opacity: 0 },
+                { opacity: 1, duration: 2, ease: "power3.out" }
             );
 
             // Stagger text reveals
@@ -34,17 +34,7 @@ export default function HeroOverlay() {
                 "-=1.2"
             );
 
-            // Parallax scroll effect for the image — move UP for a natural depth feel
-            gsap.to(imageRef.current, {
-                y: "-12%",
-                ease: "none",
-                scrollTrigger: {
-                    trigger: heroRef.current,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
+            // Photo parallax movement removed as requested
 
             // Cinematic Scrub Timeline (Based on sticky scroll)
             const scrubTl = gsap.timeline({
