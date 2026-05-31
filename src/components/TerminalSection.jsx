@@ -474,9 +474,11 @@ export default function TerminalSection() {
     const inputRef = useRef(null);
     const bodyRef = useRef(null);
 
-    // Focus input when terminal opens
+    // Focus input when terminal opens — preventScroll stops the browser scrolling to the input
     useEffect(() => {
-        if (isTerminalOpen) setTimeout(() => inputRef.current?.focus(), 100);
+        if (isTerminalOpen) {
+            setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 80);
+        }
     }, [isTerminalOpen]);
 
     // Auto scroll
@@ -1473,7 +1475,6 @@ export default function TerminalSection() {
                                         style={{ color: '#f1f5f9', caretColor: '#4ade80', fontSize: 'inherit', fontFamily: 'inherit' }}
                                         autoComplete="off"
                                         spellCheck={false}
-                                        autoFocus
                                     />
                                 ) : (
                                     <input
@@ -1486,7 +1487,6 @@ export default function TerminalSection() {
                                         style={{ color: '#f1f5f9', caretColor: '#4ade80', fontSize: 'inherit', fontFamily: 'inherit' }}
                                         autoComplete="off"
                                         spellCheck={false}
-                                        autoFocus
                                     />
                                 )}
                             </div>
