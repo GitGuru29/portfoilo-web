@@ -1124,28 +1124,106 @@ export default function TerminalSection() {
         }
 
         else if (cmd === 'about') {
-            out.push({ type: 'out', text: "Siluna Nusal Dangalla — Systems Developer, Android Engineer, Language Designer.\nBuilds at the intersection of low-level systems and native mobile.\nCreator of AeroLang, a compiler that targets native Android via NDK." });
+            out.push({ type: 'out', text:
+`Siluna Nusal Dangalla
+──────────────────────────────────────────────────
+Final-year Software Engineering undergraduate.
+Building high-performance, system-level software.
+
+Focus Areas:
+  · Native Android development (NDK, AOSP, Kotlin)
+  · Linux-based tooling and kernel internals
+  · Compiler & language design (AeroLang)
+  · Low-level system behavior & performance
+
+Philosophy:
+  Engineer software from the inside out — understand
+  how systems operate at their core before shaping
+  the user experience on top.
+
+Currently:
+  BSc Software Engineering (Final Year)
+  Building AeroLang — a compiler targeting native Android
+
+Site: silunadangalla.vercel.app` });
         }
 
         else if (cmd === 'skills') {
-            out.push({ type: 'out', text: "Languages:  C++  ·  Kotlin  ·  Python  ·  Bash  ·  Rust\nPlatforms:  Linux (Debian/Arch)  ·  Android (AOSP, NDK)\nTools:      GDB · Valgrind · Clang · Neovim · Git\nFocus:      Kernel internals · Compiler design · Android OS" });
+            out.push({ type: 'skills' });
         }
 
         else if (cmd === 'contact') {
-            out.push({ type: 'out', text: "Email   : sdangalla44@gmail.com\nGitHub  : https://github.com/GitGuru29\nLinkedIn: https://www.linkedin.com/in/siluna-dangalla-0744a02b1/\nResume  : /home/siluna/Documents/Siluna_CV.pdf" });
+            out.push({ type: 'out', text:
+`──────────────────────────────────────
+Contact Siluna Nusal Dangalla
+──────────────────────────────────────
+Email    : sdangalla44@gmail.com
+GitHub   : https://github.com/GitGuru29
+LinkedIn : https://linkedin.com/in/siluna-dangalla-0744a02b1
+Portfolio: https://silunadangalla.vercel.app
+Resume   : /home/siluna/Documents/Siluna_CV.pdf` });
         }
 
         else if (cmd === 'github') {
-            out.push({ type: 'out', text: "github.com/GitGuru29\n───────────────────\nRepos:  30+\nFocus:  C++  ·  Kotlin  ·  Python  ·  Systems\n\nProjects:\n  aerolang       — Compiler targeting native Android\n  NeoMonitor     — Linux process monitor in C++\n  SightLock      — Android biometric security tool\n  Bybridge       — Cross-device ecosystem daemon" });
+            out.push({ type: 'out', text:
+`github.com/GitGuru29
+──────────────────────────────────────
+Languages: C++  ·  Kotlin  ·  Python  ·  Bash
+Focus:     Systems  ·  Android  ·  Compilers
+
+Pinned Repositories:
+  aerolang         — Compiler targeting native Android via LLVM/NDK
+  NeoMonitor       — Real-time Linux process monitor reading /proc
+  Bybridge         — Cross-device daemon (C++ TCP/WebSocket)
+  AegisLayer       — On-device ML daemon for Android (Kotlin)
+  AutoGpuSwitcher  — Automated GPU switching for Arch Linux
+  TitanShare       — Android ↔ Linux control suite with uinput
+
+Stats: 30+ repos · Active contributor` });
         }
 
         else if (cmd === 'resume') {
-            out.push({ type: 'out', text: "Siluna Nusal Dangalla\n─────────────────────\nEmail   : sdangalla44@gmail.com\nLinkedIn: linkedin.com/in/siluna-dangalla-0744a02b1\n\nOpening CV: /home/siluna/Documents/Siluna_CV.pdf" });
+            out.push({ type: 'out', text:
+`Siluna Nusal Dangalla
+──────────────────────────────────────
+Email    : sdangalla44@gmail.com
+LinkedIn : linkedin.com/in/siluna-dangalla-0744a02b1
+
+Opening CV in new tab...` });
             setTimeout(() => window.open('/Siluna_Nusal_CV.pdf', '_blank'), 400);
         }
 
         else if (cmd === 'projects') {
-            out.push({ type: 'out', text: "~/projects\n├── aerolang/      — Compiled language targeting Android NDK\n├── neonmonitor/   — Real-time Linux process monitor (C++)\n├── sightlock/     — Android biometric liveness detection\n└── bybridge/      — Cross-device TCP/WebSocket daemon\n\nTip: cd projects/aerolang && cat main.c" });
+            out.push({ type: 'projects' });
+        }
+
+        else if (cmd === 'timeline' || cmd === 'history --career') {
+            out.push({ type: 'out', text:
+`Build Log — Career Timeline
+──────────────────────────────────────────────────────────
+2023 Q3  [EDUCATION] Started Software Engineering BSc
+          Dove into C/C++, Linux, Android outside curriculum
+
+2024 Q1  [PROJECT]   Bybridge — Cross-Device Daemon
+          C++ daemon · WebSocket/TCP · H.264 RTP · Biometric auth
+
+2024 Q3  [PROJECT]   NeonMonitor & Linux CLI Tooling
+          Real-time /proc reader · C++ · Live CPU/memory telemetry
+
+2024 Q4  [PROJECT]   AutoGpuSwitcher for Arch Linux
+          ELF binary analysis · pacman hooks · NVIDIA/AMD switching
+
+2025 Q1  [PROJECT]   AeroLang — Language Design Begins
+          Custom compiler · C++ · LLVM · Lexer → Parser → AST → NDK
+
+2026 Q1  [PROJECT]   TitanShare — Android ↔ Linux Suite
+          uinput emulation · mDNS · systemd · Custom binary protocol
+
+2026 Q2  [PROJECT]   AegisLayer — On-Device ML Daemon
+          Kotlin · Zero-dependency ML · Passive habit learning
+
+2026 Q2  [ONGOING]   Market Regime Intelligence
+          Python · Crypto trading · AI regime classification` });
         }
 
         else if (cmd === 'start') {
@@ -1386,18 +1464,93 @@ export default function TerminalSection() {
                         {entry.entries.map((e, i) => <span key={i}>{e}</span>)}
                     </div>
                 );
+            case 'skills':
+                return (
+                    <div key={idx} className="mb-3 text-[13px]">
+                        <div style={{ color: '#4ade80' }} className="mb-2 font-bold">Technical Specifications — Systems & Capabilities</div>
+                        <div className="mb-2">
+                            <div style={{ color: '#94a3b8' }} className="mb-1 text-[11px] uppercase tracking-widest">Core Languages</div>
+                            {[
+                                { name: 'C / C++',       pct: 95 },
+                                { name: 'Kotlin / Java', pct: 90 },
+                                { name: 'Bash / Shell',  pct: 85 },
+                                { name: 'Python',        pct: 80 },
+                            ].map(({ name, pct }) => {
+                                const filled = Math.round(pct / 100 * 20);
+                                const bar = '█'.repeat(filled) + '░'.repeat(20 - filled);
+                                return (
+                                    <div key={name} className="flex items-center gap-3 mb-0.5">
+                                        <span style={{ color: '#94a3b8', minWidth: 100 }}>{name}</span>
+                                        <span style={{ color: '#3b82f6' }}>{bar}</span>
+                                        <span style={{ color: '#64748b' }}>{pct}%</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div className="mb-2">
+                            <div style={{ color: '#94a3b8' }} className="mb-1 text-[11px] uppercase tracking-widest">OS & Kernel</div>
+                            {[
+                                { name: 'Linux Internals', pct: 92 },
+                                { name: 'Android NDK',     pct: 88 },
+                            ].map(({ name, pct }) => {
+                                const filled = Math.round(pct / 100 * 20);
+                                const bar = '█'.repeat(filled) + '░'.repeat(20 - filled);
+                                return (
+                                    <div key={name} className="flex items-center gap-3 mb-0.5">
+                                        <span style={{ color: '#94a3b8', minWidth: 100 }}>{name}</span>
+                                        <span style={{ color: '#c4b5fd' }}>{bar}</span>
+                                        <span style={{ color: '#64748b' }}>{pct}%</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <div>
+                            <div style={{ color: '#94a3b8' }} className="mb-1 text-[11px] uppercase tracking-widest">Architecture & Tooling</div>
+                            <div style={{ color: '#60a5fa' }}>LLVM IR · Compiler Design · System Design · Reverse Engineering</div>
+                            <div style={{ color: '#60a5fa' }}>POSIX · CMake/GCC · Docker · AWS · mDNS · uinput · /proc</div>
+                        </div>
+                    </div>
+                );
+            case 'projects':
+                return (
+                    <div key={idx} className="mb-3 text-[13px]">
+                        <div style={{ color: '#4ade80' }} className="mb-2 font-bold">Projects — silunadangalla.vercel.app</div>
+                        {[
+                            { name: 'AeroLang',                       role: 'Compiler Dev',             tech: 'C++ · LLVM · NDK',           cat: 'OS' },
+                            { name: 'AegisLayer',                     role: 'Android ML Daemon',         tech: 'Kotlin · On-device ML',      cat: 'AI' },
+                            { name: 'Bybridge',                       role: 'C++ Daemon / WebSockets',   tech: 'C++ · TCP · H.264 RTP',      cat: 'LX' },
+                            { name: 'TitanShare',                     role: 'C++ Systems Integration',  tech: 'C++ · uinput · mDNS',        cat: 'LX' },
+                            { name: 'TitanShare (Android)',           role: 'Android / Network',         tech: 'Kotlin · Binary Protocol',   cat: 'AN' },
+                            { name: 'AutoGpuSwitcher',                role: 'Linux Systems',             tech: 'Bash · ELF · pacman hooks',  cat: 'LX' },
+                            { name: 'NeonMonitor',                    role: 'Linux CLI Tool',            tech: 'C++ · /proc · ncurses',      cat: 'LX' },
+                            { name: 'Market Regime Intelligence',     role: 'Quant Researcher',          tech: 'Python · AI · Crypto',       cat: 'AI' },
+                            { name: 'Android Game System Controller', role: 'Android Performance',       tech: 'Kotlin · System-level',      cat: 'AN' },
+                            { name: 'LankaSmartMart',                 role: 'Android / E-Commerce',      tech: 'Compose · Firebase · MLKit', cat: 'AN' },
+                        ].map(({ name, role, tech, cat }) => {
+                            const catColor = cat === 'AI' ? '#a78bfa' : cat === 'LX' ? '#4ade80' : cat === 'AN' ? '#60a5fa' : '#f59e0b';
+                            return (
+                                <div key={name} className="mb-0.5 flex flex-wrap gap-2">
+                                    <span style={{ color: '#f1f5f9', minWidth: 230 }}>{name}</span>
+                                    <span style={{ color: '#64748b', minWidth: 160 }}>{role}</span>
+                                    <span style={{ color: catColor }}>{tech}</span>
+                                </div>
+                            );
+                        })}
+                        <div style={{ color: '#64748b' }} className="mt-1 text-[11px]">Tip: type 'timeline' for career log · 'github' for repos</div>
+                    </div>
+                );
             case 'help':
                 return (
                     <div key={idx} className="mb-2 text-[13px] leading-relaxed">
                         <div style={{ color: '#4ade80' }} className="mb-1 font-bold">Available commands:</div>
                         {[
-                            ['Navigation', 'ls, ls -la, cd, pwd, find, tree'],
-                            ['Files', 'cat, grep, touch, mkdir, rm, cp, mv'],
-                            ['Git', 'git status, git log, git log --oneline, git branch, git diff'],
-                            ['System', 'uname -a, uptime, date, whoami, id, env, which, history'],
-                            ['Dev', 'gcc, g++, make, python3, node, neofetch, htop'],
-                            ['Portfolio', 'about, skills, projects, github, resume, contact'],
-                            ['Shell', 'echo, man, sudo, exit, clear, Ctrl+L, Ctrl+C'],
+                            ['Navigation', 'ls, ls -la, ls -lah, cd, pwd, find'],
+                            ['Files',      'cat, grep -in, touch, mkdir, rm, cp, mv'],
+                            ['Git',        'git status, git log --oneline, git branch, git diff'],
+                            ['System',     'uname -a, uptime, date, whoami, id, env, which, history'],
+                            ['Dev',        'gcc, g++, make, python3, node, neofetch, htop'],
+                            ['Portfolio',  'about, skills, projects, timeline, github, resume, contact'],
+                            ['Shell',      'echo $HOME, man <cmd>, sudo su, exit, clear, Ctrl+L, Ctrl+C'],
                         ].map(([cat, cmds]) => (
                             <div key={cat} className="flex gap-3">
                                 <span style={{ color: '#64748b', minWidth: 80 }}>{cat}</span>
