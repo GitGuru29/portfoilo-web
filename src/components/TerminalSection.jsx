@@ -437,25 +437,6 @@ function displayPath(path) {
     return path === '~' ? '~' : path.startsWith('~/') ? path : `~/${path}`;
 }
 
-// ─── Prompt component ──────────────────────────────────────────────────────────
-const Prompt = ({ c = '~', root = false, active = false }) => {
-    const pathDisplay = c === '~' ? '~' : c;
-    return (
-        <div className="flex items-center gap-0 flex-wrap leading-tight select-none">
-            <span style={{ color: root ? '#f87171' : '#4ade80' }}>
-                {root ? 'root' : 'siluna'}
-            </span>
-            <span style={{ color: '#94a3b8' }}>@</span>
-            <span style={{ color: '#60a5fa' }}>silunaos</span>
-            <span style={{ color: '#64748b' }}> </span>
-            <span style={{ color: '#c4b5fd' }}>{pathDisplay}</span>
-            <span style={{ color: '#64748b' }}> </span>
-            <span style={{ color: root ? '#f87171' : '#4ade80' }}>❯</span>
-            {active && <span style={{ color: '#64748b' }}>&nbsp;</span>}
-        </div>
-    );
-};
-
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function TerminalSection() {
     const isTerminalOpen = useStore((state) => state.isTerminalOpen);
@@ -495,7 +476,7 @@ export default function TerminalSection() {
 
     // Focus input when terminal opens
     useEffect(() => {
-        if (isTerminalOpen) setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 100);
+        if (isTerminalOpen) setTimeout(() => inputRef.current?.focus(), 100);
     }, [isTerminalOpen]);
 
     // Auto scroll
@@ -1243,7 +1224,24 @@ export default function TerminalSection() {
         }
     }, [input, historyIdx, cmdHistory, handleEnter, cwd, isRoot, cwdNode]);
 
-
+    // ── Prompt component ─────────────────────────────────────────────────────
+    const Prompt = ({ c = cwd, root = isRoot, active = false }) => {
+        const pathDisplay = c === '~' ? '~' : c;
+        return (
+            <div className="flex items-center gap-0 flex-wrap leading-tight select-none">
+                <span style={{ color: root ? '#f87171' : '#4ade80' }}>
+                    {root ? 'root' : 'siluna'}
+                </span>
+                <span style={{ color: '#94a3b8' }}>@</span>
+                <span style={{ color: '#60a5fa' }}>silunaos</span>
+                <span style={{ color: '#64748b' }}> </span>
+                <span style={{ color: '#c4b5fd' }}>{pathDisplay}</span>
+                <span style={{ color: '#64748b' }}> </span>
+                <span style={{ color: root ? '#f87171' : '#4ade80' }}>❯</span>
+                {active && <span style={{ color: '#64748b' }}>&nbsp;</span>}
+            </div>
+        );
+    };
 
     // ── Render history entry ─────────────────────────────────────────────────
     const renderEntry = (entry, idx) => {
@@ -1431,7 +1429,7 @@ export default function TerminalSection() {
                             background: '#0d1117',
                             fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Menlo, monospace',
                         }}
-                        onPointerDown={e => { e.stopPropagation(); inputRef.current?.focus({ preventScroll: true }); }}
+                        onPointerDown={e => { e.stopPropagation(); inputRef.current?.focus(); }}
                     >
                         {/* ── Title Bar ─────────────────────────────────── */}
                         <div className="flex items-center justify-between px-4 h-10 border-b border-white/8 select-none flex-shrink-0"
@@ -1457,13 +1455,13 @@ export default function TerminalSection() {
                             ref={bodyRef}
                             className="flex-1 overflow-y-auto p-4 md:p-5 text-[13px] md:text-[14px]"
                             style={{ lineHeight: 1.6 }}
-                            onClick={() => inputRef.current?.focus({ preventScroll: true })}
+                            onClick={() => inputRef.current?.focus()}
                         >
                             {history.map((entry, i) => renderEntry(entry, i))}
 
                             {/* Active input row */}
                             <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                <Prompt active c={cwd} root={isRoot} />
+                                <Prompt active />
                                 {isAwaitingPassword ? (
                                     <input
                                         ref={inputRef}
@@ -1475,6 +1473,7 @@ export default function TerminalSection() {
                                         style={{ color: '#f1f5f9', caretColor: '#4ade80', fontSize: 'inherit', fontFamily: 'inherit' }}
                                         autoComplete="off"
                                         spellCheck={false}
+                                        autoFocus
                                     />
                                 ) : (
                                     <input
@@ -1487,6 +1486,7 @@ export default function TerminalSection() {
                                         style={{ color: '#f1f5f9', caretColor: '#4ade80', fontSize: 'inherit', fontFamily: 'inherit' }}
                                         autoComplete="off"
                                         spellCheck={false}
+                                        autoFocus
                                     />
                                 )}
                             </div>
