@@ -420,7 +420,7 @@ export default function TerminalSection() {
 
                             {/* Background Image Overlay */}
                             <div
-                                className="absolute inset-0 z-0 opacity-15 pointer-events-none"
+                                className="absolute inset-0 z-0 opacity-5 pointer-events-none"
                                 style={{
                                     backgroundImage: "url('/assets/kitty_bg.png')",
                                     backgroundSize: "cover",

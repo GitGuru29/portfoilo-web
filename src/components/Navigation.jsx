@@ -132,6 +132,8 @@ export default function Navigation() {
             <nav
                 ref={navRef}
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 will-change-transform ${
+                    isTerminalOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                } ${
                     scrolled
                         ? 'py-3 bg-[var(--color-quantum-black)]/98 border-b border-[var(--color-geyser)]/8 text-[var(--color-geyser)]'
                         : 'py-7 text-white'
