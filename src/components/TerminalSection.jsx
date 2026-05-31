@@ -476,7 +476,7 @@ export default function TerminalSection() {
 
     // Focus input when terminal opens
     useEffect(() => {
-        if (isTerminalOpen) setTimeout(() => inputRef.current?.focus(), 100);
+        if (isTerminalOpen) setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 100);
     }, [isTerminalOpen]);
 
     // Auto scroll
@@ -1429,7 +1429,7 @@ export default function TerminalSection() {
                             background: '#0d1117',
                             fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Menlo, monospace',
                         }}
-                        onPointerDown={e => { e.stopPropagation(); inputRef.current?.focus(); }}
+                        onPointerDown={e => { e.stopPropagation(); inputRef.current?.focus({ preventScroll: true }); }}
                     >
                         {/* ── Title Bar ─────────────────────────────────── */}
                         <div className="flex items-center justify-between px-4 h-10 border-b border-white/8 select-none flex-shrink-0"
@@ -1455,7 +1455,7 @@ export default function TerminalSection() {
                             ref={bodyRef}
                             className="flex-1 overflow-y-auto p-4 md:p-5 text-[13px] md:text-[14px]"
                             style={{ lineHeight: 1.6 }}
-                            onClick={() => inputRef.current?.focus()}
+                            onClick={() => inputRef.current?.focus({ preventScroll: true })}
                         >
                             {history.map((entry, i) => renderEntry(entry, i))}
 
@@ -1473,7 +1473,6 @@ export default function TerminalSection() {
                                         style={{ color: '#f1f5f9', caretColor: '#4ade80', fontSize: 'inherit', fontFamily: 'inherit' }}
                                         autoComplete="off"
                                         spellCheck={false}
-                                        autoFocus
                                     />
                                 ) : (
                                     <input
@@ -1486,7 +1485,6 @@ export default function TerminalSection() {
                                         style={{ color: '#f1f5f9', caretColor: '#4ade80', fontSize: 'inherit', fontFamily: 'inherit' }}
                                         autoComplete="off"
                                         spellCheck={false}
-                                        autoFocus
                                     />
                                 )}
                             </div>

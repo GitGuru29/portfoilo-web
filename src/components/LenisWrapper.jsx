@@ -2,10 +2,13 @@ import React, { useEffect } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import useStore from '../store/useStore';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function LenisWrapper({ children }) {
+    const isTerminalOpen = useStore((state) => state.isTerminalOpen);
+
     useEffect(() => {
         const lenis = new Lenis({
             duration: 1.2,
@@ -35,6 +38,18 @@ export default function LenisWrapper({ children }) {
             delete window.lenis;
         };
     }, []);
+
+    // Lock/unlock scroll when terminal opens/closes
+    useEffect(() => {
+        if (!window.lenis) return;
+        if (isTerminalOpen) {
+            window.lenis.stop();
+            document.body.style.overflow = 'hidden';
+        } else {
+            window.lenis.start();
+            document.body.style.overflow = '';
+        }
+    }, [isTerminalOpen]);
 
     return <>{children}</>;
 }
