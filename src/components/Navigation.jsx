@@ -163,7 +163,7 @@ export default function Navigation() {
                     <div className="flex items-center gap-4">
                         {/* Terminal toggle */}
                         <button
-                            onClick={toggleTerminal}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleTerminal(); }}
                             aria-label="Open terminal"
                             className={`group relative flex items-center gap-2 border px-3 py-1.5 transition-all duration-300 ${
                                 isTerminalOpen
