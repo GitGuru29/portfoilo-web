@@ -437,6 +437,26 @@ function displayPath(path) {
     return path === '~' ? '~' : path.startsWith('~/') ? path : `~/${path}`;
 }
 
+
+// ─── Prompt Component (must be outside main component to avoid remount on render) ─
+function ZshPrompt({ c, root, active }) {
+    const pathDisplay = c === '~' ? '~' : c;
+    return (
+        <div className="flex items-center gap-0 flex-wrap leading-tight select-none">
+            <span style={{ color: root ? '#f87171' : '#4ade80' }}>
+                {root ? 'root' : 'siluna'}
+            </span>
+            <span style={{ color: '#94a3b8' }}>@</span>
+            <span style={{ color: '#60a5fa' }}>silunaos</span>
+            <span style={{ color: '#64748b' }}> </span>
+            <span style={{ color: '#c4b5fd' }}>{pathDisplay}</span>
+            <span style={{ color: '#64748b' }}> </span>
+            <span style={{ color: root ? '#f87171' : '#4ade80' }}>❯</span>
+            {active && <span style={{ color: '#64748b' }}>&nbsp;</span>}
+        </div>
+    );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function TerminalSection() {
     const isTerminalOpen = useStore((state) => state.isTerminalOpen);
@@ -1304,24 +1324,6 @@ Opening CV in new tab...` });
         }
     }, [input, historyIdx, cmdHistory, handleEnter, cwd, isRoot, cwdNode]);
 
-    // ── Prompt component ─────────────────────────────────────────────────────
-    const Prompt = ({ c = cwd, root = isRoot, active = false }) => {
-        const pathDisplay = c === '~' ? '~' : c;
-        return (
-            <div className="flex items-center gap-0 flex-wrap leading-tight select-none">
-                <span style={{ color: root ? '#f87171' : '#4ade80' }}>
-                    {root ? 'root' : 'siluna'}
-                </span>
-                <span style={{ color: '#94a3b8' }}>@</span>
-                <span style={{ color: '#60a5fa' }}>silunaos</span>
-                <span style={{ color: '#64748b' }}> </span>
-                <span style={{ color: '#c4b5fd' }}>{pathDisplay}</span>
-                <span style={{ color: '#64748b' }}> </span>
-                <span style={{ color: root ? '#f87171' : '#4ade80' }}>❯</span>
-                {active && <span style={{ color: '#64748b' }}>&nbsp;</span>}
-            </div>
-        );
-    };
 
     // ── Render history entry ─────────────────────────────────────────────────
     const renderEntry = (entry, idx) => {
@@ -1350,7 +1352,7 @@ Opening CV in new tab...` });
                 return (
                     <div key={idx} className="mt-3 mb-0.5">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <Prompt c={entry.cwd} root={entry.isRoot} />
+                            <ZshPrompt c={entry.cwd} root={entry.isRoot} />
                             <span style={{ color: '#f1f5f9' }}>{entry.text}</span>
                         </div>
                     </div>
@@ -1616,7 +1618,7 @@ Opening CV in new tab...` });
 
                             {/* Active input row */}
                             <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                <Prompt active />
+                                <ZshPrompt c={cwd} root={isRoot} active />
                                 {isAwaitingPassword ? (
                                     <input
                                         ref={inputRef}
