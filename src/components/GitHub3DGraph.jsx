@@ -1,7 +1,56 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Instance, Instances, PointerLockControls, Html, Clouds, Cloud } from '@react-three/drei';
+import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
+
+const generateWindowTexture = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    
+    // Background: dark concrete
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(0, 0, 512, 512);
+    
+    // Grid of windows
+    const cols = 12;
+    const rows = 24;
+    const paddingX = 8;
+    const paddingY = 12;
+    
+    const w = (512 / cols) - paddingX;
+    const h = (512 / rows) - paddingY;
+    
+    for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+            const x = c * (w + paddingX) + (paddingX / 2);
+            const y = r * (h + paddingY) + (paddingY / 2);
+            
+            // 50% chance window is on
+            if (Math.random() > 0.5) {
+                const rand = Math.random();
+                if (rand > 0.8) ctx.fillStyle = '#fef08a'; // yellow tint
+                else if (rand > 0.6) ctx.fillStyle = '#7dd3fc'; // blue tint
+                else ctx.fillStyle = '#ffffff'; // pure white
+                
+                ctx.fillRect(x, y, w, h);
+            } else {
+                ctx.fillStyle = '#020617'; // unlit
+                ctx.fillRect(x, y, w, h);
+            }
+        }
+    }
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, 1);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+};
+const windowTexture = generateWindowTexture();
 
 const LEVELS = {
     'NONE': { color: '#f1f5f9', emissive: '#f8fafc', intensity: 0.1 },
@@ -86,7 +135,7 @@ const AnimatedMaterial = ({ targetColor, targetEmissive, targetIntensity, target
         }
     });
     
-    return <meshStandardMaterial ref={ref} {...props} />
+    return <meshStandardMaterial ref={ref} map={windowTexture} emissiveMap={windowTexture} {...props} />
 };
 
 const usePlayerControls = () => {
@@ -461,6 +510,11 @@ export default function GitHub3DGraph({ username }) {
                         <CityScene data={data} setHoveredBox={setHoveredBox} activityMultiplier={activityMultiplier} />
                         <NatureEnvironment vibeKey={vibeKey} />
                         <CameraRig mode={mode} isLocked={isLocked} />
+
+                        <EffectComposer disableNormalPass>
+                            <Bloom luminanceThreshold={0.5} mipmapBlur intensity={1.5} />
+                            <Vignette eskil={false} offset={0.1} darkness={1.1} />
+                        </EffectComposer>
                         
                         {mode === 'WALK' && (
                             <PointerLockControls 
