@@ -753,8 +753,8 @@ export default function TerminalSection() {
 
         if (cmd === 'clear') { setHistory([]); return; }
 
-        if (cmd.startsWith('nano ') || cmd.startsWith('vim ') || cmd.startsWith('nvim ')) {
-            const editorName = cmd.split(' ')[0];
+        if (cmd === 'nano' || cmd === 'vim' || cmd === 'nvim') {
+            const editorName = cmd;
             const targetArg = args[0];
             if (!targetArg) {
                 push([prompt, { type: 'err', text: `${editorName}: missing filename` }]);
