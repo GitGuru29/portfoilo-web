@@ -17,10 +17,7 @@ export default function Preloader() {
     const barRef = useRef(null);
     const lineRefs = useRef([]);
     const nameRef = useRef(null);
-    const promptRef = useRef(null);
     const [visibleLines, setVisibleLines] = useState([]);
-    const [isBooted, setIsBooted] = useState(false);
-    const [isUnlocking, setIsUnlocking] = useState(false);
 
     useEffect(() => {
         // Sequence boot lines
@@ -30,10 +27,17 @@ export default function Preloader() {
             }, line.delay * 1000)
         );
 
-        // Main timeline for boot sequence
+        // Main timeline
         const tl = gsap.timeline({
-            delay: 1.8,
-            onComplete: () => setIsBooted(true) // Hand over control to user here
+            delay: 2.0,
+            onComplete: () => {
+                gsap.to(containerRef.current, {
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power2.inOut',
+                    onComplete: unlockSystem,
+                });
+            },
         });
 
         // Progress bar grows to 100%
@@ -53,40 +57,12 @@ export default function Preloader() {
             timeouts.forEach(clearTimeout);
             tl.kill();
         };
-    }, []);
-
-    // Handle user input to unlock
-    useEffect(() => {
-        if (!isBooted || isUnlocking) return;
-
-        const handleUnlock = (e) => {
-            if (e.type === 'keydown' && e.key !== 'Enter') return;
-            
-            setIsUnlocking(true);
-            
-            // The handover transition
-            gsap.to(containerRef.current, {
-                opacity: 0,
-                scale: 1.1,
-                duration: 0.8,
-                ease: 'power3.inOut',
-                onComplete: unlockSystem,
-            });
-        };
-
-        window.addEventListener('keydown', handleUnlock);
-        window.addEventListener('click', handleUnlock);
-
-        return () => {
-            window.removeEventListener('keydown', handleUnlock);
-            window.removeEventListener('click', handleUnlock);
-        };
-    }, [isBooted, isUnlocking, unlockSystem]);
+    }, [unlockSystem]);
 
     return (
         <div
             ref={containerRef}
-            className="fixed inset-0 z-[200] bg-[var(--color-quantum-black)] flex flex-col items-center justify-center pointer-events-auto will-change-transform cursor-pointer select-none"
+            className="fixed inset-0 z-[200] bg-[var(--color-quantum-black)] flex flex-col items-center justify-center pointer-events-none will-change-opacity overflow-hidden"
         >
             {/* Corner accents */}
             <div className="absolute top-8 left-8 w-8 h-8 border-t border-l border-[var(--color-geyser)]/20" />
@@ -114,7 +90,7 @@ export default function Preloader() {
             </div>
 
             {/* Name + progress */}
-            <div className="flex flex-col items-center gap-6 w-full max-w-xs relative">
+            <div className="flex flex-col items-center gap-6 w-full max-w-xs">
                 <div ref={nameRef} className="opacity-0 text-[var(--color-geyser)] font-space text-xs tracking-[0.6em] uppercase font-light">
                     Siluna Nusal
                 </div>
@@ -125,16 +101,7 @@ export default function Preloader() {
                         style={{ width: '0%' }}
                     />
                 </div>
-                
-                {/* The Handover Prompt */}
-                <div 
-                    ref={promptRef}
-                    className={`absolute top-full mt-8 text-[10px] font-mono tracking-widest text-[#4ade80] transition-opacity duration-700 ${isBooted && !isUnlocking ? 'opacity-100 animate-pulse' : 'opacity-0'}`}
-                >
-                    [ PRESS ENTER TO INITIALIZE ]
-                </div>
             </div>
         </div>
     );
 }
-

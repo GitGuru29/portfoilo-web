@@ -3,6 +3,48 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, X, Minus, Square } from 'lucide-react';
 import useStore from '../store/useStore';
 
+// ─── Boot Sequence ─────────────────────────────────────────────────────────────
+const TerminalBootSequence = ({ lines, onComplete }) => {
+    const [visibleCount, setVisibleCount] = useState(0);
+
+    useEffect(() => {
+        let currentIdx = 0;
+        const timeouts = [];
+        
+        const scheduleNext = () => {
+            if (currentIdx >= lines.length) {
+                setTimeout(onComplete, 300);
+                return;
+            }
+            
+            const line = lines[currentIdx];
+            let delay = Math.random() * 80 + 30; 
+            if (line.includes('[ OK ]')) delay = Math.random() * 150 + 100;
+            if (line.includes('password:')) delay = 1200;
+            if (line === '') delay = 50;
+
+            const t = setTimeout(() => {
+                setVisibleCount(prev => prev + 1);
+                currentIdx++;
+                scheduleNext();
+            }, delay);
+            timeouts.push(t);
+        };
+        
+        scheduleNext();
+        
+        return () => timeouts.forEach(clearTimeout);
+    }, [lines, onComplete]);
+
+    return (
+        <div className="mb-4 font-mono text-[13px] md:text-[14px]">
+            {lines.slice(0, visibleCount).map((l, i) => (
+                <div key={i} style={{ color: l.includes('[ OK ]') ? '#4ade80' : '#94a3b8' }} className="leading-relaxed whitespace-pre-wrap">{l}</div>
+            ))}
+        </div>
+    );
+};
+
 // ─── Virtual File System ──────────────────────────────────────────────────────
 const buildFS = () => ({
     type: 'dir',
@@ -586,6 +628,7 @@ export default function TerminalSection() {
     const [cmdHistory, setCmdHistory] = useState([]);
     const [historyIdx, setHistoryIdx] = useState(-1);
     const [editor, setEditor] = useState({ open: false, path: '', name: '', content: '' });
+    const [isTerminalBooting, setIsTerminalBooting] = useState(!hasBooted);
 
     const inputRef = useRef(null);
     const bodyRef = useRef(null);
@@ -1390,10 +1433,13 @@ export default function TerminalSection() {
     const renderEntry = (entry, idx) => {
         switch (entry.type) {
             case 'boot':
+                if (isTerminalBooting) {
+                    return <TerminalBootSequence key={idx} lines={entry.lines} onComplete={() => setIsTerminalBooting(false)} />;
+                }
                 return (
-                    <div key={idx} className="mb-4">
+                    <div key={idx} className="mb-4 font-mono text-[13px] md:text-[14px]">
                         {entry.lines.map((l, i) => (
-                            <div key={i} style={{ color: l.includes('[ OK ]') ? '#4ade80' : '#94a3b8' }} className="leading-relaxed">{l}</div>
+                            <div key={i} style={{ color: l.includes('[ OK ]') ? '#4ade80' : '#94a3b8' }} className="leading-relaxed whitespace-pre-wrap">{l}</div>
                         ))}
                     </div>
                 );
@@ -1649,7 +1695,8 @@ export default function TerminalSection() {
                             </div>
 
                             {/* Active input row */}
-                            <div className="flex items-center gap-2 mt-2 flex-wrap" style={{ display: editor.open ? 'none' : 'flex' }}>
+                            {!isTerminalBooting && (
+                                <div className="flex items-center gap-2 mt-2 flex-wrap" style={{ display: editor.open ? 'none' : 'flex' }}>
                                 <Prompt active />
                                 {isAwaitingPassword ? (
                                     <input
@@ -1679,6 +1726,7 @@ export default function TerminalSection() {
                                     />
                                 )}
                             </div>
+                            )}
                         </div>
                     </motion.div>
                 </motion.div>
