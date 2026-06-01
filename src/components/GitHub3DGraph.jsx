@@ -322,70 +322,104 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
 function NatureEnvironment({ vibeKey }) {
     const isNight = vibeKey === 'NIGHT' || vibeKey === 'EVENING';
 
+    // River runs along the right side of the city, parallel to the Z axis
+    // City buildings occupy roughly x: -5 to +5, road gap at x≈0
+    // River is placed at x≈22, safely outside all buildings
     const riverCurve = useMemo(() => {
         const points = [];
-        for (let z = -80; z <= 80; z += 5) {
-            const x = Math.sin(z * 0.1) * 15 + Math.cos(z * 0.03) * 10;
-            points.push(new THREE.Vector3(x, 0, z));
+        for (let z = -55; z <= 55; z += 5) {
+            // Gentle meander — stays between x=18 and x=28, never near buildings
+            const x = 23 + Math.sin(z * 0.08) * 3;
+            points.push(new THREE.Vector3(x, -0.05, z));
         }
         return new THREE.CatmullRomCurve3(points);
     }, []);
 
-    const bridges = useMemo(() => {
-        const b = [];
-        [-20, -5, 10, 25].forEach(z => {
-            const x = Math.sin(z * 0.1) * 15 + Math.cos(z * 0.03) * 10;
-            b.push({ position: [x, 0.1, z], rotationY: Math.cos(z * 0.1) * 0.5 });
-        });
-        return b;
-    }, []);
+    // Road runs along x≈0 (the PATH_WIDTH gap between day columns 3 and 4)
+    // Bridges cross the river at that road, spanning in the X direction
+    // Bridge center x = 23 (center of river), road z positions
+    const bridgeZPositions = [-25, -8, 8, 25];
 
     return (
         <group>
-            {/* Realistic River */}
-            <mesh position={[0, -2.8, 0]} castShadow receiveShadow>
-                <tubeGeometry args={[riverCurve, 128, 3, 16, false]} />
-                <meshStandardMaterial color="#0284c7" emissive="#0369a1" emissiveIntensity={isNight ? 0.4 : 0.1} roughness={0.05} metalness={0.9} transparent opacity={0.85} />
+            {/* River — flows along the side of the city */}
+            <mesh castShadow receiveShadow>
+                <tubeGeometry args={[riverCurve, 200, 2.5, 12, false]} />
+                <meshStandardMaterial
+                    color="#0369a1"
+                    emissive="#0284c7"
+                    emissiveIntensity={isNight ? 0.5 : 0.15}
+                    roughness={0.05}
+                    metalness={0.9}
+                    transparent
+                    opacity={0.9}
+                />
             </mesh>
 
-            {/* Realistic Bridges */}
-            {bridges.map((bridge, i) => (
-                <group key={`bridge-${i}`} position={bridge.position} rotation={[0, bridge.rotationY, 0]}>
-                    <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
-                        <boxGeometry args={[10, 0.2, 4]} />
-                        <meshStandardMaterial color="#334155" roughness={0.9} />
-                    </mesh>
-                    <mesh position={[0, 0.6, 1.9]} castShadow receiveShadow>
-                        <boxGeometry args={[10, 0.4, 0.2]} />
-                        <meshStandardMaterial color="#94a3b8" metalness={0.5} roughness={0.5} />
-                    </mesh>
-                    <mesh position={[0, 0.6, -1.9]} castShadow receiveShadow>
-                        <boxGeometry args={[10, 0.4, 0.2]} />
-                        <meshStandardMaterial color="#94a3b8" metalness={0.5} roughness={0.5} />
-                    </mesh>
-                    <mesh position={[0, 0.45, 2.05]} castShadow receiveShadow>
-                        <boxGeometry args={[10, 0.05, 0.05]} />
-                        <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={isNight ? 2 : 0.5} />
-                    </mesh>
-                    <mesh position={[0, 0.45, -2.05]} castShadow receiveShadow>
-                        <boxGeometry args={[10, 0.05, 0.05]} />
-                        <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={isNight ? 2 : 0.5} />
-                    </mesh>
-                    <mesh position={[-3, 0.2, 0]} castShadow receiveShadow>
-                        <boxGeometry args={[0.5, 0.4, 3]} />
-                        <meshStandardMaterial color="#1e293b" />
-                    </mesh>
-                    <mesh position={[3, 0.2, 0]} castShadow receiveShadow>
-                        <boxGeometry args={[0.5, 0.4, 3]} />
-                        <meshStandardMaterial color="#1e293b" />
-                    </mesh>
-                </group>
+            {/* Road surface — runs through the building grid on x≈0 (PATH gap) */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
+                <planeGeometry args={[3, 110]} />
+                <meshStandardMaterial color="#1e293b" roughness={0.95} />
+            </mesh>
+
+            {/* Road center line dashes */}
+            {Array.from({ length: 20 }).map((_, i) => (
+                <mesh key={`dash-${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, -50 + i * 5.5]} receiveShadow>
+                    <planeGeometry args={[0.1, 2.5]} />
+                    <meshStandardMaterial color="#fbbf24" emissive="#fbbf24" emissiveIntensity={0.3} />
+                </mesh>
             ))}
 
-            {/* Realistic Volumetric Clouds */}
+            {/* Bridges — cross the river, aligned with the road (x=0) going right to river x≈23) */}
+            {bridgeZPositions.map((z, i) => {
+                const riverX = 23 + Math.sin(z * 0.08) * 3; // match river curve at this z
+                const bridgeLen = riverX + 2; // from road edge (~x=1.5) to river far bank
+                const bridgeCenterX = (1.5 + riverX) / 2;
+                return (
+                    <group key={`bridge-${i}`} position={[bridgeCenterX, 0, z]}>
+                        {/* Main bridge deck */}
+                        <mesh position={[0, 0.07, 0]} castShadow receiveShadow>
+                            <boxGeometry args={[bridgeLen, 0.18, 3.2]} />
+                            <meshStandardMaterial color="#334155" roughness={0.85} metalness={0.2} />
+                        </mesh>
+                        {/* Left railing */}
+                        <mesh position={[0, 0.35, 1.55]}>
+                            <boxGeometry args={[bridgeLen, 0.5, 0.1]} />
+                            <meshStandardMaterial color="#94a3b8" metalness={0.6} roughness={0.4} />
+                        </mesh>
+                        {/* Right railing */}
+                        <mesh position={[0, 0.35, -1.55]}>
+                            <boxGeometry args={[bridgeLen, 0.5, 0.1]} />
+                            <meshStandardMaterial color="#94a3b8" metalness={0.6} roughness={0.4} />
+                        </mesh>
+                        {/* Neon strip left */}
+                        <mesh position={[0, 0.62, 1.55]}>
+                            <boxGeometry args={[bridgeLen, 0.04, 0.04]} />
+                            <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={isNight ? 3 : 0.6} />
+                        </mesh>
+                        {/* Neon strip right */}
+                        <mesh position={[0, 0.62, -1.55]}>
+                            <boxGeometry args={[bridgeLen, 0.04, 0.04]} />
+                            <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={isNight ? 3 : 0.6} />
+                        </mesh>
+                        {/* Support pillar near building side */}
+                        <mesh position={[-bridgeLen / 2 + 0.8, -0.5, 0]} castShadow>
+                            <boxGeometry args={[0.4, 1.2, 3.0]} />
+                            <meshStandardMaterial color="#1e293b" roughness={0.9} />
+                        </mesh>
+                        {/* Support pillar at river bank */}
+                        <mesh position={[bridgeLen / 2 - 0.8, -0.5, 0]} castShadow>
+                            <boxGeometry args={[0.4, 1.2, 3.0]} />
+                            <meshStandardMaterial color="#1e293b" roughness={0.9} />
+                        </mesh>
+                    </group>
+                );
+            })}
+
+            {/* Volumetric Clouds */}
             <Clouds material={THREE.MeshLambertMaterial} limit={400}>
-                <Cloud segments={40} bounds={[80, 10, 80]} volume={20} color={isNight ? "#1e293b" : "#ffffff"} position={[0, 30, 0]} opacity={isNight ? 0.3 : 0.6} />
-                <Cloud segments={20} bounds={[40, 10, 40]} volume={15} color={isNight ? "#0f172a" : "#f1f5f9"} position={[20, 25, -20]} opacity={isNight ? 0.4 : 0.7} />
+                <Cloud segments={40} bounds={[80, 10, 80]} volume={20} color={isNight ? '#1e293b' : '#ffffff'} position={[0, 30, 0]} opacity={isNight ? 0.3 : 0.6} />
+                <Cloud segments={20} bounds={[40, 10, 40]} volume={15} color={isNight ? '#0f172a' : '#f1f5f9'} position={[20, 25, -20]} opacity={isNight ? 0.4 : 0.7} />
             </Clouds>
         </group>
     );
@@ -512,8 +546,8 @@ export default function GitHub3DGraph({ username }) {
                         <CameraRig mode={mode} isLocked={isLocked} />
 
                         <EffectComposer disableNormalPass>
-                            <Bloom luminanceThreshold={0.5} mipmapBlur intensity={1.5} />
-                            <Vignette eskil={false} offset={0.1} darkness={1.1} />
+                            <Bloom luminanceThreshold={0.8} mipmapBlur intensity={0.6} levels={5} />
+                            <Vignette eskil={false} offset={0.25} darkness={0.8} />
                         </EffectComposer>
                         
                         {mode === 'WALK' && (
