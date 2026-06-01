@@ -321,114 +321,95 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
 
 function NatureEnvironment({ vibeKey }) {
     const isNight = vibeKey === 'NIGHT' || vibeKey === 'EVENING';
-    const isMorning = vibeKey === 'MORNING';
 
-    const riverCurve = useMemo(() => {
-        const points = [];
-        for (let z = -55; z <= 55; z += 5) {
-            const x = 23 + Math.sin(z * 0.08) * 3;
-            points.push(new THREE.Vector3(x, -0.05, z));
-        }
-        return new THREE.CatmullRomCurve3(points);
-    }, []);
-
-    const trees = useMemo(() => {
-        let s = 42;
+    // Grass patches — flat colored planes filling areas outside the building grid
+    const grassPatches = useMemo(() => {
+        let s = 99;
         const rand = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
-        const list = [];
-        // Row trees alongside road (x ≈ ±2.5)
-        for (let z = -48; z <= 48; z += 4) {
-            list.push({ x:  2.4 + rand() * 0.3, z, scale: 0.5 + rand() * 0.35, type: 'tall' });
-            list.push({ x: -2.4 - rand() * 0.3, z, scale: 0.5 + rand() * 0.35, type: 'tall' });
+        const patches = [];
+        // Left park (x: -30 to -8)
+        for (let i = 0; i < 30; i++) {
+            patches.push({ x: -18 - rand() * 10, z: (rand() - 0.5) * 90, w: 3 + rand() * 5, d: 3 + rand() * 5 });
         }
-        // River bank trees (x: 14-16 and x: 27-30)
-        for (let z = -52; z <= 52; z += 3) {
-            list.push({ x: 14 + rand() * 2, z: z + (rand() - 0.5) * 2, scale: 0.55 + rand() * 0.4, type: 'round' });
-            list.push({ x: 28 + rand() * 2, z: z + (rand() - 0.5) * 2, scale: 0.45 + rand() * 0.35, type: 'round' });
+        // Right park between buildings and river (x: 8 to 15)
+        for (let i = 0; i < 20; i++) {
+            patches.push({ x: 10 + rand() * 4, z: (rand() - 0.5) * 90, w: 2 + rand() * 4, d: 2 + rand() * 4 });
         }
-        // Scattered park trees (outside building grid)
-        for (let i = 0; i < 220; i++) {
-            const x = (rand() - 0.5) * 88;
-            const z = (rand() - 0.5) * 108;
-            if (Math.abs(x) < 7 && Math.abs(z) < 30) continue; // inside city
-            if (x > 17 && x < 31) continue; // inside river
-            list.push({ x, z, scale: 0.4 + rand() * 0.75, type: rand() > 0.5 ? 'tall' : 'round' });
+        // Far perimeter
+        for (let i = 0; i < 20; i++) {
+            patches.push({ x: (rand() - 0.5) * 80, z: 35 + rand() * 15, w: 4 + rand() * 8, d: 4 + rand() * 8 });
+            patches.push({ x: (rand() - 0.5) * 80, z: -35 - rand() * 15, w: 4 + rand() * 8, d: 4 + rand() * 8 });
         }
-        return list;
+        return patches;
     }, []);
 
-    const leafColors = isNight
-        ? ['#14532d', '#15803d', '#166534']
-        : isMorning
-        ? ['#4ade80', '#86efac', '#22c55e']
-        : ['#16a34a', '#15803d', '#22c55e'];
+    // Street light poles along road (x = 0, both sides)
+    const poleZPositions = useMemo(() =>
+        Array.from({ length: 14 }, (_, i) => -26 + i * 4), []);
+
+    const grassColor = isNight ? '#14532d' : '#16a34a';
+    const waterColor = isNight ? '#0c4a6e' : '#0369a1';
 
     return (
         <group>
-            {/* River */}
-            <mesh>
-                <tubeGeometry args={[riverCurve, 200, 2.5, 12, false]} />
+            {/* Flat river — a simple reflective plane beside the city */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[23, 0.01, 0]} receiveShadow>
+                <planeGeometry args={[12, 120]} />
                 <meshStandardMaterial
-                    color="#0369a1" emissive="#0284c7"
-                    emissiveIntensity={isNight ? 0.5 : 0.12}
-                    roughness={0.05} metalness={0.9}
-                    transparent opacity={0.88}
+                    color={waterColor}
+                    emissive={isNight ? '#0369a1' : '#38bdf8'}
+                    emissiveIntensity={isNight ? 0.25 : 0.05}
+                    roughness={0.05}
+                    metalness={0.9}
+                    transparent
+                    opacity={0.92}
                 />
             </mesh>
 
-            {/* Trees */}
-            {trees.map((tree, i) => {
-                const h = tree.scale;
-                const tH = h * 0.6;
-                const tR = h * 0.07;
-                const c1 = leafColors[i % 3];
-                const c2 = leafColors[(i + 1) % 3];
-                return (
-                    <group key={i} position={[tree.x, 0, tree.z]}>
-                        <mesh position={[0, tH / 2, 0]} castShadow receiveShadow>
-                            <cylinderGeometry args={[tR, tR * 1.4, tH, 6]} />
-                            <meshStandardMaterial color="#92400e" roughness={0.95} />
-                        </mesh>
-                        {tree.type === 'tall' ? (
-                            <>
-                                <mesh position={[0, tH + h * 0.15, 0]} castShadow receiveShadow>
-                                    <coneGeometry args={[h * 0.5, h * 0.6, 7]} />
-                                    <meshStandardMaterial color={c1} roughness={0.88} />
-                                </mesh>
-                                <mesh position={[0, tH + h * 0.52, 0]} castShadow receiveShadow>
-                                    <coneGeometry args={[h * 0.35, h * 0.5, 7]} />
-                                    <meshStandardMaterial color={c2} roughness={0.88} />
-                                </mesh>
-                                <mesh position={[0, tH + h * 0.82, 0]} castShadow receiveShadow>
-                                    <coneGeometry args={[h * 0.2, h * 0.4, 7]} />
-                                    <meshStandardMaterial color={c1} roughness={0.88} />
-                                </mesh>
-                            </>
-                        ) : (
-                            <>
-                                <mesh position={[0, tH + h * 0.38, 0]} castShadow receiveShadow>
-                                    <sphereGeometry args={[h * 0.42, 8, 6]} />
-                                    <meshStandardMaterial color={c1} roughness={0.9} />
-                                </mesh>
-                                <mesh position={[h * 0.18, tH + h * 0.52, h * 0.1]} castShadow receiveShadow>
-                                    <sphereGeometry args={[h * 0.3, 7, 5]} />
-                                    <meshStandardMaterial color={c2} roughness={0.9} />
-                                </mesh>
-                            </>
-                        )}
-                    </group>
-                );
-            })}
+            {/* River bank — narrow strip of darker ground between city and water */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[15.5, 0.005, 0]} receiveShadow>
+                <planeGeometry args={[3, 120]} />
+                <meshStandardMaterial color="#1c3a1c" roughness={1} />
+            </mesh>
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[30, 0.005, 0]} receiveShadow>
+                <planeGeometry args={[3, 120]} />
+                <meshStandardMaterial color="#1c3a1c" roughness={1} />
+            </mesh>
 
-            {/* Clouds */}
-            <Clouds material={THREE.MeshLambertMaterial} limit={400}>
-                <Cloud segments={40} bounds={[80, 10, 80]} volume={20} color={isNight ? '#1e293b' : '#ffffff'} position={[0, 30, 0]} opacity={isNight ? 0.3 : 0.6} />
-                <Cloud segments={20} bounds={[40, 10, 40]} volume={15} color={isNight ? '#0f172a' : '#f1f5f9'} position={[20, 25, -20]} opacity={isNight ? 0.4 : 0.7} />
-            </Clouds>
+            {/* Grass patches */}
+            {grassPatches.map((p, i) => (
+                <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[p.x, 0.005, p.z]} receiveShadow>
+                    <planeGeometry args={[p.w, p.d]} />
+                    <meshStandardMaterial color={grassColor} roughness={0.95} />
+                </mesh>
+            ))}
+
+            {/* Street light poles along road sides */}
+            {poleZPositions.map((z, i) => (
+                <group key={`pole-${i}`}>
+                    {/* Left pole */}
+                    <mesh position={[-2.2, 0.75, z]} castShadow>
+                        <cylinderGeometry args={[0.04, 0.05, 1.5, 6]} />
+                        <meshStandardMaterial color="#475569" metalness={0.8} roughness={0.3} />
+                    </mesh>
+                    <mesh position={[-2.2, 1.52, z]}>
+                        <sphereGeometry args={[0.1, 8, 6]} />
+                        <meshStandardMaterial color="#fef9c3" emissive="#fef08a" emissiveIntensity={isNight ? 4 : 0.2} />
+                    </mesh>
+                    {/* Right pole */}
+                    <mesh position={[2.2, 0.75, z]} castShadow>
+                        <cylinderGeometry args={[0.04, 0.05, 1.5, 6]} />
+                        <meshStandardMaterial color="#475569" metalness={0.8} roughness={0.3} />
+                    </mesh>
+                    <mesh position={[2.2, 1.52, z]}>
+                        <sphereGeometry args={[0.1, 8, 6]} />
+                        <meshStandardMaterial color="#fef9c3" emissive="#fef08a" emissiveIntensity={isNight ? 4 : 0.2} />
+                    </mesh>
+                </group>
+            ))}
         </group>
     );
 }
-
 
 
 
@@ -526,9 +507,9 @@ export default function GitHub3DGraph({ username }) {
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-500 text-xl font-light pointer-events-none z-20">+</div>
                     )}
 
-                    <Canvas camera={{ fov: 60 }} shadows>
+                    <Canvas camera={{ fov: 55 }} shadows>
                         <color attach="background" args={[vibe.bg]} />
-                        <fog attach="fog" args={[vibe.fog, 10, 60]} />
+                        <fog attach="fog" args={[vibe.fog, 30, 100]} />
                         
                         <ambientLight intensity={vibe.ambient.intensity} color={vibe.ambient.color} />
                         <hemisphereLight intensity={vibe.hemi.intensity} color={vibe.hemi.color} groundColor={vibe.hemi.groundColor} />
@@ -555,8 +536,8 @@ export default function GitHub3DGraph({ username }) {
                         <CameraRig mode={mode} isLocked={isLocked} />
 
                         <EffectComposer disableNormalPass>
-                            <Bloom luminanceThreshold={0.8} mipmapBlur intensity={0.6} levels={5} />
-                            <Vignette eskil={false} offset={0.25} darkness={0.8} />
+                            <Bloom luminanceThreshold={0.95} mipmapBlur intensity={0.3} levels={4} />
+                            <Vignette eskil={false} offset={0.3} darkness={0.6} />
                         </EffectComposer>
                         
                         {mode === 'WALK' && (
