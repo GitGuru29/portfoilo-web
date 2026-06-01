@@ -254,7 +254,7 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
                 const level = day.contributionLevel;
                 const style = LEVELS[level] || LEVELS["NONE"];
                 
-                const numFloors = Math.max(1, count);
+                const numFloors = Math.min(Math.max(1, count), 15); // cap at 15 floors for performance
                 const floorHeight = 0.2; 
                 
                 for (let f = 0; f < numFloors; f++) {
@@ -322,87 +322,42 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
 function NatureEnvironment({ vibeKey }) {
     const isNight = vibeKey === 'NIGHT' || vibeKey === 'EVENING';
 
-    // Grass patches — flat colored planes filling areas outside the building grid
-    const grassPatches = useMemo(() => {
-        let s = 99;
-        const rand = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
-        const patches = [];
-        // Left park (x: -30 to -8)
-        for (let i = 0; i < 30; i++) {
-            patches.push({ x: -18 - rand() * 10, z: (rand() - 0.5) * 90, w: 3 + rand() * 5, d: 3 + rand() * 5 });
-        }
-        // Right park between buildings and river (x: 8 to 15)
-        for (let i = 0; i < 20; i++) {
-            patches.push({ x: 10 + rand() * 4, z: (rand() - 0.5) * 90, w: 2 + rand() * 4, d: 2 + rand() * 4 });
-        }
-        // Far perimeter
-        for (let i = 0; i < 20; i++) {
-            patches.push({ x: (rand() - 0.5) * 80, z: 35 + rand() * 15, w: 4 + rand() * 8, d: 4 + rand() * 8 });
-            patches.push({ x: (rand() - 0.5) * 80, z: -35 - rand() * 15, w: 4 + rand() * 8, d: 4 + rand() * 8 });
-        }
-        return patches;
-    }, []);
-
-    // Street light poles along road (x = 0, both sides)
     const poleZPositions = useMemo(() =>
         Array.from({ length: 14 }, (_, i) => -26 + i * 4), []);
 
-    const grassColor = isNight ? '#14532d' : '#16a34a';
     const waterColor = isNight ? '#0c4a6e' : '#0369a1';
 
     return (
         <group>
-            {/* Flat river — a simple reflective plane beside the city */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[23, 0.01, 0]} receiveShadow>
+            {/* Flat river */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[23, 0.01, 0]}>
                 <planeGeometry args={[12, 120]} />
                 <meshStandardMaterial
                     color={waterColor}
                     emissive={isNight ? '#0369a1' : '#38bdf8'}
                     emissiveIntensity={isNight ? 0.25 : 0.05}
-                    roughness={0.05}
-                    metalness={0.9}
-                    transparent
-                    opacity={0.92}
+                    roughness={0.05} metalness={0.9}
+                    transparent opacity={0.92}
                 />
             </mesh>
 
-            {/* River bank — narrow strip of darker ground between city and water */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[15.5, 0.005, 0]} receiveShadow>
-                <planeGeometry args={[3, 120]} />
-                <meshStandardMaterial color="#1c3a1c" roughness={1} />
-            </mesh>
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[30, 0.005, 0]} receiveShadow>
-                <planeGeometry args={[3, 120]} />
-                <meshStandardMaterial color="#1c3a1c" roughness={1} />
-            </mesh>
-
-            {/* Grass patches */}
-            {grassPatches.map((p, i) => (
-                <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[p.x, 0.005, p.z]} receiveShadow>
-                    <planeGeometry args={[p.w, p.d]} />
-                    <meshStandardMaterial color={grassColor} roughness={0.95} />
-                </mesh>
-            ))}
-
-            {/* Street light poles along road sides */}
+            {/* Street light poles */}
             {poleZPositions.map((z, i) => (
-                <group key={`pole-${i}`}>
-                    {/* Left pole */}
-                    <mesh position={[-2.2, 0.75, z]} castShadow>
+                <group key={i}>
+                    <mesh position={[-2.2, 0.75, z]}>
                         <cylinderGeometry args={[0.04, 0.05, 1.5, 6]} />
                         <meshStandardMaterial color="#475569" metalness={0.8} roughness={0.3} />
                     </mesh>
                     <mesh position={[-2.2, 1.52, z]}>
-                        <sphereGeometry args={[0.1, 8, 6]} />
+                        <sphereGeometry args={[0.1, 6, 4]} />
                         <meshStandardMaterial color="#fef9c3" emissive="#fef08a" emissiveIntensity={isNight ? 4 : 0.2} />
                     </mesh>
-                    {/* Right pole */}
-                    <mesh position={[2.2, 0.75, z]} castShadow>
+                    <mesh position={[2.2, 0.75, z]}>
                         <cylinderGeometry args={[0.04, 0.05, 1.5, 6]} />
                         <meshStandardMaterial color="#475569" metalness={0.8} roughness={0.3} />
                     </mesh>
                     <mesh position={[2.2, 1.52, z]}>
-                        <sphereGeometry args={[0.1, 8, 6]} />
+                        <sphereGeometry args={[0.1, 6, 4]} />
                         <meshStandardMaterial color="#fef9c3" emissive="#fef08a" emissiveIntensity={isNight ? 4 : 0.2} />
                     </mesh>
                 </group>
@@ -412,15 +367,13 @@ function NatureEnvironment({ vibeKey }) {
 }
 
 
-
-
-
 export default function GitHub3DGraph({ username }) {
     const [data, setData] = useState(null);
     const [totalContributions, setTotalContributions] = useState(0);
     const [mode, setMode] = useState('CINEMATIC');
     const [isLocked, setIsLocked] = useState(false);
     const [hoveredBox, setHoveredBox] = useState(null);
+    const [started, setStarted] = useState(false);
     const vibeKey = useMemo(() => getVibe(), []);
     const vibe = VIBES[vibeKey];
 
@@ -443,15 +396,56 @@ export default function GitHub3DGraph({ username }) {
     }, [totalContributions]);
 
     return (
-        <div className="w-full h-full min-h-[500px] md:min-h-[600px] relative bg-white overflow-hidden rounded-[24px]">
-            {!data && (
-                <div className="absolute inset-0 flex items-center justify-center text-blue-400 text-xs font-space tracking-widest animate-pulse">
-                    INITIALIZING URBAN GRID...
+        <div className="w-full h-full min-h-[500px] md:min-h-[600px] relative overflow-hidden rounded-[24px]" style={{ background: vibe.bg }}>
+
+            {/* SPLASH SCREEN — shown until user clicks Explore */}
+            {!started && (
+                <div
+                    className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-6"
+                    style={{ background: `linear-gradient(135deg, ${vibe.bg} 0%, #0f172a 100%)` }}
+                >
+                    <div className="text-center">
+                        <div className="text-slate-400 font-mono text-[11px] tracking-[0.3em] uppercase mb-3">GitHub Contribution City</div>
+                        <div className="font-mono text-5xl font-bold mb-1" style={{ color: vibe.directional.color }}>
+                            {data ? totalContributions : '—'}
+                        </div>
+                        <div className="text-slate-400 font-mono text-xs tracking-widest uppercase">commits in {new Date().getFullYear()}</div>
+                    </div>
+
+                    <div className="flex gap-6 font-mono text-[11px] text-slate-500 tracking-widest uppercase">
+                        <span className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>Buildings = Commits
+                        </span>
+                        <span className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>Height = Activity
+                        </span>
+                    </div>
+
+                    <button
+                        onClick={() => setStarted(true)}
+                        disabled={!data}
+                        className="group relative mt-2 px-10 py-4 rounded-2xl font-mono text-sm tracking-[0.2em] uppercase font-bold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                        style={{
+                            background: data ? `linear-gradient(135deg, #2563eb, #7c3aed)` : '#1e293b',
+                            color: '#fff',
+                            boxShadow: data ? '0 0 40px rgba(99,102,241,0.5)' : 'none'
+                        }}
+                    >
+                        {data ? '🏙️  Explore City  →' : 'Loading data...'}
+                    </button>
+
+                    {data && (
+                        <div className="text-slate-600 font-mono text-[10px] tracking-widest uppercase">
+                            {vibeKey.toLowerCase()} mode · {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                    )}
                 </div>
             )}
 
-            {data && (
+            {/* 3D CANVAS — only mounted after user clicks Explore */}
+            {started && (
                 <>
+
                     <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-6">
                         <div className="flex justify-between items-start">
                             <div className="text-slate-700 font-mono text-xs tracking-widest bg-white/70 p-3 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm">
@@ -507,38 +501,40 @@ export default function GitHub3DGraph({ username }) {
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-500 text-xl font-light pointer-events-none z-20">+</div>
                     )}
 
-                    <Canvas camera={{ fov: 55 }} shadows>
+                    <Canvas
+                        camera={{ fov: 55 }}
+                        gl={{ antialias: true, powerPreference: 'high-performance' }}
+                        dpr={Math.min(window.devicePixelRatio, 1.5)}
+                    >
                         <color attach="background" args={[vibe.bg]} />
                         <fog attach="fog" args={[vibe.fog, 30, 100]} />
-                        
+
                         <ambientLight intensity={vibe.ambient.intensity} color={vibe.ambient.color} />
                         <hemisphereLight intensity={vibe.hemi.intensity} color={vibe.hemi.color} groundColor={vibe.hemi.groundColor} />
-                        <directionalLight 
-                            position={vibe.directional.position} 
-                            intensity={vibe.directional.intensity} 
+                        <directionalLight
+                            position={vibe.directional.position}
+                            intensity={vibe.directional.intensity}
                             color={vibe.directional.color}
-                            castShadow
-                            shadow-mapSize-width={2048}
-                            shadow-mapSize-height={2048}
                         />
                         
-                        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
-                            <planeGeometry args={[1000, 1000]} />
-                            <AnimatedMaterial 
-                                targetColor={vibe.planeColor} 
-                                targetRoughness={1.0} 
-                                targetMetalness={0.0} 
-                            />
+                        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
+                            <planeGeometry args={[500, 500]} />
+                            <meshStandardMaterial color={vibe.planeColor} roughness={1} metalness={0} />
+                        </mesh>
+
+                        {/* Wide grass area beside city */}
+                        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-25, 0.005, 0]}>
+                            <planeGeometry args={[40, 200]} />
+                            <meshStandardMaterial color={vibeKey === 'NIGHT' ? '#14532d' : '#15803d'} roughness={1} />
+                        </mesh>
+                        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[12, 0.005, 0]}>
+                            <planeGeometry args={[6, 200]} />
+                            <meshStandardMaterial color={vibeKey === 'NIGHT' ? '#14532d' : '#15803d'} roughness={1} />
                         </mesh>
 
                         <CityScene data={data} setHoveredBox={setHoveredBox} activityMultiplier={activityMultiplier} />
                         <NatureEnvironment vibeKey={vibeKey} />
                         <CameraRig mode={mode} isLocked={isLocked} />
-
-                        <EffectComposer disableNormalPass>
-                            <Bloom luminanceThreshold={0.95} mipmapBlur intensity={0.3} levels={4} />
-                            <Vignette eskil={false} offset={0.3} darkness={0.6} />
-                        </EffectComposer>
                         
                         {mode === 'WALK' && (
                             <PointerLockControls 
