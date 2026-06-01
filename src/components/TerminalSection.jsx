@@ -200,8 +200,123 @@ void start_daemon() {
 }`
                         }
                     }
+                },
+                'aegislayer': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# AegisLayer\nAutonomous event-driven Android system daemon built entirely in Kotlin. Features embedded ML pipeline.`
+                        }
+                    }
+                },
+                'titanshare': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# TitanShare\nCross-platform integration suite bridging Android and Linux. High-performance C++ daemon.`
+                        }
+                    }
+                },
+                'market-regime-intelligence': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# Market Regime Intelligence\nAI-driven market intelligence system for cryptocurrency trading.`
+                        }
+                    }
+                },
+                'autogpuswitcher': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# AutoGpuSwitcher\nAutomated GPU management framework for Arch Linux.`
+                        }
+                    }
+                },
+                'gamemodex': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# GameModeX\nAndroid Game System Controller.`
+                        }
+                    }
+                },
+                'lankasmartmart': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# LankaSmartMart\nE-Commerce Android app built with Jetpack Compose & Firebase.`
+                        }
+                    }
+                },
+                'archtitan': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# ArchTitan OS\nModular Linux-based system focused on developer productivity.`
+                        }
+                    }
+                },
+                'gesture-interaction-system': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# Gesture Interaction System\nSensor-Based Interaction System for Android.`
+                        }
+                    }
+                },
+                'titanshare-android': {
+                    type: 'dir',
+                    meta: { perms: 'drwxr-xr-x', owner: 'siluna', size: 4096, date: 'May 20 10:00' },
+                    content: {
+                        'README.md': {
+                            type: 'file',
+                            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 20 10:00' },
+                            content: `# TitanShare (Android)\nAndroid-based remote management utility.`
+                        }
+                    }
                 }
             }
+        },
+        'about.txt': {
+            type: 'file',
+            meta: { perms: '-rw-r--r--', owner: 'siluna', size: 1024, date: 'May 31 12:00' },
+            content: `Hello, I'm Siluna Nusal Dangalla.
+
+I engineer low-level systems, native Android tooling, and robust developer infrastructure from the ground up.
+
+Skills:
+- C/C++ (Systems Programming)
+- Kotlin/Java (Android Internals)
+- Python (Machine Learning / Data)
+- React/JS (Web Interfaces)
+
+You can explore my projects in the ~/projects directory.
+Feel free to reach out via the chat button or check my LinkedIn/GitHub.`
         },
         '.config': {
             type: 'dir',
