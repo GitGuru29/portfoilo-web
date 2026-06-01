@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Instance, Instances, PointerLockControls, Html } from '@react-three/drei';
+import { Instance, Instances, PointerLockControls, Html, Clouds, Cloud } from '@react-three/drei';
 import * as THREE from 'three';
 
 const LEVELS = {
@@ -249,9 +249,9 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
                 <boxGeometry args={[1, 1, 1]} />
                 <AnimatedMaterial 
                     toneMapped={false} 
-                    targetRoughness={0.6}
-                    targetMetalness={0.2}
-                    targetIntensity={0.6 * activityMultiplier}
+                    targetRoughness={0.1}
+                    targetMetalness={0.8}
+                    targetIntensity={0.8 * activityMultiplier}
                 />
                 {floors.map((floor, i) => (
                     <Instance 
@@ -273,77 +273,71 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
 function NatureEnvironment({ vibeKey }) {
     const isNight = vibeKey === 'NIGHT' || vibeKey === 'EVENING';
 
-    const riverTiles = useMemo(() => {
-        const tiles = [];
-        for (let z = -40; z < 40; z += 0.5) {
-            const x = Math.sin(z * 0.15) * 12 + Math.cos(z * 0.05) * 5; 
-            tiles.push({ position: [x, 0.05, z], scale: [3, 0.1, 1] });
+    const riverCurve = useMemo(() => {
+        const points = [];
+        for (let z = -80; z <= 80; z += 5) {
+            const x = Math.sin(z * 0.1) * 15 + Math.cos(z * 0.03) * 10;
+            points.push(new THREE.Vector3(x, 0, z));
         }
-        return tiles;
+        return new THREE.CatmullRomCurve3(points);
     }, []);
 
-    const bushes = useMemo(() => {
+    const bridges = useMemo(() => {
         const b = [];
-        for (let i = 0; i < 300; i++) {
-            const x = (Math.random() - 0.5) * 80;
-            const z = (Math.random() - 0.5) * 80;
-            if (Math.abs(x) < 8 && Math.abs(z) < 30) continue;
-            b.push({ 
-                position: [x, 0.1 + Math.random() * 0.2, z], 
-                scale: 0.2 + Math.random() * 0.4 
-            });
-        }
+        [-20, -5, 10, 25].forEach(z => {
+            const x = Math.sin(z * 0.1) * 15 + Math.cos(z * 0.03) * 10;
+            b.push({ position: [x, 0.1, z], rotationY: Math.cos(z * 0.1) * 0.5 });
+        });
         return b;
     }, []);
 
-    const clouds = useMemo(() => {
-        const c = [];
-        for (let i = 0; i < 40; i++) {
-            c.push({
-                position: [(Math.random() - 0.5) * 120, 15 + Math.random() * 15, (Math.random() - 0.5) * 120],
-                scale: [4 + Math.random() * 8, 1 + Math.random() * 2, 4 + Math.random() * 8],
-                speed: 0.2 + Math.random() * 0.8
-            });
-        }
-        return c;
-    }, []);
-
-    const cloudRef = useRef();
-    useFrame((state, delta) => {
-        if (cloudRef.current) {
-            cloudRef.current.children.forEach((child, i) => {
-                child.position.x += clouds[i].speed * delta;
-                if (child.position.x > 60) child.position.x = -60;
-            });
-        }
-    });
-
     return (
         <group>
-            <Instances limit={200} range={riverTiles.length} castShadow receiveShadow>
-                <boxGeometry args={[1, 1, 1]} />
-                <meshStandardMaterial color="#0ea5e9" emissive="#38bdf8" emissiveIntensity={isNight ? 0.8 : 0.2} transparent opacity={0.8} roughness={0.1} metalness={0.8} />
-                {riverTiles.map((tile, i) => (
-                    <Instance key={`river-${i}`} position={tile.position} scale={tile.scale} />
-                ))}
-            </Instances>
+            {/* Realistic River */}
+            <mesh position={[0, -2.8, 0]} castShadow receiveShadow>
+                <tubeGeometry args={[riverCurve, 128, 3, 16, false]} />
+                <meshStandardMaterial color="#0284c7" emissive="#0369a1" emissiveIntensity={isNight ? 0.4 : 0.1} roughness={0.05} metalness={0.9} transparent opacity={0.85} />
+            </mesh>
 
-            <Instances limit={400} range={bushes.length} castShadow receiveShadow>
-                <boxGeometry args={[1, 1, 1]} />
-                <meshStandardMaterial color="#10b981" emissive="#059669" emissiveIntensity={isNight ? 0.3 : 0.1} roughness={0.8} />
-                {bushes.map((bush, i) => (
-                    <Instance key={`bush-${i}`} position={bush.position} scale={[bush.scale, bush.scale, bush.scale]} />
-                ))}
-            </Instances>
-
-            <group ref={cloudRef}>
-                {clouds.map((cloud, i) => (
-                    <mesh key={`cloud-${i}`} position={cloud.position} scale={cloud.scale} castShadow>
-                        <boxGeometry args={[1, 1, 1]} />
-                        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={isNight ? 0.02 : 0.2} transparent opacity={isNight ? 0.1 : 0.8} roughness={1} />
+            {/* Realistic Bridges */}
+            {bridges.map((bridge, i) => (
+                <group key={`bridge-${i}`} position={bridge.position} rotation={[0, bridge.rotationY, 0]}>
+                    <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
+                        <boxGeometry args={[10, 0.2, 4]} />
+                        <meshStandardMaterial color="#334155" roughness={0.9} />
                     </mesh>
-                ))}
-            </group>
+                    <mesh position={[0, 0.6, 1.9]} castShadow receiveShadow>
+                        <boxGeometry args={[10, 0.4, 0.2]} />
+                        <meshStandardMaterial color="#94a3b8" metalness={0.5} roughness={0.5} />
+                    </mesh>
+                    <mesh position={[0, 0.6, -1.9]} castShadow receiveShadow>
+                        <boxGeometry args={[10, 0.4, 0.2]} />
+                        <meshStandardMaterial color="#94a3b8" metalness={0.5} roughness={0.5} />
+                    </mesh>
+                    <mesh position={[0, 0.45, 2.05]} castShadow receiveShadow>
+                        <boxGeometry args={[10, 0.05, 0.05]} />
+                        <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={isNight ? 2 : 0.5} />
+                    </mesh>
+                    <mesh position={[0, 0.45, -2.05]} castShadow receiveShadow>
+                        <boxGeometry args={[10, 0.05, 0.05]} />
+                        <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={isNight ? 2 : 0.5} />
+                    </mesh>
+                    <mesh position={[-3, 0.2, 0]} castShadow receiveShadow>
+                        <boxGeometry args={[0.5, 0.4, 3]} />
+                        <meshStandardMaterial color="#1e293b" />
+                    </mesh>
+                    <mesh position={[3, 0.2, 0]} castShadow receiveShadow>
+                        <boxGeometry args={[0.5, 0.4, 3]} />
+                        <meshStandardMaterial color="#1e293b" />
+                    </mesh>
+                </group>
+            ))}
+
+            {/* Realistic Volumetric Clouds */}
+            <Clouds material={THREE.MeshLambertMaterial} limit={400}>
+                <Cloud segments={40} bounds={[80, 10, 80]} volume={20} color={isNight ? "#1e293b" : "#ffffff"} position={[0, 30, 0]} opacity={isNight ? 0.3 : 0.6} />
+                <Cloud segments={20} bounds={[40, 10, 40]} volume={15} color={isNight ? "#0f172a" : "#f1f5f9"} position={[20, 25, -20]} opacity={isNight ? 0.4 : 0.7} />
+            </Clouds>
         </group>
     );
 }
