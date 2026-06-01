@@ -4,43 +4,177 @@ import { Terminal, X, Minus, Square } from 'lucide-react';
 import useStore from '../store/useStore';
 
 // ─── Boot Sequence ─────────────────────────────────────────────────────────────
-const TerminalBootSequence = ({ lines, onComplete }) => {
+const REALISTIC_BOOT_LINES = [
+    "Linux version 6.8.0-arch (root@siluna-dev) (gcc (GCC) 13.2.1 20230801, GNU ld (GNU Binutils) 2.41.0) #1 SMP PREEMPT_DYNAMIC",
+    "Command line: BOOT_IMAGE=/boot/vmlinuz-linux root=UUID=8a... ro loglevel=3 quiet",
+    "x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'",
+    "x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'",
+    "x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'",
+    "signal: max sigframe size: 3376",
+    "BIOS-provided physical RAM map:",
+    "BIOS-e820: [mem 0x0000000000000000-0x000000000009efff] usable",
+    "BIOS-e820: [mem 0x000000000009f000-0x000000000009ffff] reserved",
+    "BIOS-e820: [mem 0x0000000000100000-0x000000007b8bffff] usable",
+    "NX (Execute Disable) protection: active",
+    "SMBIOS 3.3.0 present.",
+    "DMI: SilunaSystems SilunaBook Pro/SilunaOS, BIOS 1.14.0 10/25/2023",
+    "tsc: Fast TSC calibration using PIT",
+    "tsc: Detected 3192.000 MHz processor",
+    "Calibrating delay loop (skipped), value calculated using timer frequency.. 6384.00 BogoMIPS (lpj=3192000)",
+    "pid_max: default: 32768 minimum: 301",
+    "Mount-cache hash table entries: 65536 (order: 7, 524288 bytes, linear)",
+    "Mountpoint-cache hash table entries: 65536 (order: 7, 524288 bytes, linear)",
+    "smpboot: Allowing 16 CPUs, 0 hotplug CPUs",
+    "PM: RTC time: 14:21:11, date: 2026-05-30",
+    "PerfTop: 4434 irqs/sec",
+    "Btrfs loaded, crc32c=crc32c-intel, zoned=yes, fsverity=yes",
+    "systemd[1]: Inserted module 'autofs4'",
+    "systemd[1]: systemd 255.4-2-arch running in system mode (+PAM +AUDIT -SELINUX -APPARMOR +IMA +SMACK +SECCOMP +CGROUP2 +OOMD +BTRFS +ZSTD +BOOTED)",
+    "systemd[1]: Detected architecture x86-64.",
+    "Welcome to SilunaOS v3.0!",
+    "systemd[1]: Set up hostname: silunaos.",
+    "[  OK  ] Reached target Paths.",
+    "[  OK  ] Reached target Slices.",
+    "[  OK  ] Listening on Device-mapper event daemon FIFOs.",
+    "[  OK  ] Listening on LVM2 poll daemon socket.",
+    "[  OK  ] Listening on Process Core Dump Socket.",
+    "[  OK  ] Listening on initctl Compatibility Named Pipe.",
+    "[  OK  ] Listening on Journal Socket (/dev/log).",
+    "[  OK  ] Listening on Journal Socket.",
+    "[  OK  ] Listening on udev Control Socket.",
+    "[  OK  ] Listening on udev Kernel Socket.",
+    "Mounting Huge Pages File System...",
+    "Mounting POSIX Message Queue File System...",
+    "Mounting Kernel Debug File System...",
+    "Mounting Kernel Trace File System...",
+    "[  OK  ] Mounted Huge Pages File System.",
+    "[  OK  ] Mounted POSIX Message Queue File System.",
+    "[  OK  ] Mounted Kernel Debug File System.",
+    "[  OK  ] Mounted Kernel Trace File System.",
+    "[  OK  ] Started Create Static Device Nodes in /dev.",
+    "[  OK  ] Reached target Local File Systems (Pre).",
+    "Starting udev Coldplug all Devices...",
+    "[  OK  ] Started udev Coldplug all Devices.",
+    "[  OK  ] Found device /dev/nvme0n1p2.",
+    "Mounting /boot/efi...",
+    "[  OK  ] Mounted /boot/efi.",
+    "[  OK  ] Reached target Local File Systems.",
+    "Starting Flush Journal to Persistent Storage...",
+    "Starting Load AppArmor profiles...",
+    "Starting Network Time Synchronization...",
+    "Starting Update UTMP about System Boot/Shutdown...",
+    "[  OK  ] Started Update UTMP about System Boot/Shutdown.",
+    "[  OK  ] Started Flush Journal to Persistent Storage.",
+    "[  OK  ] Started Network Time Synchronization.",
+    "[  OK  ] Reached target System Initialization.",
+    "[  OK  ] Started CUPS Scheduler.",
+    "[  OK  ] Started OpenSSH Daemon.",
+    "[  OK  ] Started User Login Management.",
+    "[  OK  ] Started WPA supplicant.",
+    "[  OK  ] Reached target Multi-User System.",
+    "[  OK  ] Reached target Graphical Interface.",
+    " ",
+    "siluna@silunaos's password: "
+];
+
+const TerminalBootSequence = ({ onComplete, scrollRef }) => {
     const [visibleCount, setVisibleCount] = useState(0);
+    const [showCursor, setShowCursor] = useState(false);
+    const [typedPassword, setTypedPassword] = useState("");
+    const [loginSuccess, setLoginSuccess] = useState(false);
 
     useEffect(() => {
         let currentIdx = 0;
-        const timeouts = [];
+        let isCancelled = false;
         
         const scheduleNext = () => {
-            if (currentIdx >= lines.length) {
-                setTimeout(onComplete, 300);
+            if (isCancelled) return;
+            if (currentIdx >= REALISTIC_BOOT_LINES.length) {
+                // Done printing kernel lines. Now simulate password typing.
+                setTimeout(() => {
+                    if (isCancelled) return;
+                    setShowCursor(true);
+                    let passCount = 0;
+                    const typeInterval = setInterval(() => {
+                        if (passCount < 10) {
+                            setTypedPassword(p => p + "•");
+                            passCount++;
+                        } else {
+                            clearInterval(typeInterval);
+                            setTimeout(() => {
+                                if (!isCancelled) {
+                                    setLoginSuccess(true);
+                                    setShowCursor(false);
+                                    setTimeout(() => {
+                                        if (!isCancelled) onComplete();
+                                    }, 800);
+                                }
+                            }, 400);
+                        }
+                    }, 80);
+                }, 400);
                 return;
             }
             
-            const line = lines[currentIdx];
-            let delay = Math.random() * 80 + 30; 
-            if (line.includes('[ OK ]')) delay = Math.random() * 150 + 100;
-            if (line.includes('password:')) delay = 1200;
-            if (line === '') delay = 50;
+            const line = REALISTIC_BOOT_LINES[currentIdx];
+            // Rapid fast scrolling for kernel logs
+            let delay = Math.random() * 15 + 5; 
+            if (line.includes('Welcome to')) delay = 400;
+            if (line.includes('[  OK  ]')) delay = Math.random() * 30 + 10;
+            if (line.includes('password:')) delay = 800;
 
-            const t = setTimeout(() => {
+            setTimeout(() => {
+                if (isCancelled) return;
                 setVisibleCount(prev => prev + 1);
                 currentIdx++;
+                
+                // Auto scroll smoothly while booting
+                if (scrollRef && scrollRef.current) {
+                    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+                }
+                
                 scheduleNext();
             }, delay);
-            timeouts.push(t);
         };
         
         scheduleNext();
         
-        return () => timeouts.forEach(clearTimeout);
-    }, [lines, onComplete]);
+        return () => { isCancelled = true; };
+    }, [onComplete, scrollRef]);
 
     return (
-        <div className="mb-4 font-mono text-[13px] md:text-[14px]">
-            {lines.slice(0, visibleCount).map((l, i) => (
-                <div key={i} style={{ color: l.includes('[ OK ]') ? '#4ade80' : '#94a3b8' }} className="leading-relaxed whitespace-pre-wrap">{l}</div>
-            ))}
+        <div className="mb-4 font-mono text-[12px] md:text-[13px] text-gray-300">
+            {REALISTIC_BOOT_LINES.slice(0, visibleCount).map((l, i) => {
+                let color = '#d1d5db';
+                if (l.includes('[  OK  ]')) {
+                    const parts = l.split('[  OK  ]');
+                    return (
+                        <div key={i} className="leading-snug whitespace-pre-wrap">
+                            <span className="font-bold text-[#4ade80]">[  OK  ]</span>
+                            <span className="text-[#94a3b8]">{parts[1]}</span>
+                        </div>
+                    );
+                }
+                if (l.includes('password:')) {
+                    return (
+                        <div key={i} className="leading-snug whitespace-pre-wrap mt-2">
+                            {l}{typedPassword}{showCursor && <span className="animate-pulse bg-gray-400 w-2 h-4 inline-block align-middle ml-1" />}
+                        </div>
+                    );
+                }
+                if (l.includes('Linux version')) color = '#60a5fa';
+                if (l.includes('Welcome to')) color = '#38bdf8';
+                
+                return <div key={i} style={{ color }} className="leading-snug whitespace-pre-wrap">{l}</div>;
+            })}
+            
+            {loginSuccess && (
+                <div className="mt-2 text-[#94a3b8] leading-snug">
+                    <br/>
+                    Last login: {new Date().toDateString()} from 192.168.1.105<br/>
+                    Type 'help' to see available commands.<br/>
+                </div>
+            )}
         </div>
     );
 };
@@ -1434,13 +1568,37 @@ export default function TerminalSection() {
         switch (entry.type) {
             case 'boot':
                 if (isTerminalBooting) {
-                    return <TerminalBootSequence key={idx} lines={entry.lines} onComplete={() => setIsTerminalBooting(false)} />;
+                    return <TerminalBootSequence key={idx} scrollRef={bodyRef} onComplete={() => setIsTerminalBooting(false)} />;
                 }
                 return (
-                    <div key={idx} className="mb-4 font-mono text-[13px] md:text-[14px]">
-                        {entry.lines.map((l, i) => (
-                            <div key={i} style={{ color: l.includes('[ OK ]') ? '#4ade80' : '#94a3b8' }} className="leading-relaxed whitespace-pre-wrap">{l}</div>
-                        ))}
+                    <div key={idx} className="mb-4 font-mono text-[12px] md:text-[13px] text-gray-300">
+                        {REALISTIC_BOOT_LINES.map((l, i) => {
+                            let color = '#d1d5db';
+                            if (l.includes('[  OK  ]')) {
+                                const parts = l.split('[  OK  ]');
+                                return (
+                                    <div key={i} className="leading-snug whitespace-pre-wrap">
+                                        <span className="font-bold text-[#4ade80]">[  OK  ]</span>
+                                        <span className="text-[#94a3b8]">{parts[1]}</span>
+                                    </div>
+                                );
+                            }
+                            if (l.includes('password:')) {
+                                return (
+                                    <div key={i} className="leading-snug whitespace-pre-wrap mt-2">
+                                        {l}••••••••••
+                                    </div>
+                                );
+                            }
+                            if (l.includes('Linux version')) color = '#60a5fa';
+                            if (l.includes('Welcome to')) color = '#38bdf8';
+                            return <div key={i} style={{ color }} className="leading-snug whitespace-pre-wrap">{l}</div>;
+                        })}
+                        <div className="mt-2 text-[#94a3b8] leading-snug">
+                            <br/>
+                            Last login: {new Date().toDateString()} from 192.168.1.105<br/>
+                            Type 'help' to see available commands.<br/>
+                        </div>
                     </div>
                 );
             case 'sys':
