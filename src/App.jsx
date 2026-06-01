@@ -11,6 +11,7 @@ import useStore from './store/useStore';
 import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
 import Preloader from './components/Preloader';
+import WhatsAppChat from './components/WhatsAppChat';
 
 function App() {
     const isUnlocked = useStore((state) => state.isUnlocked);
@@ -57,6 +58,7 @@ function App() {
                             {/* Fixed global UI — outside scroll context */}
                             <SystemMetricsWidget />
                             <ScrollToTop />
+                            <WhatsAppChat />
                         </motion.div>
                     )}
                 </AnimatePresence>
