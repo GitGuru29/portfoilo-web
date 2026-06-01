@@ -270,6 +270,84 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
     );
 }
 
+function NatureEnvironment({ vibeKey }) {
+    const isNight = vibeKey === 'NIGHT' || vibeKey === 'EVENING';
+
+    const riverTiles = useMemo(() => {
+        const tiles = [];
+        for (let z = -40; z < 40; z += 0.5) {
+            const x = Math.sin(z * 0.15) * 12 + Math.cos(z * 0.05) * 5; 
+            tiles.push({ position: [x, 0.05, z], scale: [3, 0.1, 1] });
+        }
+        return tiles;
+    }, []);
+
+    const bushes = useMemo(() => {
+        const b = [];
+        for (let i = 0; i < 300; i++) {
+            const x = (Math.random() - 0.5) * 80;
+            const z = (Math.random() - 0.5) * 80;
+            if (Math.abs(x) < 8 && Math.abs(z) < 30) continue;
+            b.push({ 
+                position: [x, 0.1 + Math.random() * 0.2, z], 
+                scale: 0.2 + Math.random() * 0.4 
+            });
+        }
+        return b;
+    }, []);
+
+    const clouds = useMemo(() => {
+        const c = [];
+        for (let i = 0; i < 40; i++) {
+            c.push({
+                position: [(Math.random() - 0.5) * 120, 15 + Math.random() * 15, (Math.random() - 0.5) * 120],
+                scale: [4 + Math.random() * 8, 1 + Math.random() * 2, 4 + Math.random() * 8],
+                speed: 0.2 + Math.random() * 0.8
+            });
+        }
+        return c;
+    }, []);
+
+    const cloudRef = useRef();
+    useFrame((state, delta) => {
+        if (cloudRef.current) {
+            cloudRef.current.children.forEach((child, i) => {
+                child.position.x += clouds[i].speed * delta;
+                if (child.position.x > 60) child.position.x = -60;
+            });
+        }
+    });
+
+    return (
+        <group>
+            <Instances limit={200} range={riverTiles.length} castShadow receiveShadow>
+                <boxGeometry args={[1, 1, 1]} />
+                <meshStandardMaterial color="#0ea5e9" emissive="#38bdf8" emissiveIntensity={isNight ? 0.8 : 0.2} transparent opacity={0.8} roughness={0.1} metalness={0.8} />
+                {riverTiles.map((tile, i) => (
+                    <Instance key={`river-${i}`} position={tile.position} scale={tile.scale} />
+                ))}
+            </Instances>
+
+            <Instances limit={400} range={bushes.length} castShadow receiveShadow>
+                <boxGeometry args={[1, 1, 1]} />
+                <meshStandardMaterial color="#10b981" emissive="#059669" emissiveIntensity={isNight ? 0.3 : 0.1} roughness={0.8} />
+                {bushes.map((bush, i) => (
+                    <Instance key={`bush-${i}`} position={bush.position} scale={[bush.scale, bush.scale, bush.scale]} />
+                ))}
+            </Instances>
+
+            <group ref={cloudRef}>
+                {clouds.map((cloud, i) => (
+                    <mesh key={`cloud-${i}`} position={cloud.position} scale={cloud.scale} castShadow>
+                        <boxGeometry args={[1, 1, 1]} />
+                        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={isNight ? 0.02 : 0.2} transparent opacity={isNight ? 0.1 : 0.8} roughness={1} />
+                    </mesh>
+                ))}
+            </group>
+        </group>
+    );
+}
+
 export default function GitHub3DGraph({ username }) {
     const [data, setData] = useState(null);
     const [totalContributions, setTotalContributions] = useState(0);
@@ -387,6 +465,7 @@ export default function GitHub3DGraph({ username }) {
                         </mesh>
 
                         <CityScene data={data} setHoveredBox={setHoveredBox} activityMultiplier={activityMultiplier} />
+                        <NatureEnvironment vibeKey={vibeKey} />
                         <CameraRig mode={mode} isLocked={isLocked} />
                         
                         {mode === 'WALK' && (
