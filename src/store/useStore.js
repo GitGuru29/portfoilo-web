@@ -14,7 +14,7 @@ export const MOODS = {
 const useStore = create((set) => ({
     currentMood: MOODS.HERO,
     setMood: (mood) => set({ currentMood: mood }),
-    isUnlocked: true,
+    isUnlocked: false,
     hasBooted: false, // Tracks if initial boot sequence is done
     isTerminalOpen: false, // Tracks if the floating terminal is currently open
     unlockSystem: () => set({ isUnlocked: true, hasBooted: true, isTerminalOpen: false }),
