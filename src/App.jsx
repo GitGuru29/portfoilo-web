@@ -12,7 +12,6 @@ import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
 import Preloader from './components/Preloader';
 import WhatsAppChat from './components/WhatsAppChat';
-import TerminalSection from './components/TerminalSection';
 
 function App() {
     const isUnlocked = useStore((state) => state.isUnlocked);
@@ -60,7 +59,6 @@ function App() {
                             <SystemMetricsWidget />
                             <ScrollToTop />
                             <WhatsAppChat />
-                            <TerminalSection />
                         </motion.div>
                     )}
                 </AnimatePresence>
