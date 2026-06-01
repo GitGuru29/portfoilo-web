@@ -10,7 +10,6 @@ import CategoryFilter from '../components/CategoryFilter';
 import SearchBar from '../components/SearchBar';
 import StatsTicker from '../components/StatsTicker';
 import TimelineSection from '../components/TimelineSection';
-import TerminalSection from '../components/TerminalSection';
 import { projectsData } from '../data/projects';
 import { CATEGORIES } from '../data/categories';
 
@@ -66,9 +65,6 @@ export default function Home() {
             <div id="contact">
                 <Contact />
             </div>
-
-            {/* ── Floating Terminal overlay ── */}
-            <TerminalSection />
         </div>
     );
 }
