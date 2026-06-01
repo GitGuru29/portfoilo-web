@@ -1596,7 +1596,7 @@ export default function TerminalSection() {
                         {/* ── Body ──────────────────────────────────────── */}
                         <div
                             ref={bodyRef}
-                            className="flex-1 overflow-y-auto p-4 md:p-5 text-[13px] md:text-[14px]"
+                            className="relative flex-1 overflow-y-auto p-4 md:p-5 text-[13px] md:text-[14px]"
                             style={{ lineHeight: 1.6 }}
                             onClick={() => inputRef.current?.focus()}
                             data-lenis-prevent="true"
