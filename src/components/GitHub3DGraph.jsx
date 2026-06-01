@@ -11,6 +11,53 @@ const LEVELS = {
     'FOURTH_QUARTILE': { color: '#1e3a8a', emissive: '#1e40af', intensity: 0.9 },
 };
 
+const getVibe = () => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 10) return 'MORNING';
+    if (hour >= 10 && hour < 16) return 'NOON';
+    if (hour >= 16 && hour < 19) return 'EVENING';
+    return 'NIGHT';
+};
+
+const VIBES = {
+    'MORNING': {
+        bg: '#fdf6e3',
+        fog: '#fdf6e3',
+        ambient: { color: '#ffedd5', intensity: 0.8 },
+        hemi: { color: '#fb923c', groundColor: '#e2e8f0', intensity: 0.4 },
+        directional: { color: '#fcd34d', intensity: 1.2, position: [50, 20, 50] },
+        grid: { color: '#cbd5e1' },
+        planeColor: '#f1f5f9'
+    },
+    'NOON': {
+        bg: '#f0f9ff',
+        fog: '#f0f9ff',
+        ambient: { color: '#ffffff', intensity: 0.9 },
+        hemi: { color: '#ffffff', groundColor: '#f1f5f9', intensity: 0.6 },
+        directional: { color: '#ffffff', intensity: 1.5, position: [10, 80, 10] },
+        grid: { color: '#94a3b8' },
+        planeColor: '#f1f5f9'
+    },
+    'EVENING': {
+        bg: '#2e1065',
+        fog: '#2e1065',
+        ambient: { color: '#fbcfe8', intensity: 0.5 },
+        hemi: { color: '#c084fc', groundColor: '#0f172a', intensity: 0.6 },
+        directional: { color: '#fb7185', intensity: 1.0, position: [-50, 10, -50] },
+        grid: { color: '#4c1d95' },
+        planeColor: '#1e1b4b'
+    },
+    'NIGHT': {
+        bg: '#020617',
+        fog: '#020617',
+        ambient: { color: '#1e293b', intensity: 0.3 },
+        hemi: { color: '#38bdf8', groundColor: '#000000', intensity: 0.2 },
+        directional: { color: '#60a5fa', intensity: 0.5, position: [0, 50, 0] },
+        grid: { color: '#1e293b' },
+        planeColor: '#0f172a'
+    }
+};
+
 const AnimatedMaterial = ({ targetColor, targetEmissive, targetIntensity, targetRoughness, targetMetalness, ...props }) => {
     const ref = useRef();
     const tColor = useMemo(() => new THREE.Color(), []);
@@ -218,7 +265,7 @@ function CityScene({ data, setHoveredBox, activityMultiplier }) {
             </Instances>
             
             {/* Ground Grid Lines */}
-            <gridHelper args={[200, 200, '#94a3b8', '#cbd5e1']} position={[0, 0.02, 0]} material-opacity={0.3} material-transparent />
+            <gridHelper args={[200, 200, VIBES[getVibe()].grid.color, VIBES[getVibe()].grid.color]} position={[0, 0.02, 0]} material-opacity={0.3} material-transparent />
         </group>
     );
 }
@@ -229,6 +276,8 @@ export default function GitHub3DGraph({ username }) {
     const [mode, setMode] = useState('CINEMATIC'); 
     const [isLocked, setIsLocked] = useState(false);
     const [hoveredBox, setHoveredBox] = useState(null);
+    const vibeKey = useMemo(() => getVibe(), []);
+    const vibe = VIBES[vibeKey];
 
     useEffect(() => {
         fetch(`https://github-contributions-api.deno.dev/${username}.json`)
@@ -314,15 +363,15 @@ export default function GitHub3DGraph({ username }) {
                     )}
 
                     <Canvas camera={{ fov: 60 }} shadows>
-                        <color attach="background" args={['#f8fafc']} />
-                        <fog attach="fog" args={['#f8fafc', 10, 60]} />
+                        <color attach="background" args={[vibe.bg]} />
+                        <fog attach="fog" args={[vibe.fog, 10, 60]} />
                         
-                        <ambientLight intensity={0.7} color="#ffffff" />
-                        <hemisphereLight intensity={0.5} color="#ffffff" groundColor="#e2e8f0" />
+                        <ambientLight intensity={vibe.ambient.intensity} color={vibe.ambient.color} />
+                        <hemisphereLight intensity={vibe.hemi.intensity} color={vibe.hemi.color} groundColor={vibe.hemi.groundColor} />
                         <directionalLight 
-                            position={[20, 50, -20]} 
-                            intensity={1.0} 
-                            color="#ffffff"
+                            position={vibe.directional.position} 
+                            intensity={vibe.directional.intensity} 
+                            color={vibe.directional.color}
                             castShadow
                             shadow-mapSize-width={2048}
                             shadow-mapSize-height={2048}
@@ -331,7 +380,7 @@ export default function GitHub3DGraph({ username }) {
                         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
                             <planeGeometry args={[1000, 1000]} />
                             <AnimatedMaterial 
-                                targetColor="#f1f5f9" 
+                                targetColor={vibe.planeColor} 
                                 targetRoughness={1.0} 
                                 targetMetalness={0.0} 
                             />

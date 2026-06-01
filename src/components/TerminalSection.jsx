@@ -470,6 +470,7 @@ export default function TerminalSection() {
     const [isAwaitingPassword, setIsAwaitingPassword] = useState(false);
     const [cmdHistory, setCmdHistory] = useState([]);
     const [historyIdx, setHistoryIdx] = useState(-1);
+    const [editor, setEditor] = useState({ open: false, path: '', name: '', content: '' });
 
     const inputRef = useRef(null);
     const bodyRef = useRef(null);
@@ -636,6 +637,33 @@ export default function TerminalSection() {
         // ── Commands ──────────────────────────────────────────────────────
 
         if (cmd === 'clear') { setHistory([]); return; }
+
+        if (cmd.startsWith('nano ') || cmd.startsWith('vim ') || cmd.startsWith('nvim ')) {
+            const editorName = cmd.split(' ')[0];
+            const targetArg = args[0];
+            if (!targetArg) {
+                push([prompt, { type: 'err', text: `${editorName}: missing filename` }]);
+            } else {
+                const parentPath = targetArg.includes('/') ? targetArg.slice(0, targetArg.lastIndexOf('/')) : '.';
+                const fileName = targetArg.split('/').pop();
+                const parentResolved = resolvePath(cwd, parentPath);
+                
+                if (!parentResolved || parentResolved.node.type !== 'dir') {
+                    push([prompt, { type: 'err', text: `${editorName}: ${targetArg}: No such file or directory` }]);
+                } else if (parentResolved.node.content[fileName] && parentResolved.node.content[fileName].type === 'dir') {
+                    push([prompt, { type: 'err', text: `${editorName}: ${targetArg}: Is a directory` }]);
+                } else if (parentResolved.node.meta?.perms?.includes('------') && !isRoot) {
+                    push([prompt, { type: 'err', text: `${editorName}: ${targetArg}: Permission denied` }]);
+                } else {
+                    const fileNode = parentResolved.node.content[fileName];
+                    const content = fileNode ? fileNode.content : '';
+                    setEditor({ open: true, path: parentResolved.path, name: fileName, content });
+                    setInput('');
+                    return; 
+                }
+            }
+            return;
+        }
 
         push([prompt]);
 
@@ -1458,10 +1486,55 @@ export default function TerminalSection() {
                             onClick={() => inputRef.current?.focus()}
                             data-lenis-prevent="true"
                         >
-                            {history.map((entry, i) => renderEntry(entry, i))}
+                            {editor.open && (
+                                <div className="absolute inset-0 z-50 bg-[#0d1117] flex flex-col font-mono text-[13px] md:text-[14px]">
+                                    <div className="bg-[#cbd5e1] text-[#0d1117] px-2 py-0.5 flex justify-between font-bold">
+                                        <span>GNU nano 7.2</span>
+                                        <span>{editor.name || 'New Buffer'}</span>
+                                        <span></span>
+                                    </div>
+                                    <textarea
+                                        autoFocus
+                                        value={editor.content}
+                                        onChange={e => setEditor(prev => ({ ...prev, content: e.target.value }))}
+                                        onKeyDown={e => {
+                                            if (e.ctrlKey && e.key === 'x') {
+                                                e.preventDefault();
+                                                setEditor(prev => ({ ...prev, open: false }));
+                                                setTimeout(() => inputRef.current?.focus(), 50);
+                                            } else if (e.ctrlKey && e.key === 'o') {
+                                                e.preventDefault();
+                                                setFs(prev => {
+                                                    const next = JSON.parse(JSON.stringify(prev));
+                                                    const node = editor.path === '~'
+                                                        ? next
+                                                        : (() => { let n = next; for (const seg of editor.path.split('/').slice(1)) n = n.content[seg]; return n; })();
+                                                    
+                                                    if (!node.content[editor.name]) {
+                                                         node.content[editor.name] = { type: 'file', meta: { perms: '-rw-r--r--', owner: 'siluna', size: 0, date: 'May 31 ' + new Date().toTimeString().slice(0, 5) } };
+                                                    }
+                                                    node.content[editor.name].content = editor.content;
+                                                    node.content[editor.name].meta.size = editor.content.length;
+                                                    return next;
+                                                });
+                                            }
+                                        }}
+                                        className="flex-1 w-full bg-transparent text-[#f1f5f9] outline-none border-none resize-none p-2"
+                                        spellCheck={false}
+                                    />
+                                    <div className="bg-[#0d1117] text-[#f1f5f9] px-2 py-1 flex gap-6 text-[12px] border-t border-white/20 mt-auto">
+                                        <span><span className="font-bold">^O</span> Write Out</span>
+                                        <span><span className="font-bold">^X</span> Exit</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div style={{ display: editor.open ? 'none' : 'block' }}>
+                                {history.map((entry, i) => renderEntry(entry, i))}
+                            </div>
 
                             {/* Active input row */}
-                            <div className="flex items-center gap-2 mt-2 flex-wrap">
+                            <div className="flex items-center gap-2 mt-2 flex-wrap" style={{ display: editor.open ? 'none' : 'flex' }}>
                                 <Prompt active />
                                 {isAwaitingPassword ? (
                                     <input
