@@ -6,23 +6,27 @@ export default function CmatrixOverlay({ onClose }) {
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        const parent = canvas.parentElement;
 
         const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッン';
         const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const nums = '0123456789';
         const alphabet = katakana + latin + nums;
-
         const fontSize = 16;
-        const columns = canvas.width / fontSize;
+        let columns = 0;
+        let rainDrops = [];
 
-        const rainDrops = [];
+        const initCanvas = () => {
+            canvas.width = parent.clientWidth;
+            canvas.height = parent.clientHeight;
+            columns = canvas.width / fontSize;
+            rainDrops = [];
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+        };
 
-        for (let x = 0; x < columns; x++) {
-            rainDrops[x] = 1;
-        }
+        initCanvas();
 
         const draw = () => {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
@@ -44,16 +48,14 @@ export default function CmatrixOverlay({ onClose }) {
 
         const interval = setInterval(draw, 30);
 
-        const handleResize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-
-        window.addEventListener('resize', handleResize);
+        const resizeObserver = new ResizeObserver(() => {
+            initCanvas();
+        });
+        resizeObserver.observe(parent);
 
         return () => {
             clearInterval(interval);
-            window.removeEventListener('resize', handleResize);
+            resizeObserver.disconnect();
         };
     }, []);
 
@@ -69,7 +71,7 @@ export default function CmatrixOverlay({ onClose }) {
 
     return (
         <div 
-            className="fixed inset-0 z-[200] bg-black cursor-default select-none"
+            className="absolute inset-0 z-[200] bg-black cursor-default select-none rounded-xl overflow-hidden"
             onClick={onClose}
         >
             <canvas ref={canvasRef} className="block w-full h-full" />

@@ -1563,7 +1563,6 @@ export default function TerminalSection() {
     // ─── Render ───────────────────────────────────────────────────────────────
     return (
         <AnimatePresence>
-            {cmatrixActive && <CmatrixOverlay onClose={() => setCmatrixActive(false)} />}
             {isTerminalOpen && (
                 <motion.div
                     key="terminal-overlay"
@@ -1575,7 +1574,7 @@ export default function TerminalSection() {
                     onPointerDown={() => toggleTerminal()}
                 >
                     <motion.div
-                        className="w-full max-w-5xl flex flex-col rounded-xl overflow-hidden shadow-2xl border border-white/10"
+                        className="w-full max-w-5xl flex flex-col rounded-xl overflow-hidden shadow-2xl border border-white/10 relative"
                         style={{
                             height: 'min(85vh, 700px)',
                             background: '#0d1117',
@@ -1583,6 +1582,7 @@ export default function TerminalSection() {
                         }}
                         onPointerDown={e => { e.stopPropagation(); inputRef.current?.focus(); }}
                     >
+                        {cmatrixActive && <CmatrixOverlay onClose={() => setCmatrixActive(false)} />}
                         {/* ── Title Bar ─────────────────────────────────── */}
                         <div className="flex items-center justify-between px-4 h-10 border-b border-white/8 select-none flex-shrink-0"
                             style={{ background: '#161b22' }}>
