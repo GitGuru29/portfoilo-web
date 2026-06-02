@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, X, Minus, Square } from 'lucide-react';
 import useStore from '../store/useStore';
+import CmatrixOverlay from './CmatrixOverlay';
 
 // ─── Virtual File System ──────────────────────────────────────────────────────
 const buildFS = () => ({
@@ -586,6 +587,7 @@ export default function TerminalSection() {
     const [cmdHistory, setCmdHistory] = useState([]);
     const [historyIdx, setHistoryIdx] = useState(-1);
     const [editor, setEditor] = useState({ open: false, path: '', name: '', content: '' });
+    const [cmatrixActive, setCmatrixActive] = useState(false);
 
     const inputRef = useRef(null);
     const bodyRef = useRef(null);
@@ -752,6 +754,12 @@ export default function TerminalSection() {
         // ── Commands ──────────────────────────────────────────────────────
 
         if (cmd === 'clear') { setHistory([]); return; }
+
+        if (cmd === 'cmatrix') {
+            setCmatrixActive(true);
+            setInput('');
+            return;
+        }
 
         if (cmd === 'nano' || cmd === 'vim' || cmd === 'nvim') {
             const editorName = cmd;
@@ -1336,7 +1344,7 @@ export default function TerminalSection() {
             e.preventDefault();
             const parts = input.split(' ');
             if (parts.length === 1) {
-                const allCmds = ['ls', 'll', 'la', 'cd', 'cat', 'pwd', 'echo', 'grep', 'find', 'touch', 'mkdir', 'rm', 'cp', 'mv', 'git', 'make', 'gcc', 'g++', 'sudo', 'man', 'which', 'uname', 'date', 'uptime', 'whoami', 'id', 'env', 'history', 'neofetch', 'htop', 'top', 'python3', 'node', 'ssh', 'ping', 'curl', 'clear', 'exit', 'help', 'about', 'skills', 'projects', 'github', 'resume', 'contact', 'start'];
+                const allCmds = ['ls', 'll', 'la', 'cd', 'cat', 'pwd', 'echo', 'grep', 'find', 'touch', 'mkdir', 'rm', 'cp', 'mv', 'git', 'make', 'gcc', 'g++', 'sudo', 'man', 'which', 'uname', 'date', 'uptime', 'whoami', 'id', 'env', 'history', 'neofetch', 'htop', 'top', 'python3', 'node', 'ssh', 'ping', 'curl', 'clear', 'exit', 'help', 'about', 'skills', 'projects', 'github', 'resume', 'contact', 'start', 'cmatrix'];
                 const matches = allCmds.filter(c => c.startsWith(input));
                 if (matches.length === 1) setInput(matches[0] + ' ');
                 else if (matches.length > 1) push([{ type: 'tab-complete', entries: matches }]);
@@ -1538,7 +1546,7 @@ export default function TerminalSection() {
                             ['System', 'uname -a, uptime, date, whoami, id, env, which, history'],
                             ['Dev', 'gcc, g++, make, python3, node, neofetch, htop'],
                             ['Portfolio', 'about, skills, projects, github, resume, contact'],
-                            ['Shell', 'echo, man, sudo, exit, clear, Ctrl+L, Ctrl+C'],
+                            ['Shell', 'echo, man, sudo, exit, clear, cmatrix, Ctrl+L, Ctrl+C'],
                         ].map(([cat, cmds]) => (
                             <div key={cat} className="flex gap-3">
                                 <span style={{ color: '#64748b', minWidth: 80 }}>{cat}</span>
@@ -1555,6 +1563,7 @@ export default function TerminalSection() {
     // ─── Render ───────────────────────────────────────────────────────────────
     return (
         <AnimatePresence>
+            {cmatrixActive && <CmatrixOverlay onClose={() => setCmatrixActive(false)} />}
             {isTerminalOpen && (
                 <motion.div
                     key="terminal-overlay"
