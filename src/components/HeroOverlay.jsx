@@ -167,9 +167,10 @@ export default function HeroOverlay() {
                 {/* 6. Condensed About Section (Reveals on scroll) */}
                 <div 
                     ref={aboutContentRef}
+                    id="about"
                     className="absolute top-1/2 right-6 md:right-16 -translate-y-1/2 z-30 flex flex-col gap-5 max-w-[280px] md:max-w-[400px] invisible opacity-0 will-change-[opacity,visibility,transform,filter]"
                 >
-                    <h3 className="text-[10px] md:text-xs font-space tracking-[0.4em] uppercase text-[var(--color-geyser)]/50">
+                    <h3 className="text-[10px] md:text-xs font-space tracking-[0.4em] uppercase text-white/50">
                         About Me
                     </h3>
                     
