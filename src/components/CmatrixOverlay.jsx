@@ -16,19 +16,24 @@ export default function CmatrixOverlay({ onClose }) {
         let columns = 0;
         let rainDrops = [];
 
-        const initCanvas = () => {
-            canvas.width = parent.clientWidth;
-            canvas.height = parent.clientHeight;
-            columns = canvas.width / fontSize;
+        const initCanvas = (width, height) => {
+            if (width === 0 || height === 0) return;
+            // Only re-init if size actually changed to prevent flickering
+            if (canvas.width === width && canvas.height === height) return;
+            
+            canvas.width = width;
+            canvas.height = height;
+            columns = Math.floor(width / fontSize) + 1;
             rainDrops = [];
             for (let x = 0; x < columns; x++) {
-                rainDrops[x] = 1;
+                // Randomize initial positions so they don't all fall together
+                rainDrops[x] = Math.random() * -50; 
             }
         };
 
-        initCanvas();
-
         const draw = () => {
+            if (canvas.width === 0 || canvas.height === 0) return;
+
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -36,8 +41,10 @@ export default function CmatrixOverlay({ onClose }) {
             ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < rainDrops.length; i++) {
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                if (rainDrops[i] >= 0) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                }
 
                 if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
                     rainDrops[i] = 0;
@@ -48,10 +55,18 @@ export default function CmatrixOverlay({ onClose }) {
 
         const interval = setInterval(draw, 30);
 
-        const resizeObserver = new ResizeObserver(() => {
-            initCanvas();
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                // entry.target is the parent div
+                const rect = entry.target.getBoundingClientRect();
+                initCanvas(rect.width, rect.height);
+            }
         });
         resizeObserver.observe(parent);
+
+        // Initial call in case ResizeObserver doesn't fire immediately
+        const initialRect = parent.getBoundingClientRect();
+        initCanvas(initialRect.width, initialRect.height);
 
         return () => {
             clearInterval(interval);
