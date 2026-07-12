@@ -14,6 +14,7 @@ export default function HeroOverlay() {
     const rightTextRef = useRef(null);
     const verticalTextRef = useRef(null);
     const aboutContentRef = useRef(null);
+    const asciiImageRef = useRef(null);
     const setMood = useStore((state) => state.setMood);
 
     useEffect(() => {
@@ -66,6 +67,13 @@ export default function HeroOverlay() {
                 { autoAlpha: 1, x: 0, duration: 1.5, ease: "power2.out" },
                 1.2
             );
+            
+            // 3.5 Fade in ASCII background image
+            scrubTl.to(asciiImageRef.current, {
+                opacity: 1,
+                duration: 1.5,
+                ease: "power2.inOut"
+            }, 0.5);
 
             // 4. Hold About content for reading
             scrubTl.to({}, { duration: 2 });
@@ -107,9 +115,15 @@ export default function HeroOverlay() {
                     <img 
                         ref={imageRef}
                         src="/assets/profile.png"
-                        alt="Siluna N. Dangalla"
+                        alt="Siluna Dangalla"
                         style={{ mixBlendMode: 'luminosity' }}
                         className="w-full max-w-[900px] h-[110%] absolute -top-[5%] left-1/2 -translate-x-1/2 object-cover object-[50%_15%] grayscale contrast-125 brightness-75 opacity-0 will-change-transform"
+                    />
+                    <img 
+                        ref={asciiImageRef}
+                        src="/assets/profile_ascii.png"
+                        alt="ASCII Profile"
+                        className="w-full max-w-[900px] h-[110%] absolute -top-[5%] left-1/2 -translate-x-1/2 object-cover object-[50%_15%] opacity-0 will-change-transform pointer-events-none"
                     />
                 </div>
 
@@ -124,7 +138,7 @@ export default function HeroOverlay() {
                 <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20 max-w-4xl">
                     <div ref={nameRef} className="flex flex-col mb-6 pointer-events-none">
                         <h1 className="text-[12vw] md:text-[8vw] lg:text-[7rem] leading-[0.85] font-sans font-bold tracking-tight text-white uppercase m-0 p-0 opacity-0 will-change-transform">
-                            SILUNA N.
+                            SILUNA
                         </h1>
                         <h1 className="text-[12vw] md:text-[8vw] lg:text-[7rem] leading-[0.85] font-sans font-bold tracking-tight text-white uppercase m-0 p-0 opacity-0 will-change-transform">
                             DANGALLA
@@ -164,13 +178,15 @@ export default function HeroOverlay() {
                     </div>
                 </div>
 
+
+
                 {/* 6. Condensed About Section (Reveals on scroll) */}
                 <div 
                     ref={aboutContentRef}
                     id="about"
                     className="absolute top-1/2 right-6 md:right-16 -translate-y-1/2 z-30 flex flex-col gap-5 max-w-[280px] md:max-w-[400px] invisible opacity-0 will-change-[opacity,visibility,transform,filter]"
                 >
-                    <h3 className="text-[10px] md:text-xs font-space tracking-[0.4em] uppercase text-white/50">
+                    <h3 className="text-[10px] md:text-xs font-space tracking-[0.4em] uppercase text-white/50 font-bold">
                         About Me
                     </h3>
                     
