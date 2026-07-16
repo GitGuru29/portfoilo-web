@@ -5,6 +5,7 @@ import GitHubActivitySection from '../components/GitHubActivitySection';
 import ProjectsOverlay from '../components/ProjectsOverlay';
 import ActiveResearchOverlay from '../components/ActiveResearchOverlay';
 import CertificatesOverlay from '../components/CertificatesOverlay';
+import BadgesOverlay from '../components/BadgesOverlay';
 import Contact from '../components/Contact';
 import CategoryFilter from '../components/CategoryFilter';
 import SearchBar from '../components/SearchBar';
@@ -61,6 +62,9 @@ export default function Home() {
 
             {/* ── Certificates ── */}
             <CertificatesOverlay />
+
+            {/* ── Badges ── */}
+            <BadgesOverlay />
 
             {/* ── Contact + Footer ── */}
             <div id="contact">
