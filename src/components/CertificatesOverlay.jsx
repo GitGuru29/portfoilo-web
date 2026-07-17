@@ -4,25 +4,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const placeholderCertificates = [
     {
-        title: "eJPT - eLearnSecurity Junior Penetration Tester",
-        issuer: "INE / eLearnSecurity",
-        date: "2025 (Expected)",
-        description: "Hands-on penetration testing certification covering networking, web apps, and system exploitation.",
-        link: "#"
-    },
-    {
-        title: "Red Hat Certified System Administrator (RHCSA)",
-        issuer: "Red Hat",
-        date: "2024",
-        description: "Core system administration skills in Red Hat Enterprise Linux environments.",
-        link: "#"
-    },
-    {
-        title: "AWS Certified Solutions Architect – Associate",
-        issuer: "Amazon Web Services",
-        date: "2024",
-        description: "Designing distributed systems and deploying secure, robust applications on AWS.",
-        link: "#"
+        title: "Frontend Developer (React)",
+        issuer: "HackerRank",
+        date: "2026",
+        description: "Verified proficiency in React fundamentals including hooks, state management, component lifecycle, and building modern UI interfaces.",
+        link: "https://www.hackerrank.com/certificates/iframe/f5b570e3bb1b",
+        image: "/hackerrank-logo.png",
+        verified: true
     }
 ];
 
@@ -42,9 +30,9 @@ export default function CertificatesOverlay() {
         );
 
         gsap.fromTo(certRefs.current,
-            { opacity: 0, y: 50, scale: 0.98 },
+            { opacity: 0, y: 30, scale: 0.95 },
             {
-                opacity: 1, y: 0, scale: 1, duration: 1.2, stagger: 0.15, ease: "power3.out",
+                opacity: 1, y: 0, scale: 1, duration: 1.0, stagger: 0.12, ease: "power3.out",
                 force3D: true,
                 scrollTrigger: { trigger: containerRef.current, start: "top 75%" }
             }
@@ -60,7 +48,7 @@ export default function CertificatesOverlay() {
             <div className="structural-line structural-line-h top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl hidden lg:block" />
 
             <div className="max-w-7xl w-full pointer-events-auto flex flex-col items-center">
-                
+
                 <div ref={titleRef} className="mb-16 md:mb-24 flex flex-col items-center text-center">
                     <span className="text-xs md:text-sm font-space tracking-[0.4em] text-[var(--color-geyser)]/40 mb-4 md:mb-6 uppercase">
                         Credentials
@@ -70,28 +58,56 @@ export default function CertificatesOverlay() {
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                     {placeholderCertificates.map((cert, index) => (
-                        <div key={index} ref={el => certRefs.current[index] = el} data-cursor="View Credential" className="p-8 md:p-10 border border-[var(--color-geyser)]/10 flex flex-col h-full hover:border-[var(--color-geyser)]/30 bg-[var(--color-quantum-black)] hover:bg-[var(--color-geyser)]/[0.02] transition-colors duration-500 group relative overflow-hidden will-change-all">
-                            
-                            <div className="absolute top-0 left-0 w-[2px] h-full bg-[var(--color-geyser)] scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
+                        <div
+                            key={index}
+                            ref={el => certRefs.current[index] = el}
+                            data-cursor="View Credential"
+                            className={`p-8 rounded-3xl border flex flex-col h-full backdrop-blur-md bg-gradient-to-br transition-all duration-500 group relative overflow-hidden will-change-transform hover:-translate-y-2
+                                ${cert.verified
+                                    ? 'border-blue-400/20 hover:border-blue-400/40 bg-[var(--color-quantum-black)]/40 from-blue-900/10 to-transparent shadow-[0_15px_40px_-10px_rgba(59,130,246,0.25)] hover:shadow-[0_20px_50px_-10px_rgba(59,130,246,0.4)]'
+                                    : 'border-[var(--color-geyser)]/8 hover:border-[var(--color-geyser)]/15 bg-[var(--color-quantum-black)]/20 from-white/[0.02] to-transparent shadow-[0_15px_40px_-10px_rgba(59,130,246,0.08)] hover:shadow-[0_20px_50px_-10px_rgba(59,130,246,0.12)]'
+                                }`}
+                        >
+                            <div className={`absolute top-0 left-0 w-[2px] h-full scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top ${cert.verified ? 'bg-blue-400' : 'bg-[var(--color-geyser)]/30'}`} />
 
+                            {/* Logo + Date row */}
                             <div className="flex justify-between items-start mb-8 gap-4">
-                                <span className="text-[10px] font-space text-[var(--color-geyser)]/50 tracking-[0.2em] uppercase">{cert.issuer}</span>
-                                <span className="text-[10px] font-space text-[var(--color-geyser)]/80 uppercase">{cert.date}</span>
+                                <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 drop-shadow-lg">
+                                    <img src={cert.image} alt={cert.issuer} className="w-full h-full object-contain" />
+                                </div>
+                                <div className="flex flex-col items-end gap-2 mt-1">
+                                    {cert.verified && (
+                                        <span className="text-[9px] font-space tracking-[0.15em] uppercase text-blue-400 border border-blue-400/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
+                                            Verified
+                                        </span>
+                                    )}
+                                    <span className={`text-[10px] font-space uppercase ${cert.verified ? 'text-blue-400/70' : 'text-[var(--color-geyser)]/30'}`}>{cert.date}</span>
+                                </div>
                             </div>
 
-                            <h3 className="text-xl md:text-2xl font-space font-light text-[var(--color-geyser)] mb-6 transition-colors duration-300">
+                            {/* Title */}
+                            <h3 className={`text-xl md:text-2xl font-space font-light mb-6 transition-colors duration-300 ${cert.verified ? 'text-[var(--color-geyser)]' : 'text-[var(--color-geyser)]/40'}`}>
                                 {cert.title}
                             </h3>
-                            
-                            <p className="text-[var(--color-geyser)]/60 font-inter font-light text-sm leading-relaxed flex-grow">
+
+                            {/* Description */}
+                            <p className={`font-inter font-light text-sm leading-relaxed flex-grow ${cert.verified ? 'text-[var(--color-geyser)]/60' : 'text-[var(--color-geyser)]/25'}`}>
                                 {cert.description}
                             </p>
-                            
-                            <a href={cert.link} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-2 text-[10px] tracking-[0.2em] font-space uppercase text-[var(--color-geyser)]/40 group-hover:text-[var(--color-geyser)] transition-colors">
-                                View Credential <span className="inline-block transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
-                            </a>
+
+                            {/* CTA */}
+                            {cert.verified ? (
+                                <a href={cert.link} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-2 text-[10px] tracking-[0.2em] font-space uppercase text-blue-400/50 group-hover:text-blue-400 transition-colors">
+                                    View Credential <span className="inline-block transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                                </a>
+                            ) : (
+                                <span className="mt-8 inline-flex items-center gap-2 text-[10px] tracking-[0.2em] font-space uppercase text-[var(--color-geyser)]/20">
+                                    In Progress…
+                                </span>
+                            )}
                         </div>
                     ))}
                 </div>
