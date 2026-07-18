@@ -50,29 +50,39 @@ export default function BadgesOverlay() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                     {badgesData.map((badge, index) => {
                         return (
-                            <div 
-                                key={index} 
-                                ref={el => badgeRefs.current[index] = el} 
-                                data-cursor="Google Dev" 
-                                className={`p-8 rounded-3xl border border-[var(--color-geyser)]/10 flex flex-col h-full hover:border-blue-400/30 bg-[var(--color-quantum-black)]/40 backdrop-blur-md shadow-[0_15px_40px_-10px_rgba(59,130,246,0.25)] bg-gradient-to-br from-blue-900/10 to-transparent transition-all duration-500 group relative overflow-hidden will-change-transform hover:-translate-y-2 hover:shadow-[0_20px_50px_-10px_rgba(59,130,246,0.4)] hover:bg-[var(--color-quantum-black)]/60`}
+                            <a
+                                key={index}
+                                href={badge.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                ref={el => badgeRefs.current[index] = el}
+                                data-cursor="Google Dev"
+                                className={`p-8 rounded-3xl border border-[var(--color-geyser)]/10 flex flex-col h-full hover:border-blue-400/30 bg-[var(--color-quantum-black)]/40 backdrop-blur-md shadow-[0_15px_40px_-10px_rgba(59,130,246,0.25)] bg-gradient-to-br from-blue-900/10 to-transparent transition-all duration-500 group relative overflow-hidden will-change-transform hover:-translate-y-2 hover:shadow-[0_20px_50px_-10px_rgba(59,130,246,0.4)] hover:bg-[var(--color-quantum-black)]/60 no-underline cursor-pointer`}
                             >
                                 <div className="absolute top-0 left-0 w-[2px] h-full bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
-                                
+
+                                {/* External link icon – appears on hover */}
+                                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </div>
+
                                 <div className="flex justify-between items-start mb-8">
                                     <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 drop-shadow-lg">
                                         <img src={badge.image} alt={badge.title} className="w-full h-full object-contain" />
                                     </div>
                                     <span className="text-[10px] font-space text-[var(--color-geyser)]/60 uppercase text-right ml-4 mt-2">{badge.date}</span>
                                 </div>
-                                
+
                                 <h3 className="text-lg font-space font-light text-[var(--color-geyser)] mb-4 transition-colors duration-300">
                                     {badge.title}
                                 </h3>
-                                
+
                                 <p className="text-[var(--color-geyser)]/50 font-inter font-light text-xs leading-relaxed flex-grow">
                                     {badge.description}
                                 </p>
-                            </div>
+                            </a>
                         );
                     })}
                 </div>

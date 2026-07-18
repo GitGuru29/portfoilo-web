@@ -6,7 +6,8 @@ export const badgesData = [
         image: "/badges/Google Developer Group discovery.svg",
         color: "text-blue-400",
         bgColor: "bg-[#e5f6fd]",
-        borderColor: "border-[#e5f6fd]"
+        borderColor: "border-[#e5f6fd]",
+        link: "https://developers.google.com/profile/badges/community/gdg/discovery?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Code Wiki",
@@ -15,7 +16,8 @@ export const badgesData = [
         image: "/badges/code wiki.svg",
         color: "text-indigo-400",
         bgColor: "bg-[#fdf4e6]",
-        borderColor: "border-[#fdf4e6]"
+        borderColor: "border-[#fdf4e6]",
+        link: "https://developers.google.com/profile/badges/community/sdlcagents/gca-agents?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Cloud forums user",
@@ -24,7 +26,8 @@ export const badgesData = [
         image: "/badges/google cloud forum user.svg",
         color: "text-sky-400",
         bgColor: "bg-[#fef7e0]",
-        borderColor: "border-[#fef7e0]"
+        borderColor: "border-[#fef7e0]",
+        link: "https://developers.google.com/profile/badges/community/forums/user/cloud?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Google Cloud & NVIDIA community",
@@ -33,7 +36,8 @@ export const badgesData = [
         image: "/badges/cloud and nvidia.svg",
         color: "text-green-400",
         bgColor: "bg-[#f4e8fd]",
-        borderColor: "border-[#f4e8fd]"
+        borderColor: "border-[#f4e8fd]",
+        link: "https://developers.google.com/profile/badges/nvidia-developer?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Chrome DevTools User",
@@ -42,7 +46,8 @@ export const badgesData = [
         image: "/badges/chrome dev tools.svg",
         color: "text-yellow-400",
         bgColor: "bg-[#e9f5e9]",
-        borderColor: "border-[#e9f5e9]"
+        borderColor: "border-[#e9f5e9]",
+        link: "https://developers.google.com/profile/badges/activity/chrome-devtools/chrome-devtools-user?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Android Studio - Panda releases",
@@ -51,7 +56,8 @@ export const badgesData = [
         image: "/badges/android studio panda.svg",
         color: "text-emerald-400",
         bgColor: "bg-[#e8f0fe]",
-        borderColor: "border-[#e8f0fe]"
+        borderColor: "border-[#e8f0fe]",
+        link: "https://developers.google.com/profile/badges/activity/android/install-android-studio-panda?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Google Developer Program premium tier",
@@ -60,7 +66,8 @@ export const badgesData = [
         image: "/badges/developer program premium tire.svg",
         color: "text-amber-400",
         bgColor: "bg-[#fef7e0]",
-        borderColor: "border-[#fef7e0]"
+        borderColor: "border-[#fef7e0]",
+        link: "https://developers.google.com/profile/badges/community/innovators/cloud/innovators_plus?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Android SDK Platform Tools",
@@ -69,7 +76,8 @@ export const badgesData = [
         image: "/badges/sdk platform tools.svg",
         color: "text-green-500",
         bgColor: "bg-[#f4e8fd]",
-        borderColor: "border-[#f4e8fd]"
+        borderColor: "border-[#f4e8fd]",
+        link: "https://developers.google.com/profile/badges/activity/android/sdk-platform-tools?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Android Studio User",
@@ -78,7 +86,8 @@ export const badgesData = [
         image: "/badges/android studio user.svg",
         color: "text-teal-400",
         bgColor: "bg-[#e8f0fe]",
-        borderColor: "border-[#e8f0fe]"
+        borderColor: "border-[#e8f0fe]",
+        link: "https://developers.google.com/profile/badges/activity/android/install-android-studio?u=SIDAN" // TODO: update with your badge link
     },
     {
         title: "Learning",
@@ -87,6 +96,7 @@ export const badgesData = [
         image: "/badges/learnings.svg",
         color: "text-purple-400",
         bgColor: "bg-[#e9f5e9]",
-        borderColor: "border-[#e9f5e9]"
+        borderColor: "border-[#e9f5e9]",
+        link: "https://developers.google.com/profile/badgeshttps://developers.google.com/profile/badges/recognitions/learnings?u=SIDAN" // TODO: update with your badge link
     }
 ];
