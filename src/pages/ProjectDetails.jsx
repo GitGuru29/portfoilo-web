@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { projectsData } from '../data/projects';
 import useStore, { MOODS } from '../store/useStore';
+import Footer from '../components/Footer';
 
 export default function ProjectDetails() {
     const { id } = useParams();
@@ -124,7 +125,7 @@ export default function ProjectDetails() {
             )}
 
             {/* Bottom Back Button */}
-            <div className="mt-32 border-t border-[var(--color-geyser)]/10 pt-12 flex justify-center">
+            <div className="mt-32 border-t border-[var(--color-geyser)]/10 pt-12 mb-16 flex justify-center">
                 <Link
                     to="/"
                     className="inline-flex items-center gap-3 px-8 py-4 border border-[var(--color-geyser)]/20 hover:bg-[var(--color-geyser)] hover:text-[var(--color-quantum-black)] text-[var(--color-geyser)] transition-all font-space text-xs tracking-widest uppercase"
@@ -133,6 +134,9 @@ export default function ProjectDetails() {
                     Back to Timeline
                 </Link>
             </div>
+
+            {/* Global Footer */}
+            <Footer />
         </div>
     );
 }

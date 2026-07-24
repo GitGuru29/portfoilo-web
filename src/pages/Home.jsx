@@ -7,6 +7,7 @@ import ActiveResearchOverlay from '../components/ActiveResearchOverlay';
 import CertificatesOverlay from '../components/CertificatesOverlay';
 import BadgesOverlay from '../components/BadgesOverlay';
 import Contact from '../components/Contact';
+import Footer from '../components/Footer';
 import CategoryFilter from '../components/CategoryFilter';
 import SearchBar from '../components/SearchBar';
 import StatsTicker from '../components/StatsTicker';
@@ -70,6 +71,9 @@ export default function Home() {
             <div id="contact">
                 <Contact />
             </div>
+
+            {/* ── Global Footer ── */}
+            <Footer />
 
             {/* ── Floating Terminal overlay ── */}
             <TerminalSection />
