@@ -11,6 +11,16 @@ const placeholderCertificates = [
         link: "https://www.hackerrank.com/certificates/iframe/f5b570e3bb1b",
         image: "/hackerrank-logo.png",
         verified: true
+    },
+    {
+        title: "Problem Solving (Intermediate)",
+        issuer: "HackerRank",
+        date: "24 Jul, 2026",
+        id: "09751F9F55D8",
+        description: "Certified intermediate-level problem solving skills covering data structures and algorithms including stacks, queues, trees, and dynamic programming.",
+        link: "https://www.hackerrank.com/certificates/09751f9f55d8",
+        image: "/hackerrank-logo.png",
+        verified: true
     }
 ];
 
