@@ -6,7 +6,6 @@ import {
     Twitter, 
     FileText, 
     ArrowUpRight, 
-    ArrowUp, 
     Cpu, 
     Globe, 
     Sparkles, 
@@ -59,14 +58,6 @@ export default function Footer() {
         }
     };
 
-    // Back to Top Handler
-    const handleScrollToTop = () => {
-        if (window.lenis) {
-            window.lenis.scrollTo(0, { duration: 1.2 });
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    };
 
     const marqueeSkills = [
         "SYSTEMS ARCHITECTURE",
@@ -281,27 +272,11 @@ export default function Footer() {
 
                 </div>
 
-                {/* ── 4. BOTTOM COPYRIGHT & BACK TO TOP BAR ── */}
-                <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-slate-400 text-xs font-space">
-                    
-                    {/* Copyright & Info */}
-                    <div className="flex flex-wrap items-center gap-4 text-center sm:text-left">
-                        <span className="text-slate-300 font-medium">
-                            © {new Date().getFullYear()} Siluna Nusal Dangalla. All Rights Reserved.
-                        </span>
-                        <span className="hidden sm:inline text-slate-700">|</span>
-                        <span className="text-slate-400">Built with React, Vite & Tailwind CSS</span>
-                    </div>
-
-                    {/* Back to top button */}
-                    <button
-                        onClick={handleScrollToTop}
-                        className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-800 text-slate-200 hover:text-amber-300 transition-all duration-300 shadow-md"
-                    >
-                        <span className="text-xs uppercase tracking-wider font-semibold">Back to Top</span>
-                        <ArrowUp className="w-4 h-4 text-amber-400 group-hover:-translate-y-1 transition-transform" />
-                    </button>
-
+                {/* ── 4. BOTTOM COPYRIGHT ── */}
+                <div className="pt-8 flex items-center justify-center text-slate-400 text-xs font-space">
+                    <span className="text-slate-300 font-medium text-center">
+                        © {new Date().getFullYear()} Siluna Nusal Dangalla. All Rights Reserved.
+                    </span>
                 </div>
 
             </div>
