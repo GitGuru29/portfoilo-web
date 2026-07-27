@@ -13,6 +13,7 @@ import SearchBar from '../components/SearchBar';
 import StatsTicker from '../components/StatsTicker';
 import TimelineSection from '../components/TimelineSection';
 import TerminalSection from '../components/TerminalSection';
+import SectionDotsNav from '../components/SectionDotsNav';
 import { projectsData } from '../data/projects';
 import { CATEGORIES } from '../data/categories';
 
@@ -34,49 +35,64 @@ export default function Home() {
 
     return (
         <div className="relative z-10 w-full">
+            {/* Floating side dot indicator navigation */}
+            <SectionDotsNav />
 
             {/* ── Hero ── */}
-            <HeroOverlay />
-
-            {/* ── Tech ticker strip ── */}
-            <StatsTicker />
+            <section id="hero" className="snap-section">
+                <HeroOverlay />
+                <StatsTicker />
+            </section>
 
             {/* ── Skills ── */}
-            <SkillsOverlay />
+            <section id="skills" className="snap-section">
+                <SkillsOverlay />
+            </section>
 
             {/* ── GitHub 3D Graph ── */}
-            <GitHubActivitySection />
+            <section id="github" className="snap-section">
+                <GitHubActivitySection />
+            </section>
 
             {/* ── Projects ── */}
-            <ProjectsOverlay projects={filteredProjects} isFiltered={isFiltered}>
-                <div className="w-full max-w-6xl mx-auto px-6 mb-16 md:mb-24 bg-transparent" id="portfolio-filters">
-                    <CategoryFilter activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
-                    <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-                </div>
-            </ProjectsOverlay>
+            <section id="projects" className="snap-section">
+                <ProjectsOverlay projects={filteredProjects} isFiltered={isFiltered}>
+                    <div className="w-full max-w-6xl mx-auto px-6 mb-16 md:mb-24 bg-transparent" id="portfolio-filters">
+                        <CategoryFilter activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+                        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                    </div>
+                </ProjectsOverlay>
+            </section>
 
             {/* ── Timeline / Build Log ── */}
-            <TimelineSection />
+            <section id="timeline" className="snap-section">
+                <TimelineSection />
+            </section>
 
             {/* ── Active Research ── */}
-            <ActiveResearchOverlay />
+            <section id="research" className="snap-section">
+                <ActiveResearchOverlay />
+            </section>
 
             {/* ── Certificates ── */}
-            <CertificatesOverlay />
+            <section id="certificates" className="snap-section">
+                <CertificatesOverlay />
+            </section>
 
             {/* ── Badges ── */}
-            <BadgesOverlay />
+            <section id="badges" className="snap-section">
+                <BadgesOverlay />
+            </section>
 
             {/* ── Contact + Footer ── */}
-            <div id="contact">
+            <section id="contact" className="snap-section">
                 <Contact />
-            </div>
-
-            {/* ── Global Footer ── */}
-            <Footer />
+                <Footer />
+            </section>
 
             {/* ── Floating Terminal overlay ── */}
             <TerminalSection />
         </div>
     );
 }
+

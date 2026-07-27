@@ -525,4 +525,25 @@ p {
 }
 
 
-/* ── Keyframes ── */
+
+
+/* ─────────────────────────────────────────────────
+   SECTION ANCHORS & PADDING
+───────────────────────────────────────────────── */
+html {
+    scroll-padding-top: 80px; /* offset for navigation header */
+}
+
+.snap-section {
+    min-height: 100vh;
+    position: relative;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    html {
+        scroll-padding-top: 60px;
+    }
+}
+
+
