@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Typewriter from './Typewriter';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -95,10 +96,10 @@ export default function SkillsOverlay() {
             {/* Header */}
             <div ref={titleRef} className="w-full max-w-7xl mx-auto flex flex-col mb-16 md:mb-20 px-4">
                 <span className="text-[10px] md:text-xs tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4">
-                    Technical Specifications
+                    <Typewriter text="Technical Specifications" triggerOnScroll={true} loop={false} cursorChar="_" />
                 </span>
                 <h2 className="text-3xl md:text-5xl lg:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight">
-                    Systems & Capabilities.
+                    <Typewriter text={["Systems & Capabilities.", "Architectures & Stack.", "Engineering Capabilities."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
                 </h2>
             </div>
 

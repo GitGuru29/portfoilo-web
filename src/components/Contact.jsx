@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Typewriter from './Typewriter';
 
 // ─── EmailJS Config ───────────────────────────────────────────────
 const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
@@ -84,10 +85,10 @@ export default function Contact() {
                         <motion.div variants={itemVariants} className="lg:pr-20 xl:pr-32 flex flex-col justify-between">
                             <div>
                                 <span className="text-[10px] tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-6 block">
-                                    Initiate Contact
+                                    <Typewriter text="Initiate Contact" triggerOnScroll={true} loop={false} cursorChar="_" />
                                 </span>
                                 <h2 className="text-4xl md:text-5xl xl:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight mb-8">
-                                    Let's build<br />systems.
+                                    <Typewriter text={["Let's build systems.", "Get In Touch.", "Start A Conversation."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
                                 </h2>
                                 <p className="text-sm md:text-base font-inter font-light text-[var(--color-geyser)]/50 leading-relaxed max-w-sm mb-12">
                                     Open to Android / Linux engineering roles.<br />

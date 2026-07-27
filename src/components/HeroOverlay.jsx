@@ -2,37 +2,10 @@ import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useStore, { MOODS } from '../store/useStore';
+import Typewriter from './Typewriter';
 
 gsap.registerPlugin(ScrollTrigger);
 
-
-/* ─── Typewriter Hook ─────────────────────────────────────────────── */
-function useTypewriter(words, speed = 80, pause = 2500) {
-    const [text, setText] = useState('');
-    const state = useRef({ wi: 0, ci: 0, del: false });
-
-    useEffect(() => {
-        const s = state.current;
-        const word = words[s.wi];
-        let id;
-
-        if (!s.del && s.ci < word.length) {
-            id = setTimeout(() => { s.ci++; setText(word.slice(0, s.ci)); }, speed);
-        } else if (!s.del && s.ci === word.length) {
-            id = setTimeout(() => { s.del = true; setText(word.slice(0, s.ci)); }, pause);
-        } else if (s.del && s.ci > 0) {
-            id = setTimeout(() => { s.ci--; setText(word.slice(0, s.ci)); }, speed / 2.2);
-        } else {
-            s.del = false;
-            s.wi = (s.wi + 1) % words.length;
-            setText('');
-        }
-
-        return () => clearTimeout(id);
-    });
-
-    return text;
-}
 
 /* ─── StatCounter Component — GSAP direct DOM animation (no re-renders) ─── */
 function StatCounter({ target, suffix, label, started }) {
@@ -94,11 +67,6 @@ export default function HeroOverlay() {
     const aboutPhotoRef = useRef(null);  // headset photo (fades IN on left)
     const setMood       = useStore(s => s.setMood);
     const [statsStarted, setStatsStarted] = useState(false);
-
-    const role = useTypewriter(
-        ['Software Engineer', 'Systems Developer', 'Android Developer', 'Linux Engineer'],
-        78, 2600
-    );
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -173,7 +141,6 @@ export default function HeroOverlay() {
             display: 'flex', flexDirection: 'column',
             justifyContent: 'space-between',
             padding: 'clamp(28px, 4vw, 52px)',
-            borderRight: '1px solid rgba(212,175,55,0.1)',
         },
         /* ── Right panel — only the photo wrapper ── */
         rightPanel: {
@@ -231,7 +198,7 @@ export default function HeroOverlay() {
                                     background: 'linear-gradient(to right, rgba(212,175,55,0.8), transparent)',
                                     flexShrink: 0,
                                 }} />
-                                <span style={{
+                                <div style={{
                                     fontFamily: 'Space Grotesk, sans-serif',
                                     fontSize: 'clamp(11px, 1.4vw, 14px)',
                                     letterSpacing: '0.3em',
@@ -239,8 +206,20 @@ export default function HeroOverlay() {
                                     color: 'rgba(212,175,55,0.85)',
                                     minHeight: '1.3em',
                                 }}>
-                                    {role}<span className="lux-blink">_</span>
-                                </span>
+                                    <Typewriter
+                                        text={[
+                                            'Software Engineer',
+                                            'Systems Developer',
+                                            'Android Developer',
+                                            'Linux Engineer',
+                                            'Full-Stack Developer'
+                                        ]}
+                                        typingSpeed={70}
+                                        deletingSpeed={35}
+                                        pauseDuration={2200}
+                                        cursorChar="_"
+                                    />
+                                </div>
                             </div>
 
                             {/* Name */}
@@ -325,36 +304,6 @@ export default function HeroOverlay() {
                     
 
 
-                    {/* Bottom bar */}
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-                        <a
-                            href="https://github.com/GitGuru29"
-                            target="_blank" rel="noopener noreferrer"
-                            style={{
-                                fontFamily: 'Space Grotesk, sans-serif',
-                                fontSize: 10, letterSpacing: '0.25em',
-                                textTransform: 'uppercase',
-                                color: 'rgba(255,255,255,0.3)',
-                                textDecoration: 'none',
-                                transition: 'color 0.3s',
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.color = 'rgba(212,175,55,0.7)'}
-                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.3)'}
-                        >
-                            @GitGuru29 ↗
-                        </a>
-                        {/* Scroll cue */}
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7 }}>
-                            <span style={{
-                                fontFamily: 'Space Grotesk, sans-serif',
-                                fontSize: 9, letterSpacing: '0.3em',
-                                textTransform: 'uppercase',
-                                color: 'rgba(255,255,255,0.2)',
-                                writingMode: 'vertical-rl',
-                            }}>Scroll</span>
-                            <div className="lux-scroll-line" />
-                        </div>
-                    </div>
                 </div>
 
                 {/* ── About panel — Centered in the screen ── */}
@@ -373,25 +322,18 @@ export default function HeroOverlay() {
                         pointerEvents: 'none', // to let clicks pass when hidden
                     }}
                 >
-                    <div style={{ maxWidth: 800, display: 'flex', flexDirection: 'column', alignItems: 'center', pointerEvents: 'auto' }}>
-                        {/* Gold accent line & Header */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
-                            <span style={{
-                                display: 'block', width: 60, height: 1,
-                                background: 'linear-gradient(to right, transparent, rgba(212,175,55,0.6), transparent)',
-                            }} />
+                    <div style={{ maxWidth: 800, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', pointerEvents: 'auto' }}>
+                        {/* Header */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginBottom: 32 }}>
                             <h2 style={{
                                 fontFamily: 'Space Grotesk, sans-serif',
                                 fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                                 fontWeight: 700, color: '#FAFAFA', margin: 0,
                                 textTransform: 'uppercase', letterSpacing: '-0.02em',
+                                textAlign: 'center',
                             }}>
-                                About <span style={{ color: '#D4AF37' }}>Me</span>
+                                <Typewriter text={["About Me", "Systems Engineer", "Android & Linux Dev"]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
                             </h2>
-                            <span style={{
-                                display: 'block', width: 60, height: 1,
-                                background: 'linear-gradient(to right, transparent, rgba(212,175,55,0.6), transparent)',
-                            }} />
                         </div>
 
                         {/* Clean typography content (no background box) */}
@@ -400,33 +342,20 @@ export default function HeroOverlay() {
                             fontSize: 'clamp(1.1rem, 1.5vw, 1.4rem)',
                             lineHeight: 1.8, color: 'rgba(255,255,255,0.65)',
                             display: 'flex', flexDirection: 'column', gap: 20,
+                            textAlign: 'center',
                         }}>
-                            <p style={{ margin: 0 }}>
+                            <p style={{ margin: 0, textAlign: 'center' }}>
                                 I am a final-year Software Engineering undergraduate with a deep focus on building 
                                 high-performance, system-level software.
                             </p>
-                            <p style={{ margin: 0 }}>
+                            <p style={{ margin: 0, textAlign: 'center' }}>
                                 My work spans native Android development, Linux-based tooling, and low-level system 
                                 behaviour. I prioritize efficiency, fine-grained control, and absolute reliability.
                             </p>
-                            <p style={{ margin: 0, color: 'rgba(255,255,255,0.4)' }}>
+                            <p style={{ margin: 0, color: 'rgba(255,255,255,0.4)', textAlign: 'center' }}>
                                 From writing custom Android launchers to engineering Linux utilities — I build software 
                                 that performs predictably and scales effortlessly under pressure.
                             </p>
-                        </div>
-
-                        {/* Link row */}
-                        <div style={{ display: 'flex', gap: 32, marginTop: 40 }}>
-                            <a href="#projects" className="lux-about-link lux-about-link--gold" onClick={e => {
-                                e.preventDefault();
-                                const el = document.getElementById('portfolio-filters');
-                                if (el && window.lenis) window.lenis.scrollTo(el, { offset: -50, duration: 1.2 });
-                            }}>
-                                View Projects →
-                            </a>
-                            <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="lux-about-link">
-                                Download CV ↗
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -484,37 +413,33 @@ export default function HeroOverlay() {
                                 color: 'rgba(212,175,55,0.45)', margin: '3px 0 0',
                             }}>Software Engineering</p>
                         </div>
-                    </div>
 
-
-                </div>
-
-                {/* ── Permanent Vertical SIDAN text on the far right edge ── */}
-                <div style={{
-                    position: 'absolute', top: '50%', right: 20,
-                    transform: 'translateY(-50%)',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
-                    zIndex: 200, // Stay above everything
-                    pointerEvents: 'none', // Don't block clicks
-                }}>
-                    <div style={{
-                        width: 1, height: 40,
-                        background: 'linear-gradient(to bottom, transparent, rgba(212,175,55,0.3))',
-                    }} />
-                    <span style={{
-                        fontFamily: 'Space Grotesk, sans-serif',
-                        fontSize: 9, letterSpacing: '0.38em',
-                        textTransform: 'uppercase',
-                        color: 'rgba(255,255,255,0.45)',
-                        writingMode: 'vertical-rl',
-                        fontWeight: 500,
-                    }}>SIDAN © 2026</span>
-                    <div style={{
-                        width: 1, height: 40,
-                        background: 'linear-gradient(to top, transparent, rgba(212,175,55,0.3))',
-                    }} />
-                </div>
-
+                        {/* Vertical SIDAN text on right side of photo */}
+                        <div style={{
+                            position: 'absolute', top: '50%', right: 'clamp(16px, 2.5vw, 32px)',
+                            transform: 'translateY(-50%)',
+                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+                            zIndex: 10,
+                            pointerEvents: 'none',
+                        }}>
+                            <div style={{
+                                width: 1, height: 40,
+                                background: 'linear-gradient(to bottom, transparent, rgba(212,175,55,0.4))',
+                            }} />
+                            <span style={{
+                                fontFamily: 'Space Grotesk, sans-serif',
+                                fontSize: 9, letterSpacing: '0.38em',
+                                textTransform: 'uppercase',
+                                color: 'rgba(255,255,255,0.45)',
+                                writingMode: 'vertical-rl',
+                                fontWeight: 500,
+                            }}>SIDAN © 2026</span>
+                            <div style={{
+                                width: 1, height: 40,
+                                background: 'linear-gradient(to top, transparent, rgba(212,175,55,0.4))',
+                            }} />
+                        </div>
+                    </div>                </div>
             </div>
         </section>
     );

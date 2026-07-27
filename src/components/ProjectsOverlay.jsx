@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useStore, { MOODS } from '../store/useStore';
+import Typewriter from './Typewriter';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -62,10 +63,10 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
             <div className="w-full max-w-7xl mx-auto px-6 mb-8 flex flex-col md:flex-row justify-between items-end gap-12 lg:gap-8">
                 <div>
                     <h2 className="text-[10px] md:text-xs tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
-                        System Architecture
+                        <Typewriter text="System Architecture" triggerOnScroll={true} loop={false} cursorChar="_" />
                     </h2>
                     <h3 className="text-4xl md:text-5xl lg:text-6xl font-space font-light leading-tight text-[var(--color-geyser)]">
-                        Featured Systems.
+                        <Typewriter text={["Featured Systems.", "Selected Projects.", "Open-Source Builds."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
                     </h3>
                 </div>
             </div>

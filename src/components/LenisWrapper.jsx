@@ -21,17 +21,22 @@ export default function LenisWrapper({ children }) {
 
         window.lenis = lenis;
 
-        lenis.on('scroll', ScrollTrigger.update);
-
-        gsap.ticker.add((time) => {
-            lenis.raf(time * 1000);
+        // Keep GSAP ScrollTrigger in sync with Lenis smooth scroll
+        lenis.on('scroll', () => {
+            ScrollTrigger.update();
         });
 
-        gsap.ticker.lagSmoothing(0);
+        // Use native requestAnimationFrame for silky smooth 60fps/120fps scrolling
+        let rafId;
+        function raf(time) {
+            lenis.raf(time);
+            rafId = requestAnimationFrame(raf);
+        }
+        rafId = requestAnimationFrame(raf);
 
         return () => {
+            cancelAnimationFrame(rafId);
             lenis.destroy();
-            gsap.ticker.remove(lenis.raf);
             delete window.lenis;
         };
     }, []);

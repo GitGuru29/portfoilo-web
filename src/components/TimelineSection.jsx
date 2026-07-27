@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Typewriter from './Typewriter';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -130,10 +131,10 @@ export default function TimelineSection() {
                 {/* Header */}
                 <div className="mb-20 md:mb-32 flex flex-col items-center text-center">
                     <span className="text-xs md:text-sm tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
-                        Engineering History
+                        <Typewriter text="Engineering History" triggerOnScroll={true} loop={false} cursorChar="_" />
                     </span>
                     <h2 className="text-3xl md:text-5xl lg:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight">
-                        The Build Log.
+                        <Typewriter text={["The Build Log.", "Engineering Timeline.", "Milestones & Shipped Systems."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
                     </h2>
                 </div>
 

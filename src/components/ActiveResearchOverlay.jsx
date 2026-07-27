@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Typewriter from './Typewriter';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -66,10 +67,10 @@ export default function ActiveResearchOverlay() {
             {/* Header */}
             <div className="mb-16 md:mb-24 flex flex-col items-center text-center">
                 <span className="header-fade text-xs md:text-sm tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
-                    Current Directives
+                    <Typewriter text="Current Directives" triggerOnScroll={true} loop={false} cursorChar="_" />
                 </span>
                 <h2 className="header-fade text-3xl md:text-5xl lg:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight">
-                    Active Research.
+                    <Typewriter text={["Active Research.", "Ongoing Engineering.", "Final Year & Compiler R&D."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
                 </h2>
             </div>
 
