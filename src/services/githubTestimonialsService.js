@@ -4,6 +4,7 @@ const REPO_OWNER = 'GitGuru29';
 const REPO_NAME = 'portfoilo-web';
 const LOCAL_APPROVED_KEY = 'portfolio_approved_testimonials';
 const LOCAL_PENDING_KEY = 'portfolio_pending_testimonials';
+const LOCAL_DELETED_KEY = 'portfolio_deleted_testimonials';
 
 /**
  * Compresses an uploaded File into a 150x150 JPEG Base64 Data URL
@@ -35,6 +36,18 @@ export function compressImageFile(file) {
         reader.onerror = (err) => reject(err);
         reader.readAsDataURL(file);
     });
+}
+
+/**
+ * Helper to get deleted IDs blacklist
+ */
+function getDeletedIds() {
+    try {
+        const stored = localStorage.getItem(LOCAL_DELETED_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch {
+        return [];
+    }
 }
 
 /**
@@ -82,6 +95,8 @@ function parseIssueToTestimonial(issue) {
  * Fetches ONLY APPROVED testimonials for the public website.
  */
 export async function fetchApprovedTestimonials() {
+    const deletedIds = getDeletedIds();
+
     let liveTestimonials = [];
     try {
         const response = await fetch(
@@ -108,17 +123,20 @@ export async function fetchApprovedTestimonials() {
         console.warn('Error reading local approved testimonials:', e);
     }
 
-    const combined = [...localApproved, ...liveTestimonials];
-    return combined.length > 0 ? [...combined, ...seedTestimonials] : seedTestimonials;
+    const combined = [...localApproved, ...liveTestimonials, ...seedTestimonials];
+    // Filter out any item present in deleted blacklist
+    return combined.filter((item) => !deletedIds.includes(item.id));
 }
 
 /**
  * Fetches PENDING testimonials for the Admin Dashboard.
  */
 export function fetchPendingTestimonials() {
+    const deletedIds = getDeletedIds();
     try {
         const stored = localStorage.getItem(LOCAL_PENDING_KEY);
-        return stored ? JSON.parse(stored) : [];
+        const pending = stored ? JSON.parse(stored) : [];
+        return pending.filter((item) => !deletedIds.includes(item.id));
     } catch (e) {
         console.warn('Error reading pending testimonials:', e);
         return [];
@@ -127,7 +145,6 @@ export function fetchPendingTestimonials() {
 
 /**
  * Submits a new recommendation — enters as PENDING (approved: false) by default.
- * Trolls/haters CANNOT post live without admin approval!
  */
 export async function submitDirectRecommendation(data) {
     const payload = {
@@ -174,7 +191,6 @@ export async function submitDirectRecommendation(data) {
 
 /**
  * ADMIN ACTION: Approves a pending recommendation by ID.
- * Moves item from Pending to Approved live public view.
  */
 export function approveTestimonial(id) {
     try {
@@ -199,20 +215,32 @@ export function approveTestimonial(id) {
 }
 
 /**
- * ADMIN ACTION: Permanently deletes any recommendation by ID (Pending or Approved).
- * Used to remove test items or reject troll submissions.
+ * ADMIN ACTION: Permanently deletes any recommendation by ID (Pending, Approved, Seed, or Old Key).
  */
 export function deleteTestimonial(id) {
     try {
-        // Delete from pending
+        // 1. Delete from pending
         const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
         const updatedPending = pending.filter((item) => item.id !== id);
         localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
 
-        // Delete from approved
+        // 2. Delete from approved
         const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
         const updatedApproved = approved.filter((item) => item.id !== id);
         localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
+
+        // 3. Delete from old storage key if exists
+        try {
+            const oldStorage = JSON.parse(localStorage.getItem('portfolio_pending_testimonials') || '[]');
+            const updatedOld = oldStorage.filter((item) => item.id !== id);
+            localStorage.setItem('portfolio_pending_testimonials', JSON.stringify(updatedOld));
+        } catch {}
+
+        // 4. Blacklist the ID permanently so it never shows up from seed or API
+        const deletedIds = getDeletedIds();
+        if (!deletedIds.includes(id)) {
+            localStorage.setItem(LOCAL_DELETED_KEY, JSON.stringify([...deletedIds, id]));
+        }
 
         return true;
     } catch (e) {
