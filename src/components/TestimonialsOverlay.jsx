@@ -188,6 +188,7 @@ export default function TestimonialsOverlay() {
             <SubmitReferenceModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+                onSuccess={loadTestimonials}
             />
         </div>
     );

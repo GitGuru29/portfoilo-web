@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Star, Send, CheckCircle2, User, Building, Linkedin, Image as ImageIcon } from 'lucide-react';
-import { getGitHubIssueSubmitUrl } from '../services/githubTestimonialsService';
+import { X, Star, Send, CheckCircle2, User, Building, Linkedin, Upload, Trash2, Loader2 } from 'lucide-react';
+import { submitDirectRecommendation, compressImageFile } from '../services/githubTestimonialsService';
 
-export default function SubmitReferenceModal({ isOpen, onClose }) {
+export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
     const [formData, setFormData] = useState({
         name: '',
         role: '',
@@ -15,15 +15,57 @@ export default function SubmitReferenceModal({ isOpen, onClose }) {
         avatar: '',
         text: '',
     });
+    const [isDragging, setIsDragging] = useState(false);
+    const [compressing, setCompressing] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const fileInputRef = useRef(null);
 
-    const handleSubmit = (e) => {
+    const handleFileSelected = async (file) => {
+        if (!file || !file.type.startsWith('image/')) return;
+        try {
+            setCompressing(true);
+            const compressed = await compressImageFile(file);
+            setFormData((prev) => ({ ...prev, avatar: compressed }));
+        } catch (err) {
+            console.error('Image compression failed:', err);
+        } finally {
+            setCompressing(false);
+        }
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleFileSelected(e.dataTransfer.files[0]);
+        }
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.name || !formData.text) return;
 
-        const url = getGitHubIssueSubmitUrl(formData);
-        window.open(url, '_blank');
-        setSubmitted(true);
+        try {
+            setIsSubmitting(true);
+            await submitDirectRecommendation(formData);
+            setSubmitted(true);
+            if (onSuccess) onSuccess();
+        } catch (err) {
+            console.error('Submission error:', err);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleReset = () => {
@@ -79,9 +121,9 @@ export default function SubmitReferenceModal({ isOpen, onClose }) {
                                 <div className="w-16 h-16 bg-[#D4AF37]/20 border border-[#D4AF37] text-[#D4AF37] rounded-full flex items-center justify-center mx-auto mb-4">
                                     <CheckCircle2 className="w-8 h-8" />
                                 </div>
-                                <h4 className="text-xl font-space font-bold text-white">Thank You for Your Endorsement!</h4>
+                                <h4 className="text-xl font-space font-bold text-white">Recommendation Submitted!</h4>
                                 <p className="text-sm text-neutral-400 max-w-md mx-auto leading-relaxed">
-                                    Your recommendation issue has been opened on GitHub. Once reviewed, it will appear directly on this portfolio!
+                                    Thank you for your endorsement! Your recommendation has been submitted directly for review and will appear live on this portfolio.
                                 </p>
                                 <button
                                     onClick={handleReset}
@@ -92,6 +134,71 @@ export default function SubmitReferenceModal({ isOpen, onClose }) {
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-5">
+                                {/* Photo Upload Dropzone */}
+                                <div>
+                                    <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1.5">
+                                        Profile Photo / Avatar
+                                    </label>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => e.target.files && handleFileSelected(e.target.files[0])}
+                                    />
+
+                                    {formData.avatar ? (
+                                        <div className="flex items-center justify-between p-3 bg-white/5 border border-white/15 rounded-xl">
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={formData.avatar}
+                                                    alt="Avatar preview"
+                                                    className="w-12 h-12 rounded-full object-cover border border-[#D4AF37]"
+                                                />
+                                                <div>
+                                                    <p className="text-xs font-space text-white">Photo Ready</p>
+                                                    <p className="text-[11px] text-neutral-400">Compressed avatar preview</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData({ ...formData, avatar: '' })}
+                                                className="p-2 text-neutral-400 hover:text-red-400 transition-colors"
+                                                title="Remove photo"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div
+                                            onDrop={handleDrop}
+                                            onDragOver={handleDragOver}
+                                            onDragLeave={handleDragLeave}
+                                            onClick={() => fileInputRef.current?.click()}
+                                            className={`w-full py-6 px-4 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all ${
+                                                isDragging
+                                                    ? 'border-[#D4AF37] bg-[#D4AF37]/10'
+                                                    : 'border-white/15 bg-white/5 hover:border-white/30 hover:bg-white/10'
+                                            }`}
+                                        >
+                                            {compressing ? (
+                                                <div className="flex items-center gap-2 text-sm text-[#D4AF37]">
+                                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                                    Processing photo...
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <Upload className="w-6 h-6 text-neutral-400 mb-2" />
+                                                    <p className="text-xs font-space font-medium text-white">
+                                                        Drag & drop your photo here, or <span className="text-[#D4AF37]">browse</span>
+                                                    </p>
+                                                    <p className="text-[11px] text-neutral-500 mt-1">Supports PNG, JPG, WebP</p>
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {/* Name */}
                                     <div>
@@ -173,39 +280,20 @@ export default function SubmitReferenceModal({ isOpen, onClose }) {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    {/* LinkedIn */}
-                                    <div>
-                                        <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1.5">
-                                            LinkedIn URL (Optional)
-                                        </label>
-                                        <div className="relative">
-                                            <Linkedin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-                                            <input
-                                                type="url"
-                                                value={formData.linkedin}
-                                                onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                                                placeholder="https://linkedin.com/in/..."
-                                                className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Avatar URL */}
-                                    <div>
-                                        <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1.5">
-                                            Photo URL (Optional)
-                                        </label>
-                                        <div className="relative">
-                                            <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-                                            <input
-                                                type="url"
-                                                value={formData.avatar}
-                                                onChange={(e) => setFormData({ ...formData, avatar: e.target.value })}
-                                                placeholder="https://..."
-                                                className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
-                                            />
-                                        </div>
+                                {/* LinkedIn */}
+                                <div>
+                                    <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1.5">
+                                        LinkedIn Profile URL (Optional)
+                                    </label>
+                                    <div className="relative">
+                                        <Linkedin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                                        <input
+                                            type="url"
+                                            value={formData.linkedin}
+                                            onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+                                            placeholder="https://linkedin.com/in/..."
+                                            className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                        />
                                     </div>
                                 </div>
 
@@ -227,14 +315,19 @@ export default function SubmitReferenceModal({ isOpen, onClose }) {
                                 {/* Submit Footer */}
                                 <div className="pt-4 flex items-center justify-between border-t border-white/10">
                                     <span className="text-xs text-neutral-400">
-                                        Submits directly to GitHub moderation queue
+                                        Direct in-browser submission
                                     </span>
                                     <button
                                         type="submit"
-                                        className="px-6 py-2.5 bg-[#D4AF37] hover:bg-[#b8952b] text-neutral-950 font-space font-semibold rounded-lg transition-all flex items-center gap-2 shadow-lg hover:shadow-[#D4AF37]/20 cursor-pointer"
+                                        disabled={isSubmitting}
+                                        className="px-6 py-2.5 bg-[#D4AF37] hover:bg-[#b8952b] text-neutral-950 font-space font-semibold rounded-lg transition-all flex items-center gap-2 shadow-lg hover:shadow-[#D4AF37]/20 cursor-pointer disabled:opacity-50"
                                     >
-                                        <Send className="w-4 h-4" />
-                                        Submit Recommendation
+                                        {isSubmitting ? (
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                        ) : (
+                                            <Send className="w-4 h-4" />
+                                        )}
+                                        {isSubmitting ? 'Submitting...' : 'Submit Recommendation'}
                                     </button>
                                 </div>
                             </form>
