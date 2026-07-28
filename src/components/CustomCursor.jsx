@@ -11,7 +11,6 @@ export default function CustomCursor() {
     const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     useEffect(() => {
-        // Detect if the device has a fine pointer (mouse). If not, disable the custom cursor logic to save battery on mobile.
         if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
             setIsTouchDevice(true);
             return;
@@ -21,18 +20,19 @@ export default function CustomCursor() {
             pos.current = { x: e.clientX, y: e.clientY };
         };
 
-        const onEnterInteractive = (e) => {
-            dotRef.current?.classList.add('cursor--hover');
-            ringRef.current?.classList.add('cursor--hover');
-            // Pick up data-cursor label if exists
-            const lbl = e.target.closest('[data-cursor]')?.getAttribute('data-cursor');
-            if (lbl) setLabel(lbl);
-        };
-
-        const onLeaveInteractive = () => {
-            dotRef.current?.classList.remove('cursor--hover');
-            ringRef.current?.classList.remove('cursor--hover');
-            setLabel('');
+        // Event delegation for dynamic elements in React Portals & Modals
+        const onMouseOver = (e) => {
+            const target = e.target.closest('a, button, [role="button"], input, textarea, select, label, [tabindex], [data-cursor]');
+            if (target) {
+                dotRef.current?.classList.add('cursor--hover');
+                ringRef.current?.classList.add('cursor--hover');
+                const lbl = target.getAttribute('data-cursor');
+                if (lbl) setLabel(lbl);
+            } else {
+                dotRef.current?.classList.remove('cursor--hover');
+                ringRef.current?.classList.remove('cursor--hover');
+                setLabel('');
+            }
         };
 
         const onMouseDown = () => {
@@ -49,28 +49,24 @@ export default function CustomCursor() {
         window.addEventListener('mousemove', onMove);
         window.addEventListener('mousedown', onMouseDown);
         window.addEventListener('mouseup', onMouseUp);
-
-        const interactives = document.querySelectorAll('a, button, [role="button"], input, textarea, select, label, [tabindex], [data-cursor]');
-        interactives.forEach(el => {
-            el.addEventListener('mouseenter', onEnterInteractive);
-            el.addEventListener('mouseleave', onLeaveInteractive);
-        });
+        document.addEventListener('mouseover', onMouseOver);
 
         const tick = () => {
-            // Dot snaps immediately
             if (dotRef.current) {
-                dotRef.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px) translate(-50%, -50%)`;
+                dotRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) translate(-50%, -50%)`;
             }
-            // Ring lerps with spring-like lag
-            ring.current.x += (pos.current.x - ring.current.x) * 0.1;
-            ring.current.y += (pos.current.y - ring.current.y) * 0.1;
+
+            ring.current.x += (pos.current.x - ring.current.x) * 0.15;
+            ring.current.y += (pos.current.y - ring.current.y) * 0.15;
+
             if (ringRef.current) {
-                ringRef.current.style.transform = `translate(${ring.current.x}px, ${ring.current.y}px) translate(-50%, -50%)`;
+                ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) translate(-50%, -50%)`;
             }
-            // Label follows ring
+
             if (labelRef.current) {
-                labelRef.current.style.transform = `translate(${ring.current.x + 22}px, ${ring.current.y - 14}px)`;
+                labelRef.current.style.transform = `translate3d(${pos.current.x + 16}px, ${pos.current.y + 16}px, 0)`;
             }
+
             raf.current = requestAnimationFrame(tick);
         };
         raf.current = requestAnimationFrame(tick);
@@ -79,10 +75,7 @@ export default function CustomCursor() {
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('mousedown', onMouseDown);
             window.removeEventListener('mouseup', onMouseUp);
-            interactives.forEach(el => {
-                el.removeEventListener('mouseenter', onEnterInteractive);
-                el.removeEventListener('mouseleave', onLeaveInteractive);
-            });
+            document.removeEventListener('mouseover', onMouseOver);
             cancelAnimationFrame(raf.current);
         };
     }, []);
@@ -92,14 +85,14 @@ export default function CustomCursor() {
     return (
         <>
             {/* Outer ring */}
-            <div ref={ringRef} className="cursor-ring" aria-hidden="true" />
+            <div ref={ringRef} className="cursor-ring" aria-hidden="true" style={{ zIndex: 9999999 }} />
             {/* Inner dot */}
-            <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
-            {/* Floating label (shown when data-cursor attribute is present) */}
+            <div ref={dotRef} className="cursor-dot" aria-hidden="true" style={{ zIndex: 9999999 }} />
+            {/* Floating label */}
             {label && (
                 <div
                     ref={labelRef}
-                    className="fixed top-0 left-0 z-[999997] pointer-events-none text-[9px] font-space tracking-[0.2em] uppercase text-[var(--color-geyser)]/60 bg-[var(--color-quantum-black)]/80 border border-[var(--color-geyser)]/10 px-2 py-1 whitespace-nowrap"
+                    className="fixed top-0 left-0 z-[9999999] pointer-events-none text-[9px] font-space tracking-[0.2em] uppercase text-[var(--color-geyser)]/60 bg-[var(--color-quantum-black)]/80 border border-[var(--color-geyser)]/10 px-2 py-1 whitespace-nowrap"
                     style={{ willChange: 'transform' }}
                     aria-hidden="true"
                 >

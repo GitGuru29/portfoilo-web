@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Quote, Star, Linkedin, ChevronLeft, ChevronRight, MessageSquarePlus, RefreshCw } from 'lucide-react';
+import { Quote, Star, Linkedin, ChevronLeft, ChevronRight, MessageSquarePlus, RefreshCw, ShieldCheck } from 'lucide-react';
 import { fetchApprovedTestimonials } from '../services/githubTestimonialsService';
 import SubmitReferenceModal from './SubmitReferenceModal';
+import AdminModerationModal from './AdminModerationModal';
 
 export default function TestimonialsOverlay() {
     const [testimonials, setTestimonials] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAdminOpen, setIsAdminOpen] = useState(false);
 
     const loadTestimonials = async () => {
         setLoading(true);
@@ -51,6 +53,13 @@ export default function TestimonialsOverlay() {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setIsAdminOpen(true)}
+                            title="Admin Control Panel"
+                            className="p-3 rounded-full glass border border-white/10 text-neutral-400 hover:text-[#D4AF37] hover:border-[#D4AF37]/40 transition-all"
+                        >
+                            <ShieldCheck className="w-4 h-4" />
+                        </button>
                         <button
                             onClick={loadTestimonials}
                             title="Refresh recommendations"
@@ -190,6 +199,14 @@ export default function TestimonialsOverlay() {
                 onClose={() => setIsModalOpen(false)}
                 onSuccess={loadTestimonials}
             />
+
+            {/* Admin Control Dashboard */}
+            <AdminModerationModal
+                isOpen={isAdminOpen}
+                onClose={() => setIsAdminOpen(false)}
+                onRefreshPublic={loadTestimonials}
+            />
         </div>
     );
 }
+

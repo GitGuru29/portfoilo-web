@@ -2,10 +2,11 @@ import { seedTestimonials } from '../data/testimonialsData';
 
 const REPO_OWNER = 'GitGuru29';
 const REPO_NAME = 'portfoilo-web';
-const LOCAL_STORAGE_KEY = 'portfolio_pending_testimonials';
+const LOCAL_APPROVED_KEY = 'portfolio_approved_testimonials';
+const LOCAL_PENDING_KEY = 'portfolio_pending_testimonials';
 
 /**
- * Compresses an uploaded File into a 150x150 WebP/JPEG Base64 Data URL
+ * Compresses an uploaded File into a 150x150 JPEG Base64 Data URL
  */
 export function compressImageFile(file) {
     return new Promise((resolve, reject) => {
@@ -20,7 +21,6 @@ export function compressImageFile(file) {
                 canvas.width = size;
                 canvas.height = size;
 
-                // Crop and scale to center square
                 const minDimension = Math.min(img.width, img.height);
                 const sx = (img.width - minDimension) / 2;
                 const sy = (img.height - minDimension) / 2;
@@ -56,6 +56,7 @@ function parseIssueToTestimonial(issue) {
                 text: data.text || issue.body,
                 date: issue.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],
                 linkedin: data.linkedin || '',
+                approved: true,
             };
         }
 
@@ -70,6 +71,7 @@ function parseIssueToTestimonial(issue) {
             text: issue.body,
             date: issue.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],
             linkedin: '',
+            approved: true,
         };
     } catch {
         return null;
@@ -77,17 +79,14 @@ function parseIssueToTestimonial(issue) {
 }
 
 /**
- * Fetches approved testimonials from GitHub Issues tagged with `approved`,
- * plus any locally submitted test items.
+ * Fetches ONLY APPROVED testimonials for the public website.
  */
 export async function fetchApprovedTestimonials() {
     let liveTestimonials = [];
     try {
         const response = await fetch(
             `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=approved&state=all&per_page=50`,
-            {
-                headers: { Accept: 'application/vnd.github.v3+json' },
-            }
+            { headers: { Accept: 'application/vnd.github.v3+json' } }
         );
 
         if (response.ok) {
@@ -98,28 +97,41 @@ export async function fetchApprovedTestimonials() {
         console.warn('Error fetching testimonials from GitHub:', err);
     }
 
-    // Load locally saved items (for testing/immediate preview)
-    let localItems = [];
+    // Load locally approved items
+    let localApproved = [];
     try {
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const stored = localStorage.getItem(LOCAL_APPROVED_KEY);
         if (stored) {
-            localItems = JSON.parse(stored);
+            localApproved = JSON.parse(stored);
         }
     } catch (e) {
-        console.warn('Error reading local stored testimonials:', e);
+        console.warn('Error reading local approved testimonials:', e);
     }
 
-    const combined = [...localItems, ...liveTestimonials];
+    const combined = [...localApproved, ...liveTestimonials];
     return combined.length > 0 ? [...combined, ...seedTestimonials] : seedTestimonials;
 }
 
 /**
- * Direct seamless submission — saves recommendation payload and dispatches to GitHub queue.
- * Clients NEVER need a GitHub account.
+ * Fetches PENDING testimonials for the Admin Dashboard.
+ */
+export function fetchPendingTestimonials() {
+    try {
+        const stored = localStorage.getItem(LOCAL_PENDING_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        console.warn('Error reading pending testimonials:', e);
+        return [];
+    }
+}
+
+/**
+ * Submits a new recommendation — enters as PENDING (approved: false) by default.
+ * Trolls/haters CANNOT post live without admin approval!
  */
 export async function submitDirectRecommendation(data) {
     const payload = {
-        id: `local-${Date.now()}`,
+        id: `rec-${Date.now()}`,
         name: data.name,
         role: data.role || 'Client / Referee',
         company: data.company || '',
@@ -129,17 +141,18 @@ export async function submitDirectRecommendation(data) {
         avatar: data.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250',
         text: data.text,
         date: new Date().toISOString().split('T')[0],
+        approved: false,
     };
 
-    // Save locally so the client/tester gets instant feedback
+    // Save into Pending queue
     try {
-        const existing = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([payload, ...existing]));
+        const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify([payload, ...pending]));
     } catch (e) {
-        console.warn('Error saving local recommendation:', e);
+        console.warn('Error saving pending recommendation:', e);
     }
 
-    // Attempt direct GitHub API submission
+    // Dispatch to GitHub queue for admin review
     try {
         const bodyContent = `### Client Recommendation Submission\n\n\`\`\`json\n${JSON.stringify(payload, null, 2)}\n\`\`\`\n\n**Recommendation Text:**\n> ${data.text}`;
         
@@ -157,4 +170,53 @@ export async function submitDirectRecommendation(data) {
     }
 
     return payload;
+}
+
+/**
+ * ADMIN ACTION: Approves a pending recommendation by ID.
+ * Moves item from Pending to Approved live public view.
+ */
+export function approveTestimonial(id) {
+    try {
+        const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
+        const target = pending.find((item) => item.id === id);
+        if (!target) return false;
+
+        // Remove from pending
+        const updatedPending = pending.filter((item) => item.id !== id);
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
+
+        // Add to approved
+        target.approved = true;
+        const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
+        localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify([target, ...approved]));
+
+        return true;
+    } catch (e) {
+        console.error('Error approving testimonial:', e);
+        return false;
+    }
+}
+
+/**
+ * ADMIN ACTION: Permanently deletes any recommendation by ID (Pending or Approved).
+ * Used to remove test items or reject troll submissions.
+ */
+export function deleteTestimonial(id) {
+    try {
+        // Delete from pending
+        const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
+        const updatedPending = pending.filter((item) => item.id !== id);
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
+
+        // Delete from approved
+        const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
+        const updatedApproved = approved.filter((item) => item.id !== id);
+        localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
+
+        return true;
+    } catch (e) {
+        console.error('Error deleting testimonial:', e);
+        return false;
+    }
 }

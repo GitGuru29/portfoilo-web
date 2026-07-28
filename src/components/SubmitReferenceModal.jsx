@@ -88,11 +88,9 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
     return createPortal(
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
-                    {/* Backdrop Click */}
-                    <div className="fixed inset-0" onClick={onClose} />
-
+                <div onClick={onClose} className="fixed inset-0 z-[99990] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
                     <motion.div
+                        onClick={(e) => e.stopPropagation()}
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
