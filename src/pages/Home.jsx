@@ -4,6 +4,7 @@ import SkillsOverlay from '../components/SkillsOverlay';
 import GitHubActivitySection from '../components/GitHubActivitySection';
 import ProjectsOverlay from '../components/ProjectsOverlay';
 import ActiveResearchOverlay from '../components/ActiveResearchOverlay';
+import TestimonialsOverlay from '../components/TestimonialsOverlay';
 import CertificatesOverlay from '../components/CertificatesOverlay';
 import BadgesOverlay from '../components/BadgesOverlay';
 import Contact from '../components/Contact';
@@ -74,6 +75,11 @@ export default function Home() {
                 <ActiveResearchOverlay />
             </section>
 
+            {/* ── References & Testimonials ── */}
+            <section id="testimonials" className="snap-section">
+                <TestimonialsOverlay />
+            </section>
+
             {/* ── Certificates ── */}
             <section id="certificates" className="snap-section">
                 <CertificatesOverlay />
@@ -95,4 +101,5 @@ export default function Home() {
         </div>
     );
 }
+
 

@@ -160,10 +160,12 @@ export default function Typewriter({
                     bottom: 0,
                     display: 'inline-flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     whiteSpace: 'nowrap',
                 } : {
                     display: 'inline-flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                 }}
             >
                 <span>{displayedText}</span>

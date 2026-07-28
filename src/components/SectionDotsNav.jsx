@@ -7,6 +7,7 @@ const SECTIONS = [
     { id: 'projects', label: 'Projects' },
     { id: 'timeline', label: 'Build Log' },
     { id: 'research', label: 'Research' },
+    { id: 'testimonials', label: 'References' },
     { id: 'certificates', label: 'Certificates' },
     { id: 'badges', label: 'Badges' },
     { id: 'contact', label: 'Contact' },

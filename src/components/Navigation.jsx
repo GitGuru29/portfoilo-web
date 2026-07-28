@@ -121,9 +121,9 @@ export default function Navigation() {
 
     const navLinks = [
         { label: 'Home', id: 'home' },
-        { label: 'About', id: 'about' },
         { label: 'Work', id: 'projects' },
         { label: 'Skills', id: 'skills' },
+        { label: 'References', id: 'testimonials' },
         { label: 'Contact', id: 'contact' },
     ];
 
