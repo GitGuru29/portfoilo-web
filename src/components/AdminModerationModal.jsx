@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck, Check, Trash2, Key, Star, Clock, AlertCircle, Pencil, Save, ArrowLeft, Upload, Loader2, Linkedin, User, Building } from 'lucide-react';
+import { X, ShieldCheck, Check, Trash2, Key, Star, Clock, AlertCircle, Pencil, Save, ArrowLeft, Upload, Loader2, Linkedin, User, Building, RefreshCw } from 'lucide-react';
 import { fetchPendingTestimonials, fetchApprovedTestimonials, approveTestimonial, deleteTestimonial, updateTestimonial, compressImageFile } from '../services/githubTestimonialsService';
 
 const ADMIN_SECRET_PIN = 'msfvenom';
@@ -29,12 +29,21 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
     const [editCompressing, setEditCompressing] = useState(false);
     const editFileInputRef = useRef(null);
 
-    const loadAdminData = async () => {
-        const pending = fetchPendingTestimonials();
-        setPendingList(pending);
+    const [isLoading, setIsLoading] = useState(false);
 
-        const approved = await fetchApprovedTestimonials();
-        setApprovedList(approved);
+    const loadAdminData = async () => {
+        setIsLoading(true);
+        try {
+            const pending = await fetchPendingTestimonials();
+            setPendingList(pending);
+
+            const approved = await fetchApprovedTestimonials();
+            setApprovedList(approved);
+        } catch (err) {
+            console.error('Error loading admin data:', err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -54,15 +63,15 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
         }
     };
 
-    const handleApprove = (id) => {
-        approveTestimonial(id);
-        loadAdminData();
+    const handleApprove = async (id) => {
+        await approveTestimonial(id);
+        await loadAdminData();
         if (onRefreshPublic) onRefreshPublic();
     };
 
-    const handleDelete = (id) => {
-        deleteTestimonial(id);
-        loadAdminData();
+    const handleDelete = async (id) => {
+        await deleteTestimonial(id);
+        await loadAdminData();
         if (onRefreshPublic) onRefreshPublic();
     };
 
@@ -97,7 +106,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
         }
     };
 
-    const handleSaveEdit = (e) => {
+    const handleSaveEdit = async (e) => {
         e.preventDefault();
         if (!editingItem) return;
 
@@ -106,9 +115,9 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
             ...editFormData,
         };
 
-        updateTestimonial(updated);
+        await updateTestimonial(updated);
         setEditingItem(null);
-        loadAdminData();
+        await loadAdminData();
         if (onRefreshPublic) onRefreshPublic();
     };
 
@@ -150,12 +159,24 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                     </h3>
                                 </div>
                             </div>
-                            <button
-                                onClick={handleLogout}
-                                className="p-2 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
+                            <div className="flex items-center gap-2">
+                                {isAuthenticated && (
+                                    <button
+                                        onClick={loadAdminData}
+                                        disabled={isLoading}
+                                        title="Sync cloud submissions"
+                                        className="p-2 rounded-full text-white/60 hover:text-[#D4AF37] hover:bg-white/10 transition-colors disabled:opacity-50"
+                                    >
+                                        <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-[#D4AF37]' : ''}`} />
+                                    </button>
+                                )}
+                                <button
+                                    onClick={handleLogout}
+                                    className="p-2 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
 
                         {!isAuthenticated ? (
