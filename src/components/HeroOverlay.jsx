@@ -47,7 +47,8 @@ function StatCounter({ target, suffix, label, started }) {
             </div>
             <div style={{
                 fontFamily: 'Space Grotesk, sans-serif',
-                fontSize: 12, letterSpacing: '0.28em',
+                fontSize: 'clamp(9px, 1vw, 12px)',
+                letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 color: 'rgba(212,175,55,0.65)',
             }}>{label}</div>
@@ -261,7 +262,7 @@ export default function HeroOverlay() {
                         </div>
 
                         {/* CTAs */}
-                        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-2">
                             <a
                                 href="#projects"
                                 id="hero-view-work-btn"
@@ -385,7 +386,7 @@ export default function HeroOverlay() {
 
 
                         {/* Bottom-right tech tag */}
-                        <div style={{
+                        <div className="hidden md:block" style={{
                             position: 'absolute', bottom: 'clamp(24px, 4vw, 48px)',
                             right: 'clamp(24px, 4vw, 56px)', zIndex: 5,
                             textAlign: 'right',
@@ -403,10 +404,10 @@ export default function HeroOverlay() {
                         </div>
 
                         {/* Vertical SIDAN text on right side of photo */}
-                        <div style={{
+                        <div className="hidden md:flex" style={{
                             position: 'absolute', top: '50%', right: 'clamp(16px, 2.5vw, 32px)',
                             transform: 'translateY(-50%)',
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+                            flexDirection: 'column', alignItems: 'center', gap: 10,
                             zIndex: 10,
                             pointerEvents: 'none',
                         }}>
