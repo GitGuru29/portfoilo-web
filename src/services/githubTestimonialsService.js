@@ -3,204 +3,26 @@ import { seedTestimonials } from '../data/testimonialsData';
 const REPO_OWNER = 'GitGuru29';
 const REPO_NAME = 'portfoilo-web';
 
+// User's GitHub Fine-Grained Personal Access Token (Set in Vercel Environment Variables)
+const GITHUB_TOKEN = import.meta.env?.VITE_GITHUB_TOKEN || '';
+
 const LOCAL_APPROVED_KEY = 'portfolio_approved_testimonials';
 const LOCAL_PENDING_KEY = 'portfolio_pending_testimonials';
 const LOCAL_DELETED_KEY = 'portfolio_deleted_testimonials';
 const LOCAL_EDITED_KEY = 'portfolio_edited_testimonials';
 
-const CLOUD_APP_NAME = 'siluna_portfolio_testimonials';
-const PRIMARY_CLOUD_API = `https://api.restful-api.dev/objects`;
-
-let cachedCloudId = typeof localStorage !== 'undefined' ? localStorage.getItem('portfolio_cloud_server_id') : null;
-
 /**
- * Gets or discovers the global shared cloud object ID across all devices
+ * Standard headers for GitHub API requests
  */
-async function getOrDiscoverCloudId() {
-    if (cachedCloudId) {
-        return cachedCloudId;
-    }
-
-    try {
-        const res = await fetch(PRIMARY_CLOUD_API, {
-            headers: { Accept: 'application/json' },
-        });
-
-        if (res.ok) {
-            const list = await res.json();
-            if (Array.isArray(list)) {
-                const existing = list.find((item) => item.name === CLOUD_APP_NAME);
-                if (existing && existing.id) {
-                    cachedCloudId = existing.id;
-                    if (typeof localStorage !== 'undefined') {
-                        localStorage.setItem('portfolio_cloud_server_id', cachedCloudId);
-                    }
-                    return cachedCloudId;
-                }
-            }
-        }
-    } catch (e) {
-        console.warn('Cloud discovery notice:', e);
-    }
-    return null;
-}
-
-/**
- * Synchronizes cloud JSON payload into local storage cache
- */
-function syncToLocal(data) {
-    if (!data || typeof data !== 'object') return data;
-    try {
-        if (Array.isArray(data.pending)) {
-            localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(data.pending));
-        }
-        if (Array.isArray(data.approved)) {
-            localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(data.approved));
-        }
-        if (Array.isArray(data.deleted)) {
-            localStorage.setItem(LOCAL_DELETED_KEY, JSON.stringify(data.deleted));
-        }
-        if (data.edited && typeof data.edited === 'object') {
-            localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(data.edited));
-        }
-    } catch (e) {
-        console.warn('Local cache sync notice:', e);
-    }
-    return data;
-}
-
-/**
- * Reads local storage data into a clean state object
- */
-function getLocalState() {
-    return {
-        pending: JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]'),
-        approved: JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]'),
-        deleted: JSON.parse(localStorage.getItem(LOCAL_DELETED_KEY) || '[]'),
-        edited: JSON.parse(localStorage.getItem(LOCAL_EDITED_KEY) || '{}'),
+function getGitHubHeaders() {
+    const headers = {
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
     };
-}
-
-/**
- * Fetches fresh recommendations state from the shared Cloud DB
- */
-async function fetchCloudData() {
-    try {
-        let cloudId = await getOrDiscoverCloudId();
-
-        if (cloudId) {
-            const res = await fetch(`${PRIMARY_CLOUD_API}/${cloudId}`, {
-                headers: { Accept: 'application/json' },
-            });
-
-            if (res.ok) {
-                const json = await res.json();
-                const payload = json.data || json;
-                if (payload && typeof payload === 'object') {
-                    console.log('[Cloud Sync] Fetched live data from Cloud ID:', cloudId);
-                    return syncToLocal(payload);
-                }
-            } else if (res.status === 404) {
-                cachedCloudId = null;
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.removeItem('portfolio_cloud_server_id');
-                }
-            }
-        }
-
-        // Initialize new cloud object if none discovered
-        const localState = getLocalState();
-        const initRes = await fetch(PRIMARY_CLOUD_API, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-            body: JSON.stringify({
-                name: CLOUD_APP_NAME,
-                data: localState,
-            }),
-        });
-
-        if (initRes.ok) {
-            const initJson = await initRes.json();
-            if (initJson && initJson.id) {
-                cachedCloudId = initJson.id;
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem('portfolio_cloud_server_id', cachedCloudId);
-                }
-                console.log('[Cloud Sync] Initialized new Cloud DB ID:', cachedCloudId);
-                if (initJson.data) {
-                    return syncToLocal(initJson.data);
-                }
-            }
-        }
-    } catch (e) {
-        console.warn('Cloud read notice (using local fallback):', e);
+    if (GITHUB_TOKEN) {
+        headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
     }
-    return getLocalState();
-}
-
-/**
- * Saves updated recommendations state to the shared Cloud DB and local storage
- */
-async function saveCloudData(data) {
-    // 1. Immediately cache to localStorage
-    syncToLocal(data);
-
-    // 2. Persist to shared Cloud DB globally
-    try {
-        let cloudId = await getOrDiscoverCloudId();
-
-        const payload = {
-            name: CLOUD_APP_NAME,
-            data: {
-                pending: data.pending || [],
-                approved: data.approved || [],
-                deleted: data.deleted || [],
-                edited: data.edited || {},
-            },
-        };
-
-        if (cloudId) {
-            const res = await fetch(`${PRIMARY_CLOUD_API}/${cloudId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (res.ok) {
-                console.log('[Cloud Sync] Updated Cloud DB ID:', cloudId);
-                return;
-            }
-        }
-
-        // Create object if missing or PUT failed
-        const initRes = await fetch(PRIMARY_CLOUD_API, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-            body: JSON.stringify(payload),
-        });
-
-        if (initRes.ok) {
-            const initJson = await initRes.json();
-            if (initJson && initJson.id) {
-                cachedCloudId = initJson.id;
-                if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem('portfolio_cloud_server_id', cachedCloudId);
-                }
-                console.log('[Cloud Sync] Created new Cloud DB ID:', cachedCloudId);
-            }
-        }
-    } catch (e) {
-        console.warn('Cloud save notice:', e);
-    }
+    return headers;
 }
 
 /**
@@ -283,7 +105,8 @@ function parseIssueToTestimonial(issue) {
         if (jsonMatch && jsonMatch[1]) {
             const data = JSON.parse(jsonMatch[1]);
             return {
-                id: `gh-${issue.id}`,
+                id: `gh-${issue.number}`,
+                issueNumber: issue.number,
                 name: data.name || issue.user?.login || 'Anonymous Referee',
                 role: data.role || 'Verified Referee',
                 company: data.company || '',
@@ -293,12 +116,13 @@ function parseIssueToTestimonial(issue) {
                 text: data.text || issue.body,
                 date: issue.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],
                 linkedin: data.linkedin || '',
-                approved: true,
+                approved: issue.labels?.some((l) => l.name === 'approved') || false,
             };
         }
 
         return {
-            id: `gh-${issue.id}`,
+            id: `gh-${issue.number}`,
+            issueNumber: issue.number,
             name: issue.title.replace(/^\[Recommendation\]\s*/i, '') || issue.user?.login,
             role: 'Verified Referee',
             company: '',
@@ -308,7 +132,7 @@ function parseIssueToTestimonial(issue) {
             text: issue.body,
             date: issue.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],
             linkedin: '',
-            approved: true,
+            approved: issue.labels?.some((l) => l.name === 'approved') || false,
         };
     } catch {
         return null;
@@ -316,29 +140,27 @@ function parseIssueToTestimonial(issue) {
 }
 
 /**
- * Fetches ONLY APPROVED testimonials for the public website.
+ * Fetches ONLY APPROVED testimonials for the public website from GitHub Issues + Seed.
  */
 export async function fetchApprovedTestimonials() {
-    await fetchCloudData();
-
     const deletedIds = getDeletedIds();
 
-    let liveTestimonials = [];
+    let liveApproved = [];
     try {
         const response = await fetch(
-            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=approved&state=all&per_page=50`,
-            { headers: { Accept: 'application/vnd.github.v3+json' } }
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=approved&state=all&per_page=100`,
+            { headers: getGitHubHeaders() }
         );
 
         if (response.ok) {
             const issues = await response.json();
-            liveTestimonials = issues.map(parseIssueToTestimonial).filter(Boolean);
+            liveApproved = issues.map(parseIssueToTestimonial).filter(Boolean);
         }
     } catch (err) {
-        console.warn('Error fetching testimonials from GitHub:', err);
+        console.warn('Error fetching approved testimonials from GitHub:', err);
     }
 
-    // Load locally/cloud approved items
+    // Load local approved items
     let localApproved = [];
     try {
         const stored = localStorage.getItem(LOCAL_APPROVED_KEY);
@@ -349,8 +171,8 @@ export async function fetchApprovedTestimonials() {
         console.warn('Error reading local approved testimonials:', e);
     }
 
-    // Deduplicate by string ID
-    const allCandidates = [...localApproved, ...liveTestimonials, ...seedTestimonials];
+    // Combine & deduplicate by string ID
+    const allCandidates = [...localApproved, ...liveApproved, ...seedTestimonials];
     const uniqueMap = new Map();
     allCandidates.forEach((item) => {
         const idStr = String(item.id);
@@ -365,29 +187,57 @@ export async function fetchApprovedTestimonials() {
 }
 
 /**
- * Fetches PENDING testimonials for the Admin Dashboard (synced globally across all devices).
+ * Fetches PENDING testimonials for the Admin Dashboard from GitHub Issues + local cache.
  */
 export async function fetchPendingTestimonials() {
-    await fetchCloudData();
-
     const deletedIds = getDeletedIds();
+
+    let githubPending = [];
+    try {
+        const response = await fetch(
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=recommendation-pending&state=open&per_page=100`,
+            { headers: getGitHubHeaders() }
+        );
+
+        if (response.ok) {
+            const issues = await response.json();
+            githubPending = issues.map(parseIssueToTestimonial).filter(Boolean);
+        }
+    } catch (err) {
+        console.warn('Error fetching pending testimonials from GitHub:', err);
+    }
+
+    // Load local pending items
+    let localPending = [];
     try {
         const stored = localStorage.getItem(LOCAL_PENDING_KEY);
-        const pending = stored ? JSON.parse(stored) : [];
-        const nonDeleted = pending.filter((item) => !deletedIds.includes(String(item.id)));
-        return applyEditedOverrides(nonDeleted);
+        if (stored) {
+            localPending = JSON.parse(stored);
+        }
     } catch (e) {
-        console.warn('Error reading pending testimonials:', e);
-        return [];
+        console.warn('Error reading local pending testimonials:', e);
     }
+
+    // Deduplicate by string ID
+    const allPending = [...githubPending, ...localPending];
+    const uniqueMap = new Map();
+    allPending.forEach((item) => {
+        const idStr = String(item.id);
+        if (!uniqueMap.has(idStr)) {
+            uniqueMap.set(idStr, item);
+        }
+    });
+
+    const combined = Array.from(uniqueMap.values());
+    const nonDeleted = combined.filter((item) => !deletedIds.includes(String(item.id)));
+    return applyEditedOverrides(nonDeleted);
 }
 
 /**
- * Submits a new recommendation — pushes globally to Cloud DB so any admin device can approve it.
+ * Submits a new recommendation — posts an Issue to GitHub repository using GitHub API.
  */
 export async function submitDirectRecommendation(data) {
     const payload = {
-        id: `rec-${Date.now()}`,
         name: data.name,
         role: data.role || 'Client / Referee',
         company: data.company || '',
@@ -400,114 +250,190 @@ export async function submitDirectRecommendation(data) {
         approved: false,
     };
 
-    // 1. Fetch fresh cloud state
-    const currentCloud = (await fetchCloudData()) || getLocalState();
-
-    const updatedPending = [payload, ...(currentCloud.pending || []).filter((item) => String(item.id) !== payload.id)];
-    const newCloudState = {
-        ...currentCloud,
-        pending: updatedPending,
+    let createdItem = {
+        id: `rec-${Date.now()}`,
+        ...payload,
     };
 
-    // 2. Save globally to Cloud DB
-    await saveCloudData(newCloudState);
-    return payload;
+    // Dispatch to GitHub Issues API
+    try {
+        const bodyContent = `### Recommendation Submission\n\n\`\`\`json\n${JSON.stringify(payload, null, 2)}\n\`\`\`\n\n**Recommendation Text:**\n> ${data.text}`;
+        
+        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
+            method: 'POST',
+            headers: getGitHubHeaders(),
+            body: JSON.stringify({
+                title: `[Recommendation] ${data.name} - ${data.role || 'Client'}`,
+                body: bodyContent,
+                labels: ['recommendation-pending'],
+            }),
+        });
+
+        if (response.ok) {
+            const issueData = await response.json();
+            createdItem = {
+                ...payload,
+                id: `gh-${issueData.number}`,
+                issueNumber: issueData.number,
+            };
+        }
+    } catch (err) {
+        console.warn('GitHub issue creation warning:', err);
+    }
+
+    // Cache locally
+    try {
+        const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
+        const updated = [createdItem, ...pending.filter((i) => String(i.id) !== String(createdItem.id))];
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updated));
+    } catch (e) {
+        console.warn('Error caching pending item locally:', e);
+    }
+
+    return createdItem;
 }
 
 /**
- * ADMIN ACTION: Approves a pending recommendation by ID globally across all devices.
+ * ADMIN ACTION: Approves a pending recommendation by ID via GitHub Issues API.
  */
 export async function approveTestimonial(id) {
     if (!id) return false;
     const idStr = String(id);
 
-    const currentCloud = (await fetchCloudData()) || getLocalState();
+    // If it's a GitHub issue, update labels via GitHub API
+    if (idStr.startsWith('gh-')) {
+        const issueNumber = idStr.replace(/^gh-/, '');
+        try {
+            await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}`, {
+                method: 'PATCH',
+                headers: getGitHubHeaders(),
+                body: JSON.stringify({
+                    labels: ['approved'],
+                    state: 'open',
+                }),
+            });
+        } catch (err) {
+            console.warn('Error updating GitHub issue label to approved:', err);
+        }
+    }
 
-    const pendingList = currentCloud.pending || [];
-    const target = pendingList.find((item) => String(item.id) === idStr);
-    if (!target) return false;
+    // Sync local storage queues
+    try {
+        const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
+        const target = pending.find((item) => String(item.id) === idStr) || { id: idStr, approved: true };
 
-    const updatedPending = pendingList.filter((item) => String(item.id) !== idStr);
+        const updatedPending = pending.filter((item) => String(item.id) !== idStr);
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
 
-    const editedMap = currentCloud.edited || {};
-    const finalTarget = editedMap[idStr]
-        ? { ...target, ...editedMap[idStr], approved: true }
-        : { ...target, approved: true };
+        const editedMap = getEditedOverrides();
+        const finalTarget = editedMap[idStr]
+            ? { ...target, ...editedMap[idStr], approved: true }
+            : { ...target, approved: true };
 
-    const approvedList = currentCloud.approved || [];
-    const cleanApproved = approvedList.filter((item) => String(item.id) !== idStr);
-    const updatedApproved = [finalTarget, ...cleanApproved];
+        const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
+        const cleanApproved = approved.filter((item) => String(item.id) !== idStr);
+        localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify([finalTarget, ...cleanApproved]));
 
-    const newCloudState = {
-        ...currentCloud,
-        pending: updatedPending,
-        approved: updatedApproved,
-    };
-
-    await saveCloudData(newCloudState);
-    return true;
+        return true;
+    } catch (e) {
+        console.error('Error approving testimonial locally:', e);
+        return false;
+    }
 }
 
 /**
- * ADMIN ACTION: Updates an existing recommendation's data globally across all devices.
+ * ADMIN ACTION: Updates an existing recommendation's data on GitHub Issues API and locally.
  */
 export async function updateTestimonial(updatedData) {
     if (!updatedData || !updatedData.id) return false;
     const idStr = String(updatedData.id);
 
-    const currentCloud = (await fetchCloudData()) || getLocalState();
+    // If it's a GitHub issue, update issue body via GitHub API
+    if (idStr.startsWith('gh-')) {
+        const issueNumber = idStr.replace(/^gh-/, '');
+        try {
+            const bodyContent = `### Recommendation Submission\n\n\`\`\`json\n${JSON.stringify(updatedData, null, 2)}\n\`\`\`\n\n**Recommendation Text:**\n> ${updatedData.text}`;
+            await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}`, {
+                method: 'PATCH',
+                headers: getGitHubHeaders(),
+                body: JSON.stringify({
+                    title: `[Recommendation] ${updatedData.name} - ${updatedData.role || 'Client'}`,
+                    body: bodyContent,
+                }),
+            });
+        } catch (err) {
+            console.warn('Error updating GitHub issue body:', err);
+        }
+    }
 
-    const editedMap = currentCloud.edited || {};
-    editedMap[idStr] = updatedData;
+    // Save in edited overrides & local storage
+    try {
+        const editedMap = getEditedOverrides();
+        editedMap[idStr] = updatedData;
+        localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(editedMap));
 
-    const updatedPending = (currentCloud.pending || []).map((item) =>
-        String(item.id) === idStr ? { ...item, ...updatedData } : item
-    );
+        const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
+        const updatedPending = pending.map((item) => (String(item.id) === idStr ? { ...item, ...updatedData } : item));
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
 
-    const updatedApproved = (currentCloud.approved || []).map((item) =>
-        String(item.id) === idStr ? { ...item, ...updatedData } : item
-    );
+        const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
+        const updatedApproved = approved.map((item) => (String(item.id) === idStr ? { ...item, ...updatedData } : item));
+        localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
 
-    const newCloudState = {
-        ...currentCloud,
-        pending: updatedPending,
-        approved: updatedApproved,
-        edited: editedMap,
-    };
-
-    await saveCloudData(newCloudState);
-    return true;
+        return true;
+    } catch (e) {
+        console.error('Error updating testimonial:', e);
+        return false;
+    }
 }
 
 /**
- * ADMIN ACTION: Permanently deletes any recommendation by ID globally across all devices.
+ * ADMIN ACTION: Permanently deletes any recommendation by ID via GitHub Issues API & blacklist.
  */
 export async function deleteTestimonial(id) {
     if (!id) return false;
     const idStr = String(id);
 
-    const currentCloud = (await fetchCloudData()) || getLocalState();
-
-    const updatedPending = (currentCloud.pending || []).filter((item) => String(item.id) !== idStr);
-    const updatedApproved = (currentCloud.approved || []).filter((item) => String(item.id) !== idStr);
-
-    const editedMap = currentCloud.edited || {};
-    if (editedMap[idStr]) {
-        delete editedMap[idStr];
+    // If it's a GitHub issue, close the issue and label as rejected
+    if (idStr.startsWith('gh-')) {
+        const issueNumber = idStr.replace(/^gh-/, '');
+        try {
+            await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}`, {
+                method: 'PATCH',
+                headers: getGitHubHeaders(),
+                body: JSON.stringify({
+                    state: 'closed',
+                    labels: ['rejected'],
+                }),
+            });
+        } catch (err) {
+            console.warn('Error closing GitHub issue:', err);
+        }
     }
 
-    const deletedIds = (currentCloud.deleted || []).map(String);
-    if (!deletedIds.includes(idStr)) {
-        deletedIds.push(idStr);
+    try {
+        const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
+        const updatedPending = pending.filter((item) => String(item.id) !== idStr);
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
+
+        const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
+        const updatedApproved = approved.filter((item) => String(item.id) !== idStr);
+        localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
+
+        const editedMap = getEditedOverrides();
+        if (editedMap[idStr]) {
+            delete editedMap[idStr];
+            localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(editedMap));
+        }
+
+        const deletedIds = getDeletedIds();
+        if (!deletedIds.includes(idStr)) {
+            localStorage.setItem(LOCAL_DELETED_KEY, JSON.stringify([...deletedIds, idStr]));
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Error deleting testimonial:', e);
+        return false;
     }
-
-    const newCloudState = {
-        pending: updatedPending,
-        approved: updatedApproved,
-        deleted: deletedIds,
-        edited: editedMap,
-    };
-
-    await saveCloudData(newCloudState);
-    return true;
 }
