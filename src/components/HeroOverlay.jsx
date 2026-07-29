@@ -132,27 +132,12 @@ export default function HeroOverlay() {
             width: '100%', height: '100dvh',
             position: 'sticky', top: 0,
             overflow: 'hidden',
-            display: 'flex',
-        },
-        /* ── Left panel ── */
-        leftPanel: {
-            position: 'relative', zIndex: 10,
-            width: '50%', height: '100%',
-            display: 'flex', flexDirection: 'column',
-            justifyContent: 'space-between',
-            padding: 'clamp(28px, 4vw, 52px)',
-        },
-        /* ── Right panel — only the photo wrapper ── */
-        rightPanel: {
-            position: 'relative', zIndex: 5,
-            width: '50%', height: '100%',
-            overflow: 'hidden',
         },
     };
 
     return (
         <section id="home" ref={heroRef} style={S.section}>
-            <div style={S.sticky}>
+            <div style={S.sticky} className="flex flex-col md:flex-row">
 
                 {/* ── Subtle grain texture ── */}
                 <div aria-hidden style={{
@@ -177,7 +162,7 @@ export default function HeroOverlay() {
                 {/* ══════════════════════════════════════
                     LEFT PANEL
                 ══════════════════════════════════════ */}
-                <div style={S.leftPanel}>
+                <div className="relative z-10 w-full md:w-1/2 h-[55%] md:h-full flex flex-col justify-center md:justify-between p-[clamp(24px,4vw,52px)]">
 
                     {/* Top bar (Empty now since SIDAN moved to right) */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 24 }}>
@@ -225,7 +210,7 @@ export default function HeroOverlay() {
                             {/* Name */}
                             <h1 style={{
                                 fontFamily: 'Space Grotesk, sans-serif',
-                                fontSize: 'clamp(3.5rem, 8vw, 8rem)',
+                                fontSize: 'clamp(3rem, 8vw, 8rem)',
                                 fontWeight: 800, lineHeight: 0.9,
                                 letterSpacing: '-0.03em',
                                 textTransform: 'uppercase',
@@ -363,7 +348,7 @@ export default function HeroOverlay() {
                 {/* ══════════════════════════════════════
                     RIGHT PANEL — photo only (no about panel inside)
                 ══════════════════════════════════════ */}
-                <div style={S.rightPanel}>
+                <div className="relative z-[5] w-full md:w-1/2 h-[45%] md:h-full overflow-hidden">
 
                     {/* Photo — fades out on scroll */}
                     <div ref={photoRef} style={{ position: 'absolute', inset: 0 }}>

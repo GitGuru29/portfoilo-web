@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, X, Minus, Square } from 'lucide-react';
+import { Terminal, X, Minus, Square, Smartphone } from 'lucide-react';
 import useStore from '../store/useStore';
 import CmatrixOverlay from './CmatrixOverlay';
 
@@ -592,9 +592,29 @@ export default function TerminalSection() {
     const inputRef = useRef(null);
     const bodyRef = useRef(null);
 
-    // Focus input when terminal opens
+    // Focus input when terminal opens and handle mobile landscape rotation
     useEffect(() => {
-        if (isTerminalOpen) setTimeout(() => inputRef.current?.focus(), 100);
+        if (isTerminalOpen) {
+            setTimeout(() => inputRef.current?.focus(), 100);
+            try {
+                if (window.innerWidth < 768 && document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().then(() => {
+                        if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
+                            window.screen.orientation.lock('landscape').catch(() => {});
+                        }
+                    }).catch(() => {});
+                }
+            } catch (e) {}
+        } else {
+            try {
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                }
+                if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
+                    window.screen.orientation.unlock();
+                }
+            } catch (e) {}
+        }
     }, [isTerminalOpen]);
 
     // Auto scroll
@@ -1570,13 +1590,31 @@ export default function TerminalSection() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.2, ease: 'easeOut' }}
-                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-3 md:p-8 pb-16"
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-8 md:pb-16"
                     onPointerDown={() => toggleTerminal()}
                 >
+                    {/* Portrait Warning for Mobile */}
+                    <div className="md:hidden flex-col items-center justify-center fixed inset-0 z-[200] bg-[#0d1117] text-white p-6 text-center" style={{ display: 'none' }} id="portrait-warning">
+                        <style>{`
+                            @media (orientation: portrait) {
+                                #portrait-warning { display: flex !important; }
+                            }
+                        `}</style>
+                        <Smartphone size={48} className="mb-4 animate-bounce" />
+                        <h2 className="text-xl font-bold mb-2">Rotate Your Device</h2>
+                        <p className="text-[#94a3b8] mb-6">Please rotate your device to landscape mode for the best terminal experience.</p>
+                        <button 
+                            onPointerDown={(e) => { e.stopPropagation(); toggleTerminal(); }}
+                            className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                        >
+                            Close Terminal
+                        </button>
+                    </div>
+
                     <motion.div
-                        className="w-full max-w-5xl flex flex-col rounded-xl overflow-hidden shadow-2xl border border-white/10 relative"
+                        className="w-full h-full md:max-w-5xl flex flex-col md:rounded-xl overflow-hidden shadow-2xl border border-white/10 relative"
                         style={{
-                            height: 'min(85vh, 700px)',
+                            height: 'min(100vh, 700px)',
                             background: '#0d1117',
                             fontFamily: '"JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Menlo, monospace',
                         }}
