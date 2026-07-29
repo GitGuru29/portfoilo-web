@@ -7,91 +7,135 @@ const LOCAL_APPROVED_KEY = 'portfolio_approved_testimonials';
 const LOCAL_PENDING_KEY = 'portfolio_pending_testimonials';
 const LOCAL_DELETED_KEY = 'portfolio_deleted_testimonials';
 const LOCAL_EDITED_KEY = 'portfolio_edited_testimonials';
-const LOCAL_BLOB_ID_KEY = 'portfolio_cloud_blob_id';
 
-// Shared fallback cloud storage Blob ID
-const MASTER_BLOB_ID = '1345100000000000000';
+// Hardcoded shared Cloud Database object ID (shared across all devices & browsers)
+const SHARED_CLOUD_ID = 'siluna_portfolio_testimonials_v1';
+const PRIMARY_CLOUD_API = `https://api.restful-api.dev/objects`;
 
 /**
- * Gets or creates the Cloud Blob URL
+ * Synchronizes cloud JSON payload into local storage cache
  */
-function getCloudBlobUrl() {
-    const savedBlobId = localStorage.getItem(LOCAL_BLOB_ID_KEY) || MASTER_BLOB_ID;
-    return `https://jsonblob.com/api/jsonBlob/${savedBlobId}`;
+function syncToLocal(data) {
+    if (!data || typeof data !== 'object') return data;
+    try {
+        if (Array.isArray(data.pending)) {
+            localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(data.pending));
+        }
+        if (Array.isArray(data.approved)) {
+            localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(data.approved));
+        }
+        if (Array.isArray(data.deleted)) {
+            localStorage.setItem(LOCAL_DELETED_KEY, JSON.stringify(data.deleted));
+        }
+        if (data.edited && typeof data.edited === 'object') {
+            localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(data.edited));
+        }
+    } catch (e) {
+        console.warn('Local cache sync notice:', e);
+    }
+    return data;
 }
 
 /**
- * Fetches fresh recommendations state from Cloud DB and syncs to local storage
+ * Reads local storage data into a clean state object
+ */
+function getLocalState() {
+    return {
+        pending: JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]'),
+        approved: JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]'),
+        deleted: JSON.parse(localStorage.getItem(LOCAL_DELETED_KEY) || '[]'),
+        edited: JSON.parse(localStorage.getItem(LOCAL_EDITED_KEY) || '{}'),
+    };
+}
+
+/**
+ * Fetches fresh recommendations state from the shared Cloud DB
  */
 async function fetchCloudData() {
     try {
-        const url = getCloudBlobUrl();
-        const res = await fetch(url, {
+        const res = await fetch(`${PRIMARY_CLOUD_API}/${SHARED_CLOUD_ID}`, {
             headers: { Accept: 'application/json' },
         });
 
         if (res.ok) {
-            const data = await res.json();
-            if (data && typeof data === 'object') {
-                if (Array.isArray(data.pending)) {
-                    localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(data.pending));
-                }
-                if (Array.isArray(data.approved)) {
-                    localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(data.approved));
-                }
-                if (Array.isArray(data.deleted)) {
-                    localStorage.setItem(LOCAL_DELETED_KEY, JSON.stringify(data.deleted));
-                }
-                if (data.edited && typeof data.edited === 'object') {
-                    localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(data.edited));
-                }
-                return data;
+            const json = await res.json();
+            const payload = json.data || json;
+            if (payload && typeof payload === 'object') {
+                return syncToLocal(payload);
             }
         } else if (res.status === 404) {
-            // Create a new master blob if it doesn't exist yet
-            const initRes = await fetch('https://jsonblob.com/api/jsonBlob', {
+            // Object not initialized yet on cloud DB -> initialize shared object
+            const localState = getLocalState();
+            const initRes = await fetch(PRIMARY_CLOUD_API, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
                 },
                 body: JSON.stringify({
-                    pending: JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]'),
-                    approved: JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]'),
-                    deleted: JSON.parse(localStorage.getItem(LOCAL_DELETED_KEY) || '[]'),
-                    edited: JSON.parse(localStorage.getItem(LOCAL_EDITED_KEY) || '{}'),
+                    id: SHARED_CLOUD_ID,
+                    name: 'siluna_portfolio_testimonials',
+                    data: localState,
                 }),
             });
+
             if (initRes.ok) {
-                const locationHeader = initRes.headers.get('Location');
-                if (locationHeader) {
-                    const newBlobId = locationHeader.split('/').pop();
-                    localStorage.setItem(LOCAL_BLOB_ID_KEY, newBlobId);
+                const initJson = await initRes.json();
+                if (initJson && initJson.data) {
+                    return syncToLocal(initJson.data);
                 }
             }
         }
     } catch (e) {
-        console.warn('Cloud sync fetch notice:', e);
+        console.warn('Cloud read notice (using local fallback):', e);
     }
-    return null;
+    return getLocalState();
 }
 
 /**
- * Saves updated recommendations state to Cloud DB
+ * Saves updated recommendations state to the shared Cloud DB and local storage
  */
 async function saveCloudData(data) {
+    // 1. Immediately cache to localStorage
+    syncToLocal(data);
+
+    // 2. Persist to shared Cloud DB globally
     try {
-        const url = getCloudBlobUrl();
-        await fetch(url, {
+        const payload = {
+            name: 'siluna_portfolio_testimonials',
+            data: {
+                pending: data.pending || [],
+                approved: data.approved || [],
+                deleted: data.deleted || [],
+                edited: data.edited || {},
+            },
+        };
+
+        const res = await fetch(`${PRIMARY_CLOUD_API}/${SHARED_CLOUD_ID}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(payload),
         });
+
+        if (!res.ok && res.status === 404) {
+            // Re-create shared object if missing
+            await fetch(PRIMARY_CLOUD_API, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({
+                    id: SHARED_CLOUD_ID,
+                    ...payload,
+                }),
+            });
+        }
     } catch (e) {
-        console.warn('Cloud sync save notice:', e);
+        console.warn('Cloud save notice:', e);
     }
 }
 
@@ -257,7 +301,7 @@ export async function fetchApprovedTestimonials() {
 }
 
 /**
- * Fetches PENDING testimonials for the Admin Dashboard (synced globally across devices).
+ * Fetches PENDING testimonials for the Admin Dashboard (synced globally across all devices).
  */
 export async function fetchPendingTestimonials() {
     await fetchCloudData();
@@ -292,23 +336,8 @@ export async function submitDirectRecommendation(data) {
         approved: false,
     };
 
-    // Save locally
-    let currentPending = [];
-    try {
-        currentPending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
-        currentPending = [payload, ...currentPending.filter((item) => String(item.id) !== payload.id)];
-        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(currentPending));
-    } catch (e) {
-        console.warn('Error saving local recommendation:', e);
-    }
-
-    // Push globally to Cloud DB
-    const currentCloud = (await fetchCloudData()) || {
-        pending: currentPending,
-        approved: JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]'),
-        deleted: JSON.parse(localStorage.getItem(LOCAL_DELETED_KEY) || '[]'),
-        edited: JSON.parse(localStorage.getItem(LOCAL_EDITED_KEY) || '{}'),
-    };
+    // 1. Fetch fresh cloud state
+    const currentCloud = (await fetchCloudData()) || getLocalState();
 
     const updatedPending = [payload, ...(currentCloud.pending || []).filter((item) => String(item.id) !== payload.id)];
     const newCloudState = {
@@ -316,6 +345,7 @@ export async function submitDirectRecommendation(data) {
         pending: updatedPending,
     };
 
+    // 2. Save globally to Cloud DB
     await saveCloudData(newCloudState);
     return payload;
 }
@@ -327,12 +357,7 @@ export async function approveTestimonial(id) {
     if (!id) return false;
     const idStr = String(id);
 
-    const currentCloud = (await fetchCloudData()) || {
-        pending: JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]'),
-        approved: JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]'),
-        deleted: JSON.parse(localStorage.getItem(LOCAL_DELETED_KEY) || '[]'),
-        edited: JSON.parse(localStorage.getItem(LOCAL_EDITED_KEY) || '{}'),
-    };
+    const currentCloud = (await fetchCloudData()) || getLocalState();
 
     const pendingList = currentCloud.pending || [];
     const target = pendingList.find((item) => String(item.id) === idStr);
@@ -355,10 +380,7 @@ export async function approveTestimonial(id) {
         approved: updatedApproved,
     };
 
-    localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
-    localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
     await saveCloudData(newCloudState);
-
     return true;
 }
 
@@ -369,12 +391,7 @@ export async function updateTestimonial(updatedData) {
     if (!updatedData || !updatedData.id) return false;
     const idStr = String(updatedData.id);
 
-    const currentCloud = (await fetchCloudData()) || {
-        pending: JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]'),
-        approved: JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]'),
-        deleted: JSON.parse(localStorage.getItem(LOCAL_DELETED_KEY) || '[]'),
-        edited: JSON.parse(localStorage.getItem(LOCAL_EDITED_KEY) || '{}'),
-    };
+    const currentCloud = (await fetchCloudData()) || getLocalState();
 
     const editedMap = currentCloud.edited || {};
     editedMap[idStr] = updatedData;
@@ -394,11 +411,7 @@ export async function updateTestimonial(updatedData) {
         edited: editedMap,
     };
 
-    localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(editedMap));
-    localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
-    localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
     await saveCloudData(newCloudState);
-
     return true;
 }
 
@@ -409,12 +422,7 @@ export async function deleteTestimonial(id) {
     if (!id) return false;
     const idStr = String(id);
 
-    const currentCloud = (await fetchCloudData()) || {
-        pending: JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]'),
-        approved: JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]'),
-        deleted: JSON.parse(localStorage.getItem(LOCAL_DELETED_KEY) || '[]'),
-        edited: JSON.parse(localStorage.getItem(LOCAL_EDITED_KEY) || '{}'),
-    };
+    const currentCloud = (await fetchCloudData()) || getLocalState();
 
     const updatedPending = (currentCloud.pending || []).filter((item) => String(item.id) !== idStr);
     const updatedApproved = (currentCloud.approved || []).filter((item) => String(item.id) !== idStr);
@@ -436,11 +444,6 @@ export async function deleteTestimonial(id) {
         edited: editedMap,
     };
 
-    localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
-    localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
-    localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(editedMap));
-    localStorage.setItem(LOCAL_DELETED_KEY, JSON.stringify(deletedIds));
     await saveCloudData(newCloudState);
-
     return true;
 }
