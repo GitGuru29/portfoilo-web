@@ -8,9 +8,42 @@ const LOCAL_PENDING_KEY = 'portfolio_pending_testimonials';
 const LOCAL_DELETED_KEY = 'portfolio_deleted_testimonials';
 const LOCAL_EDITED_KEY = 'portfolio_edited_testimonials';
 
-// Hardcoded shared Cloud Database object ID (shared across all devices & browsers)
-const SHARED_CLOUD_ID = 'siluna_portfolio_testimonials_v1';
+const CLOUD_APP_NAME = 'siluna_portfolio_testimonials';
 const PRIMARY_CLOUD_API = `https://api.restful-api.dev/objects`;
+
+let cachedCloudId = typeof localStorage !== 'undefined' ? localStorage.getItem('portfolio_cloud_server_id') : null;
+
+/**
+ * Gets or discovers the global shared cloud object ID across all devices
+ */
+async function getOrDiscoverCloudId() {
+    if (cachedCloudId) {
+        return cachedCloudId;
+    }
+
+    try {
+        const res = await fetch(PRIMARY_CLOUD_API, {
+            headers: { Accept: 'application/json' },
+        });
+
+        if (res.ok) {
+            const list = await res.json();
+            if (Array.isArray(list)) {
+                const existing = list.find((item) => item.name === CLOUD_APP_NAME);
+                if (existing && existing.id) {
+                    cachedCloudId = existing.id;
+                    if (typeof localStorage !== 'undefined') {
+                        localStorage.setItem('portfolio_cloud_server_id', cachedCloudId);
+                    }
+                    return cachedCloudId;
+                }
+            }
+        }
+    } catch (e) {
+        console.warn('Cloud discovery notice:', e);
+    }
+    return null;
+}
 
 /**
  * Synchronizes cloud JSON payload into local storage cache
@@ -53,35 +86,51 @@ function getLocalState() {
  */
 async function fetchCloudData() {
     try {
-        const res = await fetch(`${PRIMARY_CLOUD_API}/${SHARED_CLOUD_ID}`, {
-            headers: { Accept: 'application/json' },
-        });
+        let cloudId = await getOrDiscoverCloudId();
 
-        if (res.ok) {
-            const json = await res.json();
-            const payload = json.data || json;
-            if (payload && typeof payload === 'object') {
-                return syncToLocal(payload);
-            }
-        } else if (res.status === 404) {
-            // Object not initialized yet on cloud DB -> initialize shared object
-            const localState = getLocalState();
-            const initRes = await fetch(PRIMARY_CLOUD_API, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify({
-                    id: SHARED_CLOUD_ID,
-                    name: 'siluna_portfolio_testimonials',
-                    data: localState,
-                }),
+        if (cloudId) {
+            const res = await fetch(`${PRIMARY_CLOUD_API}/${cloudId}`, {
+                headers: { Accept: 'application/json' },
             });
 
-            if (initRes.ok) {
-                const initJson = await initRes.json();
-                if (initJson && initJson.data) {
+            if (res.ok) {
+                const json = await res.json();
+                const payload = json.data || json;
+                if (payload && typeof payload === 'object') {
+                    console.log('[Cloud Sync] Fetched live data from Cloud ID:', cloudId);
+                    return syncToLocal(payload);
+                }
+            } else if (res.status === 404) {
+                cachedCloudId = null;
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.removeItem('portfolio_cloud_server_id');
+                }
+            }
+        }
+
+        // Initialize new cloud object if none discovered
+        const localState = getLocalState();
+        const initRes = await fetch(PRIMARY_CLOUD_API, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify({
+                name: CLOUD_APP_NAME,
+                data: localState,
+            }),
+        });
+
+        if (initRes.ok) {
+            const initJson = await initRes.json();
+            if (initJson && initJson.id) {
+                cachedCloudId = initJson.id;
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem('portfolio_cloud_server_id', cachedCloudId);
+                }
+                console.log('[Cloud Sync] Initialized new Cloud DB ID:', cachedCloudId);
+                if (initJson.data) {
                     return syncToLocal(initJson.data);
                 }
             }
@@ -101,8 +150,10 @@ async function saveCloudData(data) {
 
     // 2. Persist to shared Cloud DB globally
     try {
+        let cloudId = await getOrDiscoverCloudId();
+
         const payload = {
-            name: 'siluna_portfolio_testimonials',
+            name: CLOUD_APP_NAME,
             data: {
                 pending: data.pending || [],
                 approved: data.approved || [],
@@ -111,8 +162,25 @@ async function saveCloudData(data) {
             },
         };
 
-        const res = await fetch(`${PRIMARY_CLOUD_API}/${SHARED_CLOUD_ID}`, {
-            method: 'PUT',
+        if (cloudId) {
+            const res = await fetch(`${PRIMARY_CLOUD_API}/${cloudId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (res.ok) {
+                console.log('[Cloud Sync] Updated Cloud DB ID:', cloudId);
+                return;
+            }
+        }
+
+        // Create object if missing or PUT failed
+        const initRes = await fetch(PRIMARY_CLOUD_API, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -120,19 +188,15 @@ async function saveCloudData(data) {
             body: JSON.stringify(payload),
         });
 
-        if (!res.ok && res.status === 404) {
-            // Re-create shared object if missing
-            await fetch(PRIMARY_CLOUD_API, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify({
-                    id: SHARED_CLOUD_ID,
-                    ...payload,
-                }),
-            });
+        if (initRes.ok) {
+            const initJson = await initRes.json();
+            if (initJson && initJson.id) {
+                cachedCloudId = initJson.id;
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem('portfolio_cloud_server_id', cachedCloudId);
+                }
+                console.log('[Cloud Sync] Created new Cloud DB ID:', cachedCloudId);
+            }
         }
     } catch (e) {
         console.warn('Cloud save notice:', e);
