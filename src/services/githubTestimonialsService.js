@@ -304,7 +304,7 @@ export async function approveTestimonial(id) {
     if (idStr.startsWith('gh-')) {
         const issueNumber = idStr.replace(/^gh-/, '');
         try {
-            await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}`, {
+            const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}`, {
                 method: 'PATCH',
                 headers: getGitHubHeaders(),
                 body: JSON.stringify({
@@ -312,8 +312,14 @@ export async function approveTestimonial(id) {
                     state: 'open',
                 }),
             });
+            if (!response.ok) {
+                alert("GitHub API Error: Could not approve. Make sure VITE_GITHUB_TOKEN is set in Vercel and you have redeployed!");
+                console.error("GitHub API Error:", await response.text());
+                return false;
+            }
         } catch (err) {
             console.warn('Error updating GitHub issue label to approved:', err);
+            return false;
         }
     }
 
