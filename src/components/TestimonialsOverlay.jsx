@@ -11,6 +11,7 @@ export default function TestimonialsOverlay() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAdminOpen, setIsAdminOpen] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const loadTestimonials = async () => {
         setLoading(true);
@@ -25,11 +26,13 @@ export default function TestimonialsOverlay() {
 
     const nextSlide = () => {
         if (testimonials.length === 0) return;
+        setIsExpanded(false);
         setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     };
 
     const prevSlide = () => {
         if (testimonials.length === 0) return;
+        setIsExpanded(false);
         setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
     };
 
@@ -121,9 +124,19 @@ export default function TestimonialsOverlay() {
                             </div>
 
                             {/* Quote Text */}
-                            <p className="text-lg md:text-2xl font-sans text-neutral-200 leading-relaxed font-normal mb-8 italic">
-                                "{testimonials[currentIndex].text}"
-                            </p>
+                            <div className="mb-8">
+                                <p className={`text-lg md:text-2xl font-sans text-neutral-200 leading-relaxed font-normal italic ${isExpanded ? '' : 'line-clamp-4'}`}>
+                                    "{testimonials[currentIndex].text}"
+                                </p>
+                                {testimonials[currentIndex].text.length > 180 && (
+                                    <button 
+                                        onClick={() => setIsExpanded(!isExpanded)}
+                                        className="mt-3 text-xs font-space tracking-widest text-[#D4AF37] hover:text-white uppercase transition-colors flex items-center gap-1"
+                                    >
+                                        {isExpanded ? 'Show Less' : 'See Full Review'}
+                                    </button>
+                                )}
+                            </div>
 
                             {/* Author Info Footer */}
                             <div className="flex items-center justify-between pt-6 border-t border-white/10">
@@ -166,7 +179,10 @@ export default function TestimonialsOverlay() {
                                 {testimonials.map((_, idx) => (
                                     <button
                                         key={idx}
-                                        onClick={() => setCurrentIndex(idx)}
+                                        onClick={() => {
+                                            setIsExpanded(false);
+                                            setCurrentIndex(idx);
+                                        }}
                                         className={`h-2 rounded-full transition-all duration-300 ${
                                             idx === currentIndex ? 'w-8 bg-[#D4AF37]' : 'w-2 bg-white/20 hover:bg-white/40'
                                         }`}
