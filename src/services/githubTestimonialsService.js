@@ -5,6 +5,7 @@ const REPO_NAME = 'portfoilo-web';
 const LOCAL_APPROVED_KEY = 'portfolio_approved_testimonials';
 const LOCAL_PENDING_KEY = 'portfolio_pending_testimonials';
 const LOCAL_DELETED_KEY = 'portfolio_deleted_testimonials';
+const LOCAL_EDITED_KEY = 'portfolio_edited_testimonials';
 
 /**
  * Compresses an uploaded File into a 150x150 JPEG Base64 Data URL
@@ -39,15 +40,42 @@ export function compressImageFile(file) {
 }
 
 /**
- * Helper to get deleted IDs blacklist
+ * Helper to get deleted IDs blacklist (always returned as array of strings)
  */
 function getDeletedIds() {
     try {
         const stored = localStorage.getItem(LOCAL_DELETED_KEY);
-        return stored ? JSON.parse(stored) : [];
+        const parsed = stored ? JSON.parse(stored) : [];
+        return parsed.map(String);
     } catch {
         return [];
     }
+}
+
+/**
+ * Helper to get edited recommendations map (key: string id, value: updated testimonial object)
+ */
+function getEditedOverrides() {
+    try {
+        const stored = localStorage.getItem(LOCAL_EDITED_KEY);
+        return stored ? JSON.parse(stored) : {};
+    } catch {
+        return {};
+    }
+}
+
+/**
+ * Applies any edited property overrides to an array of testimonial objects
+ */
+function applyEditedOverrides(items) {
+    const editedMap = getEditedOverrides();
+    return items.map((item) => {
+        const idStr = String(item.id);
+        if (editedMap[idStr]) {
+            return { ...item, ...editedMap[idStr] };
+        }
+        return item;
+    });
 }
 
 /**
@@ -123,9 +151,19 @@ export async function fetchApprovedTestimonials() {
         console.warn('Error reading local approved testimonials:', e);
     }
 
-    const combined = [...localApproved, ...liveTestimonials, ...seedTestimonials];
-    // Filter out any item present in deleted blacklist
-    return combined.filter((item) => !deletedIds.includes(item.id));
+    // Deduplicate by string ID
+    const allCandidates = [...localApproved, ...liveTestimonials, ...seedTestimonials];
+    const uniqueMap = new Map();
+    allCandidates.forEach((item) => {
+        const idStr = String(item.id);
+        if (!uniqueMap.has(idStr)) {
+            uniqueMap.set(idStr, item);
+        }
+    });
+
+    const combined = Array.from(uniqueMap.values());
+    const nonDeleted = combined.filter((item) => !deletedIds.includes(String(item.id)));
+    return applyEditedOverrides(nonDeleted);
 }
 
 /**
@@ -136,7 +174,8 @@ export function fetchPendingTestimonials() {
     try {
         const stored = localStorage.getItem(LOCAL_PENDING_KEY);
         const pending = stored ? JSON.parse(stored) : [];
-        return pending.filter((item) => !deletedIds.includes(item.id));
+        const nonDeleted = pending.filter((item) => !deletedIds.includes(String(item.id)));
+        return applyEditedOverrides(nonDeleted);
     } catch (e) {
         console.warn('Error reading pending testimonials:', e);
         return [];
@@ -193,19 +232,28 @@ export async function submitDirectRecommendation(data) {
  * ADMIN ACTION: Approves a pending recommendation by ID.
  */
 export function approveTestimonial(id) {
+    if (!id) return false;
+    const idStr = String(id);
+
     try {
         const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
-        const target = pending.find((item) => item.id === id);
+        const target = pending.find((item) => String(item.id) === idStr);
         if (!target) return false;
 
         // Remove from pending
-        const updatedPending = pending.filter((item) => item.id !== id);
+        const updatedPending = pending.filter((item) => String(item.id) !== idStr);
         localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
 
+        // Apply edited override if exists
+        const editedMap = getEditedOverrides();
+        const finalTarget = editedMap[idStr]
+            ? { ...target, ...editedMap[idStr], approved: true }
+            : { ...target, approved: true };
+
         // Add to approved
-        target.approved = true;
         const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
-        localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify([target, ...approved]));
+        const cleanApproved = approved.filter((item) => String(item.id) !== idStr);
+        localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify([finalTarget, ...cleanApproved]));
 
         return true;
     } catch (e) {
@@ -215,31 +263,68 @@ export function approveTestimonial(id) {
 }
 
 /**
+ * ADMIN ACTION: Updates an existing recommendation's data (saves edits across all collections).
+ */
+export function updateTestimonial(updatedData) {
+    if (!updatedData || !updatedData.id) return false;
+    const idStr = String(updatedData.id);
+
+    try {
+        // 1. Save in edited overrides map
+        const editedMap = getEditedOverrides();
+        editedMap[idStr] = updatedData;
+        localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(editedMap));
+
+        // 2. Update in pending list if present
+        const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
+        const updatedPending = pending.map((item) =>
+            String(item.id) === idStr ? { ...item, ...updatedData } : item
+        );
+        localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
+
+        // 3. Update in approved list if present
+        const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
+        const updatedApproved = approved.map((item) =>
+            String(item.id) === idStr ? { ...item, ...updatedData } : item
+        );
+        localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
+
+        return true;
+    } catch (e) {
+        console.error('Error updating testimonial:', e);
+        return false;
+    }
+}
+
+/**
  * ADMIN ACTION: Permanently deletes any recommendation by ID (Pending, Approved, Seed, or Old Key).
  */
 export function deleteTestimonial(id) {
+    if (!id) return false;
+    const idStr = String(id);
+
     try {
         // 1. Delete from pending
         const pending = JSON.parse(localStorage.getItem(LOCAL_PENDING_KEY) || '[]');
-        const updatedPending = pending.filter((item) => item.id !== id);
+        const updatedPending = pending.filter((item) => String(item.id) !== idStr);
         localStorage.setItem(LOCAL_PENDING_KEY, JSON.stringify(updatedPending));
 
         // 2. Delete from approved
         const approved = JSON.parse(localStorage.getItem(LOCAL_APPROVED_KEY) || '[]');
-        const updatedApproved = approved.filter((item) => item.id !== id);
+        const updatedApproved = approved.filter((item) => String(item.id) !== idStr);
         localStorage.setItem(LOCAL_APPROVED_KEY, JSON.stringify(updatedApproved));
 
-        // 3. Delete from old storage key if exists
-        try {
-            const oldStorage = JSON.parse(localStorage.getItem('portfolio_pending_testimonials') || '[]');
-            const updatedOld = oldStorage.filter((item) => item.id !== id);
-            localStorage.setItem('portfolio_pending_testimonials', JSON.stringify(updatedOld));
-        } catch {}
+        // 3. Delete from edited overrides
+        const editedMap = getEditedOverrides();
+        if (editedMap[idStr]) {
+            delete editedMap[idStr];
+            localStorage.setItem(LOCAL_EDITED_KEY, JSON.stringify(editedMap));
+        }
 
         // 4. Blacklist the ID permanently so it never shows up from seed or API
         const deletedIds = getDeletedIds();
-        if (!deletedIds.includes(id)) {
-            localStorage.setItem(LOCAL_DELETED_KEY, JSON.stringify([...deletedIds, id]));
+        if (!deletedIds.includes(idStr)) {
+            localStorage.setItem(LOCAL_DELETED_KEY, JSON.stringify([...deletedIds, idStr]));
         }
 
         return true;

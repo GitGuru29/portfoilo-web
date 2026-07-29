@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck, Check, Trash2, Key, Star, Clock, AlertCircle } from 'lucide-react';
-import { fetchPendingTestimonials, fetchApprovedTestimonials, approveTestimonial, deleteTestimonial } from '../services/githubTestimonialsService';
+import { X, ShieldCheck, Check, Trash2, Key, Star, Clock, AlertCircle, Pencil, Save, ArrowLeft, Upload, Loader2, Linkedin, User, Building } from 'lucide-react';
+import { fetchPendingTestimonials, fetchApprovedTestimonials, approveTestimonial, deleteTestimonial, updateTestimonial, compressImageFile } from '../services/githubTestimonialsService';
 
 const ADMIN_SECRET_PIN = 'msfvenom';
 
@@ -13,6 +13,21 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
     const [activeTab, setActiveTab] = useState('pending'); // 'pending' | 'approved'
     const [pendingList, setPendingList] = useState([]);
     const [approvedList, setApprovedList] = useState([]);
+
+    // Edit state
+    const [editingItem, setEditingItem] = useState(null);
+    const [editFormData, setEditFormData] = useState({
+        name: '',
+        role: '',
+        company: '',
+        relationship: 'Client',
+        rating: 5,
+        linkedin: '',
+        avatar: '',
+        text: '',
+    });
+    const [editCompressing, setEditCompressing] = useState(false);
+    const editFileInputRef = useRef(null);
 
     const loadAdminData = async () => {
         const pending = fetchPendingTestimonials();
@@ -51,8 +66,55 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
         if (onRefreshPublic) onRefreshPublic();
     };
 
+    const handleStartEdit = (item) => {
+        setEditingItem(item);
+        setEditFormData({
+            name: item.name || '',
+            role: item.role || '',
+            company: item.company || '',
+            relationship: item.relationship || 'Client',
+            rating: item.rating || 5,
+            linkedin: item.linkedin || '',
+            avatar: item.avatar || '',
+            text: item.text || '',
+        });
+    };
+
+    const handleCancelEdit = () => {
+        setEditingItem(null);
+    };
+
+    const handleEditFileSelected = async (file) => {
+        if (!file || !file.type.startsWith('image/')) return;
+        try {
+            setEditCompressing(true);
+            const compressed = await compressImageFile(file);
+            setEditFormData((prev) => ({ ...prev, avatar: compressed }));
+        } catch (err) {
+            console.error('Image compression failed:', err);
+        } finally {
+            setEditCompressing(false);
+        }
+    };
+
+    const handleSaveEdit = (e) => {
+        e.preventDefault();
+        if (!editingItem) return;
+
+        const updated = {
+            ...editingItem,
+            ...editFormData,
+        };
+
+        updateTestimonial(updated);
+        setEditingItem(null);
+        loadAdminData();
+        if (onRefreshPublic) onRefreshPublic();
+    };
+
     const handleLogout = () => {
         setIsAuthenticated(false);
+        setEditingItem(null);
         setPin('');
         setAuthError('');
         onClose();
@@ -83,7 +145,9 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                 </div>
                                 <div>
                                     <span className="text-[11px] font-mono tracking-widest text-[#D4AF37] uppercase">System Moderation</span>
-                                    <h3 className="text-xl md:text-2xl font-space font-bold text-white mt-0.5">Admin Control Panel</h3>
+                                    <h3 className="text-xl md:text-2xl font-space font-bold text-white mt-0.5">
+                                        {editingItem ? 'Edit Recommendation' : 'Admin Control Panel'}
+                                    </h3>
                                 </div>
                             </div>
                             <button
@@ -128,6 +192,207 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                 >
                                     Unlock Admin Panel
                                 </button>
+                            </form>
+                        ) : editingItem ? (
+                            /* Edit Recommendation Form */
+                            <form onSubmit={handleSaveEdit} className="flex flex-col flex-1 min-h-0">
+                                <div className="flex items-center gap-2 mb-4 flex-shrink-0">
+                                    <button
+                                        type="button"
+                                        onClick={handleCancelEdit}
+                                        className="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-neutral-300 text-xs font-mono rounded-lg flex items-center gap-1 transition-colors"
+                                    >
+                                        <ArrowLeft className="w-3.5 h-3.5" />
+                                        Back to Dashboard
+                                    </button>
+                                </div>
+
+                                <div className="space-y-4 flex-1 overflow-y-auto pr-2 pb-2">
+                                    {/* Avatar Photo Edit */}
+                                    <div>
+                                        <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                            Profile Photo / Avatar
+                                        </label>
+                                        <input
+                                            type="file"
+                                            ref={editFileInputRef}
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => e.target.files && handleEditFileSelected(e.target.files[0])}
+                                        />
+                                        <div className="flex items-center gap-3">
+                                            <img
+                                                src={editFormData.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'}
+                                                alt="Avatar"
+                                                className="w-12 h-12 rounded-full object-cover border border-[#D4AF37]"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => editFileInputRef.current?.click()}
+                                                disabled={editCompressing}
+                                                className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-space rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                                            >
+                                                {editCompressing ? (
+                                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                                ) : (
+                                                    <Upload className="w-3.5 h-3.5" />
+                                                )}
+                                                Upload New Photo
+                                            </button>
+                                            {editFormData.avatar && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setEditFormData({ ...editFormData, avatar: '' })}
+                                                    className="text-xs text-neutral-400 hover:text-red-400 transition-colors"
+                                                >
+                                                    Remove photo
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Name & Role */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                                Full Name
+                                            </label>
+                                            <div className="relative">
+                                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    value={editFormData.name}
+                                                    onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                                                    className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                                Role / Position
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={editFormData.role}
+                                                onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
+                                                placeholder="e.g. Lead Engineer"
+                                                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Company & Relationship */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                                Company / Organization
+                                            </label>
+                                            <div className="relative">
+                                                <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                                                <input
+                                                    type="text"
+                                                    value={editFormData.company}
+                                                    onChange={(e) => setEditFormData({ ...editFormData, company: e.target.value })}
+                                                    placeholder="e.g. Acme Corp (or leave blank if independent)"
+                                                    className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                                Relationship
+                                            </label>
+                                            <select
+                                                value={editFormData.relationship}
+                                                onChange={(e) => setEditFormData({ ...editFormData, relationship: e.target.value })}
+                                                className="w-full px-3 py-2 bg-neutral-900 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                            >
+                                                <option value="Client">Client</option>
+                                                <option value="Manager / Supervisor">Manager / Supervisor</option>
+                                                <option value="Colleague / Teammate">Colleague / Teammate</option>
+                                                <option value="Mentor / Industry Peer">Mentor / Industry Peer</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Rating & LinkedIn */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                                Star Rating
+                                            </label>
+                                            <div className="flex items-center gap-1 py-1">
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <button
+                                                        key={star}
+                                                        type="button"
+                                                        onClick={() => setEditFormData({ ...editFormData, rating: star })}
+                                                        className="focus:outline-none transition-transform hover:scale-110"
+                                                    >
+                                                        <Star
+                                                            className={`w-5 h-5 ${
+                                                                star <= editFormData.rating
+                                                                    ? 'fill-[#D4AF37] text-[#D4AF37]'
+                                                                    : 'text-neutral-600'
+                                                            }`}
+                                                        />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                                LinkedIn Profile URL (Optional)
+                                            </label>
+                                            <div className="relative">
+                                                <Linkedin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                                                <input
+                                                    type="url"
+                                                    value={editFormData.linkedin}
+                                                    onChange={(e) => setEditFormData({ ...editFormData, linkedin: e.target.value })}
+                                                    placeholder="https://linkedin.com/in/... (Optional)"
+                                                    className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Testimonial Text */}
+                                    <div>
+                                        <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                            Recommendation Text
+                                        </label>
+                                        <textarea
+                                            required
+                                            rows={4}
+                                            value={editFormData.text}
+                                            onChange={(e) => setEditFormData({ ...editFormData, text: e.target.value })}
+                                            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors resize-none"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Save / Cancel Footer */}
+                                <div className="pt-3 border-t border-white/10 flex items-center justify-end gap-3 flex-shrink-0 mt-auto bg-neutral-950">
+                                    <button
+                                        type="button"
+                                        onClick={handleCancelEdit}
+                                        className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-space font-semibold text-xs rounded-lg transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-5 py-2 bg-[#D4AF37] hover:bg-[#b8952b] text-neutral-950 font-space font-semibold text-xs rounded-lg flex items-center gap-1.5 transition-all shadow-md"
+                                    >
+                                        <Save className="w-4 h-4" />
+                                        Save Changes
+                                    </button>
+                                </div>
                             </form>
                         ) : (
                             /* Authenticated Admin Dashboard */
@@ -193,6 +458,14 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
 
                                                     <div className="flex items-center gap-2 flex-shrink-0">
                                                         <button
+                                                            onClick={() => handleStartEdit(item)}
+                                                            className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors"
+                                                            title="Edit recommendation"
+                                                        >
+                                                            <Pencil className="w-3.5 h-3.5" />
+                                                            Edit
+                                                        </button>
+                                                        <button
                                                             onClick={() => handleApprove(item.id)}
                                                             className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors shadow-md"
                                                         >
@@ -237,13 +510,23 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                                     </div>
                                                 </div>
 
-                                                <button
-                                                    onClick={() => handleDelete(item.id)}
-                                                    className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors flex-shrink-0"
-                                                >
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                    Delete
-                                                </button>
+                                                <div className="flex items-center gap-2 flex-shrink-0">
+                                                    <button
+                                                        onClick={() => handleStartEdit(item)}
+                                                        className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors"
+                                                        title="Edit recommendation"
+                                                    >
+                                                        <Pencil className="w-3.5 h-3.5" />
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(item.id)}
+                                                        className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors"
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                        Delete
+                                                    </button>
+                                                </div>
                                             </div>
                                         ))
                                     )}
