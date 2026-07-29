@@ -137,7 +137,7 @@ export default function HeroOverlay() {
 
     return (
         <section id="home" ref={heroRef} style={S.section}>
-            <div style={S.sticky} className="flex flex-col md:flex-row">
+            <div style={S.sticky} className="flex">
 
                 {/* ── Subtle grain texture ── */}
                 <div aria-hidden style={{
@@ -162,10 +162,10 @@ export default function HeroOverlay() {
                 {/* ══════════════════════════════════════
                     LEFT PANEL
                 ══════════════════════════════════════ */}
-                <div className="relative z-10 w-full md:w-1/2 h-[55%] md:h-full flex flex-col justify-center md:justify-between p-[clamp(24px,4vw,52px)]">
+                <div className="relative z-10 w-full md:w-1/2 h-full flex flex-col justify-center md:justify-between p-6 md:p-[clamp(24px,4vw,52px)]">
 
                     {/* Top bar (Empty now since SIDAN moved to right) */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 24 }}>
+                    <div className="hidden md:flex items-center justify-between min-h-[24px]">
                     </div>
 
                     {/* ── Main copy ── */}
@@ -210,7 +210,7 @@ export default function HeroOverlay() {
                             {/* Name */}
                             <h1 style={{
                                 fontFamily: 'Space Grotesk, sans-serif',
-                                fontSize: 'clamp(3rem, 8vw, 8rem)',
+                                fontSize: 'clamp(2.5rem, 12vw, 8rem)',
                                 fontWeight: 800, lineHeight: 0.9,
                                 letterSpacing: '-0.03em',
                                 textTransform: 'uppercase',
@@ -248,7 +248,7 @@ export default function HeroOverlay() {
 
                         {/* Stats — animated count-up */}
                         <div style={{
-                            display: 'flex', gap: 'clamp(20px, 3.5vw, 48px)',
+                            display: 'flex', flexWrap: 'wrap', gap: 'clamp(20px, 3.5vw, 48px)',
                             marginBottom: 'clamp(22px, 3vw, 36px)',
                         }}>
                             {[
@@ -348,7 +348,7 @@ export default function HeroOverlay() {
                 {/* ══════════════════════════════════════
                     RIGHT PANEL — photo only (no about panel inside)
                 ══════════════════════════════════════ */}
-                <div className="relative z-[5] w-full md:w-1/2 h-[45%] md:h-full overflow-hidden">
+                <div className="absolute md:relative inset-0 md:inset-auto z-[5] w-full md:w-1/2 h-full overflow-hidden pointer-events-none md:pointer-events-auto">
 
                     {/* Photo — fades out on scroll */}
                     <div ref={photoRef} style={{ position: 'absolute', inset: 0 }}>
@@ -378,6 +378,9 @@ export default function HeroOverlay() {
                             position: 'absolute', inset: 0, pointerEvents: 'none',
                             background: 'linear-gradient(135deg, rgba(212,175,55,0.05) 0%, transparent 55%)',
                         }} />
+
+                        {/* Mobile dark overlay to make text readable */}
+                        <div aria-hidden className="block md:hidden absolute inset-0 bg-[#0C0C0F]/75 pointer-events-none" />
 
 
 
