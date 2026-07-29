@@ -149,7 +149,7 @@ export async function fetchApprovedTestimonials() {
     try {
         const response = await fetch(
             `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=approved&state=all&per_page=100`,
-            { headers: getGitHubHeaders() }
+            { headers: getGitHubHeaders(), cache: 'no-store' }
         );
 
         if (response.ok) {
@@ -196,7 +196,7 @@ export async function fetchPendingTestimonials() {
     try {
         const response = await fetch(
             `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=recommendation-pending&state=open&per_page=100`,
-            { headers: getGitHubHeaders() }
+            { headers: getGitHubHeaders(), cache: 'no-store' }
         );
 
         if (response.ok) {
