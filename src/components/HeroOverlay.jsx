@@ -163,7 +163,7 @@ export default function HeroOverlay() {
                 {/* ══════════════════════════════════════
                     LEFT PANEL
                 ══════════════════════════════════════ */}
-                <div className="relative z-10 w-full md:w-1/2 h-full flex flex-col justify-center md:justify-between p-6 md:p-[clamp(24px,4vw,52px)]">
+                <div className="relative z-10 w-full md:w-1/2 h-full flex flex-col justify-end md:justify-between p-6 pb-16 md:p-[clamp(24px,4vw,52px)]">
 
                     {/* Top bar (Empty now since SIDAN moved to right) */}
                     <div className="hidden md:flex items-center justify-between min-h-[24px]">
