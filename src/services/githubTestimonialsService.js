@@ -276,8 +276,13 @@ export async function submitDirectRecommendation(data) {
                 id: `gh-${issueData.number}`,
                 issueNumber: issueData.number,
             };
+        } else {
+            const errorText = await response.text();
+            alert(`GitHub API Error (Submission): ${response.status}\nMake sure your token is added to Vercel for PRODUCTION environments and redeployed!\nDetails: ${errorText}`);
+            console.error("Submission error:", errorText);
         }
     } catch (err) {
+        alert(`Network Error during submission: ${err.message}`);
         console.warn('GitHub issue creation warning:', err);
     }
 
