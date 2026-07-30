@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Github, Cpu } from 'lucide-react';
+import { Activity, Github, Cpu, Calendar } from 'lucide-react';
+import ScheduleMeetingModal from './ScheduleMeetingModal';
+import useStore from '../store/useStore';
+import { playClickSound } from '../utils/soundFX';
 
 export default function SystemMetricsWidget() {
     const [githubData, setGithubData] = useState({ repos: 30, followers: 0 });
     const [cpuLoad, setCpuLoad] = useState(18);
     const [time, setTime] = useState('');
+    const [isMeetingOpen, setIsMeetingOpen] = useState(false);
+    const soundEnabled = useStore((s) => s.soundEnabled);
 
     useEffect(() => {
         // Live clock
@@ -70,8 +75,19 @@ export default function SystemMetricsWidget() {
                 SilunaOS v3.0 — Sri Lanka
             </div>
 
-            {/* Right: GitHub + clock */}
-            <div className="flex items-center gap-4 md:gap-6">
+            {/* Right: GitHub + Schedule Meeting + clock */}
+            <div className="flex items-center gap-3 md:gap-5">
+                <button
+                    onClick={() => {
+                        setIsMeetingOpen(true);
+                        playClickSound(soundEnabled);
+                    }}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/25 transition-all text-[9px] font-space tracking-wider uppercase font-semibold"
+                >
+                    <Calendar className="w-3 h-3" />
+                    <span>Book Chat</span>
+                </button>
+
                 <div className="flex items-center gap-1.5">
                     <Github className="w-3 h-3 text-slate-500" />
                     <span className="text-[9px] font-space tracking-[0.2em] text-slate-400">
@@ -88,6 +104,9 @@ export default function SystemMetricsWidget() {
                     {time}
                 </span>
             </div>
+
+            {/* Schedule Meeting Modal */}
+            <ScheduleMeetingModal isOpen={isMeetingOpen} onClose={() => setIsMeetingOpen(false)} />
         </motion.div>
     );
 }
