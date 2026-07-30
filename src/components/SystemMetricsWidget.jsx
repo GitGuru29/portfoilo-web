@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Github, Cpu, Calendar } from 'lucide-react';
-import ScheduleMeetingModal from './ScheduleMeetingModal';
 import useStore from '../store/useStore';
 import { playClickSound } from '../utils/soundFX';
 
@@ -9,8 +8,8 @@ export default function SystemMetricsWidget() {
     const [githubData, setGithubData] = useState({ repos: 30, followers: 0 });
     const [cpuLoad, setCpuLoad] = useState(18);
     const [time, setTime] = useState('');
-    const [isMeetingOpen, setIsMeetingOpen] = useState(false);
     const soundEnabled = useStore((s) => s.soundEnabled);
+    const setMeetingModalOpen = useStore((s) => s.setMeetingModalOpen);
 
     useEffect(() => {
         // Live clock
@@ -79,7 +78,7 @@ export default function SystemMetricsWidget() {
             <div className="flex items-center gap-3 md:gap-5">
                 <button
                     onClick={() => {
-                        setIsMeetingOpen(true);
+                        setMeetingModalOpen(true);
                         playClickSound(soundEnabled);
                     }}
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/25 transition-all text-[9px] font-space tracking-wider uppercase font-semibold"
@@ -104,9 +103,6 @@ export default function SystemMetricsWidget() {
                     {time}
                 </span>
             </div>
-
-            {/* Schedule Meeting Modal */}
-            <ScheduleMeetingModal isOpen={isMeetingOpen} onClose={() => setIsMeetingOpen(false)} />
         </motion.div>
     );
 }

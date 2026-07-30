@@ -5,18 +5,16 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * SectionBanner Component using GSAP ScrollTrigger (Lenis synced)
+ * Deep Blue Glass SectionBanner (Matching Badges Section Theme)
  * 
- * Guarantees silky-smooth 60fps/120fps scroll-scrubbing with Lenis smooth scroll.
- * Sequence:
- *  1. Pins full-screen dark container (sticky top-0 h-screen) as user enters section.
- *  2. As user scrolls down, section title types out letter-by-letter.
- *  3. Once typed, continuing to scroll fades out the heading and moves directly into section details.
+ * - Transparent outer background (no black box surrounding card).
+ * - Crisp, high-contrast bold white text heading (text-white).
+ * - Deep dark blue glass container matching BadgesOverlay.
+ * - GSAP ScrollTrigger letter-by-letter scroll typewriter animation.
  */
 export default function SectionBanner({
     id,
     title = 'SECTION TITLE',
-    accentColor = '#D4AF37', // Gold accent glow
 }) {
     const bannerRef = useRef(null);
     const textRef = useRef(null);
@@ -34,11 +32,11 @@ export default function SectionBanner({
                     trigger: bannerRef.current,
                     start: 'top top',
                     end: 'bottom bottom',
-                    scrub: 0.5, // Synced with Lenis scroll animation
+                    scrub: 0.5,
                 }
             });
 
-            // Phase 1: Type out characters letter-by-letter as user scrolls (0% -> 65% scroll)
+            // Phase 1: Type out characters letter-by-letter on scroll (0% -> 65% scroll)
             tl.to(obj, {
                 count: totalChars,
                 duration: 3,
@@ -48,11 +46,12 @@ export default function SectionBanner({
                 }
             }, 0);
 
-            // Phase 2: Fade title out and slide up as user reaches end of banner scroll (75% -> 100% scroll)
+            // Phase 2: Fade title out and slide up as user completes banner scroll (75% -> 100% scroll)
             if (textRef.current) {
                 tl.to(textRef.current, {
                     opacity: 0,
-                    y: -60,
+                    y: -50,
+                    scale: 0.96,
                     duration: 1.5,
                     ease: 'power1.out'
                 }, 3.5);
@@ -68,27 +67,30 @@ export default function SectionBanner({
         <div
             id={id ? `${id}-banner` : undefined}
             ref={bannerRef}
-            className="relative w-full h-[220vh] bg-[#070709]"
+            className="relative w-full h-[200vh] bg-transparent"
         >
-            {/* Sticky Full-Screen Viewport */}
-            <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center bg-[#070709] z-20 shadow-2xl">
-                {/* Ambient Background Radial Glow */}
-                <div
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] rounded-full pointer-events-none blur-[150px] opacity-15"
-                    style={{ background: `radial-gradient(circle, ${accentColor} 0%, transparent 70%)` }}
-                />
+            {/* Sticky Viewport Container - Transparent BG */}
+            <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center p-4 sm:p-8 bg-transparent z-20">
 
-                {/* Main Scroll-Driven Typewriter Title */}
-                <div
-                    ref={textRef}
-                    className="relative z-10 max-w-6xl mx-auto text-center px-6"
-                >
-                    <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-space font-bold text-white tracking-tight uppercase min-h-[1.2em] flex items-center justify-center flex-wrap leading-none">
-                        <span>{visibleTitle}</span>
-                        <span
-                            className="inline-block w-[0.35em] h-[0.85em] ml-2 bg-[#D4AF37] animate-pulse shadow-[0_0_20px_rgba(212,175,55,0.9)] align-middle"
-                        />
-                    </h2>
+                {/* Dark Blue Glass Rounded Banner Container (Matching Badges Grid Theme) */}
+                <div className="w-full max-w-6xl min-h-[55vh] md:min-h-[68vh] rounded-3xl md:rounded-[2.5rem] bg-gradient-to-br from-[#0c1322] via-[#0A0F1C] to-[#070b14] p-8 md:p-16 border border-blue-500/30 shadow-[0_20px_50px_-10px_rgba(59,130,246,0.35)] backdrop-blur-xl flex items-center justify-center relative overflow-hidden">
+
+                    {/* Ambient Blue Background Glow Blobs */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-blue-500/15 blur-[110px] pointer-events-none" />
+                    <div className="absolute inset-0 bg-repeat opacity-[0.03] pointer-events-none noise-bg" />
+
+                    {/* Main Scroll-Driven Typewriter Title - Crisp High-Contrast Bold White Text */}
+                    <div
+                        ref={textRef}
+                        className="relative z-10 max-w-5xl mx-auto text-center px-4"
+                    >
+                        <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-space font-bold text-white tracking-tight uppercase min-h-[1.2em] flex items-center justify-center flex-wrap leading-none drop-shadow-2xl">
+                            <span>{visibleTitle}</span>
+                            <span
+                                className="inline-block w-[0.35em] h-[0.85em] ml-2 bg-blue-400 animate-pulse shadow-[0_0_20px_rgba(96,165,250,0.9)] align-middle"
+                            />
+                        </h2>
+                    </div>
                 </div>
             </div>
         </div>

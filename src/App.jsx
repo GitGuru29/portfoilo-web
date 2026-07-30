@@ -12,10 +12,13 @@ import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
 import Preloader from './components/Preloader';
 import CommandPalette from './components/CommandPalette';
+import ScheduleMeetingModal from './components/ScheduleMeetingModal';
 import WhatsAppChat from './components/WhatsAppChat';
 
 function App() {
     const isUnlocked = useStore((state) => state.isUnlocked);
+    const isMeetingModalOpen = useStore((state) => state.isMeetingModalOpen);
+    const setMeetingModalOpen = useStore((state) => state.setMeetingModalOpen);
 
     // Force scroll to top on refresh
     useEffect(() => {
@@ -34,6 +37,12 @@ function App() {
 
                 {/* Developer Command Palette (Cmd + K) */}
                 <CommandPalette />
+
+                {/* Schedule Meeting Modal */}
+                <ScheduleMeetingModal
+                    isOpen={isMeetingModalOpen}
+                    onClose={() => setMeetingModalOpen(false)}
+                />
 
                 {/* The Sleek Preloader */}
                 <AnimatePresence>

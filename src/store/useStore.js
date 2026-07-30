@@ -20,6 +20,7 @@ const useStore = create((set) => ({
     soundEnabled: true,
     accentTheme: 'gold', // 'gold' | 'cyan' | 'emerald'
     isCommandPaletteOpen: false,
+    isMeetingModalOpen: false,
 
     unlockSystem: () => set({ isUnlocked: true, hasBooted: true, isTerminalOpen: false }),
     lockSystem: () => set({ isUnlocked: false }),
@@ -27,6 +28,7 @@ const useStore = create((set) => ({
     toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
     setAccentTheme: (theme) => set({ accentTheme: theme }),
     setCommandPaletteOpen: (open) => set({ isCommandPaletteOpen: open }),
+    setMeetingModalOpen: (open) => set({ isMeetingModalOpen: open }),
 }));
 
 export default useStore;

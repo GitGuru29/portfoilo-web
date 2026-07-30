@@ -142,7 +142,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 overflow-y-auto">
+                <div data-lenis-prevent data-lenis-prevent-touch className="fixed inset-0 z-[999999] flex items-center justify-center p-4 overflow-y-auto">
                     {/* Dark Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -154,11 +154,13 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
 
                     {/* Modal Content */}
                     <motion.div
+                        data-lenis-prevent
+                        data-lenis-prevent-touch
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative w-full max-w-xl bg-[#0d0d12] border border-neutral-800 rounded-3xl shadow-2xl overflow-hidden z-10 p-6 md:p-8"
+                        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-[#0d0d12] border border-neutral-800 rounded-3xl shadow-2xl z-10 p-6 md:p-8 scrollbar-thin overscroll-contain"
                     >
                         {/* Header Bar */}
                         <div className="flex items-center justify-between pb-5 border-b border-neutral-800/80">
