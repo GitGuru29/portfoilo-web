@@ -15,6 +15,7 @@ import StatsTicker from '../components/StatsTicker';
 import TimelineSection from '../components/TimelineSection';
 import TerminalSection from '../components/TerminalSection';
 import SectionDotsNav from '../components/SectionDotsNav';
+import SectionBanner from '../components/SectionBanner';
 import { projectsData } from '../data/projects';
 import { CATEGORIES } from '../data/categories';
 
@@ -46,16 +47,19 @@ export default function Home() {
             </section>
 
             {/* ── Skills ── */}
+            <SectionBanner id="skills-banner" title="SKILLS & COMPETENCIES" />
             <section id="skills" className="snap-section">
                 <SkillsOverlay />
             </section>
 
             {/* ── GitHub 3D Graph ── */}
+            <SectionBanner id="github-banner" title="GITHUB ACTIVITY & CODEBASE" />
             <section id="github" className="snap-section">
                 <GitHubActivitySection />
             </section>
 
             {/* ── Projects ── */}
+            <SectionBanner id="projects-banner" title="FEATURED PROJECTS" />
             <section id="projects" className="snap-section">
                 <ProjectsOverlay projects={filteredProjects} isFiltered={isFiltered}>
                     <div className="w-full max-w-6xl mx-auto px-6 mb-16 md:mb-24 bg-transparent" id="portfolio-filters">
@@ -66,31 +70,37 @@ export default function Home() {
             </section>
 
             {/* ── Timeline / Build Log ── */}
+            <SectionBanner id="timeline-banner" title="EXPERIENCE & BUILD LOG" />
             <section id="timeline" className="snap-section">
                 <TimelineSection />
             </section>
 
             {/* ── Active Research ── */}
+            <SectionBanner id="research-banner" title="ACTIVE RESEARCH" />
             <section id="research" className="snap-section">
                 <ActiveResearchOverlay />
             </section>
 
-            {/* ── References & Testimonials ── */}
+            {/* ── References & Recommendations ── */}
+            <SectionBanner id="testimonials-banner" title="RECOMMENDATIONS & REFERENCES" />
             <section id="testimonials" className="snap-section">
                 <TestimonialsOverlay />
             </section>
 
             {/* ── Certificates ── */}
+            <SectionBanner id="certificates-banner" title="CERTIFICATES & ACCREDITATIONS" />
             <section id="certificates" className="snap-section">
                 <CertificatesOverlay />
             </section>
 
             {/* ── Badges ── */}
+            <SectionBanner id="badges-banner" title="BADGES & RECOGNITION" />
             <section id="badges" className="snap-section">
                 <BadgesOverlay />
             </section>
 
             {/* ── Contact + Footer ── */}
+            <SectionBanner id="contact-banner" title="CONTACT & COLLABORATION" />
             <section id="contact" className="snap-section">
                 <Contact />
                 <Footer />
