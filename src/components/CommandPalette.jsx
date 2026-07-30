@@ -101,6 +101,18 @@ export default function CommandPalette() {
         }
     };
 
+    const listRef = useRef(null);
+
+    // Auto-scroll selected item into view when navigating with Arrow Up/Down
+    useEffect(() => {
+        if (listRef.current) {
+            const selectedEl = listRef.current.children[selectedIndex];
+            if (selectedEl) {
+                selectedEl.scrollIntoView({ block: 'nearest' });
+            }
+        }
+    }, [selectedIndex]);
+
     return (
         <AnimatePresence>
             {isCommandPaletteOpen && (
@@ -139,8 +151,13 @@ export default function CommandPalette() {
                             </div>
                         </div>
 
-                        {/* Filtered Command List */}
-                        <div className="max-h-[380px] overflow-y-auto p-2 scrollbar-thin">
+                        {/* Filtered Command List - data-lenis-prevent allows mouse wheel / trackpad scroll inside Lenis */}
+                        <div
+                            ref={listRef}
+                            data-lenis-prevent
+                            data-lenis-prevent-touch
+                            className="max-h-[380px] overflow-y-auto p-2 scrollbar-thin overscroll-contain"
+                        >
                             {filteredItems.length === 0 ? (
                                 <div className="py-12 text-center text-neutral-500 font-mono text-xs">
                                     No matching commands found.
