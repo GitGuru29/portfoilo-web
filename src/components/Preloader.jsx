@@ -1,266 +1,152 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import useStore from '../store/useStore';
+import { playChimeSound, playTypewriterSound } from '../utils/soundFX';
 
+/**
+ * Premium Early-2010s Flagship Smartphone Orb & Vector Stroke Boot Animation for SIDAN
+ * 
+ * - Starts on pitch-black canvas (#000000).
+ * - Blue-white glowing energy orb orbits clockwise leaving a Milky Way stardust trail.
+ * - Draws SIDAN letter by letter synchronized with the orb's movement.
+ * - Each letter emits a soft electric-blue glow before settling into metallic white.
+ * - Orb completes one final circular stardust loop around completed SIDAN before dissolving.
+ * - 1-second crisp hold & smooth fade to black (~3.8s total duration).
+ */
 export default function Preloader() {
     const unlockSystem = useStore((state) => state.unlockSystem);
+    const soundEnabled = useStore((state) => state.soundEnabled);
 
-    const containerRef  = useRef(null);
-    const topBarRef     = useRef(null);
-    const bottomBarRef  = useRef(null);
-    const nameRef       = useRef(null);
-    const scanRef       = useRef(null);
-    const barTrackRef   = useRef(null);
-    const barFillRef    = useRef(null);
-    const pctRef        = useRef(null);
-    const taglineRef    = useRef(null);
-    const letterRefs    = useRef([]);
+    const [isExiting, setIsExiting] = useState(false);
+    const [letterProgress, setLetterProgress] = useState(0); // 0 to 5 for S-I-D-A-N
+    const [trailActive, setTrailActive] = useState(true);
 
-    const NAME = 'SILUNA';
+    const LETTERS = ['S', 'I', 'D', 'A', 'N'];
 
     useEffect(() => {
-        const tl = gsap.timeline();
+        // Play soft boot chime
+        playChimeSound(soundEnabled);
 
-        // ── Phase 1: Letterbox bars slide in from top & bottom ──────────
-        tl.fromTo(topBarRef.current,
-            { scaleY: 0, transformOrigin: 'top center' },
-            { scaleY: 1, duration: 0.6, ease: 'power4.out' },
-            0
-        );
-        tl.fromTo(bottomBarRef.current,
-            { scaleY: 0, transformOrigin: 'bottom center' },
-            { scaleY: 1, duration: 0.6, ease: 'power4.out' },
-            0
-        );
+        // Synchronized letter drawing sequence as orb orbits
+        let step = 0;
+        const letterInterval = setInterval(() => {
+            step += 1;
+            setLetterProgress(step);
+            playTypewriterSound(soundEnabled);
 
-        // ── Phase 2: Name letters stagger in ─────────────────────────────
-        tl.fromTo(letterRefs.current,
-            { opacity: 0, y: 40, rotateX: -90 },
-            {
-                opacity: 1, y: 0, rotateX: 0,
-                duration: 0.7, ease: 'power4.out',
-                stagger: 0.08,
-            },
-            0.5
-        );
+            if (step >= LETTERS.length) {
+                clearInterval(letterInterval);
+            }
+        }, 320); // Draws letters in ~1.6s
 
-        // ── Phase 3: Gold scan line sweeps across ────────────────────────
-        tl.fromTo(scanRef.current,
-            { left: '-5%', opacity: 1 },
-            { left: '110%', opacity: 1, duration: 0.9, ease: 'power2.inOut' },
-            1.0
-        );
+        // Dissolve stardust trail after final orbit loop at ~2.8s
+        const trailTimer = setTimeout(() => {
+            setTrailActive(false);
+        }, 2800);
 
-        // ── Phase 4: Tagline fades in ────────────────────────────────────
-        tl.fromTo(taglineRef.current,
-            { opacity: 0, y: 10 },
-            { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-            1.4
-        );
+        // Smooth exit fade to black and unlock after ~3.8s
+        const exitTimer = setTimeout(() => {
+            setIsExiting(true);
+            setTimeout(unlockSystem, 600);
+        }, 3800);
 
-        // ── Phase 5: Progress bar fills up ────────────────────────────────
-        tl.fromTo(barTrackRef.current,
-            { opacity: 0, scaleX: 0, transformOrigin: 'left center' },
-            { opacity: 1, scaleX: 1, duration: 0.4, ease: 'power2.out' },
-            1.6
-        );
-
-        const pctObj = { v: 0 };
-        tl.to(pctObj, {
-            v: 100,
-            duration: 1.4,
-            ease: 'power1.inOut',
-            onUpdate() {
-                if (barFillRef.current)
-                    barFillRef.current.style.width = pctObj.v + '%';
-                if (pctRef.current)
-                    pctRef.current.textContent = Math.round(pctObj.v) + '%';
-            },
-        }, 1.8);
-
-        // ── Phase 6: Exit — bars collapse, content fades ─────────────────
-        tl.to([nameRef.current, taglineRef.current, barTrackRef.current, pctRef.current], {
-            opacity: 0, y: -20, duration: 0.4, ease: 'power2.in', stagger: 0.04,
-        }, 3.4);
-
-        tl.to(topBarRef.current,
-            { scaleY: 0, transformOrigin: 'top center', duration: 0.5, ease: 'power4.in' },
-            3.7
-        );
-        tl.to(bottomBarRef.current,
-            { scaleY: 0, transformOrigin: 'bottom center', duration: 0.5, ease: 'power4.in' },
-            3.7
-        );
-
-        // Final fade out and unlock
-        tl.to(containerRef.current, {
-            opacity: 0, duration: 0.4, ease: 'power2.inOut',
-            onComplete: unlockSystem,
-        }, 4.1);
-
-        return () => tl.kill();
-    }, [unlockSystem]);
+        return () => {
+            clearInterval(letterInterval);
+            clearTimeout(trailTimer);
+            clearTimeout(exitTimer);
+        };
+    }, [unlockSystem, soundEnabled]);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: 'fixed', inset: 0, zIndex: 9999,
-                background: '#0C0C0F',
-                display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center',
-                overflow: 'hidden',
-            }}
-        >
-            {/* ── Subtle grain texture ── */}
-            <div aria-hidden style={{
-                position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`,
-            }} />
-
-            {/* ── Radial gold glow ── */}
-            <div aria-hidden style={{
-                position: 'absolute', inset: 0,
-                background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(212,175,55,0.06) 0%, transparent 70%)',
-                pointerEvents: 'none', zIndex: 0,
-            }} />
-
-            {/* ── Letterbox bars ── */}
-            <div ref={topBarRef} style={{
-                position: 'absolute', top: 0, left: 0, right: 0,
-                height: '18%', background: '#0C0C0F', zIndex: 2,
-                borderBottom: '1px solid rgba(212,175,55,0.15)',
-            }} />
-            <div ref={bottomBarRef} style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0,
-                height: '18%', background: '#0C0C0F', zIndex: 2,
-                borderTop: '1px solid rgba(212,175,55,0.15)',
-            }} />
-
-            {/* ── Corner accents ── */}
-            {[
-                { top: '18%', left: 0 },
-                { top: '18%', right: 0 },
-                { bottom: '18%', left: 0 },
-                { bottom: '18%', right: 0 },
-            ].map((pos, i) => (
-                <div key={i} aria-hidden style={{
-                    position: 'absolute', ...pos,
-                    width: 40, height: 40, zIndex: 3,
-                    borderTop: i < 2 ? '1px solid rgba(212,175,55,0.2)' : 'none',
-                    borderBottom: i >= 2 ? '1px solid rgba(212,175,55,0.2)' : 'none',
-                    borderLeft: i % 2 === 0 ? '1px solid rgba(212,175,55,0.2)' : 'none',
-                    borderRight: i % 2 === 1 ? '1px solid rgba(212,175,55,0.2)' : 'none',
-                }} />
-            ))}
-
-            {/* ── Main center content ── */}
-            <div style={{
-                position: 'relative', zIndex: 5,
-                display: 'flex', flexDirection: 'column',
-                alignItems: 'center', gap: 24,
-            }}>
-
-                {/* Name letters */}
-                <div
-                    ref={nameRef}
-                    style={{
-                        position: 'relative', overflow: 'hidden',
-                        display: 'flex', gap: 'clamp(4px, 1.5vw, 12px)',
-                        perspective: 800,
-                    }}
+        <AnimatePresence>
+            {!isExiting && (
+                <motion.div
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.7, ease: 'easeInOut' }}
+                    className="fixed inset-0 z-[999999] bg-black flex items-center justify-center select-none overflow-hidden"
                 >
-                    {/* Gold scan line over the name */}
-                    <div ref={scanRef} style={{
-                        position: 'absolute', top: 0, bottom: 0,
-                        width: '6%',
-                        background: 'linear-gradient(to right, transparent, rgba(212,175,55,0.6), transparent)',
-                        zIndex: 10, pointerEvents: 'none',
-                        left: '-5%', opacity: 0,
-                    }} />
+                    {/* Centered Composition */}
+                    <div className="relative flex items-center justify-center w-full max-w-4xl h-80">
+                        
+                        {/* Orbiting Stardust & Energy Orb Ring */}
+                        <AnimatePresence>
+                            {trailActive && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.6 }}
+                                    animate={{ opacity: 1, scale: 1, rotate: 360 }}
+                                    exit={{ opacity: 0, scale: 1.1 }}
+                                    transition={{
+                                        rotate: { duration: 2.2, repeat: Infinity, ease: 'linear' },
+                                        opacity: { duration: 0.6 },
+                                        scale: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+                                    }}
+                                    className="absolute w-72 sm:w-96 md:w-[28rem] h-72 sm:h-96 md:h-[28rem] rounded-full pointer-events-none flex items-center justify-center"
+                                >
+                                    {/* Milky Way Stardust Light Dust Arc Trail */}
+                                    <div className="absolute inset-0 rounded-full border border-sky-400/20 border-t-sky-300 shadow-[0_0_40px_rgba(56,189,248,0.3)] filter blur-[1px]" />
+                                    
+                                    {/* Rotating Glowing Blue-White Energy Orb at orbit top */}
+                                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white shadow-[0_0_25px_rgba(255,255,255,1),0_0_50px_rgba(56,189,248,0.9)]" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
 
-                    {NAME.split('').map((letter, i) => (
-                        <span
-                            key={i}
-                            ref={el => letterRefs.current[i] = el}
-                            style={{
-                                fontFamily: 'Space Grotesk, sans-serif',
-                                fontSize: 'clamp(3.5rem, 10vw, 9rem)',
-                                fontWeight: 800,
-                                letterSpacing: '0.05em',
-                                textTransform: 'uppercase',
-                                color: '#FAFAFA',
-                                lineHeight: 1,
-                                opacity: 0,
-                                display: 'inline-block',
-                            }}
-                        >
-                            {letter}
-                        </span>
-                    ))}
-                </div>
+                        {/* SIDAN Vector Stroke Typography */}
+                        <div className="relative z-10 flex items-center justify-center gap-3 sm:gap-5 md:gap-8 px-8">
+                            {LETTERS.map((char, index) => {
+                                const isDrawn = letterProgress > index;
+                                const isCurrentlyDrawing = letterProgress === index + 1;
 
-                {/* Tagline */}
-                <div ref={taglineRef} style={{
-                    opacity: 0,
-                    fontFamily: 'Space Grotesk, sans-serif',
-                    fontSize: 'clamp(9px, 1.2vw, 11px)',
-                    letterSpacing: '0.5em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(212,175,55,0.7)',
-                }}>
-                    Systems · Android · Software
-                </div>
+                                return (
+                                    <motion.div
+                                        key={char}
+                                        initial={{ opacity: 0, scale: 0.9, y: 5 }}
+                                        animate={{
+                                            opacity: isDrawn ? 1 : 0,
+                                            scale: isDrawn ? 1 : 0.9,
+                                            y: isDrawn ? 0 : 5
+                                        }}
+                                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                                        className="relative"
+                                    >
+                                        <span
+                                            className={`text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-space font-extrabold uppercase tracking-tight transition-all duration-500 ${
+                                                isCurrentlyDrawing
+                                                    ? 'text-sky-300 drop-shadow-[0_0_35px_rgba(56,189,248,0.95)]'
+                                                    : 'text-transparent bg-clip-text bg-gradient-to-b from-[#ffffff] via-[#f1f5f9] to-[#cbd5e1] drop-shadow-[0_2px_15px_rgba(255,255,255,0.2)]'
+                                            }`}
+                                        >
+                                            {char}
+                                        </span>
 
-                {/* Progress bar + percentage */}
-                <div style={{
-                    display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', gap: 10, width: 'clamp(200px, 30vw, 340px)',
-                }}>
-                    <div
-                        ref={barTrackRef}
-                        style={{
-                            width: '100%', height: 1,
-                            background: 'rgba(255,255,255,0.08)',
-                            position: 'relative', overflow: 'hidden',
-                            opacity: 0,
-                        }}
-                    >
-                        <div
-                            ref={barFillRef}
-                            style={{
-                                position: 'absolute', top: 0, left: 0,
-                                height: '100%', width: '0%',
-                                background: 'linear-gradient(to right, rgba(212,175,55,0.4), rgba(212,175,55,1))',
-                                boxShadow: '0 0 8px rgba(212,175,55,0.6)',
-                            }}
+                                        {/* Brief Electric-Blue Edge Glow overlay as each letter is completed */}
+                                        {isCurrentlyDrawing && (
+                                            <motion.span
+                                                initial={{ opacity: 1, scale: 1.05 }}
+                                                animate={{ opacity: 0, scale: 1 }}
+                                                transition={{ duration: 0.6 }}
+                                                className="absolute inset-0 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-space font-extrabold uppercase tracking-tight text-sky-400 blur-md pointer-events-none"
+                                            >
+                                                {char}
+                                            </motion.span>
+                                        )}
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Soft Ambient Illumination aura around completed SIDAN */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: letterProgress >= 5 ? 0.35 : 0 }}
+                            transition={{ duration: 1.0 }}
+                            className="absolute w-96 h-48 rounded-full bg-sky-400/20 blur-3xl pointer-events-none"
                         />
-                    </div>
-                    <span
-                        ref={pctRef}
-                        style={{
-                            fontFamily: 'Space Grotesk, sans-serif',
-                            fontSize: 10, letterSpacing: '0.3em',
-                            color: 'rgba(255,255,255,0.25)',
-                            fontVariantNumeric: 'tabular-nums',
-                        }}
-                    >
-                        0%
-                    </span>
-                </div>
-            </div>
 
-            {/* ── Bottom label ── */}
-            <div style={{
-                position: 'absolute', bottom: '22%',
-                fontFamily: 'Space Grotesk, sans-serif',
-                fontSize: 9, letterSpacing: '0.4em',
-                textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.15)',
-                zIndex: 5,
-            }}>
-                Portfolio v2026
-            </div>
-        </div>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
