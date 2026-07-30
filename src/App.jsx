@@ -11,6 +11,7 @@ import useStore from './store/useStore';
 import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
 import Preloader from './components/Preloader';
+import CommandPalette from './components/CommandPalette';
 import WhatsAppChat from './components/WhatsAppChat';
 
 function App() {
@@ -30,6 +31,9 @@ function App() {
 
                 {/* Premium custom cursor — always on top */}
                 <CustomCursor />
+
+                {/* Developer Command Palette (Cmd + K) */}
+                <CommandPalette />
 
                 {/* The Sleek Preloader */}
                 <AnimatePresence>

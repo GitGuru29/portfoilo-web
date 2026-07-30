@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import useStore from '../store/useStore';
-import { Terminal } from 'lucide-react';
+import { Terminal, Volume2, VolumeX } from 'lucide-react';
+import { playClickSound } from '../utils/soundFX';
 
 // Magnetic link — pulls toward cursor on hover
 function MagneticLink({ href, id, children, onClick, external }) {
@@ -160,12 +161,44 @@ export default function Navigation() {
                     </div>
 
                     {/* Right actions */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 md:gap-4">
+                        {/* Cmd + K Command Palette Trigger */}
+                        <button
+                            onClick={() => {
+                                useStore.getState().setCommandPaletteOpen(true);
+                                playClickSound(useStore.getState().soundEnabled);
+                            }}
+                            title="Command Palette (Cmd + K)"
+                            aria-label="Open Command Palette"
+                            className="hidden sm:flex items-center gap-1.5 border border-current/20 px-2.5 py-1.5 text-[10px] font-mono tracking-widest text-current/80 hover:text-current hover:border-current/50 transition-all rounded"
+                        >
+                            <span className="text-[#D4AF37]">⌘</span>
+                            <span>K</span>
+                        </button>
+
+                        {/* Sound FX Toggle */}
+                        <button
+                            onClick={() => {
+                                const current = useStore.getState().soundEnabled;
+                                useStore.getState().toggleSound();
+                                playClickSound(!current);
+                            }}
+                            title={useStore((s) => s.soundEnabled) ? "Mute Sound Effects" : "Enable Sound Effects"}
+                            aria-label="Toggle Sound Effects"
+                            className="p-1.5 border border-current/20 opacity-70 hover:opacity-100 hover:border-current/50 transition-all rounded text-current"
+                        >
+                            {useStore((s) => s.soundEnabled) ? (
+                                <Volume2 size={12} className="text-[#D4AF37]" />
+                            ) : (
+                                <VolumeX size={12} className="text-current/50" />
+                            )}
+                        </button>
+
                         {/* Terminal toggle */}
                         <button
                             onClick={toggleTerminal}
                             aria-label="Open terminal"
-                            className={`group relative flex items-center gap-2 border px-3 py-1.5 transition-all duration-300 ${
+                            className={`group relative flex items-center gap-2 border px-3 py-1.5 transition-all duration-300 rounded ${
                                 isTerminalOpen
                                     ? 'border-current opacity-100 bg-current/10'
                                     : 'border-current/20 opacity-50 hover:opacity-100 hover:border-current/40'
