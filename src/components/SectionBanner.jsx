@@ -5,11 +5,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * Deep Blue Glass SectionBanner (Matching Badges Section Theme)
+ * Full-Screen Deep Blue Glass SectionBanner
  * 
- * - Transparent outer background (no black box surrounding card).
- * - Crisp, high-contrast bold white text heading (text-white).
- * - Deep dark blue glass container matching BadgesOverlay.
+ * - Full screen viewport width & height (w-full h-screen).
+ * - Deep dark blue gradient background matching BadgesOverlay.
+ * - Crisp, high-contrast bold white typewriter text heading (text-white).
  * - GSAP ScrollTrigger letter-by-letter scroll typewriter animation.
  */
 export default function SectionBanner({
@@ -69,28 +69,24 @@ export default function SectionBanner({
             ref={bannerRef}
             className="relative w-full h-[200vh] bg-transparent"
         >
-            {/* Sticky Viewport Container - Transparent BG */}
-            <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center p-4 sm:p-8 bg-transparent z-20">
+            {/* Sticky Full-Screen Viewport Banner (100vw x 100vh) */}
+            <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#0c1322] via-[#0A0F1C] to-[#070b14] border-y border-blue-500/20 shadow-[0_20px_50px_-10px_rgba(59,130,246,0.35)] z-20">
 
-                {/* Dark Blue Glass Rounded Banner Container (Matching Badges Grid Theme) */}
-                <div className="w-full max-w-6xl min-h-[55vh] md:min-h-[68vh] rounded-3xl md:rounded-[2.5rem] bg-gradient-to-br from-[#0c1322] via-[#0A0F1C] to-[#070b14] p-8 md:p-16 border border-blue-500/30 shadow-[0_20px_50px_-10px_rgba(59,130,246,0.35)] backdrop-blur-xl flex items-center justify-center relative overflow-hidden">
+                {/* Ambient Blue Background Glow Blobs */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-blue-500/20 blur-[130px] pointer-events-none" />
+                <div className="absolute inset-0 bg-repeat opacity-[0.03] pointer-events-none noise-bg" />
 
-                    {/* Ambient Blue Background Glow Blobs */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-blue-500/15 blur-[110px] pointer-events-none" />
-                    <div className="absolute inset-0 bg-repeat opacity-[0.03] pointer-events-none noise-bg" />
-
-                    {/* Main Scroll-Driven Typewriter Title - Crisp High-Contrast Bold White Text */}
-                    <div
-                        ref={textRef}
-                        className="relative z-10 max-w-5xl mx-auto text-center px-4"
-                    >
-                        <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-space font-bold text-white tracking-tight uppercase min-h-[1.2em] flex items-center justify-center flex-wrap leading-none drop-shadow-2xl">
-                            <span>{visibleTitle}</span>
-                            <span
-                                className="inline-block w-[0.35em] h-[0.85em] ml-2 bg-blue-400 animate-pulse shadow-[0_0_20px_rgba(96,165,250,0.9)] align-middle"
-                            />
-                        </h2>
-                    </div>
+                {/* Main Scroll-Driven Typewriter Title - Crisp High-Contrast Bold White Text */}
+                <div
+                    ref={textRef}
+                    className="relative z-10 max-w-7xl mx-auto text-center px-6"
+                >
+                    <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-space font-bold text-white tracking-tight uppercase min-h-[1.2em] flex items-center justify-center flex-wrap leading-none drop-shadow-2xl">
+                        <span>{visibleTitle}</span>
+                        <span
+                            className="inline-block w-[0.35em] h-[0.85em] ml-2 bg-blue-400 animate-pulse shadow-[0_0_20px_rgba(96,165,250,0.9)] align-middle"
+                        />
+                    </h2>
                 </div>
             </div>
         </div>
