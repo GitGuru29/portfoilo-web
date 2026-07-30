@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 
 const SECTIONS = [
     { id: 'hero', label: 'Hero' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'timeline', label: 'Experience' },
     { id: 'skills', label: 'Skills' },
     { id: 'github', label: 'GitHub Activity' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'timeline', label: 'Build Log' },
     { id: 'research', label: 'Research' },
-    { id: 'testimonials', label: 'References' },
     { id: 'certificates', label: 'Certificates' },
     { id: 'badges', label: 'Badges' },
+    { id: 'testimonials', label: 'References' },
     { id: 'contact', label: 'Contact' },
 ];
 

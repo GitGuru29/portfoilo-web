@@ -19,6 +19,21 @@ import SectionBanner from '../components/SectionBanner';
 import { projectsData } from '../data/projects';
 import { CATEGORIES } from '../data/categories';
 
+/**
+ * Re-organized Home Page Layout
+ * 
+ * Optimized Section Flow:
+ *  1. Hero & Metrics
+ *  2. Featured Projects (Primary Showcase)
+ *  3. Experience & Build Log (Work History)
+ *  4. Skills & Competencies (Technical Stack)
+ *  5. GitHub Activity (Open Source Contributions)
+ *  6. Active Research (Systems & Android Papers)
+ *  7. Certificates & Accreditations (Formal Qualifications)
+ *  8. Badges & Recognition (Community Credentials)
+ *  9. Recommendations & References (Testimonials)
+ * 10. Contact & Footer (Call to Action & Booking)
+ */
 export default function Home() {
     const [activeCategory, setActiveCategory] = useState(CATEGORIES.ALL.id);
     const [searchQuery, setSearchQuery] = useState('');
@@ -40,25 +55,13 @@ export default function Home() {
             {/* Floating side dot indicator navigation */}
             <SectionDotsNav />
 
-            {/* ── Hero ── */}
+            {/* 1. ── Hero Section ── */}
             <section id="hero" className="snap-section">
                 <HeroOverlay />
                 <StatsTicker />
             </section>
 
-            {/* ── Skills ── */}
-            <SectionBanner id="skills-banner" title="SKILLS & COMPETENCIES" />
-            <section id="skills" className="snap-section">
-                <SkillsOverlay />
-            </section>
-
-            {/* ── GitHub 3D Graph ── */}
-            <SectionBanner id="github-banner" title="GITHUB ACTIVITY & CODEBASE" />
-            <section id="github" className="snap-section">
-                <GitHubActivitySection />
-            </section>
-
-            {/* ── Projects ── */}
+            {/* 2. ── Featured Projects (Top Showcase) ── */}
             <SectionBanner id="projects-banner" title="FEATURED PROJECTS" />
             <section id="projects" className="snap-section">
                 <ProjectsOverlay projects={filteredProjects} isFiltered={isFiltered}>
@@ -69,37 +72,49 @@ export default function Home() {
                 </ProjectsOverlay>
             </section>
 
-            {/* ── Timeline / Build Log ── */}
+            {/* 3. ── Experience & Build Log ── */}
             <SectionBanner id="timeline-banner" title="EXPERIENCE & BUILD LOG" />
             <section id="timeline" className="snap-section">
                 <TimelineSection />
             </section>
 
-            {/* ── Active Research ── */}
+            {/* 4. ── Skills & Competencies ── */}
+            <SectionBanner id="skills-banner" title="SKILLS & COMPETENCIES" />
+            <section id="skills" className="snap-section">
+                <SkillsOverlay />
+            </section>
+
+            {/* 5. ── GitHub Activity & Codebase ── */}
+            <SectionBanner id="github-banner" title="GITHUB ACTIVITY & CODEBASE" />
+            <section id="github" className="snap-section">
+                <GitHubActivitySection />
+            </section>
+
+            {/* 6. ── Active Research ── */}
             <SectionBanner id="research-banner" title="ACTIVE RESEARCH" />
             <section id="research" className="snap-section">
                 <ActiveResearchOverlay />
             </section>
 
-            {/* ── References & Recommendations ── */}
-            <SectionBanner id="testimonials-banner" title="RECOMMENDATIONS & REFERENCES" />
-            <section id="testimonials" className="snap-section">
-                <TestimonialsOverlay />
-            </section>
-
-            {/* ── Certificates ── */}
+            {/* 7. ── Certificates & Accreditations ── */}
             <SectionBanner id="certificates-banner" title="CERTIFICATES & ACCREDITATIONS" />
             <section id="certificates" className="snap-section">
                 <CertificatesOverlay />
             </section>
 
-            {/* ── Badges ── */}
+            {/* 8. ── Badges & Recognition ── */}
             <SectionBanner id="badges-banner" title="BADGES & RECOGNITION" />
             <section id="badges" className="snap-section">
                 <BadgesOverlay />
             </section>
 
-            {/* ── Contact + Footer ── */}
+            {/* 9. ── References & Recommendations ── */}
+            <SectionBanner id="testimonials-banner" title="RECOMMENDATIONS & REFERENCES" />
+            <section id="testimonials" className="snap-section">
+                <TestimonialsOverlay />
+            </section>
+
+            {/* 10. ── Contact & Footer ── */}
             <SectionBanner id="contact-banner" title="CONTACT & COLLABORATION" />
             <section id="contact" className="snap-section">
                 <Contact />
@@ -111,5 +126,3 @@ export default function Home() {
         </div>
     );
 }
-
-
