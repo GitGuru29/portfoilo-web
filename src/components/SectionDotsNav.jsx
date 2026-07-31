@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 const SECTIONS = [
     { id: 'hero', label: 'Hero' },
@@ -52,10 +53,12 @@ export default function SectionDotsNav() {
         }
     };
 
-    return (
+    if (typeof document === 'undefined') return null;
+
+    return createPortal(
         <aside
             aria-label="Section Navigation"
-            className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-4 py-4 px-2 rounded-full glass border border-white/10 shadow-2xl backdrop-blur-md"
+            className="fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-[99995] hidden lg:flex flex-col items-center gap-3.5 py-4 px-2 rounded-full bg-neutral-950/85 border border-white/15 shadow-2xl backdrop-blur-xl"
         >
             {SECTIONS.map(({ id, label }, index) => {
                 const isActive = activeSection === id;
@@ -63,11 +66,11 @@ export default function SectionDotsNav() {
                     <button
                         key={id}
                         onClick={() => scrollToSection(id)}
-                        className="group relative flex items-center justify-center p-1.5 focus:outline-none"
+                        className="group relative flex items-center justify-center p-1.5 focus:outline-none cursor-pointer"
                         aria-label={`Scroll to section ${label}`}
                     >
                         {/* Tooltip on hover */}
-                        <span className="absolute right-9 px-3 py-1 text-[11px] font-space tracking-widest text-white/90 bg-neutral-900/90 border border-white/10 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-lg">
+                        <span className="absolute right-9 px-3 py-1 text-[11px] font-space tracking-widest text-white/90 bg-neutral-900/95 border border-white/15 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl">
                             <span className="text-[#D4AF37] font-mono mr-1.5">0{index + 1}.</span>
                             {label}
                         </span>
@@ -77,12 +80,15 @@ export default function SectionDotsNav() {
                             className={`block rounded-full transition-all duration-300 ${
                                 isActive
                                     ? 'w-3 h-3 bg-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.8)] scale-110'
-                                    : 'w-2 h-2 bg-white/30 group-hover:bg-white/70 hover:scale-125'
+                                    : 'w-2 h-2 bg-white/30 group-hover:bg-white/80 hover:scale-125'
                             }`}
                         />
                     </button>
                 );
             })}
-        </aside>
+        </aside>,
+        document.body
     );
 }
+
+

@@ -403,31 +403,6 @@ export default function HeroOverlay() {
                             }}>Software Engineering</p>
                         </div>
 
-                        {/* Vertical SIDAN text on right side of photo */}
-                        <div className="hidden md:flex" style={{
-                            position: 'absolute', top: '50%', right: 'clamp(16px, 2.5vw, 32px)',
-                            transform: 'translateY(-50%)',
-                            flexDirection: 'column', alignItems: 'center', gap: 10,
-                            zIndex: 10,
-                            pointerEvents: 'none',
-                        }}>
-                            <div style={{
-                                width: 1, height: 40,
-                                background: 'linear-gradient(to bottom, transparent, rgba(212,175,55,0.4))',
-                            }} />
-                            <span style={{
-                                fontFamily: 'Space Grotesk, sans-serif',
-                                fontSize: 9, letterSpacing: '0.38em',
-                                textTransform: 'uppercase',
-                                color: 'rgba(255,255,255,0.45)',
-                                writingMode: 'vertical-rl',
-                                fontWeight: 500,
-                            }}>SIDAN © 2026</span>
-                            <div style={{
-                                width: 1, height: 40,
-                                background: 'linear-gradient(to top, transparent, rgba(212,175,55,0.4))',
-                            }} />
-                        </div>
                     </div>                </div>
             </div>
         </section>
