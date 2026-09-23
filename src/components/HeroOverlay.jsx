@@ -286,36 +286,131 @@ export default function HeroOverlay() {
                     style={{
                         position: 'absolute', inset: 0, visibility: 'hidden', opacity: 0, zIndex: 100,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        padding: 'clamp(24px, 5vw, 64px)',
+                        padding: 'clamp(16px, 3.5vw, 40px)',
                     }}
                 >
-                    <div style={{ width: '100%', maxWidth: 900, display: 'flex', flexDirection: 'column', gap: 26 }}>
-                        <div className="flex items-center gap-4" style={{ borderBottom: '1px solid rgba(18,18,18,0.3)', paddingBottom: 10 }}>
-                            <span className="stamp--edition">● Inside Edition</span>
-                            <span className="dateline">THE DEVELOPER'S DESK — CONTINUED FROM PAGE ONE</span>
+                    <div className="w-full max-w-7xl mx-auto flex flex-col gap-4 md:gap-5 px-4 md:px-8">
+                        
+                        {/* Editorial Top Bar */}
+                        <div className="flex flex-wrap items-center justify-between gap-4 pb-2.5" style={{ borderBottom: '1px solid rgba(18,18,18,0.25)' }}>
+                            <div className="flex items-center gap-3">
+                                <span className="stamp--edition">● Inside Edition</span>
+                                <span className="dateline hidden sm:inline">THE DEVELOPER'S DESK — CONTINUED FROM PAGE ONE</span>
+                            </div>
+                            <div className="dateline text-accent">SPECIAL REPORT · DISPATCH NO. 024-B</div>
                         </div>
-                        <div className="mt-3">
-                            <h2 className="headline-chop text-balance" style={{ fontSize: 'clamp(2rem, 4.2vw, 3.6rem)' }}>
+
+                        {/* Section Headline */}
+                        <div>
+                            <h2 className="headline-chop text-balance" style={{ fontSize: 'clamp(1.6rem, 3.4vw, 3rem)', lineHeight: 1.05 }}>
                                 SYSTEMS BEFORE SOFTWARE, CORRECTNESS BEFORE SPEED.
                             </h2>
                         </div>
-                        <div className="news-columns" style={{ fontFamily: S.body, fontSize: '15px', lineHeight: 1.75, color: 'rgba(18,18,18,0.82)' }}>
-                            <p className="drop-cap text-justify" style={{ marginTop: 2 }}>
-                                A final-year Software Engineering undergraduate who works at the edge of the stack —
-                                native Android launchers, Linux utilities, and low-level system behaviour where
-                                performance is a feature, not an afterthought. The desk moves on foot from kernel
-                                modules to Jetpack Compose without changing its stride.
-                            </p>
-                            <p className="text-justify" style={{ marginTop: 2 }}>
-                                Every dispatch is built for determinism: small, measurable, and predictable under
-                                pressure. Opinion is reserved for the compiler. The office dog catches the binders.
-                            </p>
+
+                        {/* Main 12-Column Editorial Grid */}
+                        <div className="grid grid-cols-12 gap-6 lg:gap-8 items-start">
+                            
+                            {/* Left Column — Deep Editorial Story & Philosophy (7 Cols) */}
+                            <div className="col-span-12 lg:col-span-7 flex flex-col gap-4">
+                                
+                                {/* Pull Quote */}
+                                <blockquote className="italic font-serif text-ink/85 text-sm md:text-base pl-4 border-l-2 border-accent py-1 bg-panel/60">
+                                    “The machine is read-only until proven otherwise — building low-level systems software, native Android tooling, and compilers engineered for determinism and quiet correctness.”
+                                </blockquote>
+
+                                {/* 2-Column Article Text */}
+                                <div className="news-columns" style={{ fontFamily: S.body, fontSize: '13px', lineHeight: 1.6, color: 'rgba(18,18,18,0.85)' }}>
+                                    <p className="drop-cap text-justify mb-2">
+                                        As a final-year Software Engineering undergraduate working at the edge of the stack, the desk bridges high-level user interfaces with low-level execution environments. From custom Linux daemons to AOSP launcher internals, every project is driven by the conviction that performance is not an afterthought, but a core architectural requirement.
+                                    </p>
+                                    <p className="text-justify mb-2">
+                                        Whether engineering compiler passes for AeroLang, optimizing inter-process communication in ByBridge, or securing network telemetry in AegisLayer, the focus remains on zero-allocation inner loops, predictable memory layouts, and strict contract enforcement. Opinion is reserved for the compiler.
+                                    </p>
+                                </div>
+
+                                {/* Core Disciplines List */}
+                                <div className="grid grid-cols-3 gap-3 pt-3" style={{ borderTop: '1px solid rgba(18,18,18,0.2)' }}>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold">01. Determinism</span>
+                                        <span className="text-[11px] font-serif text-graphite leading-tight">Zero hidden allocations & predictable latency.</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold">02. Correctness</span>
+                                        <span className="text-[11px] font-serif text-graphite leading-tight">Type-safe boundaries & verified contracts.</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold">03. Efficiency</span>
+                                        <span className="text-[11px] font-serif text-graphite leading-tight">Lowest layer that will run cleanly under load.</span>
+                                    </div>
+                                </div>
+
+                                {/* Tech Chips */}
+                                <div className="flex flex-wrap gap-2 pt-1">
+                                    {['C++20', 'Kotlin', 'Linux Kernel', 'Android AOSP', 'LLVM', 'Rust', 'eBPF', 'PostgreSQL', 'CMake'].map(t => (
+                                        <span key={t} className="chip-tech">{t}</span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Right Column — Technical Specifications & Telemetry Card (5 Cols) */}
+                            <div className="col-span-12 lg:col-span-5 flex flex-col gap-4">
+                                
+                                {/* Classified Specs Box */}
+                                <div className="story-card p-5 flex flex-col gap-3">
+                                    <div className="flex items-center justify-between border-b border-ink/20 pb-2">
+                                        <span className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-ink">SYSTEM SPECIFICATIONS</span>
+                                        <span className="font-mono text-[9px] text-accent">CLASSIFIED 024</span>
+                                    </div>
+
+                                    <div className="space-y-2 font-mono text-[11px]">
+                                        <div className="flex justify-between border-b border-ink/10 pb-1.5">
+                                            <span className="text-graphite uppercase">Degree</span>
+                                            <span className="font-semibold text-ink">BSc (Hons) Software Eng.</span>
+                                        </div>
+                                        <div className="flex justify-between border-b border-ink/10 pb-1.5">
+                                            <span className="text-graphite uppercase">Specialization</span>
+                                            <span className="font-semibold text-ink">Systems & Mobile Eng.</span>
+                                        </div>
+                                        <div className="flex justify-between border-b border-ink/10 pb-1.5">
+                                            <span className="text-graphite uppercase">Location</span>
+                                            <span className="font-semibold text-ink">Colombo, Sri Lanka</span>
+                                        </div>
+                                        <div className="flex justify-between border-b border-ink/10 pb-1.5">
+                                            <span className="text-graphite uppercase">Engagement</span>
+                                            <span className="font-semibold text-accent">Available / Remote</span>
+                                        </div>
+                                    </div>
+
+                                    {/* CTAs */}
+                                    <div className="flex flex-col gap-2 pt-2">
+                                        <a href="#projects" className="lux-btn-primary text-center justify-center py-2.5">
+                                            Explore Projects <span className="lux-btn-chevron">→</span>
+                                        </a>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="lux-btn-ghost text-center justify-center py-2">
+                                                Fax CV ↗
+                                            </a>
+                                            <button
+                                                onClick={() => useStore.getState().setMeetingModalOpen(true)}
+                                                className="hud-btn hud-btn--volt text-center justify-center py-2 cursor-pointer"
+                                            >
+                                                Book Call 📅
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Dispatch Note */}
+                                <div className="telegram px-4 py-3" data-stamp="STATUS">
+                                    <div className="dateline text-[9px] tracking-[0.2em] uppercase text-ink/70">DESK DISPATCH NOTE</div>
+                                    <p className="font-mono text-[10px] text-graphite mt-1 leading-relaxed">
+                                        Currently engineering high-throughput platform tools. Reach out for systems contracts or full-time engagements.
+                                    </p>
+                                </div>
+                            </div>
+
                         </div>
-                        <div className="flex flex-wrap gap-2" style={{ borderTop: '1px solid ' + S.line, paddingTop: 18 }}>
-                            {['C++', 'Kotlin', 'Linux', 'Android', 'LLVM', 'AOSP', 'Rust', 'PostgreSQL'].map(t => (
-                                <span key={t} className="chip-tech">{t}</span>
-                            ))}
-                        </div>
+
                     </div>
                 </div>
             </div>
