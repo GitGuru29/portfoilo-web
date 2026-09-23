@@ -69,7 +69,7 @@ export default function Footer() {
                             <span className="text-[10px] md:text-xs tracking-[0.25em] font-mono font-semibold uppercase opacity-90">
                                 {item}
                             </span>
-                            <Sparkles className="w-3 h-3" style={{ color: '#b91c1c' }} />
+                            <Sparkles className="w-3 h-3 text-accent" />
                         </div>
                     ))}
                 </div>
@@ -82,8 +82,8 @@ export default function Footer() {
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8"
                     style={{ borderBottom: '3px double #121212' }}>
                     <div className="space-y-2">
-                        <span className="inline-flex items-center gap-2 px-2 py-1 rounded-none border border-[#b91c1c] text-[#b91c1c] text-[10px] font-mono tracking-widest uppercase">
-                            <span className="w-1.5 h-1.5 bg-[#b91c1c] animate-pulse" />
+                        <span className="inline-flex items-center gap-2 px-2 py-1 rounded-none border border-accent text-accent text-[10px] font-mono tracking-widest uppercase">
+                            <span className="w-1.5 h-1.5 bg-accent animate-pulse" />
                             Open for Core Systems & Android Roles
                         </span>
                         <h2 className="font-blackletter text-4xl md:text-5xl leading-none text-ink">

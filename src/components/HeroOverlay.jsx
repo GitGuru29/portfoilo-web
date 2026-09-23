@@ -11,7 +11,7 @@ const S = {
     ink: '#121212',
     graphite: '#57544d',
     line: 'rgba(18,18,18,0.4)',
-    crimson: '#b91c1c',
+    crimson: '#0ea5e9',
     mono: "'JetBrains Mono', monospace",
     serif: "'Playfair Display', 'Fraunces', Georgia, serif",
     blackletter: "'UnifrakturMaguntia', Georgia, serif",

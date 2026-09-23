@@ -20,9 +20,9 @@ import WhatsAppChat from './components/WhatsAppChat';
 // Tailwind utility that references --color-accent follows the active edition.
 // All values stay inside the broadsheet palette (paper / ink / pressed inks).
 const ACCENT_PRESETS = {
-    sky:   { accent: '#B91C1C', hot: '#D02424', dim: 'rgba(185,28,28,0.35)', cyan: '#121212' },
-    deep:  { accent: '#121212', hot: '#57544D', dim: 'rgba(18,18,18,0.14)', cyan: '#B91C1C' },
-    ochre: { accent: '#8A6D3B', hot: '#B09154', dim: 'rgba(138,109,59,0.35)', cyan: '#121212' },
+    sky:   { accent: '#0EA5E9', hot: '#38BDF8', dim: 'rgba(14,165,233,0.35)', cyan: '#121212' },
+    deep:  { accent: '#121212', hot: '#57544D', dim: 'rgba(18,18,18,0.14)', cyan: '#0EA5E9' },
+    ochre: { accent: '#0284C7', hot: '#38BDF8', dim: 'rgba(2,132,199,0.35)', cyan: '#121212' },
 };
 
 function App() {

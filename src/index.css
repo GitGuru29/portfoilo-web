@@ -27,13 +27,13 @@
     --color-graphite: #57544d;
     --color-bordertech: #cfc9bb;
 
-    /* Press colours — crimson is the single spot */
-    --color-accent: #b91c1c;
-    --color-accent-hot: #d02424;
+    /* Accent colours — light sky blue spot */
+    --color-accent: #0ea5e9;
+    --color-accent-hot: #38bdf8;
     --color-cyanx: #121212;
-    --color-amberx: #8a6d3b;
-    --color-accent-dim: rgba(185, 28, 28, 0.14);
-    --color-telemetry: #b91c1c;
+    --color-amberx: #0284c7;
+    --color-accent-dim: rgba(14, 165, 233, 0.14);
+    --color-telemetry: #0ea5e9;
 
     /* Legacy aliases (keep component classes working) */
     --color-quantum-dark: #f5f2eb;

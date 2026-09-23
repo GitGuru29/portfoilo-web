@@ -55,13 +55,13 @@ export default function Preloader() {
                                         y: 0, 
                                         opacity: 1, 
                                         scale: 1,
-                                        color: ["#ffffff", "#b91c1c", "#ffffff", "#b91c1c", "#ffffff"],
+                                        color: ["#ffffff", "#38bdf8", "#ffffff", "#0ea5e9", "#ffffff"],
                                         textShadow: [
-                                            "0px 0px 0px rgba(96,165,250,0)",
-                                            "0px 0px 15px rgba(96,165,250,0.8)",
-                                            "0px 0px 0px rgba(96,165,250,0)",
-                                            "0px 0px 15px rgba(96,165,250,0.8)",
-                                            "0px 0px 0px rgba(96,165,250,0)"
+                                            "0px 0px 0px rgba(56,189,248,0)",
+                                            "0px 0px 15px rgba(56,189,248,0.8)",
+                                            "0px 0px 0px rgba(56,189,248,0)",
+                                            "0px 0px 15px rgba(56,189,248,0.8)",
+                                            "0px 0px 0px rgba(56,189,248,0)"
                                         ]
                                     }}
                                     transition={{
@@ -83,7 +83,7 @@ export default function Preloader() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: [0, 0.4, 0.1, 0.4] }}
                             transition={{ duration: 4, ease: "easeInOut", delay: 1.8 }}
-                            className="absolute w-[200%] h-[200%] bg-red-700/30 blur-[80px] rounded-[100%] pointer-events-none -z-10"
+                            className="absolute w-[200%] h-[200%] bg-sky-500/30 blur-[80px] rounded-[100%] pointer-events-none -z-10"
                         />
                     </div>
 
@@ -94,7 +94,7 @@ export default function Preloader() {
                         transition={{ duration: 1, delay: 1.5 }}
                         className="absolute bottom-16 flex flex-col items-center gap-3"
                     >
-                        <div className="w-8 h-8 rounded-full border-2 border-gray-800 border-t-red-600 animate-spin" />
+                        <div className="w-8 h-8 rounded-full border-2 border-gray-800 border-t-sky-400 animate-spin" />
                         <span className="text-gray-500 text-[10px] tracking-widest font-sans uppercase">Powered by The Daily Developer Press</span>
                     </motion.div>
                 </motion.div>
