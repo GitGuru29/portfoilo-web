@@ -16,7 +16,7 @@ const WhatsAppChat = () => {
                 href={waLink} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="group flex items-center justify-center w-10 h-10 rounded-xl border border-white/10 bg-[#0A0F1C]/80 backdrop-blur-md hover:border-[#25D366]/50 hover:bg-[#0A0F1C] hover:shadow-[0_0_20px_rgba(37,211,102,0.15)] transition-all duration-300"
+                className="group flex items-center justify-center w-10 h-10 rounded-xl border border-ink/10 bg-panel/90 backdrop-blur-md hover:border-[#25D366]/60 hover:bg-panel hover:shadow-[0_0_20px_rgba(37,211,102,0.15)] transition-all duration-300"
                 aria-label="Chat on WhatsApp"
             >
                 <svg 
@@ -29,7 +29,7 @@ const WhatsAppChat = () => {
                 </svg>
                 
                 {/* Minimalist Tooltip */}
-                <div className="absolute right-full mr-3 px-3 py-1.5 rounded bg-[#0A0F1C]/90 text-slate-300 text-[10px] font-mono border border-white/5 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none tracking-widest uppercase">
+                <div className="absolute right-full mr-3 px-3 py-1.5 rounded bg-ink/90 text-slate-100 text-[10px] font-mono border border-ink/10 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none tracking-widest uppercase">
                     WhatsApp
                 </div>
             </a>

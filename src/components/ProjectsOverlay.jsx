@@ -63,10 +63,10 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
             <div className="w-full max-w-7xl mx-auto px-6 mb-8 flex flex-col md:flex-row justify-between items-end gap-12 lg:gap-8">
                 <div>
                     <h2 className="text-[10px] md:text-xs tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
-                        <Typewriter text="System Architecture" triggerOnScroll={true} loop={false} cursorChar="_" />
+                        <Typewriter text="Latest Bulletins / Dispatches" triggerOnScroll={true} loop={false} cursorChar="_" />
                     </h2>
                     <h3 className="text-4xl md:text-5xl lg:text-6xl font-space font-light leading-tight text-[var(--color-geyser)]">
-                        <Typewriter text={["Featured Systems.", "Selected Projects.", "Open-Source Builds."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
+                        <Typewriter text={["Systems in Print.", "Featured Dispatches.", "Open-Source Builds."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
                     </h3>
                 </div>
             </div>
@@ -86,51 +86,53 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
                         }}
                         className="w-full group will-change-all"
                     >
-                        <Link to={`/project/${project.id}`} data-cursor="View Project" className="block w-full">
-                            <div className="w-full bg-[#F5F5F7] rounded-[24px] md:rounded-[32px] p-6 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative overflow-hidden border border-slate-200/60 hover:border-blue-300/80 transition-all duration-500 shadow-xl shadow-blue-900/5 hover:shadow-[0_8px_40px_rgba(59,130,246,0.08)]">
+<Link to={`/project/${project.id}`} data-cursor="Open Project" className="block w-full">
+                            <div className="w-full story-card laser-card chamfer-sm p-6 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative overflow-hidden">
 
-                                {/* Hover ambient glow */}
-                                <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/10 to-blue-200/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                                <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-blue-300/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
 
                                 {/* Left content */}
                                 <div className="flex flex-col z-10 flex-1 min-w-0 pr-0 md:pr-12">
                                     <div className="flex items-center gap-4 mb-5">
-                                        <span className="text-[10px] md:text-xs font-mono text-blue-400 tracking-widest tabular-nums border border-blue-200 px-2 py-1 rounded">
+                                        <span className="text-[10px] md:text-xs font-mono text-accent-gradient tracking-widest tabular-nums border border-accent/30 px-2 py-1 rounded-none bg-accent/[0.06]">
                                             SYS.{String(index + 1).padStart(2, '0')}
                                         </span>
-                                        <span className="text-[9px] md:text-[10px] tracking-[0.3em] font-space text-slate-400 uppercase">
+                                        <span className="text-[9px] md:text-[10px] tracking-[0.3em] font-mono text-cyanx uppercase">
                                             {CATEGORY_LABELS[project.categoryId] || project.role}
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl md:text-4xl lg:text-5xl font-space font-light mb-4 text-slate-800 group-hover:text-slate-900 transition-colors duration-300 leading-tight">
+                                    <h3 className="text-2xl md:text-4xl lg:text-5xl font-space font-medium mb-4 text-geyser group-hover:text-accent transition-colors duration-300 leading-tight">
                                         {project.title}
                                     </h3>
-                                    <p className="text-sm md:text-base text-slate-500 font-inter font-light leading-relaxed max-w-2xl">
+                                    <p className="text-sm md:text-base text-titanium font-inter font-light leading-relaxed max-w-2xl">
                                         {project.description}
                                     </p>
+
+                                    {/* Dossier metadata */}
+                                    <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] tracking-[0.2em] uppercase text-graphite border-t border-bordertech pt-4 max-w-2xl">
+                                        <span className="text-cyanx">[ COLOMBO / GIT HASH 7FA2 ]</span>
+                                        <span>SYS.{String(index + 1).padStart(2, '0')} · {CATEGORY_LABELS[project.categoryId] || project.role}</span>
+                                    </div>
                                 </div>
 
                                 {/* Right content */}
-                                <div className="flex flex-col items-start md:items-end z-10 gap-6 shrink-0 w-full md:w-auto mt-2 md:mt-0 pt-6 md:pt-0 border-t md:border-t-0 border-blue-200/50 md:border-transparent">
+                                <div className="flex flex-col items-start md:items-end z-10 gap-6 shrink-0 w-full md:w-auto mt-2 md:mt-0 pt-6 md:pt-0 border-t md:border-t-0 border-geyser/10 md:border-transparent">
                                     {/* Tech tags */}
                                     <div className="flex flex-wrap gap-2 justify-start md:justify-end max-w-[280px]">
                                         {project.role.split(' / ').slice(0, 3).map((tag, ti) => (
                                             <span
                                                 key={ti}
-                                                className="text-[9px] font-space tracking-[0.15em] uppercase text-blue-700 border border-blue-200 px-3 py-1.5 rounded-full group-hover:border-blue-300 group-hover:text-blue-800 hover:bg-blue-100 transition-colors duration-300"
+                                                className="chip-tech"
                                             >
                                                 {tag.trim()}
                                             </span>
                                         ))}
                                     </div>
 
-                                    {/* Explore CTA */}
-                                    <div className="flex items-center gap-3 text-slate-400 font-space text-[11px] md:text-xs tracking-[0.2em] uppercase group-hover:text-blue-600 transition-all duration-300 mt-2 md:mt-auto">
-                                        Explore Architecture
-                                        <div className="w-8 h-8 rounded-full border border-blue-200 flex items-center justify-center group-hover:border-blue-500 group-hover:bg-blue-500 transition-all duration-300">
-                                            <span className="inline-block transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-blue-400 group-hover:text-white transition-transform duration-300">↗</span>
-                                        </div>
+                                    {/* Action rail */}
+                                    <div className="flex items-center gap-2 mt-2 md:mt-auto">
+                                        <span className="hud-btn">SOURCE</span>
+                                        <span className="hud-btn hud-btn--volt">DEPLOY</span>
+                                        <span className="hud-btn hud-btn--cyan">SYS_LOG</span>
                                     </div>
                                 </div>
                             </div>
@@ -143,9 +145,9 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
                     <div className="w-full flex justify-center mt-12 relative z-20">
                         <button
                             onClick={() => setShowAll(v => !v)}
-                            className="group flex items-center gap-6 text-[10px] md:text-xs tracking-[0.3em] font-space uppercase text-[var(--color-geyser)]/50 hover:text-[var(--color-geyser)] transition-colors duration-300 px-8 py-4 border border-[var(--color-geyser)]/10 hover:border-[var(--color-geyser)]/30 rounded-full bg-[#EFF6FF]"
+                            className="group flex items-center gap-6 text-[10px] md:text-xs tracking-[0.3em] font-mono uppercase text-graphite hover:text-accent transition-colors duration-300 px-8 py-4 border border-bordertech hover:border-accent/50 bg-surface rounded-none"
                         >
-                            {showAll ? 'Collapse Systems' : `View all ${projects.length} systems`}
+                            {showAll ? '[-] Collapse Systems' : `[+] View all ${projects.length} systems`}
                         </button>
                     </div>
                 )}

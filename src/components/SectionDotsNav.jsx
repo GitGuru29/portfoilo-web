@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
-const SECTIONS = [
-    { id: 'hero', label: 'Hero' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'timeline', label: 'Experience' },
-    { id: 'skills', label: 'Skills' },
-    { id: 'github', label: 'GitHub Activity' },
-    { id: 'research', label: 'Research' },
-    { id: 'certificates', label: 'Certificates' },
-    { id: 'badges', label: 'Badges' },
-    { id: 'testimonials', label: 'References' },
-    { id: 'contact', label: 'Contact' },
+const CHAPTERS = [
+    { id: 'hero', num: '00', label: 'Home' },
+    { id: 'projects', num: '01', label: 'Projects' },
+    { id: 'timeline', num: '02', label: 'Experience' },
+    { id: 'skills', num: '03', label: 'Skills' },
+    { id: 'github', num: '04', label: 'GitHub' },
+    { id: 'research', num: '05', label: 'Research' },
+    { id: 'recognition', num: '06', label: 'Credentials' },
+    { id: 'testimonials', num: '07', label: 'Testimonials' },
+    { id: 'contact', num: '08', label: 'Contact' },
 ];
 
 export default function SectionDotsNav() {
@@ -34,16 +33,31 @@ export default function SectionDotsNav() {
 
         const observer = new IntersectionObserver(handleIntersect, observerOptions);
 
-        SECTIONS.forEach(({ id }) => {
+        CHAPTERS.forEach(({ id }) => {
             const el = document.getElementById(id);
+            // "recognition" is a container spanning badges + certificates
+            if (id === 'recognition') {
+                const children = ['certificates', 'badges'];
+                children.forEach((cid) => {
+                    const cel = document.getElementById(cid);
+                    if (cel) observer.observe(cel);
+                });
+                return;
+            }
             if (el) observer.observe(el);
         });
 
         return () => observer.disconnect();
     }, []);
 
+    // Map active section back to a chapter
+    const activeChapter = (() => {
+        if (activeSection === 'certificates' || activeSection === 'badges') return 'recognition';
+        return activeSection;
+    })();
+
     const scrollToSection = (id) => {
-        const targetEl = document.getElementById(id);
+        const targetEl = id === 'recognition' ? document.getElementById('certificates') : document.getElementById(id);
         if (!targetEl) return;
 
         if (window.lenis) {
@@ -56,31 +70,26 @@ export default function SectionDotsNav() {
     if (typeof document === 'undefined') return null;
 
     return createPortal(
-        <aside
-            aria-label="Section Navigation"
-            className="fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-[99995] hidden lg:flex flex-col items-center gap-3.5 py-4 px-2 rounded-full bg-[#0F1E36]/90 border border-sky-400/35 shadow-[0_8px_32px_rgba(56,189,248,0.25)] backdrop-blur-xl transition-all duration-300"
-        >
-            {SECTIONS.map(({ id, label }, index) => {
-                const isActive = activeSection === id;
+        <aside aria-label="Chapter Navigation" className="chapter-rail">
+            {CHAPTERS.map(({ id, num, label }, index) => {
+                const isActive = activeChapter === id;
                 return (
                     <button
                         key={id}
                         onClick={() => scrollToSection(id)}
-                        className="group relative flex items-center justify-center p-1.5 focus:outline-none cursor-pointer"
-                        aria-label={`Scroll to section ${label}`}
+                        className="chapter-rail__dot group focus:outline-none cursor-pointer"
+                        style={isActive ? { borderColor: 'transparent' } : undefined}
+                        aria-label={`Chapter ${num} — ${label}`}
                     >
-                        {/* Tooltip on hover */}
-                        <span className="absolute right-9 px-3 py-1 text-[11px] font-space tracking-widest text-sky-100 bg-[#0B1528]/95 border border-sky-400/30 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-xl">
-                            <span className="text-[#D4AF37] font-mono mr-1.5">0{index + 1}.</span>
+                        <span className="chapter-rail__tip">
+                            <span className="text-accent font-mono mr-1.5">{num}.</span>
                             {label}
                         </span>
-
-                        {/* Dot indicator */}
                         <span
-                            className={`block rounded-full transition-all duration-300 ${
+                            className={`block transition-all duration-300 ${
                                 isActive
-                                    ? 'w-3 h-3 bg-[#D4AF37] shadow-[0_0_12px_rgba(212,175,55,0.9)] scale-110'
-                                    : 'w-2 h-2 bg-sky-200/50 group-hover:bg-sky-100 hover:scale-125'
+                                    ? 'w-2 h-2 bg-accent skew-x-[-12deg] shadow-[0_0_8px_rgba(185,28,28,0.5)]'
+                                    : 'w-1.5 h-1.5 bg-graphite/70 group-hover:bg-ink group-hover:scale-125'
                             }`}
                         />
                     </button>
@@ -90,5 +99,3 @@ export default function SectionDotsNav() {
         document.body
     );
 }
-
-

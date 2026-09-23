@@ -18,7 +18,7 @@ const useStore = create((set) => ({
     hasBooted: false,
     isTerminalOpen: false,
     soundEnabled: true,
-    accentTheme: 'gold', // 'gold' | 'cyan' | 'emerald'
+    accentTheme: 'sky', // 'sky' | 'deep' | 'ochre' — riso plate filter
     isCommandPaletteOpen: false,
     isMeetingModalOpen: false,
 

@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { 
-    Github, 
-    Linkedin, 
-    Twitter, 
-    FileText, 
-    ArrowUpRight, 
-    Cpu, 
-    Globe, 
-    Sparkles, 
-    Terminal
-} from 'lucide-react';
+import { Github, Linkedin, Twitter, FileText, ArrowUpRight, Cpu, Globe, Sparkles, Terminal } from 'lucide-react';
 import useStore from '../store/useStore';
 
 export default function Footer() {
@@ -69,76 +59,76 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="w-full relative z-20 bg-[#070A10] text-slate-100 border-t border-slate-800/80 overflow-hidden font-sans">
-            
-            {/* ── Ambient Background Gradient Lights ── */}
-            <div aria-hidden className="absolute top-0 left-1/4 -translate-y-1/2 w-[350px] h-[350px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
-            <div aria-hidden className="absolute bottom-0 right-1/4 translate-y-1/2 w-[350px] h-[350px] bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+        <footer className="w-full relative z-20 bg-void text-ink border-t-2 border-ink overflow-hidden font-sans" style={{ borderTop: '3px double #121212' }}>
 
-            {/* ── 1. KINETIC MARQUEE TICKER ── */}
-            <div className="w-full bg-[#0A0E17] border-b border-slate-800/80 py-2.5 overflow-hidden relative">
+            {/* 1. KINETIC MARQUEE TICKER — ink band */}
+            <div className="w-full bg-[#121212] text-[#f5f2eb] border-b-2 border-ink py-2.5 overflow-hidden relative">
                 <div className="flex whitespace-nowrap animate-ticker">
                     {[...marqueeSkills, ...marqueeSkills, ...marqueeSkills].map((item, idx) => (
                         <div key={idx} className="flex items-center gap-4 mx-3">
-                            <span className="text-[10px] md:text-xs font-space tracking-[0.25em] font-semibold text-slate-400 uppercase hover:text-amber-400 transition-colors">
+                            <span className="text-[10px] md:text-xs tracking-[0.25em] font-mono font-semibold uppercase opacity-90">
                                 {item}
                             </span>
-                            <Sparkles className="w-3 h-3 text-amber-400/60" />
+                            <Sparkles className="w-3 h-3" style={{ color: '#b91c1c' }} />
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* ── 2. MAIN FOOTER CONTAINER ── */}
+            {/* 2. MAIN FOOTER — colophon */}
             <div className="max-w-7xl mx-auto px-6 md:px-10 py-10 relative z-10">
 
-                {/* ── Brand Header & Status Strip ── */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-800/80">
-                    <div className="space-y-1.5">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] font-space font-medium tracking-wider uppercase mb-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                            <span>Available for Core Systems & Android Roles</span>
-                        </div>
-                        <h2 className="text-2xl md:text-3xl font-space font-extrabold tracking-tight text-white uppercase">
-                            Siluna <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500">Dangalla</span>
+                {/* Brand header & status strip */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8"
+                    style={{ borderBottom: '3px double #121212' }}>
+                    <div className="space-y-2">
+                        <span className="inline-flex items-center gap-2 px-2 py-1 rounded-none border border-[#b91c1c] text-[#b91c1c] text-[10px] font-mono tracking-widest uppercase">
+                            <span className="w-1.5 h-1.5 bg-[#b91c1c] animate-pulse" />
+                            Open for Core Systems & Android Roles
+                        </span>
+                        <h2 className="font-blackletter text-4xl md:text-5xl leading-none text-ink">
+                            The Daily Developer
                         </h2>
+                        <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-graphite">
+                            Independent Systems Engineering · Colombo
+                        </p>
                     </div>
 
-                    {/* Compact Colombo Live Clock & System Status */}
-                    <div className="flex items-center gap-4 text-xs font-space bg-slate-900/80 border border-slate-800 px-4 py-2.5 rounded-xl">
-                        <div className="flex items-center gap-2 text-slate-300">
-                            <Globe className="w-3.5 h-3.5 text-blue-400" />
-                            <span className="text-slate-400">Colombo:</span>
-                            <span className="font-mono font-bold text-white">{timeStr || '13:00:00 PM'}</span>
+                    <div className="flex items-center gap-4 text-xs font-mono bg-panel/80 border border-ink text-ink px-4 py-2.5 rounded-none">
+                        <div className="flex items-center gap-2">
+                            <Globe className="w-3.5 h-3.5 text-accent" />
+                            <span className="uppercase tracking-widest">Last Update:</span>
+                            <span className="font-bold tabular-nums">{timeStr || '13:00:00 PM'} SLT</span>
                         </div>
-                        <div className="w-[1px] h-4 bg-slate-800" />
-                        <div className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                            <span>NOMINAL</span>
+                        <div className="w-[1px] h-4 bg-ink/40" />
+                        <div className="flex items-center gap-1.5 text-accent">
+                            <span className="w-2 h-2 bg-accent animate-pulse" />
+                            <span className="uppercase tracking-widest">☀ NOMINAL</span>
                         </div>
                     </div>
                 </div>
 
-                {/* ── 3. FOUR-COLUMN GRID NAVIGATION ── */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-slate-800/80">
-                    
+                {/* 3. FOUR-COLUMN GRID */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8"
+                    style={{ borderBottom: '3px double #121212' }}>
+
                     {/* Col 1: System Specs */}
                     <div className="space-y-3">
-                        <h3 className="text-[11px] font-space tracking-[0.25em] font-bold text-amber-400 uppercase flex items-center gap-1.5">
+                        <h3 className="text-[11px] font-mono tracking-[0.25em] font-bold text-accent uppercase flex items-center gap-1.5">
                             <Cpu className="w-3.5 h-3.5" />
                             System Focus
                         </h3>
-                        <p className="text-xs text-slate-400 font-inter font-light leading-relaxed">
+                        <p className="text-xs text-graphite font-serif leading-relaxed">
                             Low-level C/C++ runtime engines, native Android architecture, kernel tooling, and compiled languages.
                         </p>
                     </div>
 
                     {/* Col 2: Navigation Links */}
                     <div className="space-y-3">
-                        <h3 className="text-[11px] font-space tracking-[0.25em] font-bold text-amber-400 uppercase">
+                        <h3 className="text-[11px] font-mono tracking-[0.25em] font-bold text-accent uppercase">
                             Navigation
                         </h3>
-                        <ul className="space-y-1.5 font-space text-xs">
+                        <ul className="space-y-1.5 font-mono text-xs">
                             {[
                                 { label: 'Overview', id: 'home' },
                                 { label: 'Skills & Tech', id: 'skills' },
@@ -151,9 +141,9 @@ export default function Footer() {
                                     <a
                                         href={`#${id}`}
                                         onClick={(e) => handleNavClick(e, id)}
-                                        className="text-slate-400 hover:text-amber-300 transition-colors flex items-center gap-1.5"
+                                        className="text-graphite hover:text-accent transition-colors flex items-center gap-1.5"
                                     >
-                                        <span className="w-1 h-1 rounded-full bg-slate-600" />
+                                        <span className="w-1.5 h-1.5 border border-ink bg-transparent" />
                                         <span>{label}</span>
                                     </a>
                                 </li>
@@ -163,10 +153,10 @@ export default function Footer() {
 
                     {/* Col 3: Flagship Builds */}
                     <div className="space-y-3">
-                        <h3 className="text-[11px] font-space tracking-[0.25em] font-bold text-amber-400 uppercase">
+                        <h3 className="text-[11px] font-mono tracking-[0.25em] font-bold text-accent uppercase">
                             Flagship Builds
                         </h3>
-                        <ul className="space-y-1.5 font-space text-xs">
+                        <ul className="space-y-1.5 font-mono text-xs">
                             {[
                                 { name: 'AeroLang Compiler', href: 'https://aero-lang-web.vercel.app/' },
                                 { name: 'AegisLayer Security', href: '/project/aegislayer' },
@@ -177,7 +167,7 @@ export default function Footer() {
                                         href={proj.href}
                                         target={proj.href.startsWith('http') ? '_blank' : '_self'}
                                         rel={proj.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                        className="text-slate-400 hover:text-amber-300 transition-colors flex items-center justify-between group"
+                                        className="text-graphite hover:text-accent transition-colors flex items-center justify-between group"
                                     >
                                         <span>{proj.name}</span>
                                         <ArrowUpRight className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -187,10 +177,10 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* Col 4: Connect & Links */}
+                    {/* Col 4: Connect & Dispatch */}
                     <div className="space-y-3">
-                        <h3 className="text-[11px] font-space tracking-[0.25em] font-bold text-amber-400 uppercase">
-                            Connect
+                        <h3 className="text-[11px] font-mono tracking-[0.25em] font-bold text-accent uppercase">
+                            Dispatch Desk
                         </h3>
                         <div className="flex flex-col gap-2">
                             {[
@@ -204,14 +194,14 @@ export default function Footer() {
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`flex items-center justify-between px-3 py-1.5 rounded-lg border text-xs font-space transition-colors ${
+                                    className={`flex items-center justify-between px-3 py-1.5 rounded-none border font-mono text-xs transition-colors ${
                                         highlight
-                                            ? 'bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/20'
-                                            : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:text-white'
+                                            ? 'bg-accent/10 border-accent/60 text-accent hover:bg-accent/20'
+                                            : 'bg-panel/60 border-ink/50 text-graphite hover:text-accent'
                                     }`}
                                 >
                                     <div className="flex items-center gap-2">
-                                        <Icon className="w-3.5 h-3.5 text-amber-400" />
+                                        <Icon className="w-3.5 h-3.5 text-accent" />
                                         <span>{label}</span>
                                     </div>
                                     <ArrowUpRight className="w-3 h-3 opacity-50" />
@@ -220,23 +210,24 @@ export default function Footer() {
 
                             <button
                                 onClick={toggleTerminal}
-                                className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-emerald-400 text-xs font-space transition-colors"
+                                className="flex items-center justify-between px-3 py-1.5 rounded-none bg-panel/60 border border-ink/50 text-graphite hover:text-accent font-mono text-xs transition-colors"
                             >
                                 <div className="flex items-center gap-2">
-                                    <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                                    <Terminal className="w-3.5 h-3.5 text-accent" />
                                     <span>CLI Terminal</span>
                                 </div>
-                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">`</span>
+                                <span className="text-[9px] font-mono px-1.5 border border-ink/40 text-graphite">`</span>
                             </button>
                         </div>
                     </div>
 
                 </div>
 
-                {/* ── 4. BOTTOM COPYRIGHT ── */}
-                <div className="pt-6 flex items-center justify-center text-slate-400 text-xs font-space">
-                    <span className="text-slate-400 font-medium text-center">
-                        © {new Date().getFullYear()} Siluna Nusal Dangalla. All Rights Reserved.
+                {/* 4. BOTTOM COPYRIGHT */}
+                <div className="pt-6 flex flex-col items-center gap-2">
+                    <span className="block w-24 border-t-2 border-ink" />
+                    <span className="text-graphite text-xs font-mono text-center">
+                        © {new Date().getFullYear()} Siluna Nusal Dangalla · Set & Printed in Playfair Display & UnifrakturMaguntia
                     </span>
                 </div>
 

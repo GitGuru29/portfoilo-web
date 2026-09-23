@@ -11,7 +11,7 @@ const generateWindowTexture = () => {
     const ctx = canvas.getContext('2d');
     
     // Background: dark concrete
-    ctx.fillStyle = '#0f172a';
+    ctx.fillStyle = '#101217';
     ctx.fillRect(0, 0, 512, 512);
     
     // Grid of windows
@@ -31,13 +31,13 @@ const generateWindowTexture = () => {
             // 50% chance window is on
             if (Math.random() > 0.5) {
                 const rand = Math.random();
-                if (rand > 0.8) ctx.fillStyle = '#fef08a'; // yellow tint
-                else if (rand > 0.6) ctx.fillStyle = '#7dd3fc'; // blue tint
-                else ctx.fillStyle = '#ffffff'; // pure white
+                if (rand > 0.8) ctx.fillStyle = '#00F0FF'; // accent tint
+                else if (rand > 0.6) ctx.fillStyle = '#7fb4ff'; // blue tint
+                else ctx.fillStyle = '#f2f1ec'; // warm white
                 
                 ctx.fillRect(x, y, w, h);
             } else {
-                ctx.fillStyle = '#020617'; // unlit
+                ctx.fillStyle = '#060a10'; // unlit
                 ctx.fillRect(x, y, w, h);
             }
         }
@@ -53,11 +53,11 @@ const generateWindowTexture = () => {
 const windowTexture = generateWindowTexture();
 
 const LEVELS = {
-    'NONE': { color: '#f1f5f9', emissive: '#f8fafc', intensity: 0.1 },
-    'FIRST_QUARTILE': { color: '#bfdbfe', emissive: '#93c5fd', intensity: 0.3 },
-    'SECOND_QUARTILE': { color: '#60a5fa', emissive: '#3b82f6', intensity: 0.5 },
-    'THIRD_QUARTILE': { color: '#2563eb', emissive: '#1d4ed8', intensity: 0.7 },
-    'FOURTH_QUARTILE': { color: '#1e3a8a', emissive: '#1e40af', intensity: 0.9 },
+    'NONE': { color: '#1a1c22', emissive: '#23262e', intensity: 0.1 },
+    'FIRST_QUARTILE': { color: '#6f5a12', emissive: '#8a6d1a', intensity: 0.3 },
+    'SECOND_QUARTILE': { color: '#a9851f', emissive: '#c39b29', intensity: 0.45 },
+    'THIRD_QUARTILE': { color: '#c9a034', emissive: '#CCFF00', intensity: 0.6 },
+    'FOURTH_QUARTILE': { color: '#e6bf4a', emissive: '#00F0FF', intensity: 0.85 },
 };
 
 const getVibe = () => {
@@ -70,40 +70,40 @@ const getVibe = () => {
 
 const VIBES = {
     'MORNING': {
-        bg: '#fdf6e3',
-        fog: '#fdf6e3',
-        ambient: { color: '#ffedd5', intensity: 0.8 },
-        hemi: { color: '#fb923c', groundColor: '#e2e8f0', intensity: 0.4 },
-        directional: { color: '#fcd34d', intensity: 1.2, position: [50, 20, 50] },
-        grid: { color: '#cbd5e1' },
-        planeColor: '#f1f5f9'
+        bg: '#08090c',
+        fog: '#08090c',
+        ambient: { color: '#c9a24a', intensity: 0.25 },
+        hemi: { color: '#CCFF00', groundColor: '#0d0f14', intensity: 0.3 },
+        directional: { color: '#00F0FF', intensity: 0.7, position: [50, 20, 50] },
+        grid: { color: '#1a1c22' },
+        planeColor: '#12141a'
     },
     'NOON': {
-        bg: '#f0f9ff',
-        fog: '#f0f9ff',
-        ambient: { color: '#ffffff', intensity: 0.9 },
-        hemi: { color: '#ffffff', groundColor: '#f1f5f9', intensity: 0.6 },
-        directional: { color: '#ffffff', intensity: 1.5, position: [10, 80, 10] },
-        grid: { color: '#94a3b8' },
-        planeColor: '#f1f5f9'
+        bg: '#0d0f14',
+        fog: '#0d0f14',
+        ambient: { color: '#dfc066', intensity: 0.3 },
+        hemi: { color: '#00F0FF', groundColor: '#0d0f14', intensity: 0.35 },
+        directional: { color: '#fff3c4', intensity: 0.9, position: [10, 80, 10] },
+        grid: { color: '#1d1f26' },
+        planeColor: '#14161c'
     },
     'EVENING': {
-        bg: '#2e1065',
-        fog: '#2e1065',
-        ambient: { color: '#fbcfe8', intensity: 0.5 },
-        hemi: { color: '#c084fc', groundColor: '#0f172a', intensity: 0.6 },
-        directional: { color: '#fb7185', intensity: 1.0, position: [-50, 10, -50] },
-        grid: { color: '#4c1d95' },
-        planeColor: '#1e1b4b'
+        bg: '#0a090b',
+        fog: '#0a090b',
+        ambient: { color: '#a9793a', intensity: 0.25 },
+        hemi: { color: '#9aa7c0', groundColor: '#0d0f14', intensity: 0.3 },
+        directional: { color: '#e0a44f', intensity: 0.6, position: [-50, 10, -50] },
+        grid: { color: '#1c1a18' },
+        planeColor: '#14130f'
     },
     'NIGHT': {
-        bg: '#020617',
-        fog: '#020617',
-        ambient: { color: '#1e293b', intensity: 0.3 },
-        hemi: { color: '#38bdf8', groundColor: '#000000', intensity: 0.2 },
-        directional: { color: '#60a5fa', intensity: 0.5, position: [0, 50, 0] },
-        grid: { color: '#1e293b' },
-        planeColor: '#0f172a'
+        bg: '#07080b',
+        fog: '#07080b',
+        ambient: { color: '#8a7328', intensity: 0.25 },
+        hemi: { color: '#CCFF00', groundColor: '#000000', intensity: 0.25 },
+        directional: { color: '#c9a24a', intensity: 0.45, position: [0, 50, 0] },
+        grid: { color: '#171920' },
+        planeColor: '#101217'
     }
 };
 
@@ -448,39 +448,39 @@ export default function GitHub3DGraph({ username }) {
 
                     <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-6">
                         <div className="flex justify-between items-start">
-                            <div className="text-slate-700 font-mono text-xs tracking-widest bg-white/70 p-3 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm">
-                                <span className="text-blue-600 font-bold">{username}</span>'s Contributions — {new Date().getFullYear()}
+                            <div className="text-geyser/80 font-mono text-xs tracking-widest bg-black/50 p-3 backdrop-blur-md border border-accent/20 rounded-lg shadow-sm">
+                                <span className="text-accent font-bold">{username}</span>'s Contributions — {new Date().getFullYear()}
                             </div>
-                            <div className="text-slate-800 font-mono text-lg bg-white/70 px-4 py-2 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm flex items-center gap-2">
-                                {totalContributions} <span className="text-[10px] text-slate-500 uppercase tracking-widest">TOTAL</span>
+                            <div className="text-geyser font-mono text-lg bg-black/50 px-4 py-2 backdrop-blur-md border border-accent/20 rounded-lg shadow-sm flex items-center gap-2">
+                                {totalContributions} <span className="text-[10px] text-titanium uppercase tracking-widest">TOTAL</span>
                             </div>
                         </div>
 
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-                            <div className="flex gap-3 items-center bg-white/70 p-3 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm pointer-events-auto">
-                                <span className="text-[10px] text-slate-400 font-mono tracking-widest">LESS</span>
+                            <div className="flex gap-3 items-center bg-black/50 p-3 backdrop-blur-md border border-accent/20 rounded-lg shadow-sm pointer-events-auto">
+                                <span className="text-[10px] text-titanium font-mono tracking-widest">LESS</span>
                                 {Object.values(LEVELS).map((lvl, idx) => (
-                                    <div key={idx} className="w-4 h-4 rounded-sm border border-blue-200/50" style={{ backgroundColor: lvl.color }} />
+                                    <div key={idx} className="w-4 h-4 rounded-sm border border-accent/20" style={{ backgroundColor: lvl.color }} />
                                 ))}
-                                <span className="text-[10px] text-slate-400 font-mono tracking-widest">MORE</span>
+                                <span className="text-[10px] text-titanium font-mono tracking-widest">MORE</span>
                             </div>
 
-                            <div className="flex bg-white/70 p-1.5 backdrop-blur-md border border-blue-200/50 rounded-lg shadow-sm pointer-events-auto gap-1">
+                            <div className="flex bg-black/50 p-1.5 backdrop-blur-md border border-accent/20 rounded-lg shadow-sm pointer-events-auto gap-1">
                                 <button 
                                     onClick={() => setMode('CINEMATIC')}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'CINEMATIC' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-blue-600 hover:bg-blue-50'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'CINEMATIC' ? 'bg-accent text-black shadow-md' : 'text-titanium hover:text-accent hover:bg-accent/10'}`}
                                 >
                                     ◉ STREET
                                 </button>
                                 <button 
                                     onClick={() => setMode('DRONE')}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'DRONE' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-blue-600 hover:bg-blue-50'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'DRONE' ? 'bg-accent text-black shadow-md' : 'text-titanium hover:text-accent hover:bg-accent/10'}`}
                                 >
                                     ✈ DRONE
                                 </button>
                                 <button 
                                     onClick={handleWalkClick}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'WALK' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-blue-600 hover:bg-blue-50'}`}
+                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'WALK' ? 'bg-accent text-black shadow-md' : 'text-titanium hover:text-accent hover:bg-accent/10'}`}
                                 >
                                     🚶 WALK
                                 </button>
@@ -489,16 +489,16 @@ export default function GitHub3DGraph({ username }) {
                     </div>
 
                     {mode === 'WALK' && !isLocked && (
-                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/40 backdrop-blur-md pointer-events-none">
-                            <div className="text-center font-mono text-blue-600 border border-blue-200 p-8 bg-white/90 rounded-2xl shadow-xl">
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-md pointer-events-none">
+                            <div className="text-center font-mono text-accent border border-accent/25 p-8 bg-[#0c0d11]/90 rounded-2xl shadow-2xl">
                                 <div className="text-sm mb-4 tracking-[0.2em] uppercase font-bold">CLICK TO ENTER</div>
-                                <div className="text-[10px] text-slate-500 uppercase tracking-[0.1em]">[WASD] to move, [MOUSE] to look, [ESC] to exit</div>
+                                <div className="text-[10px] text-titanium uppercase tracking-[0.1em]">[WASD] to move, [MOUSE] to look, [ESC] to exit</div>
                             </div>
                         </div>
                     )}
                     
                     {mode === 'WALK' && isLocked && (
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-blue-500 text-xl font-light pointer-events-none z-20">+</div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-accent text-xl font-light pointer-events-none z-20">+</div>
                     )}
 
                     <Canvas
@@ -545,8 +545,8 @@ export default function GitHub3DGraph({ username }) {
 
                         {hoveredBox && (
                             <Html position={[hoveredBox.position[0], hoveredBox.position[1] + 0.5, hoveredBox.position[2]]} center className="pointer-events-none z-50">
-                                <div className="bg-white border border-blue-200 text-slate-800 font-mono text-[10px] tracking-widest p-3 rounded-lg shadow-[0_8px_30px_rgba(37,99,235,0.12)] whitespace-nowrap uppercase">
-                                    <span className="text-blue-600 mb-1 block font-bold">{hoveredBox.date}</span>
+                                <div className="bg-[#0c0d11]/95 border border-accent/25 text-geyser font-mono text-[10px] tracking-widest p-3 rounded-lg shadow-[0_8px_30px_rgba(204,255,0,0.15)] whitespace-nowrap uppercase">
+                                    <span className="text-accent mb-1 block font-bold">{hoveredBox.date}</span>
                                     {hoveredBox.count} contributions
                                 </div>
                             </Html>

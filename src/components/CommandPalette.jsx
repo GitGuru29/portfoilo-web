@@ -75,9 +75,9 @@ export default function CommandPalette() {
         { id: 'act-linkedin', label: 'Open LinkedIn Profile', category: 'Quick Actions', icon: Linkedin, action: () => { window.open('https://linkedin.com/in/siluna-dangalla', '_blank'); setCommandPaletteOpen(false); } },
 
         // Theme & Audio Settings
-        { id: 'set-theme-gold', label: 'Theme: Switch Accent to Quantum Gold', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('gold'); playChimeSound(soundEnabled); } },
-        { id: 'set-theme-cyan', label: 'Theme: Switch Accent to Cyber Cyan', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('cyan'); playChimeSound(soundEnabled); } },
-        { id: 'set-theme-emerald', label: 'Theme: Switch Accent to Matrix Emerald', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('emerald'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-sky',   label: 'Plate: SKY · RISO_01', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('sky'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-deep',  label: 'Plate: DEEP SKY · RISO_02', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('deep'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-ochre', label: 'Plate: OCHRE · RISO_03', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('ochre'); playChimeSound(soundEnabled); } },
         { id: 'set-sound', label: `Audio: ${soundEnabled ? 'Mute Sound FX' : 'Enable Sound FX'}`, category: 'Appearance & Audio', icon: soundEnabled ? VolumeX : Volume2, action: () => { toggleSound(); playClickSound(!soundEnabled); } },
     ];
 
@@ -117,26 +117,26 @@ export default function CommandPalette() {
         <AnimatePresence>
             {isCommandPaletteOpen && (
                 <div className="fixed inset-0 z-[999999] flex items-start justify-center pt-20 px-4">
-                    {/* Dark Glass Backdrop */}
+                    {/* Paper Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setCommandPaletteOpen(false)}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-md"
+                        className="fixed inset-0 bg-ink/25 backdrop-blur-sm"
                     />
 
                     {/* Command Palette Card */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: -20 }}
+                        initial={{ opacity: 0, scale: 0.98, y: -16 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -20 }}
+                        exit={{ opacity: 0, scale: 0.98, y: -16 }}
                         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative w-full max-w-2xl bg-[#0d0d12] border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden z-10"
+                        className="relative w-full max-w-2xl bg-panel border-[1.5px] border-ink/20 rounded-none shadow-[0_20px_60px_-24px_rgba(23,19,15,0.4)] overflow-hidden z-10"
                     >
                         {/* Search Input Bar */}
-                        <div className="flex items-center gap-3 px-5 py-4 border-b border-neutral-800/80 bg-neutral-900/50">
-                            <Search className="w-5 h-5 text-[#D4AF37]" />
+                        <div className="flex items-center gap-3 px-5 py-4 border-b border-ink/10 bg-panel-deep/60">
+                            <Search className="w-5 h-5 text-accent" />
                             <input
                                 ref={inputRef}
                                 type="text"
@@ -144,9 +144,9 @@ export default function CommandPalette() {
                                 onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0); }}
                                 onKeyDown={handleKeyDownInInput}
                                 placeholder="Type a command or search sections..."
-                                className="w-full bg-transparent text-white placeholder-neutral-500 font-sans text-sm focus:outline-none"
+                                className="w-full bg-transparent text-ink placeholder-graphite font-sans text-sm focus:outline-none"
                             />
-                            <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest text-neutral-400 px-2 py-1 rounded bg-neutral-800 border border-neutral-700 uppercase">
+                            <div className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest text-graphite px-2 py-1 rounded border border-ink/15 uppercase">
                                 <span>ESC</span>
                             </div>
                         </div>
@@ -159,7 +159,7 @@ export default function CommandPalette() {
                             className="max-h-[380px] overflow-y-auto p-2 scrollbar-thin overscroll-contain"
                         >
                             {filteredItems.length === 0 ? (
-                                <div className="py-12 text-center text-neutral-500 font-mono text-xs">
+                                <div className="py-12 text-center text-graphite font-mono text-xs">
                                     No matching commands found.
                                 </div>
                             ) : (
@@ -174,26 +174,26 @@ export default function CommandPalette() {
                                             onMouseEnter={() => setSelectedIndex(idx)}
                                             className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all text-left ${
                                                 isSelected
-                                                    ? 'bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-white'
-                                                    : 'text-neutral-400 hover:text-white border border-transparent'
+                                                    ? 'bg-[#B91C1C]/10 border border-[#B91C1C]/30 text-ink'
+                                                    : 'text-graphite hover:text-ink border border-transparent'
                                             }`}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className={`p-2 rounded-lg ${isSelected ? 'bg-[#D4AF37] text-black' : 'bg-neutral-900 text-neutral-400'}`}>
+                                                <div className={`p-2 rounded-lg ${isSelected ? 'bg-[#B91C1C] text-black' : 'bg-panel text-graphite'}`}>
                                                     <IconComponent className="w-4 h-4" />
                                                 </div>
                                                 <div>
                                                     <span className="text-sm font-space font-medium block">
                                                         {item.label}
                                                     </span>
-                                                    <span className="text-[10px] font-mono tracking-wider text-neutral-500 uppercase">
+                                                    <span className="text-[10px] font-mono tracking-wider text-graphite uppercase">
                                                         {item.category}
                                                     </span>
                                                 </div>
                                             </div>
 
                                             {isSelected && (
-                                                <div className="flex items-center gap-1 text-[11px] font-mono text-[#D4AF37]">
+                                                <div className="flex items-center gap-1 text-[11px] font-mono text-[#B91C1C]">
                                                     <span>Execute</span>
                                                     <ArrowRight className="w-3.5 h-3.5" />
                                                 </div>
@@ -205,13 +205,13 @@ export default function CommandPalette() {
                         </div>
 
                         {/* Footer Hints */}
-                        <div className="flex items-center justify-between px-5 py-3 border-t border-neutral-800/80 bg-neutral-950/80 text-[11px] font-mono text-neutral-500">
+                        <div className="flex items-center justify-between px-5 py-3 border-t border-ink/10 bg-panel-deep/60 text-[11px] font-mono text-graphite">
                             <div className="flex items-center gap-3">
-                                <span className="flex items-center gap-1"><Command className="w-3 h-3 text-[#D4AF37]" /> + K</span>
+                                <span className="flex items-center gap-1"><Command className="w-3 h-3 text-accent" /> + K</span>
                                 <span>• Navigate: ↑ ↓</span>
                                 <span>• Select: ↵</span>
                             </div>
-                            <span className="text-[#D4AF37] font-semibold">Siluna Dangalla Portfolio</span>
+                            <span className="text-accent font-sans font-semibold font-space">Siluna Dangalla Portfolio</span>
                         </div>
                     </motion.div>
                 </div>

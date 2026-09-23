@@ -57,13 +57,13 @@ export default function BadgesOverlay() {
                                 rel="noopener noreferrer"
                                 ref={el => badgeRefs.current[index] = el}
                                 data-cursor="Google Dev"
-                                className={`p-8 rounded-3xl border border-[var(--color-geyser)]/10 flex flex-col h-full hover:border-blue-400/30 bg-[var(--color-quantum-black)]/40 backdrop-blur-md shadow-[0_15px_40px_-10px_rgba(59,130,246,0.25)] bg-gradient-to-br from-blue-900/10 to-transparent transition-all duration-500 group relative overflow-hidden will-change-transform hover:-translate-y-2 hover:shadow-[0_20px_50px_-10px_rgba(59,130,246,0.4)] hover:bg-[var(--color-quantum-black)]/60 no-underline cursor-pointer`}
+                                className={`p-8 rounded-3xl border border-geyser/10 flex flex-col h-full hover:border-accent/30 bg-surface/40 backdrop-blur-md shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] bg-gradient-to-br from-accent/[0.05] to-transparent transition-all duration-500 group relative overflow-hidden will-change-transform hover:-translate-y-2 hover:shadow-[0_20px_50px_-10px_rgba(204,255,0,0.15)] hover:bg-surface/70 no-underline cursor-pointer`}
                             >
-                                <div className="absolute top-0 left-0 w-[2px] h-full bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
+                                <div className="absolute top-0 left-0 w-[2px] h-full bg-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
 
                                 {/* External link icon – appears on hover */}
                                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-60 transition-opacity duration-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>
                                 </div>

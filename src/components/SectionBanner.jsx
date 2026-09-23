@@ -1,92 +1,51 @@
-import React, { useRef, useEffect, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import React from 'react';
 
 /**
- * Full-Screen Deep Blue Glass SectionBanner
- * 
- * - Full screen viewport width & height (w-full h-screen).
- * - Deep dark blue gradient background matching BadgesOverlay.
- * - Crisp, high-contrast bold white typewriter text heading (text-white).
- * - GSAP ScrollTrigger letter-by-letter scroll typewriter animation.
+ * Section slug — riso press divider: hairline, giant numeral, poster serif,
+ * misregistered ink. Quiet print chrome, loud type.
  */
 export default function SectionBanner({
     id,
-    title = 'SECTION TITLE',
+    chapter = '01',
+    kicker = '',
+    title = '',
+    lede = '',
 }) {
-    const bannerRef = useRef(null);
-    const textRef = useRef(null);
-    const [typedCount, setTypedCount] = useState(0);
-
-    useEffect(() => {
-        const totalChars = title.length;
-        if (!totalChars) return;
-
-        const ctx = gsap.context(() => {
-            const obj = { count: 0 };
-
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: bannerRef.current,
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    scrub: 0.5,
-                }
-            });
-
-            // Phase 1: Type out characters letter-by-letter on scroll (0% -> 65% scroll)
-            tl.to(obj, {
-                count: totalChars,
-                duration: 3,
-                ease: 'none',
-                onUpdate: () => {
-                    setTypedCount(Math.round(obj.count));
-                }
-            }, 0);
-
-            // Phase 2: Fade title out and slide up as user completes banner scroll (75% -> 100% scroll)
-            if (textRef.current) {
-                tl.to(textRef.current, {
-                    opacity: 0,
-                    y: -50,
-                    scale: 0.96,
-                    duration: 1.5,
-                    ease: 'power1.out'
-                }, 3.5);
-            }
-        }, bannerRef);
-
-        return () => ctx.revert();
-    }, [title]);
-
-    const visibleTitle = title.slice(0, typedCount);
+    if (!title && !lede) return null;
 
     return (
-        <div
+<div
             id={id ? `${id}-banner` : undefined}
-            ref={bannerRef}
-            className="relative w-full h-[200vh] bg-transparent"
+            className="relative w-full overflow-hidden border-b border-ink/15 bg-[var(--color-quantum-dark)]"
         >
-            {/* Sticky Full-Screen Viewport Banner (100vw x 100vh) */}
-            <div className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#0c1322] via-[#0A0F1C] to-[#070b14] border-y border-blue-500/20 shadow-[0_20px_50px_-10px_rgba(59,130,246,0.35)] z-20">
+            <div className="absolute inset-0 noise-bg opacity-40 pointer-events-none" />
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-25 pointer-events-none select-none big-num leading-none pr-6">
+                {chapter}
+            </div>
+            <div aria-hidden className="absolute left-0 top-0 bottom-0 w-px bg-ink/10 pointer-events-none" />
+            <div aria-hidden className="absolute right-0 top-0 bottom-0 w-px bg-ink/10 pointer-events-none" />
 
-                {/* Ambient Blue Background Glow Blobs */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-blue-500/20 blur-[130px] pointer-events-none" />
-                <div className="absolute inset-0 bg-repeat opacity-[0.03] pointer-events-none noise-bg" />
+            <div className="relative z-10 mx-auto max-w-6xl px-6 py-20 md:py-24">
+                <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+                    <div className="min-w-0">
+                        <div className="mb-6 flex items-center gap-4">
+                            <span className="meta-tag text-accent">[ {chapter} ]</span>
+                            <span className="h-px w-14 md:w-24 bg-gradient-to-r from-accent to-transparent" />
+                            {kicker && <span className="meta-tag text-cyanx truncate">{kicker}</span>}
+                        </div>
+                        <h2 className="poster-title text-balance">{title}</h2>
+                    </div>
+                    {lede && (
+                        <p className="max-w-md md:text-right text-sm md:text-base leading-relaxed text-graphite font-light text-pretty md:pb-2 font-mono">
+                            {lede}
+                        </p>
+                    )}
+                </div>
 
-                {/* Main Scroll-Driven Typewriter Title - Crisp High-Contrast Bold White Text */}
-                <div
-                    ref={textRef}
-                    className="relative z-10 max-w-7xl mx-auto text-center px-6"
-                >
-                    <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-space font-bold text-white tracking-tight uppercase min-h-[1.2em] flex items-center justify-center flex-wrap leading-none drop-shadow-2xl">
-                        <span>{visibleTitle}</span>
-                        <span
-                            className="inline-block w-[0.35em] h-[0.85em] ml-2 bg-blue-400 animate-pulse shadow-[0_0_20px_rgba(96,165,250,0.9)] align-middle"
-                        />
-                    </h2>
+                <div className="mt-12 flex items-center gap-3 relative">
+                    <span className="h-px flex-1 bg-ink/15" />
+                    <span className="stamp">verified {kicker || 'page'}</span>
+                    <span className="h-px flex-1 bg-ink/15" />
                 </div>
             </div>
         </div>

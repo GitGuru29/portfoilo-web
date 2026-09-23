@@ -21,8 +21,8 @@ const CategoryFilter = ({ activeCategory, setActiveCategory }) => {
                             onClick={() => handleCategoryClick(category)}
                             className={`text-[10px] md:text-xs tracking-[0.2em] font-space uppercase transition-all duration-300 pb-1 ${
                                 isActive
-                                    ? 'text-[var(--color-geyser)] border-b border-[var(--color-geyser)]'
-                                    : 'text-[var(--color-geyser)]/40 hover:text-[var(--color-geyser)]/80 border-b border-transparent'
+                                    ? 'text-accent border-b border-accent'
+                                    : 'text-titanium hover:text-geyser/80 border-b border-transparent'
                             }`}
                         >
                             {category.label}

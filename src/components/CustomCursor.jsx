@@ -92,7 +92,7 @@ export default function CustomCursor() {
             {label && (
                 <div
                     ref={labelRef}
-                    className="fixed top-0 left-0 z-[9999999] pointer-events-none text-[9px] font-space tracking-[0.2em] uppercase text-[var(--color-geyser)]/60 bg-[var(--color-quantum-black)]/80 border border-[var(--color-geyser)]/10 px-2 py-1 whitespace-nowrap"
+                    className="fixed top-0 left-0 z-[9999999] pointer-events-none text-[9px] font-space tracking-[0.2em] uppercase text-ink/70 bg-panel/90 border border-ink/15 px-2 py-1 whitespace-nowrap"
                     style={{ willChange: 'transform' }}
                     aria-hidden="true"
                 >

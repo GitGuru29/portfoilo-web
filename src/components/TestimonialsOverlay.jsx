@@ -39,18 +39,18 @@ export default function TestimonialsOverlay() {
     return (
         <div className="w-full py-24 md:py-32 px-6 relative overflow-hidden bg-transparent">
             {/* Background Accent Gradients */}
-            <div className="absolute top-1/2 left-10 -translate-y-1/2 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-1/2 left-10 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="max-w-6xl mx-auto relative z-10">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                     <div>
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass border border-neutral-200 text-xs font-mono tracking-widest text-[#D4AF37] uppercase mb-4 shadow-sm">
-                            <Quote className="w-3.5 h-3.5 text-[#D4AF37]" />
+                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass border border-geyser/10 text-xs font-mono tracking-widest text-accent uppercase mb-4 shadow-sm">
+                            <Quote className="w-3.5 h-3.5 text-accent" />
                             <span>Client Endorsements & References</span>
                         </div>
-                        <h2 className="text-3xl md:text-5xl font-space font-bold text-neutral-900 tracking-tight">
+                        <h2 className="text-3xl md:text-5xl font-space font-bold text-geyser tracking-tight">
                             Trusted by Leaders & Clients
                         </h2>
                     </div>
@@ -59,20 +59,20 @@ export default function TestimonialsOverlay() {
                         <button
                             onClick={() => setIsAdminOpen(true)}
                             title="Admin Control Panel"
-                            className="p-3 rounded-full glass border border-neutral-200 text-neutral-500 hover:text-[#D4AF37] hover:border-[#D4AF37]/40 transition-all"
+                            className="p-3 rounded-full glass border border-geyser/10 text-titanium hover:text-accent hover:border-accent/40 transition-all"
                         >
                             <ShieldCheck className="w-4 h-4" />
                         </button>
                         <button
                             onClick={loadTestimonials}
                             title="Refresh recommendations"
-                            className="p-3 rounded-full glass border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-[#D4AF37]/40 transition-all"
+                            className="p-3 rounded-full glass border border-geyser/10 text-titanium hover:text-geyser hover:border-accent/40 transition-all"
                         >
                             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                         </button>
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="px-5 py-3 rounded-full bg-[#D4AF37] hover:bg-[#b8952b] text-neutral-950 font-space font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg hover:shadow-[#D4AF37]/20"
+                            className="px-5 py-3 rounded-full bg-accent hover:bg-[#8CC8FF] text-neutral-950 font-space font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg hover:shadow-accent/20"
                         >
                             <MessageSquarePlus className="w-4 h-4" />
                             Leave a Recommendation
@@ -82,18 +82,18 @@ export default function TestimonialsOverlay() {
 
                 {/* Main Recommendation Carousel / Card View */}
                 {loading ? (
-                    <div className="w-full h-80 rounded-2xl glass border border-neutral-200 flex items-center justify-center">
-                        <div className="flex items-center gap-3 text-neutral-500 font-mono text-sm">
-                            <RefreshCw className="w-5 h-5 animate-spin text-[#D4AF37]" />
+                    <div className="w-full h-80 rounded-2xl glass border border-geyser/10 flex items-center justify-center">
+                        <div className="flex items-center gap-3 text-titanium font-mono text-sm">
+                            <RefreshCw className="w-5 h-5 animate-spin text-accent" />
                             Loading references...
                         </div>
                     </div>
                 ) : testimonials.length === 0 ? (
-                    <div className="w-full py-16 rounded-2xl glass border border-neutral-200 text-center px-6">
-                        <p className="text-neutral-500 text-sm mb-4">No recommendations submitted yet.</p>
+                    <div className="w-full py-16 rounded-2xl glass border border-geyser/10 text-center px-6">
+                        <p className="text-titanium text-sm mb-4">No recommendations submitted yet.</p>
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="px-6 py-2.5 bg-[#D4AF37] text-neutral-950 font-space font-semibold rounded-lg text-xs uppercase"
+                            className="px-6 py-2.5 bg-accent text-neutral-950 font-space font-semibold rounded-lg text-xs uppercase"
                         >
                             Be the first to submit a reference
                         </button>
@@ -107,31 +107,31 @@ export default function TestimonialsOverlay() {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative w-full rounded-2xl glass border border-neutral-200 p-8 md:p-12 shadow-2xl overflow-hidden"
+                            className="relative w-full rounded-2xl glass border border-geyser/10 p-8 md:p-12 shadow-2xl overflow-hidden"
                         >
-                            <Quote className="absolute right-8 top-8 w-24 h-24 text-neutral-900/5 pointer-events-none" />
+                            <Quote className="absolute right-8 top-8 w-24 h-24 text-geyser/5 pointer-events-none" />
 
                             {/* Rating Stars & Tag */}
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-1">
                                     {[...Array(testimonials[currentIndex].rating || 5)].map((_, i) => (
-                                        <Star key={i} className="w-5 h-5 fill-[#D4AF37] text-[#D4AF37]" />
+                                        <Star key={i} className="w-5 h-5 fill-[#B91C1C] text-accent" />
                                     ))}
                                 </div>
-                                <span className="px-3 py-1 text-[11px] font-mono tracking-wider text-[#D4AF37] bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-md uppercase">
+                                <span className="px-3 py-1 text-[11px] font-mono tracking-wider text-accent bg-accent/10 border border-[#B91C1C]/20 rounded-md uppercase">
                                     {testimonials[currentIndex].relationship || 'Client'}
                                 </span>
                             </div>
 
                             {/* Quote Text */}
                             <div className="mb-8">
-                                <p className={`text-lg md:text-2xl font-sans text-neutral-700 leading-relaxed font-normal italic ${isExpanded ? '' : 'line-clamp-4'}`}>
+                                <p className={`text-lg md:text-2xl font-sans text-titanium leading-relaxed font-normal italic ${isExpanded ? '' : 'line-clamp-4'}`}>
                                     "{testimonials[currentIndex].text}"
                                 </p>
                                 {testimonials[currentIndex].text.length > 180 && (
                                     <button 
                                         onClick={() => setIsExpanded(!isExpanded)}
-                                        className="mt-3 text-xs font-space tracking-widest text-[#D4AF37] hover:text-neutral-900 uppercase transition-colors flex items-center gap-1"
+                                        className="mt-3 text-xs font-space tracking-widest text-accent hover:text-geyser uppercase transition-colors flex items-center gap-1"
                                     >
                                         {isExpanded ? 'Show Less' : 'See Full Review'}
                                     </button>
@@ -139,21 +139,21 @@ export default function TestimonialsOverlay() {
                             </div>
 
                             {/* Author Info Footer */}
-                            <div className="flex items-center justify-between pt-6 border-t border-neutral-200">
+                            <div className="flex items-center justify-between pt-6 border-t border-geyser/10">
                                 <div className="flex items-center gap-4">
                                     <img
                                         src={testimonials[currentIndex].avatar}
                                         alt={testimonials[currentIndex].name}
-                                        className="w-12 h-12 rounded-full object-cover border border-[#D4AF37]/40 shadow-md"
+                                        className="w-12 h-12 rounded-full object-cover border border-[#B91C1C]/40 shadow-md"
                                         onError={(e) => {
                                             e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250';
                                         }}
                                     />
                                     <div>
-                                        <h4 className="text-base font-space font-bold text-neutral-900">
+                                        <h4 className="text-base font-space font-bold text-geyser">
                                             {testimonials[currentIndex].name}
                                         </h4>
-                                        <p className="text-xs text-neutral-500 font-mono">
+                                        <p className="text-xs text-titanium font-mono">
                                             {testimonials[currentIndex].role} {testimonials[currentIndex].company ? `@ ${testimonials[currentIndex].company}` : ''}
                                         </p>
                                     </div>
@@ -164,7 +164,7 @@ export default function TestimonialsOverlay() {
                                         href={testimonials[currentIndex].linkedin}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="p-2.5 rounded-full glass text-neutral-500 hover:text-[#D4AF37] hover:border-[#D4AF37]/40 transition-colors"
+                                        className="p-2.5 rounded-full glass text-titanium hover:text-accent hover:border-accent/40 transition-colors"
                                         title="View LinkedIn Profile"
                                     >
                                         <Linkedin className="w-4 h-4" />
@@ -184,7 +184,7 @@ export default function TestimonialsOverlay() {
                                             setCurrentIndex(idx);
                                         }}
                                         className={`h-2 rounded-full transition-all duration-300 ${
-                                            idx === currentIndex ? 'w-8 bg-[#D4AF37]' : 'w-2 bg-neutral-300 hover:bg-neutral-400'
+                                            idx === currentIndex ? 'w-8 bg-accent' : 'w-2 bg-geyser/15 hover:bg-accent/50'
                                         }`}
                                     />
                                 ))}
@@ -193,13 +193,13 @@ export default function TestimonialsOverlay() {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={prevSlide}
-                                    className="p-3 rounded-full glass border border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:border-[#D4AF37]/40 transition-colors"
+                                    className="p-3 rounded-full glass border border-geyser/10 text-titanium hover:text-geyser hover:border-accent/40 transition-colors"
                                 >
                                     <ChevronLeft className="w-5 h-5" />
                                 </button>
                                 <button
                                     onClick={nextSlide}
-                                    className="p-3 rounded-full glass border border-neutral-200 text-neutral-600 hover:text-neutral-900 hover:border-[#D4AF37]/40 transition-colors"
+                                    className="p-3 rounded-full glass border border-geyser/10 text-titanium hover:text-geyser hover:border-accent/40 transition-colors"
                                 >
                                     <ChevronRight className="w-5 h-5" />
                                 </button>

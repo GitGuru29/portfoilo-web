@@ -166,7 +166,7 @@ export default function TimelineSection() {
 
                                 {/* Center node */}
                                 <div className="hidden md:flex flex-col items-center justify-start pt-2 w-6">
-                                    <div className={`w-2 h-2 rounded-full border ${m.highlight ? 'bg-blue-400 border-blue-400' : 'bg-transparent border-blue-400/40'} mt-3 shrink-0 relative z-10`} />
+                                    <div className={`w-2 h-2 rounded-full border ${m.highlight ? 'bg-accent border-accent shadow-[0_0_10px_rgba(204,255,0,0.7)]' : 'bg-transparent border-accent/40'} mt-3 shrink-0 relative z-10`} />
                                 </div>
 
                                 {/* Right side — odd cards */}
@@ -178,7 +178,7 @@ export default function TimelineSection() {
 
                                 {/* Mobile layout — all left */}
                                 <div className="pl-12 flex flex-col items-start md:hidden">
-                                    <div className="absolute left-[21px] top-3 w-2 h-2 rounded-full border border-blue-400/40 bg-transparent z-10" />
+                                    <div className="absolute left-[21px] top-3 w-2 h-2 rounded-full border border-accent/40 bg-transparent z-10" />
                                     <TimelineCard milestone={m} mobile />
                                 </div>
                             </div>
@@ -194,9 +194,9 @@ function TimelineCard({ milestone, mobile = false }) {
     const isActive = milestone.type === 'ACTIVE';
 
     return (
-        <div className={`group p-6 md:p-8 border border-blue-400/20 hover:border-blue-400/50 transition-all duration-500 bg-transparent hover:bg-blue-400/[0.02] relative overflow-hidden ${isActive ? 'border-blue-400/50' : ''}`}>
+        <div className={`group p-6 md:p-8 border border-accent/15 hover:border-accent/45 transition-all duration-500 bg-transparent hover:bg-accent/[0.02] relative overflow-hidden ${isActive ? 'border-accent/45' : ''}`}>
             {/* Accent line */}
-            <div className="absolute top-0 left-0 w-[2px] h-full bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
+            <div className="absolute top-0 left-0 w-[2px] h-full bg-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
 
             {/* Header row */}
             <div className="flex items-center justify-between mb-4 gap-4">

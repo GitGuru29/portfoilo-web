@@ -81,7 +81,7 @@ export default function ActiveResearchOverlay() {
                         key={idx}
                         ref={el => el && !cardsRef.current.includes(el) && cardsRef.current.push(el)}
                         data-cursor="Research Node"
-                        className="group p-8 md:p-12 border border-[var(--color-geyser)]/10 flex flex-col hover:border-[var(--color-geyser)]/30 transition-colors duration-500 bg-[var(--color-quantum-black)] hover:bg-[var(--color-geyser)]/[0.02] relative overflow-hidden will-change-all"
+                        className="group p-8 md:p-12 border border-ink/12 flex flex-col hover:border-accent/50 transition-colors duration-500 bg-panel hover:bg-panel-deep/70 relative overflow-hidden will-change-all"
                     >
                         <div className="absolute top-0 left-0 w-[2px] h-full bg-[var(--color-geyser)] scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
                         

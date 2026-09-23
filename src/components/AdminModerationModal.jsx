@@ -134,27 +134,27 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
     return createPortal(
         <AnimatePresence>
             {isOpen && (
-                <div onClick={onClose} className="fixed inset-0 z-[99990] flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg">
+                <div onClick={onClose} className="fixed inset-0 z-[99990] flex items-center justify-center p-4 bg-ink/25 backdrop-blur-sm">
                     <motion.div
                         onClick={(e) => e.stopPropagation()}
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative z-10 w-full max-w-3xl max-h-[85vh] bg-neutral-950 border border-white/15 rounded-2xl shadow-2xl p-6 md:p-8 text-white flex flex-col overflow-hidden my-auto"
+                        className="relative z-10 w-full max-w-3xl max-h-[85vh] bg-neutral-950 border border-white/15 rounded-2xl shadow-2xl p-6 md:p-8 text-ink flex flex-col overflow-hidden my-auto"
                     >
                         {/* Background Accent Glow */}
-                        <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#D4AF37]/15 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#B91C1C]/15 rounded-full blur-3xl pointer-events-none" />
 
                         {/* Header */}
-                        <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4 flex-shrink-0">
+                        <div className="flex items-center justify-between pb-4 border-b border-ink/10 mb-4 flex-shrink-0">
                             <div className="flex items-center gap-3">
-                                <div className="p-2.5 bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37] rounded-xl">
+                                <div className="p-2.5 bg-[#B91C1C]/20 border border-[#B91C1C]/40 text-[#B91C1C] rounded-xl">
                                     <ShieldCheck className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <span className="text-[11px] font-mono tracking-widest text-[#D4AF37] uppercase">System Moderation</span>
-                                    <h3 className="text-xl md:text-2xl font-space font-bold text-white mt-0.5">
+                                    <span className="text-[11px] font-mono tracking-widest text-[#B91C1C] uppercase">System Moderation</span>
+                                    <h3 className="text-xl md:text-2xl font-space font-bold text-ink mt-0.5">
                                         {editingItem ? 'Edit Recommendation' : 'Admin Control Panel'}
                                     </h3>
                                 </div>
@@ -165,14 +165,14 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                         onClick={loadAdminData}
                                         disabled={isLoading}
                                         title="Sync cloud submissions"
-                                        className="p-2 rounded-full text-white/60 hover:text-[#D4AF37] hover:bg-white/10 transition-colors disabled:opacity-50"
+                                        className="p-2 rounded-full text-ink/60 hover:text-[#B91C1C] hover:bg-white/10 transition-colors disabled:opacity-50"
                                     >
-                                        <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-[#D4AF37]' : ''}`} />
+                                        <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-[#B91C1C]' : ''}`} />
                                     </button>
                                 )}
                                 <button
                                     onClick={handleLogout}
-                                    className="p-2 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                                    className="p-2 rounded-full text-ink/60 hover:text-ink hover:bg-white/10 transition-colors"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -182,12 +182,12 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                         {!isAuthenticated ? (
                             /* Login Form */
                             <form onSubmit={handleLogin} className="py-12 px-4 max-w-sm mx-auto w-full text-center space-y-5">
-                                <div className="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center mx-auto text-[#D4AF37]">
+                                <div className="w-14 h-14 bg-ink/5 border border-ink/10 rounded-2xl flex items-center justify-center mx-auto text-[#B91C1C]">
                                     <Key className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h4 className="text-lg font-space font-bold text-white">Enter Admin Key</h4>
-                                    <p className="text-xs text-neutral-400 mt-1">Authenticate to moderate client recommendations</p>
+                                    <h4 className="text-lg font-space font-bold text-ink">Enter Admin Key</h4>
+                                    <p className="text-xs text-graphite mt-1">Authenticate to moderate client recommendations</p>
                                 </div>
 
                                 <div>
@@ -197,7 +197,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                         onChange={(e) => setPin(e.target.value)}
                                         placeholder="Admin Secret Key..."
                                         autoFocus
-                                        className="w-full px-4 py-3 bg-white/5 border border-white/15 rounded-xl text-center text-lg font-mono tracking-widest text-white placeholder-neutral-600 focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                        className="w-full px-4 py-3 bg-ink/5 border border-white/15 rounded-xl text-center text-lg font-mono tracking-widest text-ink placeholder-neutral-600 focus:outline-none focus:border-[#B91C1C] transition-colors"
                                     />
                                     {authError && (
                                         <p className="text-xs text-red-400 mt-2 flex items-center justify-center gap-1">
@@ -209,7 +209,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
 
                                 <button
                                     type="submit"
-                                    className="w-full py-3 bg-[#D4AF37] hover:bg-[#b8952b] text-neutral-950 font-space font-bold rounded-xl transition-all shadow-lg"
+                                    className="w-full py-3 bg-[#B91C1C] hover:bg-[#8CC8FF] text-neutral-950 font-space font-bold rounded-xl transition-all shadow-lg"
                                 >
                                     Unlock Admin Panel
                                 </button>
@@ -221,7 +221,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                     <button
                                         type="button"
                                         onClick={handleCancelEdit}
-                                        className="px-3 py-1.5 bg-white/5 hover:bg-white/10 text-neutral-300 text-xs font-mono rounded-lg flex items-center gap-1 transition-colors"
+                                        className="px-3 py-1.5 bg-ink/5 hover:bg-white/10 text-ink/70 text-xs font-mono rounded-lg flex items-center gap-1 transition-colors"
                                     >
                                         <ArrowLeft className="w-3.5 h-3.5" />
                                         Back to Dashboard
@@ -231,7 +231,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                 <div className="space-y-4 flex-1 overflow-y-auto pr-2 pb-2">
                                     {/* Avatar Photo Edit */}
                                     <div>
-                                        <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                        <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
                                             Profile Photo / Avatar
                                         </label>
                                         <input
@@ -245,13 +245,13 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                             <img
                                                 src={editFormData.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250'}
                                                 alt="Avatar"
-                                                className="w-12 h-12 rounded-full object-cover border border-[#D4AF37]"
+                                                className="w-12 h-12 rounded-full object-cover border border-[#B91C1C]"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => editFileInputRef.current?.click()}
                                                 disabled={editCompressing}
-                                                className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-space rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                                                className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-ink text-xs font-space rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
                                             >
                                                 {editCompressing ? (
                                                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -264,7 +264,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                                 <button
                                                     type="button"
                                                     onClick={() => setEditFormData({ ...editFormData, avatar: '' })}
-                                                    className="text-xs text-neutral-400 hover:text-red-400 transition-colors"
+                                                    className="text-xs text-graphite hover:text-red-400 transition-colors"
                                                 >
                                                     Remove photo
                                                 </button>
@@ -275,23 +275,23 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                     {/* Name & Role */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
                                                 Full Name
                                             </label>
                                             <div className="relative">
-                                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-graphite" />
                                                 <input
                                                     type="text"
                                                     required
                                                     value={editFormData.name}
                                                     onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
-                                                    className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                                    className="w-full pl-9 pr-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink focus:outline-none focus:border-[#B91C1C] transition-colors"
                                                 />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
                                                 Role / Position
                                             </label>
                                             <input
@@ -299,7 +299,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                                 value={editFormData.role}
                                                 onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
                                                 placeholder="e.g. Lead Engineer"
-                                                className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                                className="w-full px-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink focus:outline-none focus:border-[#B91C1C] transition-colors"
                                             />
                                         </div>
                                     </div>
@@ -307,29 +307,29 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                     {/* Company & Relationship */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
                                                 Company / Organization
                                             </label>
                                             <div className="relative">
-                                                <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                                                <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-graphite" />
                                                 <input
                                                     type="text"
                                                     value={editFormData.company}
                                                     onChange={(e) => setEditFormData({ ...editFormData, company: e.target.value })}
                                                     placeholder="e.g. Acme Corp (or leave blank if independent)"
-                                                    className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                                    className="w-full pl-9 pr-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink focus:outline-none focus:border-[#B91C1C] transition-colors"
                                                 />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
                                                 Relationship
                                             </label>
                                             <select
                                                 value={editFormData.relationship}
                                                 onChange={(e) => setEditFormData({ ...editFormData, relationship: e.target.value })}
-                                                className="w-full px-3 py-2 bg-neutral-900 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                                className="w-full px-3 py-2 bg-panel border border-ink/10 rounded-lg text-sm text-ink focus:outline-none focus:border-[#B91C1C] transition-colors"
                                             >
                                                 <option value="Client">Client</option>
                                                 <option value="Manager / Supervisor">Manager / Supervisor</option>
@@ -342,7 +342,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                     {/* Rating & LinkedIn */}
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
                                                 Star Rating
                                             </label>
                                             <div className="flex items-center gap-1 py-1">
@@ -356,7 +356,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                                         <Star
                                                             className={`w-5 h-5 ${
                                                                 star <= editFormData.rating
-                                                                    ? 'fill-[#D4AF37] text-[#D4AF37]'
+                                                                    ? 'fill-[#B91C1C] text-[#B91C1C]'
                                                                     : 'text-neutral-600'
                                                             }`}
                                                         />
@@ -366,17 +366,17 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                         </div>
 
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
                                                 LinkedIn Profile URL (Optional)
                                             </label>
                                             <div className="relative">
-                                                <Linkedin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                                                <Linkedin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-graphite" />
                                                 <input
                                                     type="url"
                                                     value={editFormData.linkedin}
                                                     onChange={(e) => setEditFormData({ ...editFormData, linkedin: e.target.value })}
                                                     placeholder="https://linkedin.com/in/... (Optional)"
-                                                    className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors"
+                                                    className="w-full pl-9 pr-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink focus:outline-none focus:border-[#B91C1C] transition-colors"
                                                 />
                                             </div>
                                         </div>
@@ -384,7 +384,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
 
                                     {/* Testimonial Text */}
                                     <div>
-                                        <label className="block text-xs font-space tracking-wider uppercase text-neutral-400 mb-1">
+                                        <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
                                             Recommendation Text
                                         </label>
                                         <textarea
@@ -392,23 +392,23 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                             rows={4}
                                             value={editFormData.text}
                                             onChange={(e) => setEditFormData({ ...editFormData, text: e.target.value })}
-                                            className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#D4AF37] transition-colors resize-none"
+                                            className="w-full px-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink focus:outline-none focus:border-[#B91C1C] transition-colors resize-none"
                                         />
                                     </div>
                                 </div>
 
                                 {/* Save / Cancel Footer */}
-                                <div className="pt-3 border-t border-white/10 flex items-center justify-end gap-3 flex-shrink-0 mt-auto bg-neutral-950">
+                                <div className="pt-3 border-t border-ink/10 flex items-center justify-end gap-3 flex-shrink-0 mt-auto bg-neutral-950">
                                     <button
                                         type="button"
                                         onClick={handleCancelEdit}
-                                        className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-space font-semibold text-xs rounded-lg transition-colors"
+                                        className="px-4 py-2 bg-white/10 hover:bg-white/20 text-ink font-space font-semibold text-xs rounded-lg transition-colors"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-5 py-2 bg-[#D4AF37] hover:bg-[#b8952b] text-neutral-950 font-space font-semibold text-xs rounded-lg flex items-center gap-1.5 transition-all shadow-md"
+                                        className="px-5 py-2 bg-[#B91C1C] hover:bg-[#8CC8FF] text-neutral-950 font-space font-semibold text-xs rounded-lg flex items-center gap-1.5 transition-all shadow-md"
                                     >
                                         <Save className="w-4 h-4" />
                                         Save Changes
@@ -419,13 +419,13 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                             /* Authenticated Admin Dashboard */
                             <div className="flex flex-col flex-1 min-h-0">
                                 {/* Navigation Tabs */}
-                                <div className="flex items-center gap-3 border-b border-white/10 pb-3 mb-4 flex-shrink-0">
+                                <div className="flex items-center gap-3 border-b border-ink/10 pb-3 mb-4 flex-shrink-0">
                                     <button
                                         onClick={() => setActiveTab('pending')}
                                         className={`px-4 py-2 rounded-xl text-xs font-space font-semibold transition-all flex items-center gap-2 ${
                                             activeTab === 'pending'
-                                                ? 'bg-[#D4AF37] text-neutral-950 shadow-md'
-                                                : 'bg-white/5 text-neutral-400 hover:text-white'
+                                                ? 'bg-[#B91C1C] text-neutral-950 shadow-md'
+                                                : 'bg-ink/5 text-graphite hover:text-ink'
                                         }`}
                                     >
                                         <Clock className="w-3.5 h-3.5" />
@@ -435,8 +435,8 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                         onClick={() => setActiveTab('approved')}
                                         className={`px-4 py-2 rounded-xl text-xs font-space font-semibold transition-all flex items-center gap-2 ${
                                             activeTab === 'approved'
-                                                ? 'bg-[#D4AF37] text-neutral-950 shadow-md'
-                                                : 'bg-white/5 text-neutral-400 hover:text-white'
+                                                ? 'bg-[#B91C1C] text-neutral-950 shadow-md'
+                                                : 'bg-ink/5 text-graphite hover:text-ink'
                                         }`}
                                     >
                                         <ShieldCheck className="w-3.5 h-3.5" />
@@ -448,39 +448,39 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                 <div className="flex-1 overflow-y-auto pr-2 space-y-3">
                                     {activeTab === 'pending' ? (
                                         pendingList.length === 0 ? (
-                                            <div className="py-16 text-center text-neutral-500 font-mono text-sm">
+                                            <div className="py-16 text-center text-graphite font-mono text-sm">
                                                 No pending submissions. All clear!
                                             </div>
                                         ) : (
                                             pendingList.map((item) => (
                                                 <div
                                                     key={item.id}
-                                                    className="p-4 bg-white/5 border border-white/10 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4"
+                                                    className="p-4 bg-ink/5 border border-ink/10 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4"
                                                 >
                                                     <div className="flex items-start gap-3">
                                                         <img
                                                             src={item.avatar}
                                                             alt={item.name}
-                                                            className="w-10 h-10 rounded-full object-cover border border-[#D4AF37]/40 flex-shrink-0"
+                                                            className="w-10 h-10 rounded-full object-cover border border-[#B91C1C]/40 flex-shrink-0"
                                                         />
                                                         <div>
                                                             <div className="flex items-center gap-2">
-                                                                <h5 className="font-space font-bold text-white text-sm">{item.name}</h5>
+                                                                <h5 className="font-space font-bold text-ink text-sm">{item.name}</h5>
                                                                 <span className="text-[10px] font-mono px-2 py-0.5 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-md uppercase">
                                                                     Pending
                                                                 </span>
                                                             </div>
-                                                            <p className="text-xs text-neutral-400 font-mono mt-0.5">
+                                                            <p className="text-xs text-graphite font-mono mt-0.5">
                                                                 {item.role} {item.company ? `@ ${item.company}` : ''} • {item.relationship}
                                                             </p>
-                                                            <p className="text-xs text-neutral-200 mt-2 italic">"{item.text}"</p>
+                                                            <p className="text-xs text-ink/85 mt-2 italic">"{item.text}"</p>
                                                         </div>
                                                     </div>
 
                                                     <div className="flex items-center gap-2 flex-shrink-0">
                                                         <button
                                                             onClick={() => handleStartEdit(item)}
-                                                            className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors"
+                                                            className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-ink font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors"
                                                             title="Edit recommendation"
                                                         >
                                                             <Pencil className="w-3.5 h-3.5" />
@@ -488,7 +488,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                                         </button>
                                                         <button
                                                             onClick={() => handleApprove(item.id)}
-                                                            className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors shadow-md"
+                                                            className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-ink font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors shadow-md"
                                                         >
                                                             <Check className="w-3.5 h-3.5" />
                                                             Approve Live
@@ -508,7 +508,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                         approvedList.map((item) => (
                                             <div
                                                 key={item.id}
-                                                className="p-4 bg-white/5 border border-white/10 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4"
+                                                className="p-4 bg-ink/5 border border-ink/10 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4"
                                             >
                                                 <div className="flex items-start gap-3">
                                                     <img
@@ -518,23 +518,23 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                                     />
                                                     <div>
                                                         <div className="flex items-center gap-2">
-                                                            <h5 className="font-space font-bold text-white text-sm">{item.name}</h5>
-                                                            <div className="flex items-center text-[#D4AF37]">
-                                                                <Star className="w-3 h-3 fill-[#D4AF37]" />
+                                                            <h5 className="font-space font-bold text-ink text-sm">{item.name}</h5>
+                                                            <div className="flex items-center text-[#B91C1C]">
+                                                                <Star className="w-3 h-3 fill-[#B91C1C]" />
                                                                 <span className="text-xs font-mono ml-1">{item.rating}</span>
                                                             </div>
                                                         </div>
-                                                        <p className="text-xs text-neutral-400 font-mono mt-0.5">
+                                                        <p className="text-xs text-graphite font-mono mt-0.5">
                                                             {item.role} {item.company ? `@ ${item.company}` : ''}
                                                         </p>
-                                                        <p className="text-xs text-neutral-300 mt-1 italic">"{item.text}"</p>
+                                                        <p className="text-xs text-ink/70 mt-1 italic">"{item.text}"</p>
                                                     </div>
                                                 </div>
 
                                                 <div className="flex items-center gap-2 flex-shrink-0">
                                                     <button
                                                         onClick={() => handleStartEdit(item)}
-                                                        className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors"
+                                                        className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-ink font-space font-semibold text-xs rounded-lg flex items-center gap-1 transition-colors"
                                                         title="Edit recommendation"
                                                     >
                                                         <Pencil className="w-3.5 h-3.5" />
@@ -554,13 +554,13 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                 </div>
 
                                 {/* Footer */}
-                                <div className="pt-3 border-t border-white/10 flex items-center justify-between flex-shrink-0 mt-auto bg-neutral-950">
-                                    <span className="text-xs text-neutral-500 font-mono">
-                                        Admin Key: <code className="text-[#D4AF37]">msfvenom</code>
+                                <div className="pt-3 border-t border-ink/10 flex items-center justify-between flex-shrink-0 mt-auto bg-neutral-950">
+                                    <span className="text-xs text-graphite font-mono">
+                                        Admin Key: <code className="text-[#B91C1C]">msfvenom</code>
                                     </span>
                                     <button
                                         onClick={handleLogout}
-                                        className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-space font-semibold text-xs rounded-lg transition-colors"
+                                        className="px-4 py-2 bg-white/10 hover:bg-white/20 text-ink font-space font-semibold text-xs rounded-lg transition-colors"
                                     >
                                         Lock & Close
                                     </button>

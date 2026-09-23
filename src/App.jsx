@@ -6,6 +6,7 @@ import Navigation from './components/Navigation';
 import CustomCursor from './components/CustomCursor';
 import SystemMetricsWidget from './components/SystemMetricsWidget';
 import ScrollToTop from './components/ScrollToTop';
+import StoryProgress from './components/StoryProgress';
 import useStore from './store/useStore';
 
 import Home from './pages/Home';
@@ -15,10 +16,31 @@ import CommandPalette from './components/CommandPalette';
 import ScheduleMeetingModal from './components/ScheduleMeetingModal';
 import WhatsAppChat from './components/WhatsAppChat';
 
+// Edition presets — drive the accent via runtime CSS vars so every
+// Tailwind utility that references --color-accent follows the active edition.
+// All values stay inside the broadsheet palette (paper / ink / pressed inks).
+const ACCENT_PRESETS = {
+    sky:   { accent: '#B91C1C', hot: '#D02424', dim: 'rgba(185,28,28,0.35)', cyan: '#121212' },
+    deep:  { accent: '#121212', hot: '#57544D', dim: 'rgba(18,18,18,0.14)', cyan: '#B91C1C' },
+    ochre: { accent: '#8A6D3B', hot: '#B09154', dim: 'rgba(138,109,59,0.35)', cyan: '#121212' },
+};
+
 function App() {
     const isUnlocked = useStore((state) => state.isUnlocked);
     const isMeetingModalOpen = useStore((state) => state.isMeetingModalOpen);
     const setMeetingModalOpen = useStore((state) => state.setMeetingModalOpen);
+    const accentTheme = useStore((state) => state.accentTheme);
+
+    // Apply the riso plate to the root element
+    useEffect(() => {
+        const preset = ACCENT_PRESETS[accentTheme] || ACCENT_PRESETS.sky;
+        const root = document.documentElement;
+        root.style.setProperty('--color-accent', preset.accent);
+        root.style.setProperty('--color-accent-hot', preset.hot);
+        root.style.setProperty('--color-accent-dim', preset.dim);
+        root.style.setProperty('--color-cyanx', preset.cyan);
+        root.style.setProperty('--color-telemetry', preset.cyan);
+    }, [accentTheme]);
 
     // Force scroll to top on refresh
     useEffect(() => {
@@ -30,10 +52,13 @@ function App() {
 
     return (
         <HashRouter>
-            <div className="relative text-[var(--color-geyser)] font-sans overflow-clip min-h-screen bg-[var(--color-quantum-black)]">
+            <div className="relative text-ink font-sans overflow-clip min-h-screen bg-[var(--color-quantum-dark)]">
 
                 {/* Premium custom cursor — always on top */}
                 <CustomCursor />
+
+                {/* Story reading progress — thin gold line */}
+                <StoryProgress />
 
                 {/* Developer Command Palette (Cmd + K) */}
                 <CommandPalette />

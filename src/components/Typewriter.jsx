@@ -172,10 +172,10 @@ export default function Typewriter({
                 <span
                     className="lux-blink"
                     style={{
-                        color: 'rgba(212,175,55,0.95)',
+                        color: 'rgba(204,255,0,0.95)',
                         marginLeft: '2px',
                         fontWeight: 'bold',
-                        textShadow: '0 0 8px rgba(212,175,55,0.6)',
+                        textShadow: '0 0 8px rgba(204,255,0,0.6)',
                     }}
                 >
                     {cursorChar}

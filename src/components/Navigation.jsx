@@ -124,7 +124,7 @@ export default function Navigation() {
         { label: 'Home', id: 'home' },
         { label: 'Work', id: 'projects' },
         { label: 'Skills', id: 'skills' },
-        { label: 'References', id: 'testimonials' },
+        { label: 'Feedback', id: 'testimonials' },
         { label: 'Contact', id: 'contact' },
     ];
 
@@ -132,23 +132,23 @@ export default function Navigation() {
         <>
             <nav
                 ref={navRef}
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 will-change-transform ${
+                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 will-change-transform ${
                     isTerminalOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
                 } ${
                     scrolled
-                        ? 'py-3 bg-[var(--color-quantum-black)]/98 border-b border-[var(--color-geyser)]/8 text-[var(--color-geyser)]'
-                        : 'py-7 text-white'
+                        ? 'py-2.5 bg-panel/95 backdrop-blur-md border-b-2 border-ink rule-double text-ink shadow-[0_2px_14px_-8px_rgba(23,19,15,0.18)]'
+                        : 'py-3 bg-panel/90 backdrop-blur-md border-b border-ink/30 text-ink'
                 }`}
             >
                 <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
-                    {/* Logo (Hidden on initial load to match reference image) */}
+                    {/* Logo */}
                     <a
                         href="#"
                         onClick={(e) => handleNavClick(e, 'home')}
-                        className={`text-lg font-space font-medium tracking-[0.35em] transition-opacity duration-300 ${scrolled ? 'opacity-100 text-current hover:opacity-60' : 'opacity-0 pointer-events-none'}`}
+                        className={`text-xs font-mono font-bold tracking-[0.3em] uppercase transition-opacity duration-300 text-current hover:opacity-60`}
                     >
-                        SN.
+                        T.D.D.
                     </a>
 
                     {/* Desktop links */}
@@ -162,6 +162,25 @@ export default function Navigation() {
 
                     {/* Right actions */}
                     <div className="flex items-center gap-3 md:gap-4">
+                        {/* HUD filter cycle */}
+                        <button
+                            onClick={() => {
+                                const order = ['sky', 'deep', 'ochre'];
+                                const current = useStore.getState().accentTheme;
+                                const next = order[(order.indexOf(current) + 1) % order.length];
+                                useStore.getState().setAccentTheme(next);
+                                playClickSound(useStore.getState().soundEnabled);
+                            }}
+                            title="Cycle HUD filter"
+                            aria-label="Cycle HUD filter"
+                            className="hidden sm:flex items-center gap-1.5 border border-current/20 px-2.5 py-1.5 text-[9px] font-mono tracking-widest text-current/80 hover:text-current hover:border-current/50 transition-all rounded-none"
+                        >
+                            <span className="w-1.5 h-1.5 bg-accent inline-block skew-x-[-12deg]" />
+                            <span className="text-accent">
+                                {useStore((s) => s.accentTheme).toUpperCase()}
+                            </span>
+                        </button>
+
                         {/* Cmd + K Command Palette Trigger */}
                         <button
                             onClick={() => {
@@ -170,9 +189,9 @@ export default function Navigation() {
                             }}
                             title="Command Palette (Cmd + K)"
                             aria-label="Open Command Palette"
-                            className="hidden sm:flex items-center gap-1.5 border border-current/20 px-2.5 py-1.5 text-[10px] font-mono tracking-widest text-current/80 hover:text-current hover:border-current/50 transition-all rounded"
+                            className="hidden sm:flex items-center gap-1.5 border border-current/20 px-2.5 py-1.5 text-[10px] font-mono tracking-widest text-current/80 hover:text-current hover:border-current/50 transition-all rounded-none"
                         >
-                            <span className="text-[#D4AF37]">⌘</span>
+                            <span className="text-accent">⌘</span>
                             <span>K</span>
                         </button>
 
@@ -185,10 +204,10 @@ export default function Navigation() {
                             }}
                             title={useStore((s) => s.soundEnabled) ? "Mute Sound Effects" : "Enable Sound Effects"}
                             aria-label="Toggle Sound Effects"
-                            className="p-1.5 border border-current/20 opacity-70 hover:opacity-100 hover:border-current/50 transition-all rounded text-current"
+                            className="p-1.5 border border-current/20 opacity-70 hover:opacity-100 hover:border-current/50 transition-all rounded-none text-current"
                         >
                             {useStore((s) => s.soundEnabled) ? (
-                                <Volume2 size={12} className="text-[#D4AF37]" />
+                                <Volume2 size={12} className="text-accent" />
                             ) : (
                                 <VolumeX size={12} className="text-current/50" />
                             )}
@@ -232,14 +251,14 @@ export default function Navigation() {
             {menuOpen && (
                 <div
                     ref={mobileMenuRef}
-                    className="fixed top-0 left-0 right-0 z-40 pt-20 pb-8 px-6 bg-[var(--color-quantum-black)]/98 border-b border-[var(--color-geyser)]/10 md:hidden flex flex-col gap-6"
+                    className="fixed top-0 left-0 right-0 z-40 pt-20 pb-8 px-6 bg-panel/97 border-b border-ink/10 md:hidden flex flex-col gap-6"
                 >
                     {navLinks.map(({ label, id }) => (
                         <a
                             key={id}
                             href={`#${id}`}
                             onClick={(e) => handleNavClick(e, id)}
-                            className="text-base font-space tracking-[0.2em] uppercase text-[var(--color-geyser)]/60 hover:text-[var(--color-geyser)] transition-colors border-b border-[var(--color-geyser)]/8 pb-4"
+                            className="text-base font-space tracking-[0.2em] uppercase text-ink/60 hover:text-ink transition-colors border-b border-ink/10 pb-4"
                         >
                             {label}
                         </a>
@@ -248,7 +267,7 @@ export default function Navigation() {
                         href="https://github.com/GitGuru29"
                         target="_blank"
                         rel="noreferrer"
-                        className="text-base font-space tracking-[0.2em] uppercase text-[var(--color-geyser)]/40 hover:text-[var(--color-geyser)] transition-colors"
+                        className="text-base font-space tracking-[0.2em] uppercase text-ink/40 hover:text-ink transition-colors"
                     >
                         GitHub ↗
                     </a>

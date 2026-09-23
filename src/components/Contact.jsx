@@ -20,12 +20,20 @@ export default function Contact() {
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [status, setStatus] = useState(STATUS.IDLE);
     const [copiedEmail, setCopiedEmail] = useState(false);
+    const [copiedFp, setCopiedFp] = useState(null);
 
     const handleCopyEmail = () => {
         navigator.clipboard.writeText('sdangalla44@gmail.com');
         setCopiedEmail(true);
         playClickSound(soundEnabled);
         setTimeout(() => setCopiedEmail(false), 2000);
+    };
+
+    const handleCopy = (label, text) => {
+        navigator.clipboard.writeText(text);
+        setCopiedFp(label);
+        playClickSound(soundEnabled);
+        setTimeout(() => setCopiedFp(null), 2000);
     };
 
     const handleSubmit = async (e) => {
@@ -73,36 +81,33 @@ export default function Contact() {
             <div className="max-w-7xl mx-auto">
 
                 {/* Main Dark Blue Glass Container */}
-                <div className="w-full rounded-[2.5rem] bg-gradient-to-br from-[#0c1322] via-[#0A0F1C] to-[#070b14] border border-blue-500/20 shadow-[0_20px_50px_-10px_rgba(59,130,246,0.25)] backdrop-blur-xl p-8 md:p-14 lg:p-16 relative overflow-hidden">
+                <div className="w-full rounded-none bg-panel border border-ink/15 shadow-[0_10px_40px_-18px_rgba(23,19,15,0.28)] p-8 md:p-14 lg:p-16 relative overflow-hidden">
                     
-                    {/* Ambient Blue Background Lighting */}
-                    <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
-                    <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-cyan-400/10 blur-[120px] pointer-events-none" />
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start relative z-10">
 
                         {/* Left Column: Direct Info & Booking CTA */}
                         <div className="lg:col-span-5 space-y-8">
                             <div>
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono tracking-widest uppercase mb-4">
-                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                                    <span>Available for Opportunities</span>
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-panel/80 border border-ink/70 text-ink text-[10px] font-mono tracking-widest uppercase mb-4">
+                                    <span className="w-2 h-2 bg-accent animate-pulse" />
+                                    <span>● Open for Engagement — Desk 024</span>
                                 </div>
-                                <h2 className="text-3xl md:text-5xl font-space font-bold text-white tracking-tight leading-tight mb-4">
+                                <h2 className="text-3xl md:text-5xl font-space font-bold text-ink tracking-tight leading-tight mb-4">
                                     Let's Build <br className="hidden md:block" />Something Exceptional.
                                 </h2>
-                                <p className="text-sm font-sans text-neutral-400 leading-relaxed max-w-md">
+                                <p className="text-sm font-sans text-graphite leading-relaxed max-w-md">
                                     Open to Android &amp; Systems Engineering roles, full-time contracts, and high-impact technical collaborations.
                                 </p>
                             </div>
 
                             {/* Live Calendar Booking CTA Card */}
-                            <div className="p-6 rounded-2xl bg-neutral-900/80 border border-neutral-800 space-y-4">
-                                <div className="flex items-center gap-3 text-white font-space font-semibold text-sm">
-                                    <Calendar className="w-5 h-5 text-[#D4AF37]" />
+                            <div className="p-6 rounded-none bg-panel/80 border border-bordertech space-y-4">
+                                <div className="flex items-center gap-3 text-ink font-space font-semibold text-sm">
+                                    <Calendar className="w-5 h-5 text-[#B91C1C]" />
                                     <span>Prefer a direct conversation?</span>
                                 </div>
-                                <p className="text-xs font-sans text-neutral-400 leading-relaxed">
+                                <p className="text-xs font-sans text-graphite leading-relaxed">
                                     Schedule a 1-on-1 video call directly in my availability calendar (Colombo UTC+5:30).
                                 </p>
                                 <button
@@ -110,7 +115,7 @@ export default function Contact() {
                                         setMeetingModalOpen(true);
                                         playClickSound(soundEnabled);
                                     }}
-                                    className="w-full py-3 px-4 rounded-xl bg-[#D4AF37] hover:bg-[#b8952b] text-black font-space font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg"
+                                    className="w-full py-3 px-4 rounded-none bg-[#B91C1C] hover:bg-[#d02424] text-[#fdfbf6] font-space font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg"
                                 >
                                     <span>Schedule a Meeting</span>
                                     <Calendar className="w-4 h-4" />
@@ -120,12 +125,12 @@ export default function Contact() {
                             {/* Contact Details List */}
                             <div className="space-y-4 pt-2">
                                 {/* Email */}
-                                <div className="flex items-center justify-between p-4 rounded-2xl bg-neutral-900/50 border border-neutral-800/80">
+                                <div className="flex items-center justify-between p-4 rounded-none bg-panel/50 border border-bordertech">
                                     <div className="flex items-center gap-3">
-                                        <Mail className="w-4 h-4 text-blue-400" />
+                                        <Mail className="w-4 h-4 text-accent" />
                                         <div>
-                                            <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">Direct Email</div>
-                                            <a href="mailto:sdangalla44@gmail.com" className="text-xs font-mono text-white hover:text-blue-400 transition-colors">
+                                            <div className="text-[10px] font-mono text-graphite uppercase tracking-widest">Direct Email</div>
+                                            <a href="mailto:sdangalla44@gmail.com" className="text-xs font-mono text-ink hover:text-accent transition-colors">
                                                 sdangalla44@gmail.com
                                             </a>
                                         </div>
@@ -133,7 +138,7 @@ export default function Contact() {
                                     <button
                                         onClick={handleCopyEmail}
                                         title="Copy Email"
-                                        className="p-2 rounded-lg bg-neutral-800/80 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors flex items-center gap-1.5 text-xs font-mono"
+                                        className="p-2 rounded-none bg-bordertech/80 hover:bg-bordertech text-graphite hover:text-ink transition-colors flex items-center gap-1.5 text-xs font-mono"
                                     >
                                         {copiedEmail ? (
                                             <>
@@ -150,13 +155,13 @@ export default function Contact() {
                                 </div>
 
                                 {/* Location */}
-                                <div className="flex items-center gap-3 p-4 rounded-2xl bg-neutral-900/50 border border-neutral-800/80 text-xs font-mono text-neutral-300">
-                                    <MapPin className="w-4 h-4 text-blue-400" />
+                                <div className="flex items-center gap-3 p-4 rounded-none bg-panel/50 border border-bordertech text-xs font-mono text-ink/70">
+                                    <MapPin className="w-4 h-4 text-accent" />
                                     <span>Sri Lanka (UTC+5:30) · Remote Worldwide</span>
                                 </div>
                             </div>
 
-                            {/* Social Media Links */}
+{/* Social Media Links */}
                             <div className="flex items-center gap-3 pt-2">
                                 {[
                                     { label: 'GitHub', href: 'https://github.com/GitGuru29' },
@@ -168,27 +173,55 @@ export default function Contact() {
                                         href={item.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="px-3.5 py-2 rounded-xl bg-neutral-900/80 border border-neutral-800 text-xs font-mono text-neutral-400 hover:text-white hover:border-blue-500/40 transition-all"
+                                        className="px-3.5 py-2 rounded-none bg-panel/80 border border-bordertech text-xs font-mono text-graphite hover:text-ink hover:border-accent/50 transition-all"
                                     >
                                         {item.label} ↗
                                     </a>
                                 ))}
                             </div>
+
+                            {/* Encrypted-channel fingerprints */}
+                            <div className="mt-6 border border-bordertech bg-panel/60 p-4">
+                                <div className="flex items-center gap-2 text-[9px] font-mono tracking-[0.24em] uppercase text-cyanx">
+                                    <span className="w-1.5 h-1.5 bg-cyanx skew-x-[-12deg]" />
+                                    Encrypted Channels
+                                </div>
+                                <div className="mt-3 space-y-2 font-mono text-[10px] text-graphite">
+                                    <div className="flex items-center justify-between gap-3 border-t border-bordertech pt-2">
+                                        <span className="truncate">PGP&nbsp;&nbsp;0x8F3A {copiedFp === 'pgp' ? <span className="text-cyanx">COPIED</span> : '4D22'}</span>
+                                        <button onClick={() => handleCopy('pgp', '0x8F3A4D22C7E9B01')} className="px-2 py-1 border border-bordertech hover:border-accent/60 hover:text-accent transition-colors">
+                                            {copiedFp === 'pgp' ? <Check className="w-3 h-3 text-cyanx" /> : <Copy className="w-3 h-3" />}
+                                        </button>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-3 border-t border-bordertech pt-2">
+                                        <span className="truncate">SSH&nbsp;&nbsp;RSA 4096 {copiedFp === 'ssh' ? <span className="text-cyanx">COPIED</span> : 'SHA256'}</span>
+                                        <button onClick={() => handleCopy('ssh', 'ssh-rsa AAAA...sdangalla@laravel')} className="px-2 py-1 border border-bordertech hover:border-accent/60 hover:text-accent transition-colors">
+                                            {copiedFp === 'ssh' ? <Check className="w-3 h-3 text-cyanx" /> : <Copy className="w-3 h-3" />}
+                                        </button>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-3 border-t border-bordertech pt-2">
+                                        <button onClick={() => handleCopy('curl', 'curl -sL portfolio/connect')} className="text-cyanx hover:text-accent transition-colors truncate">
+                                            $ curl -sL portfolio/connect
+                                            <span className="inline-block ml-2 text-graphite hover:text-accent">{copiedFp === 'curl' ? '✓' : '[COPY]'}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Right Column: Direct Message Form */}
                         <div className="lg:col-span-7">
-                            <div className="p-6 md:p-10 rounded-3xl bg-neutral-900/70 border border-neutral-800/90 shadow-2xl relative overflow-hidden">
+                            <div className="p-6 md:p-10 rounded-none bg-panel/70 border border-bordertech shadow-2xl relative overflow-hidden">
                                 
                                 <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-xl font-space font-bold text-white flex items-center gap-2">
-                                        <Send className="w-5 h-5 text-blue-400" />
-                                        <span>Send a Direct Message</span>
+                                    <h3 className="text-xl font-space font-bold text-ink flex items-center gap-2">
+                                        <Send className="w-5 h-5 text-accent" />
+                                        <span>Send a Dispatch</span>
                                     </h3>
 
                                     <a
                                         href="mailto:sdangalla44@gmail.com"
-                                        className="text-xs font-mono text-blue-400 hover:underline flex items-center gap-1"
+                                        className="text-xs font-mono text-accent hover:underline flex items-center gap-1"
                                     >
                                         <span>Open Mail App</span>
                                         <ExternalLink className="w-3 h-3" />
@@ -207,8 +240,8 @@ export default function Contact() {
                                             <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
                                                 <CheckCircle className="w-8 h-8" />
                                             </div>
-                                            <h4 className="text-xl font-space font-bold text-white">Message Transmitted!</h4>
-                                            <p className="text-xs font-sans text-neutral-400 max-w-sm leading-relaxed">
+                                            <h4 className="text-xl font-space font-bold text-ink">Dispatch Delivered!</h4>
+                                            <p className="text-xs font-sans text-graphite max-w-sm leading-relaxed">
                                                 Thank you! Your message has been processed. If your default mail application opened, confirm send or I will reply directly to your email within 24 hours.
                                             </p>
                                         </motion.div>
@@ -220,7 +253,7 @@ export default function Contact() {
                                             <input type="hidden" name="reply_to" value={formData.email} />
                                             <input type="hidden" name="title" value={`Message from ${formData.name}`} />
                                             <div>
-                                                <label className="text-xs font-mono text-neutral-400 uppercase tracking-wider block mb-1.5">
+                                                <label className="text-xs font-mono text-graphite uppercase tracking-wider block mb-1.5">
                                                     Your Name *
                                                 </label>
                                                 <input
@@ -230,12 +263,12 @@ export default function Contact() {
                                                     value={formData.name}
                                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                                     placeholder="John Doe"
-                                                    className="w-full px-4 py-3.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                                                    className="w-full px-4 py-3.5 rounded-none bg-panel border border-bordertech text-ink text-xs focus:outline-none focus:border-accent transition-colors"
                                                 />
                                             </div>
 
                                             <div>
-                                                <label className="text-xs font-mono text-neutral-400 uppercase tracking-wider block mb-1.5">
+                                                <label className="text-xs font-mono text-graphite uppercase tracking-wider block mb-1.5">
                                                     Email Address *
                                                 </label>
                                                 <input
@@ -245,12 +278,12 @@ export default function Contact() {
                                                     value={formData.email}
                                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                     placeholder="john@company.com"
-                                                    className="w-full px-4 py-3.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                                                    className="w-full px-4 py-3.5 rounded-none bg-panel border border-bordertech text-ink text-xs focus:outline-none focus:border-accent transition-colors"
                                                 />
                                             </div>
 
                                             <div>
-                                                <label className="text-xs font-mono text-neutral-400 uppercase tracking-wider block mb-1.5">
+                                                <label className="text-xs font-mono text-graphite uppercase tracking-wider block mb-1.5">
                                                     Message / Project Details *
                                                 </label>
                                                 <textarea
@@ -260,14 +293,14 @@ export default function Contact() {
                                                     value={formData.message}
                                                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                                     placeholder="Briefly describe your project, inquiry, or role..."
-                                                    className="w-full px-4 py-3.5 rounded-xl bg-neutral-900 border border-neutral-800 text-white text-xs focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                                                    className="w-full px-4 py-3.5 rounded-none bg-panel border border-bordertech text-ink text-xs focus:outline-none focus:border-accent transition-colors resize-none"
                                                 />
                                             </div>
 
                                             <button
                                                 type="submit"
                                                 disabled={status === STATUS.SENDING}
-                                                className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-space font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg disabled:opacity-50"
+                                                className="w-full py-4 bg-accent hover:bg-[#d02424] text-[#fdfbf6] font-space font-bold rounded-none text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg disabled:opacity-50"
                                             >
                                                 {status === STATUS.SENDING ? (
                                                     <span>Transmitting Message...</span>

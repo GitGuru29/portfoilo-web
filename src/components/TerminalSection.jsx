@@ -1540,7 +1540,7 @@ export default function TerminalSection() {
                 );
             case 'htop':
                 return (
-                    <div key={idx} className="mb-2 font-mono text-[12px] bg-black/40 p-2 rounded border border-white/5">
+                    <div key={idx} className="mb-2 font-mono text-[12px] bg-black/40 p-2 rounded border border-ink/10">
                         <div style={{ color: '#4ade80' }}>  PID USER      PRI  NI  VIRT   RES   SHR S CPU% MEM%   TIME+  Command</div>
                         <div style={{ color: '#60a5fa' }}>12847 siluna     20   0  4.2G  2.1G  450M S 42.3 13.5  12:33.44 /usr/bin/g++ aerolang/main.c</div>
                         <div style={{ color: '#cbd5e1' }}>  941 siluna     20   0  225M  18M   12M S  8.1  0.1  0:04.12 /usr/bin/node server.js</div>
@@ -1594,7 +1594,7 @@ export default function TerminalSection() {
                     onPointerDown={() => toggleTerminal()}
                 >
                     {/* Portrait Warning for Mobile */}
-                    <div className="md:hidden flex-col items-center justify-center fixed inset-0 z-[200] bg-[#0d1117] text-white p-6 text-center" style={{ display: 'none' }} id="portrait-warning">
+                    <div className="md:hidden flex-col items-center justify-center fixed inset-0 z-[200] bg-[#0d1117] text-[#f1f5f9] p-6 text-center" style={{ display: 'none' }} id="portrait-warning">
                         <style>{`
                             @media (orientation: portrait) {
                                 #portrait-warning { display: flex !important; }

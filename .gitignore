@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Temporary profiles and cache
+chromeprof
+chromeprof*
+.vite
+

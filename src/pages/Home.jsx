@@ -16,23 +16,22 @@ import TimelineSection from '../components/TimelineSection';
 import TerminalSection from '../components/TerminalSection';
 import SectionDotsNav from '../components/SectionDotsNav';
 import SectionBanner from '../components/SectionBanner';
+import KineticScene from '../components/KineticScene';
 import { projectsData } from '../data/projects';
 import { CATEGORIES } from '../data/categories';
 
 /**
- * Re-organized Home Page Layout
- * 
- * Optimized Section Flow:
- *  1. Hero & Metrics
- *  2. Featured Projects (Primary Showcase)
- *  3. Experience & Build Log (Work History)
- *  4. Skills & Competencies (Technical Stack)
- *  5. GitHub Activity (Open Source Contributions)
- *  6. Active Research (Systems & Android Papers)
- *  7. Certificates & Accreditations (Formal Qualifications)
- *  8. Badges & Recognition (Community Credentials)
- *  9. Recommendations & References (Testimonials)
- * 10. Contact & Footer (Call to Action & Booking)
+ * Home — single-page route.
+ *
+ *   00 — HERO          | intro + stats ticker
+ *   01 — PROJECTS      | selected work
+ *   02 — EXPERIENCE    | timeline
+ *   03 — SKILLS        | capabilities
+ *   04 — GITHUB        | open-source activity
+ *   05 — RESEARCH      | work in progress
+ *   06 — CREDENTIALS   | certificates & badges
+ *   07 — TESTIMONIALS  | collaborator feedback
+ *   08 — CONTACT       | contact + footer
  */
 export default function Home() {
     const [activeCategory, setActiveCategory] = useState(CATEGORIES.ALL.id);
@@ -51,19 +50,28 @@ export default function Home() {
     const isFiltered = activeCategory !== CATEGORIES.ALL.id || searchQuery.trim() !== '';
 
     return (
-        <div className="relative z-10 w-full">
-            {/* Floating side dot indicator navigation */}
+        <div className="relative z-10 w-full bg-[var(--color-quantum-dark)]">
+            {/* Chapter rail — fixed right-edge navigation */}
             <SectionDotsNav />
 
-            {/* 1. ── Hero Section ── */}
+            {/* ── CHAPTER 00 · PROLOGUE ── */}
             <section id="hero" className="snap-section">
                 <HeroOverlay />
                 <StatsTicker />
             </section>
 
-            {/* 2. ── Featured Projects (Top Showcase) ── */}
-            <SectionBanner id="projects-banner" title="FEATURED PROJECTS" />
-            <section id="projects" className="snap-section">
+            {/* ── INTERLUDE · SHIP IT ── */}
+            <KineticScene word="SHIP IT" note="Selected Work · Press Run 01" variant="sky" />
+
+            {/* ── 01 · SELECTED WORK ── */}
+            <SectionBanner
+                id="projects"
+                chapter="01"
+                kicker="Selected Work"
+                title="Projects"
+                lede="Systems I've built and shipped — daemons, compilers, and native tooling, engineered for determinism and speed."
+            />
+            <section id="projects" className="snap-section story-section">
                 <ProjectsOverlay projects={filteredProjects} isFiltered={isFiltered}>
                     <div className="w-full max-w-6xl mx-auto px-6 mb-16 md:mb-24 bg-transparent" id="portfolio-filters">
                         <CategoryFilter activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
@@ -72,51 +80,97 @@ export default function Home() {
                 </ProjectsOverlay>
             </section>
 
-            {/* 3. ── Experience & Build Log ── */}
-            <SectionBanner id="timeline-banner" title="EXPERIENCE & BUILD LOG" />
-            <section id="timeline" className="snap-section">
+            {/* ── INTERLUDE · ITERATE ── */}
+            <KineticScene word="ITERATE" note="Experience · Press Run 02" variant="vrm" />
+
+            {/* ── 02 · EXPERIENCE ── */}
+            <SectionBanner
+                id="timeline"
+                chapter="02"
+                kicker="Experience"
+                title="Timeline"
+                lede="A build log of the journey so far — milestones, contributions, and the skills accumulated along the way."
+            />
+            <section id="timeline" className="snap-section story-section">
                 <TimelineSection />
             </section>
 
-            {/* 4. ── Skills & Competencies ── */}
-            <SectionBanner id="skills-banner" title="SKILLS & COMPETENCIES" />
-            <section id="skills" className="snap-section">
+            {/* ── 03 · SKILLS ── */}
+            <SectionBanner
+                id="skills"
+                chapter="03"
+                kicker="Skills"
+                title="Capabilities"
+                lede="C++, Kotlin, kernel internals, and LLVM — the disciplines I reach for when something needs to be built fast, small, and correct."
+            />
+            <section id="skills" className="snap-section story-section">
                 <SkillsOverlay />
             </section>
 
-            {/* 5. ── GitHub Activity & Codebase ── */}
-            <SectionBanner id="github-banner" title="GITHUB ACTIVITY & CODEBASE" />
-            <section id="github" className="snap-section">
+            {/* ── 04 · GITHUB ── */}
+            <SectionBanner
+                id="github"
+                chapter="04"
+                kicker="GitHub"
+                title="Open Source"
+                lede="A year of building in public — drag the skyline to orbit the contribution history below."
+            />
+            <section id="github" className="snap-section story-section">
                 <GitHubActivitySection />
             </section>
 
-            {/* 6. ── Active Research ── */}
-            <SectionBanner id="research-banner" title="ACTIVE RESEARCH" />
-            <section id="research" className="snap-section">
+            {/* ── 05 · RESEARCH ── */}
+            <SectionBanner
+                id="research"
+                chapter="05"
+                kicker="Research"
+                title="Currently Exploring"
+                lede="The problems on my workbench right now, and where the work is heading next."
+            />
+            <section id="research" className="snap-section story-section">
                 <ActiveResearchOverlay />
             </section>
 
-            {/* 7. ── Certificates & Accreditations ── */}
-            <SectionBanner id="certificates-banner" title="CERTIFICATES & ACCREDITATIONS" />
-            <section id="certificates" className="snap-section">
+            {/* ── INTERLUDE · REVIEW ── */}
+            <KineticScene word="REVIEW" note="Credentials · Press Run 06" variant="ink" />
+
+            {/* ── 06 · CREDENTIALS ── */}
+            <SectionBanner
+                id="recognition"
+                chapter="06"
+                kicker="Credentials"
+                title="Certificates & Badges"
+                lede="Credentialed milestones — certifications, awards, and achievements."
+            />
+            <div id="recognition" className="snap-section story-section">
                 <CertificatesOverlay />
-            </section>
-
-            {/* 8. ── Badges & Recognition ── */}
-            <SectionBanner id="badges-banner" title="BADGES & RECOGNITION" />
-            <section id="badges" className="snap-section">
                 <BadgesOverlay />
-            </section>
+            </div>
 
-            {/* 9. ── References & Recommendations ── */}
-            <SectionBanner id="testimonials-banner" title="RECOMMENDATIONS & REFERENCES" />
-            <section id="testimonials" className="snap-section">
+            {/* ── 07 · TESTIMONIALS ── */}
+            <SectionBanner
+                id="testimonials"
+                chapter="07"
+                kicker="Testimonials"
+                title="Collaborator Voices"
+                lede="What collaborators, leaders, and clients say about working together."
+            />
+            <section id="testimonials" className="snap-section story-section">
                 <TestimonialsOverlay />
             </section>
 
-            {/* 10. ── Contact & Footer ── */}
-            <SectionBanner id="contact-banner" title="CONTACT & COLLABORATION" />
-            <section id="contact" className="snap-section">
+            {/* ── INTERLUDE · OPEN CHANNEL ── */}
+            <KineticScene word="EMAIL ME" note="Open Channel · Press Run 08" variant="sky" />
+
+            {/* ── 08 · CONTACT ── */}
+            <SectionBanner
+                id="contact"
+                chapter="08"
+                kicker="Contact"
+                title="Get in Touch"
+                lede="Building something on systems, Android, or the edges of performance? Let's talk."
+            />
+            <section id="contact" className="snap-section story-section">
                 <Contact />
                 <Footer />
             </section>
