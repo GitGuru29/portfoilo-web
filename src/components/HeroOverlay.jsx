@@ -53,6 +53,8 @@ export default function HeroOverlay() {
     const heroRef    = useRef(null);
     const stageRef   = useRef(null);
     const topRef     = useRef(null);
+    const folioTopRef    = useRef(null);
+    const folioBottomRef = useRef(null);
     const chopA      = useRef(null);
     const chopB      = useRef(null);
     const bodyRef    = useRef(null);
@@ -83,7 +85,7 @@ export default function HeroOverlay() {
                 { opacity: 1, x: 0, scale: 1, duration: 1.2, ease: 'power3.out' },
                 '-=0.9'
             );
-            tl.fromTo([topRef.current, bodyRef.current],
+            tl.fromTo([topRef.current, bodyRef.current, folioTopRef.current, folioBottomRef.current],
                 { opacity: 0 },
                 { opacity: 1, duration: 0.9, ease: 'power2.out' },
                 '-=1.05'
@@ -100,7 +102,7 @@ export default function HeroOverlay() {
                 },
             });
 
-            scrub.to(topRef.current,   { opacity: 0, y: -60, duration: 1 }, 0);
+            scrub.to([topRef.current, folioTopRef.current, folioBottomRef.current], { opacity: 0, y: -40, duration: 1 }, 0);
             scrub.to([bodyRef.current, chopA.current, chopB.current], { opacity: 0, y: -40, duration: 1 }, 0);
             scrub.to(photoRef.current, { opacity: 0, y: -50, scale: 1.02, duration: 1 }, 0);
 
@@ -136,7 +138,7 @@ export default function HeroOverlay() {
                 <div aria-hidden className="absolute inset-0 noise-bg opacity-35 pointer-events-none" />
 
                 {/* ── FOLIO / TOP STRIP — double hairline ── */}
-                <div className="absolute top-[58px] md:top-[62px] left-6 right-6 z-20" style={{ borderTop: '1px solid ' + S.ink, borderBottom: '3px double ' + S.ink }}>
+                <div ref={folioTopRef} className="absolute top-[58px] md:top-[62px] left-6 right-6 z-20" style={{ borderTop: '1px solid ' + S.ink, borderBottom: '1px solid rgba(18,18,18,0.25)' }}>
                     <div className="flex items-center justify-between gap-4 px-2 pt-1.5 pb-1 font-mono text-[8px] md:text-[9px] tracking-[0.26em] uppercase text-ink/70">
                         <span className="hidden sm:inline">EST. 2021 — VOL. XXIV</span>
                         <span className="truncate font-semibold text-ink/90">THE DAILY DEVELOPER · BROADSHEET EDITION</span>
@@ -268,7 +270,7 @@ export default function HeroOverlay() {
                 </div>
 
                 {/* BOTTOM FOLIO STRIP — double hairline (stage level) */}
-                <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between font-mono text-[8px] tracking-[0.3em] uppercase text-ink/60"
+                <div ref={folioBottomRef} className="absolute bottom-6 left-6 right-6 flex items-center justify-between font-mono text-[8px] tracking-[0.3em] uppercase text-ink/60"
                     style={{ borderTop: '1px solid rgba(18,18,18,0.7)', paddingTop: 6 }}>
                     <span>CONTINUED ON PAGE TWO — THE DEVELOPER'S DESK ↑</span>
                     <span className="hidden md:inline text-accent">● PRESIDENTIAL RACE = N/A ▮ FLOODS = N/A</span>
@@ -288,7 +290,7 @@ export default function HeroOverlay() {
                     }}
                 >
                     <div style={{ width: '100%', maxWidth: 900, display: 'flex', flexDirection: 'column', gap: 26 }}>
-                        <div className="flex items-center gap-4" style={{ borderBottom: '3px double ' + S.ink, paddingBottom: 10 }}>
+                        <div className="flex items-center gap-4" style={{ borderBottom: '1px solid rgba(18,18,18,0.3)', paddingBottom: 10 }}>
                             <span className="stamp--edition">● Inside Edition</span>
                             <span className="dateline">THE DEVELOPER'S DESK — CONTINUED FROM PAGE ONE</span>
                         </div>

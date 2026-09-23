@@ -136,7 +136,7 @@ export default function Navigation() {
                     isTerminalOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
                 } ${
                     scrolled
-                        ? 'py-2.5 bg-panel/95 backdrop-blur-md border-b-2 border-ink rule-double text-ink shadow-[0_2px_14px_-8px_rgba(23,19,15,0.18)]'
+                        ? 'py-2.5 bg-panel/95 backdrop-blur-md border-b border-ink/20 text-ink shadow-[0_2px_10px_-4px_rgba(23,19,15,0.12)]'
                         : 'py-3 bg-panel/90 backdrop-blur-md border-b border-ink/30 text-ink'
                 }`}
             >
