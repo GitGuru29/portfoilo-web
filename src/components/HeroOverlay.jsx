@@ -52,15 +52,16 @@ function FolioStat({ target, suffix, label, started }) {
 export default function HeroOverlay() {
     const heroRef    = useRef(null);
     const stageRef   = useRef(null);
-    const topRef     = useRef(null);
+    const topRef         = useRef(null);
     const folioTopRef    = useRef(null);
     const folioBottomRef = useRef(null);
-    const chopA      = useRef(null);
-    const chopB      = useRef(null);
-    const bodyRef    = useRef(null);
-    const photoRef   = useRef(null);
-    const aboutRef   = useRef(null);
-    const setMood    = useStore((s) => s.setMood);
+    const leadGridRef    = useRef(null);
+    const chopA          = useRef(null);
+    const chopB          = useRef(null);
+    const bodyRef        = useRef(null);
+    const photoRef       = useRef(null);
+    const aboutRef       = useRef(null);
+    const setMood        = useStore((s) => s.setMood);
     const [statsStarted, setStatsStarted] = useState(false);
 
     const today = useMemo(() => {
@@ -85,7 +86,7 @@ export default function HeroOverlay() {
                 { opacity: 1, x: 0, scale: 1, duration: 1.2, ease: 'power3.out' },
                 '-=0.9'
             );
-            tl.fromTo([topRef.current, bodyRef.current, folioTopRef.current, folioBottomRef.current],
+            tl.fromTo([topRef.current, bodyRef.current, folioTopRef.current, folioBottomRef.current, leadGridRef.current],
                 { opacity: 0 },
                 { opacity: 1, duration: 0.9, ease: 'power2.out' },
                 '-=1.05'
@@ -102,7 +103,7 @@ export default function HeroOverlay() {
                 },
             });
 
-            scrub.to([topRef.current, folioTopRef.current, folioBottomRef.current], { opacity: 0, y: -40, duration: 1 }, 0);
+            scrub.to([topRef.current, folioTopRef.current, folioBottomRef.current, leadGridRef.current], { opacity: 0, y: -40, duration: 1 }, 0);
             scrub.to([bodyRef.current, chopA.current, chopB.current], { opacity: 0, y: -40, duration: 1 }, 0);
             scrub.to(photoRef.current, { opacity: 0, y: -50, scale: 1.02, duration: 1 }, 0);
 
@@ -162,7 +163,7 @@ export default function HeroOverlay() {
 
                 {/* ── LEAD STORY + PORTRAIT ── */}
                 <div className="absolute left-0 right-0 bottom-[48px] top-[232px] md:top-[244px] z-10 px-6 md:px-[5vw]">
-                    <div className="h-full grid grid-cols-12 gap-0 pt-3" style={{ borderTop: '2px solid ' + S.ink }}>
+                    <div ref={leadGridRef} className="h-full grid grid-cols-12 gap-0 pt-3" style={{ borderTop: '2px solid ' + S.ink }}>
 
                         {/* LEFT — the lead story */}
                         <div className="col-span-12 md:col-span-7 lg:col-span-8 flex flex-col md:pr-8 pt-4 overflow-hidden" style={{ borderRight: '0 none' }}>
