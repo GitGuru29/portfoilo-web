@@ -72,7 +72,7 @@ export default function TestimonialsOverlay() {
                         </button>
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="px-5 py-3 rounded-none bg-accent hover:bg-[#d02424] text-[#fdfbf6] font-space font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg"
+                            className="px-5 py-3 rounded-none bg-accent hover:bg-sky-600 text-[#fdfbf6] font-space font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg"
                         >
                             <MessageSquarePlus className="w-4 h-4" />
                             Leave a Recommendation
@@ -115,10 +115,10 @@ export default function TestimonialsOverlay() {
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-1">
                                     {[...Array(testimonials[currentIndex].rating || 5)].map((_, i) => (
-                                        <Star key={i} className="w-5 h-5 fill-[#B91C1C] text-accent" />
+                                        <Star key={i} className="w-5 h-5 fill-accent text-accent" />
                                     ))}
                                 </div>
-                                <span className="px-3 py-1 text-[11px] font-mono tracking-wider text-accent bg-accent/10 border border-[#B91C1C]/20 rounded-md uppercase">
+                                <span className="px-3 py-1 text-[11px] font-mono tracking-wider text-accent bg-accent/10 border border-accent/20 rounded-md uppercase">
                                     {testimonials[currentIndex].relationship || 'Client'}
                                 </span>
                             </div>
@@ -144,7 +144,7 @@ export default function TestimonialsOverlay() {
                                     <img
                                         src={testimonials[currentIndex].avatar}
                                         alt={testimonials[currentIndex].name}
-                                        className="w-12 h-12 rounded-full object-cover border border-[#B91C1C]/40 shadow-md"
+                                        className="w-12 h-12 rounded-full object-cover border border-accent/40 shadow-md"
                                         onError={(e) => {
                                             e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250';
                                         }}
