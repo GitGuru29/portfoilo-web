@@ -11,7 +11,7 @@ const S = {
     ink: '#121212',
     graphite: '#57544d',
     line: 'rgba(18,18,18,0.4)',
-    crimson: '#0ea5e9',
+    crimson: '#b91c1c',
     mono: "'JetBrains Mono', monospace",
     serif: "'Playfair Display', 'Fraunces', Georgia, serif",
     blackletter: "'UnifrakturMaguntia', Georgia, serif",
@@ -165,7 +165,7 @@ export default function HeroOverlay() {
                     <div className="h-full grid grid-cols-12 gap-0 pt-3" style={{ borderTop: '2px solid ' + S.ink }}>
 
                         {/* LEFT — the lead story */}
-                        <div className="col-span-12 md:col-span-7 flex flex-col md:pr-8 pt-4 overflow-hidden" style={{ borderRight: '0 none' }}>
+                        <div className="col-span-12 md:col-span-7 lg:col-span-8 flex flex-col md:pr-8 pt-4 overflow-hidden" style={{ borderRight: '0 none' }}>
 
                             {/* Byline */}
                             <div ref={bodyRef} className="flex flex-col gap-2" style={{ opacity: 0 }}>
@@ -193,10 +193,14 @@ export default function HeroOverlay() {
                                         The desk reports a developer who treats the machine as read-only until
                                         proven otherwise — building low-level systems software, native Android,
                                         and Linux tooling engineered for determinism and quiet correctness.
+                                        Every project is compiled against reality: small, measurable, and
+                                        predictable under load.
                                     </p>
                                     <p className="mb-2 text-justify" style={{ marginTop: 3 }}>
                                         From kernel utilities to compiler passes, the work favours the lowest
-                                        layer that will still run: correctness before speed, speed before scale.
+                                        layer that will still run. The editorial board notes a particular
+                                        immunity to fashionable abstractions: correctness before speed, speed
+                                        before scale.
                                     </p>
                                 </div>
 
@@ -231,7 +235,7 @@ export default function HeroOverlay() {
                         </div>
 
                         {/* RIGHT — portrait plate + telegraph */}
-                        <div className="hidden md:flex col-span-5 flex-col pl-8 pt-5">
+                        <div className="hidden md:flex col-span-5 lg:col-span-4 flex-col pl-8 pt-5">
                             <div ref={photoRef} className="flex flex-col gap-3" style={{ opacity: 0 }}>
                                 {/* 1-bit halftone portrait */}
                                 <figure className="relative border border-ink p-1.5" style={{ background: S.panel }}>
@@ -326,10 +330,30 @@ export default function HeroOverlay() {
                                     <p className="text-justify mb-2">
                                         Whether engineering compiler passes for AeroLang, optimizing inter-process communication in ByBridge, or securing network telemetry in AegisLayer, the focus remains on zero-allocation inner loops, predictable memory layouts, and strict contract enforcement. Opinion is reserved for the compiler.
                                     </p>
+                                    <p className="text-justify mb-2">
+                                        Working from a corner desk in Colombo, the press favours the smallest moving part that solves the whole problem — a habit learned the hard way, on machines where every microsecond clears a market or a deadline.
+                                    </p>
+                                </div>
+
+                                {/* Education & Postings */}
+                                <div className="pt-2.5" style={{ borderTop: '1px solid rgba(18,18,18,0.2)' }}>
+                                    <div className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold mb-2">Education &amp; Postings</div>
+                                    <div className="grid grid-cols-3 gap-3">
+                                        {[
+                                            { year: '2021 →', entry: 'Systems foundations — first C under the desk', tag: 'BSc' },
+                                            { year: '2023 →', entry: 'Independent engineering & open-source work', tag: 'FREELANCE' },
+                                            { year: 'NOW', entry: 'AeroLang · ByBridge · AegisLayer on the bench', tag: 'ACTIVE' },
+                                        ].map(e => (
+                                            <div key={e.tag} className="flex flex-col gap-0.5">
+                                                <span className="font-mono text-[9px] text-ink/70">{e.year} <span className="text-accent">[{e.tag}]</span></span>
+                                                <span className="text-[11px] font-serif text-graphite leading-tight">{e.entry}</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 {/* Core Disciplines List */}
-                                <div className="grid grid-cols-3 gap-3 pt-3" style={{ borderTop: '1px solid rgba(18,18,18,0.2)' }}>
+                                <div className="grid grid-cols-3 gap-3 pt-2.5" style={{ borderTop: '1px solid rgba(18,18,18,0.2)' }}>
                                     <div className="flex flex-col gap-1">
                                         <span className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold">01. Determinism</span>
                                         <span className="text-[11px] font-serif text-graphite leading-tight">Zero hidden allocations & predictable latency.</span>
@@ -346,9 +370,17 @@ export default function HeroOverlay() {
 
                                 {/* Tech Chips */}
                                 <div className="flex flex-wrap gap-2 pt-1">
-                                    {['C++20', 'Kotlin', 'Linux Kernel', 'Android AOSP', 'LLVM', 'Rust', 'eBPF', 'PostgreSQL', 'CMake'].map(t => (
+                                    {['C++20', 'Kotlin', 'Linux Kernel', 'Android AOSP', 'LLVM', 'Rust', 'eBPF', 'PostgreSQL', 'CMake', 'C#', 'Bash', 'Git'].map(t => (
                                         <span key={t} className="chip-tech">{t}</span>
                                     ))}
+                                </div>
+
+                                {/* Editor's signoff */}
+                                <div className="flex items-center justify-between gap-4" style={{ borderTop: '1px solid rgba(18,18,18,0.2)', paddingTop: 8, marginTop: 2 }}>
+                                    <p className="italic font-serif text-[11px] text-graphite leading-snug">
+                                        — The machine stays read-only until the contracts are proven. The desk is now open.
+                                    </p>
+                                    <span className="font-blackletter text-2xl leading-none shrink-0" style={{ color: S.ink }}>Siluna Dangalla</span>
                                 </div>
                             </div>
 
@@ -406,6 +438,29 @@ export default function HeroOverlay() {
                                     <p className="font-mono text-[10px] text-graphite mt-1 leading-relaxed">
                                         Currently engineering high-throughput platform tools. Reach out for systems contracts or full-time engagements.
                                     </p>
+                                </div>
+
+                                {/* In Print — Current Works */}
+                                <div className="story-card p-4">
+                                    <div className="flex items-center justify-between border-b border-ink/20 pb-2 mb-2">
+                                        <span className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-ink">On the Bench</span>
+                                        <span className="font-mono text-[9px] text-accent">IN PRINT</span>
+                                    </div>
+                                    <div className="space-y-2 font-mono text-[11px]">
+                                        {[
+                                            { name: 'AeroLang', status: 'Compiler passes', state: 'RC' },
+                                            { name: 'ByBridge', status: 'IPC design', state: 'ACTIVE' },
+                                            { name: 'AegisLayer', status: 'Telemetry security', state: 'SHIPPING' },
+                                        ].map(w => (
+                                            <div key={w.name} className="flex items-center justify-between border-b border-ink/10 pb-1.5 last:border-0 last:pb-0">
+                                                <span className="text-ink">{w.name}</span>
+                                                <span className="flex items-center gap-2">
+                                                    <span className="text-graphite">{w.status}</span>
+                                                    <span className="text-accent">{w.state}</span>
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 

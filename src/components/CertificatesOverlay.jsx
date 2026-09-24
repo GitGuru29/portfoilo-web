@@ -21,6 +21,42 @@ const placeholderCertificates = [
         link: "https://www.hackerrank.com/certificates/09751f9f55d8",
         image: "/hackerrank-logo.png",
         verified: true
+    },
+    {
+        title: "Java (Intermediate)",
+        issuer: "HackerRank",
+        date: "2026",
+        description: "Verified intermediate Java covering generics, concurrency, collections, and integer/string manipulation across time-constrained problems.",
+        link: "https://www.hackerrank.com/certificates",
+        image: "/hackerrank-logo.png",
+        verified: true
+    },
+    {
+        title: "Kotlin for Android Development",
+        issuer: "JetBrains Academy",
+        date: "In Progress",
+        description: "Building toward certification in Kotlin coroutines, Android toolchain internals, Gradle modules, and reactive UI architecture.",
+        link: "#",
+        image: "/sn-logo.png",
+        verified: false
+    },
+    {
+        title: "Linux Systems Administration (LPIC-style)",
+        issuer: "Linux Professional Institute",
+        date: "In Progress",
+        description: "Working towards LPIC-level coverage: filesystem hierarchy, process management, shell scripting, networking, and security hardening.",
+        link: "#",
+        image: "/sn-logo.png",
+        verified: false
+    },
+    {
+        title: "Compiler Construction & LLVM",
+        issuer: "Independent Study",
+        date: "In Progress",
+        description: "Structured self-study across lexers, parsers, SSA form, and LLVM IR passes — the materials behind the AeroLang compiler work.",
+        link: "#",
+        image: "/sn-logo.png",
+        verified: false
     }
 ];
 

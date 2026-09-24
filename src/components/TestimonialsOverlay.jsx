@@ -72,7 +72,7 @@ export default function TestimonialsOverlay() {
                         </button>
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="px-5 py-3 rounded-full bg-accent hover:bg-[#8CC8FF] text-neutral-950 font-space font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg hover:shadow-accent/20"
+                            className="px-5 py-3 rounded-none bg-accent hover:bg-[#d02424] text-[#fdfbf6] font-space font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg"
                         >
                             <MessageSquarePlus className="w-4 h-4" />
                             Leave a Recommendation
