@@ -274,7 +274,7 @@ export default function HeroOverlay() {
                     style={{ borderTop: '1px solid rgba(18,18,18,0.7)', paddingTop: 6 }}>
                     <span>CONTINUED ON PAGE TWO — THE DEVELOPER'S DESK ↑</span>
                     <span className="hidden md:inline text-accent">● PRESIDENTIAL RACE = N/A ▮ FLOODS = N/A</span>
-                    <span>12°59′N — 80°14′E</span>
+                    <span>6°55′N — 79°51′E</span>
                 </div>
 
                 {/* ══════════════════════════════════════
