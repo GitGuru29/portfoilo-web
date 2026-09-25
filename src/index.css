@@ -1280,6 +1280,8 @@ html { scroll-padding-top: 76px; }
 .paper-page[data-chapter='07'] { --ch-h: 335; --ch-s: 80%; --ch-l: 44%; }
 /* 08 — contact · forest green */
 .paper-page[data-chapter='08'] { --ch-h: 148; --ch-s: 72%; --ch-l: 32%; }
+/* 09 — colophon · press slate (desaturated, reads as ink) */
+.paper-page[data-chapter='09'] { --ch-h: 205; --ch-s: 25%; --ch-l: 34%; }
 
 /* Duotone grade — doubled opacity for visible color wash */
 .paper-page__grade {

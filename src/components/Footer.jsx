@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Github, Linkedin, Twitter, FileText, ArrowUpRight, Cpu, Globe, Sparkles, Terminal } from 'lucide-react';
 import useStore from '../store/useStore';
 
-export default function Footer({ compact = false }) {
+export default function Footer() {
     const location = useLocation();
     const navigate = useNavigate();
     const [timeStr, setTimeStr] = useState('');
@@ -65,10 +65,10 @@ export default function Footer({ compact = false }) {
     ];
 
     return (
-        <footer className="w-full relative z-20 bg-void text-ink border-t-2 border-ink overflow-hidden font-sans" style={{ borderTop: '3px double #121212' }}>
+        <footer className="w-full relative z-20 bg-void text-ink border-t-2 border-ink overflow-hidden font-sans" style={{ borderTop: '3px double var(--color-ink)' }}>
 
             {/* 1. KINETIC MARQUEE TICKER — ink band */}
-            <div className="w-full bg-[#121212] text-[#f5f2eb] border-b-2 border-ink py-2.5 overflow-hidden relative">
+            <div className="w-full bg-ink text-void border-b-2 border-ink py-2.5 overflow-hidden relative">
                 <div className="flex whitespace-nowrap animate-ticker">
                     {[...marqueeSkills, ...marqueeSkills, ...marqueeSkills].map((item, idx) => (
                         <div key={idx} className="flex items-center gap-4 mx-3">
@@ -81,73 +81,12 @@ export default function Footer({ compact = false }) {
                 </div>
             </div>
 
-            {compact && (
-                <div className="w-full py-6 relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[10px] tracking-[0.2em] uppercase text-graphite">
-                            <span className="inline-flex items-center gap-2 text-accent">
-                                <span className="w-1.5 h-1.5 bg-accent animate-pulse" />
-                                Nominal
-                            </span>
-                            <span className="flex items-center gap-2">
-                                <Globe className="w-3 h-3 text-accent" />
-                                Colombo · {timeStr || '13:00:00'} SLT
-                            </span>
-                        </div>
-
-                        <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] tracking-[0.2em] uppercase">
-                            {[
-                                { label: 'Projects', id: 'projects' },
-                                { label: 'Skills', id: 'skills' },
-                                { label: 'Research', id: 'research' },
-                                { label: 'Contact', id: 'contact' },
-                            ].map(({ label, id }) => (
-                                <li key={id}>
-                                    <a
-                                        href={`#${id}`}
-                                        onClick={(e) => handleNavClick(e, id)}
-                                        className="text-graphite hover:text-accent transition-colors"
-                                    >
-                                        {label}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="mt-5 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-ink/20">
-                        <span className="text-[10px] font-mono text-graphite/70 tracking-wide">
-                            © {new Date().getFullYear()} Siluna Nusal Dangalla
-                        </span>
-                        <div className="flex items-center gap-3">
-                            {[
-                                { label: 'GitHub', href: 'https://github.com/GitGuru29', icon: Github },
-                                { label: 'LinkedIn', href: 'https://www.linkedin.com/in/siluna-dangalla-0744a02b1/', icon: Linkedin },
-                                { label: 'Resume', href: '/Siluna_Nusal_CV.pdf', icon: FileText },
-                            ].map(({ label, href, icon: Icon }) => (
-                                <a
-                                    key={label}
-                                    href={href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={label}
-                                    className="text-graphite hover:text-accent transition-colors"
-                                >
-                                    <Icon className="w-3.5 h-3.5" />
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 2. MAIN FOOTER — colophon */}
-            {!compact && (
+            {/* MAIN FOOTER — colophon */}
             <div className="max-w-7xl mx-auto px-6 md:px-10 py-10 relative z-10">
 
                 {/* Brand header & status strip */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8"
-                    style={{ borderBottom: '3px double #121212' }}>
+                    style={{ borderBottom: '3px double var(--color-ink)' }}>
                     <div className="space-y-2">
                         <span className="inline-flex items-center gap-2 px-2 py-1 rounded-none border border-accent text-accent text-[10px] font-mono tracking-widest uppercase">
                             <span className="w-1.5 h-1.5 bg-accent animate-pulse" />
@@ -177,7 +116,7 @@ export default function Footer({ compact = false }) {
 
                 {/* 3. FOUR-COLUMN GRID */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8"
-                    style={{ borderBottom: '3px double #121212' }}>
+                    style={{ borderBottom: '3px double var(--color-ink)' }}>
 
                     {/* Col 1: System Specs */}
                     <div className="space-y-3">
@@ -299,7 +238,6 @@ export default function Footer({ compact = false }) {
                 </div>
 
             </div>
-            )}
         </footer>
     );
 }

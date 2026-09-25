@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 const CHAPTERS = [
-    { id: 'hero', num: '00', label: 'Home', hue: 355, sat: '72%', lum: '42%' },
-    { id: 'projects', num: '01', label: 'Projects', hue: 22, sat: '88%', lum: '48%' },
-    { id: 'timeline', num: '02', label: 'Experience', hue: 268, sat: '62%', lum: '50%' },
-    { id: 'skills', num: '03', label: 'Skills', hue: 174, sat: '72%', lum: '33%' },
-    { id: 'github', num: '04', label: 'GitHub', hue: 212, sat: '88%', lum: '46%' },
-    { id: 'research', num: '05', label: 'Research', hue: 292, sat: '66%', lum: '48%' },
-    { id: 'recognition', num: '06', label: 'Credentials', hue: 44, sat: '84%', lum: '42%' },
-    { id: 'testimonials', num: '07', label: 'Testimonials', hue: 330, sat: '74%', lum: '48%' },
-    { id: 'contact', num: '08', label: 'Contact', hue: 146, sat: '64%', lum: '36%' },
+    { id: 'hero', num: '00', label: 'Home', hue: 350, sat: '82%', lum: '40%' },
+    { id: 'projects', num: '01', label: 'Projects', hue: 18, sat: '92%', lum: '44%' },
+    { id: 'timeline', num: '02', label: 'Experience', hue: 264, sat: '72%', lum: '46%' },
+    { id: 'skills', num: '03', label: 'Skills', hue: 172, sat: '80%', lum: '30%' },
+    { id: 'github', num: '04', label: 'GitHub', hue: 216, sat: '90%', lum: '42%' },
+    { id: 'research', num: '05', label: 'Research', hue: 285, sat: '76%', lum: '44%' },
+    { id: 'recognition', num: '06', label: 'Credentials', hue: 40, sat: '90%', lum: '38%' },
+    { id: 'testimonials', num: '07', label: 'Testimonials', hue: 335, sat: '80%', lum: '44%' },
+    { id: 'contact', num: '08', label: 'Contact', hue: 148, sat: '72%', lum: '32%' },
+    { id: 'colophon', num: '09', label: 'Colophon', hue: 205, sat: '25%', lum: '34%' },
 ];
 
 export default function SectionDotsNav() {

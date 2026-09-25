@@ -176,7 +176,18 @@ export default function Home() {
                     lede="Building something on systems, Android, or the edges of performance? Let's talk."
                 >
                     <Contact />
-                    <Footer compact />
+                </PaperPage>
+
+                {/* 09 · COLOPHON — the masthead footer, last sheet of the run */}
+                <PaperPage
+                    id="colophon"
+                    chapter="09"
+                    kicker="Colophon"
+                    title="About This Paper"
+                    watermark="COLOPHON"
+                    lede="How The Daily Developer is set, printed, and distributed."
+                >
+                    <Footer />
                 </PaperPage>
             </PaperDeck>
 
