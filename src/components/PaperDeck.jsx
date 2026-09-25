@@ -104,7 +104,11 @@ export default function PaperDeck({ children }) {
             playPaperTurnSound(soundEnabled);
 
             if (isForward) {
-                // Prepare incoming page directly beneath
+                // ─── FORWARD TURN: 3-stage cinematic arc ─────────────────
+                // Stage 1 — lift-off (page peels slightly off desk)
+                // Stage 2 — wide arc sweep (rotationY 0 → -150)
+                // Stage 3 — overshoot settle (-150 → -155 → -148, elastic land)
+
                 const isToBare = toPage.classList.contains('paper-page--bare');
                 gsap.set(toPage, {
                     display: isToBare ? 'block' : 'grid',
@@ -117,60 +121,50 @@ export default function PaperDeck({ children }) {
                     transformPerspective: 2400,
                 });
 
+                // Incoming page grade
                 const toGrade = toPage.querySelector('.paper-page__grade');
                 if (toGrade) {
                     gsap.fromTo(
                         toGrade,
-                        { opacity: 0, scale: 1.06 },
-                        { opacity: 1, scale: 1, duration: 1.05, ease: 'power2.out', overwrite: true }
+                        { opacity: 0, scale: 1.05 },
+                        { opacity: 1, scale: 1, duration: 1.1, ease: 'power2.out', overwrite: true }
                     );
                 }
 
-                if (toShadow) {
-                    gsap.fromTo(
-                        toShadow,
-                        { opacity: 0.55 },
-                        { opacity: 0, duration: 0.85, ease: 'power2.out' }
-                    );
-                }
-
-                // Crease highlight sweep
+                // Crease highlight — sweeps right-to-left during the arc
                 if (crease) {
                     gsap.fromTo(
                         crease,
-                        { display: 'block', opacity: 0, x: window.innerWidth * 0.8 },
+                        { display: 'block', opacity: 0, x: window.innerWidth * 0.85 },
                         {
-                            x: -20,
-                            opacity: 0.75,
-                            duration: 0.85,
+                            x: -28,
+                            opacity: 1,
+                            duration: 1.0,
                             ease: 'power2.inOut',
                             onComplete: () => {
-                                gsap.set(crease, { display: 'none', opacity: 0 });
+                                gsap.to(crease, { opacity: 0, duration: 0.2, onComplete: () => gsap.set(crease, { display: 'none' }) });
                             },
                         }
                     );
                 }
 
-                // Turn the outgoing page over to the left
+                // Outgoing page: cinematic multi-stage rotation
                 gsap.set(fromPage, {
                     zIndex: 20,
                     transformOrigin: 'left center',
                     transformPerspective: 2400,
                 });
 
-                gsap.to(fromPage, {
-                    rotationY: -112,
-                    rotateZ: -2.5,
-                    xPercent: -8,
-                    duration: 0.85,
-                    ease: 'power2.inOut',
+                const tl = gsap.timeline({
                     onComplete: () => {
                         gsap.set(fromPage, {
                             display: 'none',
                             zIndex: 1,
                             rotationY: 0,
                             rotateZ: 0,
+                            rotationX: 0,
                             xPercent: 0,
+                            scaleX: 1,
                         });
                         gsap.set(toPage, { zIndex: 10 });
                         fromPage.classList.remove('is-active');
@@ -187,62 +181,105 @@ export default function PaperDeck({ children }) {
                         );
                     },
                 });
+
+                // Stage 1: lift-off — slight rotationX + scaleX compression (0 → 15%)
+                tl.to(fromPage, {
+                    rotationX: 2.5,
+                    scaleX: 0.985,
+                    duration: 0.14,
+                    ease: 'power2.out',
+                });
+
+                // Stage 2: wide arc sweep (15% → 88%)
+                tl.to(fromPage, {
+                    rotationY: -150,
+                    rotateZ: -4,
+                    xPercent: -10,
+                    rotationX: 0,
+                    scaleX: 1,
+                    duration: 0.78,
+                    ease: 'power2.inOut',
+                });
+
+                // Stage 3: elastic overshoot settle (88% → 100%)
+                tl.to(fromPage, {
+                    rotationY: -146,
+                    rotateZ: -3.5,
+                    duration: 0.13,
+                    ease: 'power1.out',
+                });
+
+                // Under-shadow: cast band travels right-to-left with the sweep,
+                // then falls off once the sheet has landed flat.
+                if (toShadow) {
+                    tl.fromTo(
+                        toShadow,
+                        { xPercent: 16, opacity: 0 },
+                        { xPercent: -16, opacity: 1, duration: 0.92, ease: 'none' },
+                        0
+                    );
+                    tl.to(toShadow, { opacity: 0, duration: 0.25, ease: 'power2.in' }, 0.75);
+                }
+
             } else {
-                // Turning backward (from left back onto stack)
+                // ─── BACKWARD TURN: page rises from left, unfolds back ──
+
                 const isToBare = toPage.classList.contains('paper-page--bare');
                 gsap.set(toPage, {
                     display: isToBare ? 'block' : 'grid',
                     zIndex: 20,
                     opacity: 1,
-                    rotationY: -112,
-                    rotateZ: -2.5,
-                    xPercent: -8,
+                    rotationY: -146,
+                    rotateZ: -3.5,
+                    xPercent: -10,
                     transformOrigin: 'left center',
                     transformPerspective: 2400,
                 });
                 gsap.set(fromPage, { zIndex: 5 });
 
+                // Shadow on the outgoing page lifts and releases as the
+                // returning sheet falls back onto it.
                 if (fromShadow) {
                     gsap.fromTo(
                         fromShadow,
-                        { opacity: 0 },
+                        { opacity: 0, xPercent: -16 },
                         {
-                            opacity: 0.55,
-                            duration: 0.45,
-                            yoyo: true,
-                            repeat: 1,
-                            ease: 'power2.inOut',
-                            onComplete: () => gsap.set(fromShadow, { opacity: 0 }),
+                            opacity: 0.85,
+                            xPercent: 6,
+                            duration: 0.5,
+                            ease: 'power2.out',
+                            onComplete: () =>
+                                gsap.to(fromShadow, {
+                                    opacity: 0,
+                                    xPercent: 16,
+                                    duration: 0.45,
+                                    ease: 'power2.inOut',
+                                }),
                         }
                     );
                 }
 
-                // Crease highlight sweep reverse
+                // Crease highlight sweeps left-to-right on backward turn
                 if (crease) {
                     gsap.fromTo(
                         crease,
-                        { display: 'block', opacity: 0, x: -20 },
+                        { display: 'block', opacity: 0, x: -28 },
                         {
-                            x: window.innerWidth * 0.8,
-                            opacity: 0.75,
-                            duration: 0.85,
+                            x: window.innerWidth * 0.85,
+                            opacity: 1,
+                            duration: 1.0,
                             ease: 'power2.inOut',
                             onComplete: () => {
-                                gsap.set(crease, { display: 'none', opacity: 0 });
+                                gsap.to(crease, { opacity: 0, duration: 0.2, onComplete: () => gsap.set(crease, { display: 'none' }) });
                             },
                         }
                     );
                 }
 
-                gsap.to(toPage, {
-                    rotationY: 0,
-                    rotateZ: 0,
-                    xPercent: 0,
-                    duration: 0.85,
-                    ease: 'power2.inOut',
+                const tl = gsap.timeline({
                     onComplete: () => {
                         gsap.set(fromPage, { display: 'none', zIndex: 1 });
-                        gsap.set(toPage, { zIndex: 10 });
+                        gsap.set(toPage, { zIndex: 10, rotationY: 0, rotateZ: 0, xPercent: 0, rotationX: 0, scaleX: 1 });
                         fromPage.classList.remove('is-active');
                         toPage.classList.add('is-active');
                         activeIdxRef.current = toIdx;
@@ -256,6 +293,32 @@ export default function PaperDeck({ children }) {
                             })
                         );
                     },
+                });
+
+                // Stage 1: wide arc sweep back (0 → 85%)
+                tl.to(toPage, {
+                    rotationY: -4,
+                    rotateZ: -0.4,
+                    xPercent: -1,
+                    duration: 0.78,
+                    ease: 'power2.inOut',
+                });
+
+                // Stage 2: land with slight settle bounce
+                tl.to(toPage, {
+                    rotationY: 0,
+                    rotateZ: 0,
+                    xPercent: 0,
+                    rotationX: 1.5,
+                    duration: 0.14,
+                    ease: 'power2.out',
+                });
+
+                // Stage 3: flatten fully
+                tl.to(toPage, {
+                    rotationX: 0,
+                    duration: 0.13,
+                    ease: 'power1.out',
                 });
             }
         };

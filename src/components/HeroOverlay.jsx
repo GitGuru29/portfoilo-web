@@ -72,23 +72,65 @@ export default function HeroOverlay() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            const tl = gsap.timeline({ delay: 0.35 });
+            const tl = gsap.timeline({ delay: 0.2 });
 
-            tl.fromTo([chopA.current, chopB.current],
-                { yPercent: 118 },
-                { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: 0.09 }
+            // Masthead drops in with rotateX tilt — like paper landing flat on desk
+            tl.fromTo(
+                topRef.current,
+                { opacity: 0, y: -28, rotateX: -14 },
+                { opacity: 1, y: 0, rotateX: 0, duration: 0.95, ease: 'power4.out', transformPerspective: 1200 }
             );
-            tl.fromTo(photoRef.current,
-                { opacity: 0, x: 24, scale: 0.99 },
-                { opacity: 1, x: 0, scale: 1, duration: 1.2, ease: 'power3.out' },
-                '-=0.9'
+
+            // Folio strips draw in from edges (left strip: scaleX from left, bottom: from right)
+            tl.fromTo(
+                folioTopRef.current,
+                { scaleX: 0, opacity: 0, transformOrigin: 'left center' },
+                { scaleX: 1, opacity: 1, duration: 0.8, ease: 'power3.out' },
+                '-=0.7'
             );
-            tl.fromTo([topRef.current, bodyRef.current, folioTopRef.current, folioBottomRef.current, leadGridRef.current],
+
+            // Headline chop A — stamp-press: slides up + skewY slam
+            tl.fromTo(
+                chopA.current,
+                { yPercent: 120, skewY: 5 },
+                { yPercent: 0, skewY: 0, duration: 0.9, ease: 'power4.out' },
+                '-=0.55'
+            );
+
+            // Headline chop B — follows with slight stagger
+            tl.fromTo(
+                chopB.current,
+                { yPercent: 120, skewY: 4 },
+                { yPercent: 0, skewY: 0, duration: 0.85, ease: 'power4.out' },
+                '-=0.75'
+            );
+
+            // Photo: clip-path wipe from top (like photo pulled from enlarger tray)
+            tl.fromTo(
+                photoRef.current,
+                { clipPath: 'inset(0% 0% 100% 0%)', opacity: 1 },
+                { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 1.05, ease: 'power3.out' },
+                '-=0.8'
+            );
+
+            // Body content, folio bottom, lead grid — cascade fade up
+            tl.fromTo(
+                [bodyRef.current, folioBottomRef.current],
+                { opacity: 0, y: 10 },
+                { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', stagger: 0.08 },
+                '-=0.85'
+            );
+
+            tl.fromTo(
+                leadGridRef.current,
                 { opacity: 0 },
-                { opacity: 1, duration: 0.9, ease: 'power2.out' },
-                '-=1.05'
+                { opacity: 1, duration: 0.7, ease: 'power2.out' },
+                '-=0.7'
             );
-            setTimeout(() => setStatsStarted(true), 700);
+
+            // Stats counters start early — 300ms in, well before the headline
+            // chop finishes, so the numbers are already turning under the fold.
+            setTimeout(() => setStatsStarted(true), 300);
 
             setMood(MOODS.HERO);
         }, heroRef);
