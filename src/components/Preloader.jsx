@@ -20,13 +20,29 @@ export default function Preloader() {
             setTimeout(() => playTypewriterSound(soundEnabled), (0.5 + index * 0.15) * 1000);
         });
         
-        // Classic boot time slightly extended to let animation finish (8 seconds total)
-        const exitTimer = setTimeout(() => {
+        let exited = false;
+        const triggerExit = (delay = 400) => {
+            if (exited) return;
+            exited = true;
             setIsExiting(true);
-            setTimeout(unlockSystem, 800);
-        }, 8000);
+            setTimeout(unlockSystem, delay);
+        };
 
-        return () => clearTimeout(exitTimer);
+        const exitTimer = setTimeout(() => triggerExit(800), 4500);
+
+        const onInteract = () => triggerExit(300);
+        window.addEventListener('click', onInteract, { once: true });
+        window.addEventListener('keydown', onInteract, { once: true });
+        window.addEventListener('wheel', onInteract, { once: true });
+        window.addEventListener('touchstart', onInteract, { once: true });
+
+        return () => {
+            clearTimeout(exitTimer);
+            window.removeEventListener('click', onInteract);
+            window.removeEventListener('keydown', onInteract);
+            window.removeEventListener('wheel', onInteract);
+            window.removeEventListener('touchstart', onInteract);
+        };
     }, [unlockSystem, soundEnabled]);
 
     return (

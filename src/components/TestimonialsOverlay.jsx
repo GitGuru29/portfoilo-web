@@ -37,47 +37,35 @@ export default function TestimonialsOverlay() {
     };
 
     return (
-        <div className="w-full py-24 md:py-32 px-6 relative overflow-hidden bg-transparent">
+        <div className="w-full relative overflow-hidden bg-transparent">
             {/* Background Accent Gradients */}
             <div className="absolute top-1/2 left-10 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="max-w-6xl mx-auto relative z-10">
-                {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-                    <div>
-                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass border border-geyser/10 text-xs font-mono tracking-widest text-accent uppercase mb-4 shadow-sm">
-                            <Quote className="w-3.5 h-3.5 text-accent" />
-                            <span>Client Endorsements & References</span>
-                        </div>
-                        <h2 className="text-3xl md:text-5xl font-space font-bold text-geyser tracking-tight">
-                            Trusted by Leaders & Clients
-                        </h2>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={() => setIsAdminOpen(true)}
-                            title="Admin Control Panel"
-                            className="p-3 rounded-full glass border border-geyser/10 text-titanium hover:text-accent hover:border-accent/40 transition-all"
-                        >
-                            <ShieldCheck className="w-4 h-4" />
-                        </button>
-                        <button
-                            onClick={loadTestimonials}
-                            title="Refresh recommendations"
-                            className="p-3 rounded-full glass border border-geyser/10 text-titanium hover:text-geyser hover:border-accent/40 transition-all"
-                        >
-                            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                        </button>
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="px-5 py-3 rounded-none bg-accent hover:bg-sky-600 text-[#fdfbf6] font-space font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg"
-                        >
-                            <MessageSquarePlus className="w-4 h-4" />
-                            Leave a Recommendation
-                        </button>
-                    </div>
+            <div className="w-full relative z-10">
+                {/* Controls */}
+                <div className="flex flex-wrap items-center justify-end gap-3">
+                    <button
+                        onClick={() => setIsAdminOpen(true)}
+                        title="Admin Control Panel"
+                        className="p-3 rounded-full glass border border-geyser/10 text-titanium hover:text-accent hover:border-accent/40 transition-all"
+                    >
+                        <ShieldCheck className="w-4 h-4" />
+                    </button>
+                    <button
+                        onClick={loadTestimonials}
+                        title="Refresh recommendations"
+                        className="p-3 rounded-full glass border border-geyser/10 text-titanium hover:text-geyser hover:border-accent/40 transition-all"
+                    >
+                        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                    </button>
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="px-5 py-3 rounded-none bg-accent hover:bg-sky-600 text-[#fdfbf6] font-space font-semibold text-xs tracking-wider uppercase flex items-center gap-2 transition-all shadow-lg"
+                    >
+                        <MessageSquarePlus className="w-4 h-4" />
+                        Leave a Recommendation
+                    </button>
                 </div>
 
                 {/* Main Recommendation Carousel / Card View */}

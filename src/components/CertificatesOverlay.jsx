@@ -1,6 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React from 'react';
+import usePageReveal from '../utils/usePageReveal';
 
 const placeholderCertificates = [
     {
@@ -61,56 +60,16 @@ const placeholderCertificates = [
 ];
 
 export default function CertificatesOverlay() {
-    const containerRef = useRef(null);
-    const titleRef = useRef(null);
-    const certRefs = useRef([]);
-
-    useEffect(() => {
-        gsap.fromTo(titleRef.current,
-            { opacity: 0, y: 50, skewY: 2 },
-            {
-                opacity: 1, y: 0, skewY: 0, duration: 1.2, ease: "power4.out",
-                force3D: true,
-                scrollTrigger: { trigger: containerRef.current, start: "top 80%" }
-            }
-        );
-
-        gsap.fromTo(certRefs.current,
-            { opacity: 0, y: 30, scale: 0.95 },
-            {
-                opacity: 1, y: 0, scale: 1, duration: 1.0, stagger: 0.12, ease: "power3.out",
-                force3D: true,
-                scrollTrigger: { trigger: containerRef.current, start: "top 75%" }
-            }
-        );
-
-        return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill());
-        };
-    }, []);
+    const containerRef = usePageReveal({ selector: '.cert-card', y: 30, scale: 0.97, stagger: 0.1 });
 
     return (
-        <section id="certificates" ref={containerRef} className="w-full py-32 px-6 flex flex-col items-center pointer-events-none z-10 relative">
-            <div className="structural-line structural-line-h top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl hidden lg:block" />
-
-            <div className="max-w-7xl w-full pointer-events-auto flex flex-col items-center">
-
-                <div ref={titleRef} className="mb-16 md:mb-24 flex flex-col items-center text-center">
-                    <span className="text-xs md:text-sm font-space tracking-[0.4em] text-[var(--color-geyser)]/40 mb-4 md:mb-6 uppercase">
-                        Credentials
-                    </span>
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight">
-                        Industry Certificates.
-                    </h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        <section id="certificates" ref={containerRef} className="w-full flex flex-col relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 w-full">
                     {placeholderCertificates.map((cert, index) => (
                         <div
                             key={index}
-                            ref={el => certRefs.current[index] = el}
                             data-cursor="View Credential"
-                            className={`p-8 rounded-3xl border flex flex-col h-full backdrop-blur-md bg-gradient-to-br transition-all duration-500 group relative overflow-hidden will-change-transform hover:-translate-y-2
+                            className={`cert-card p-6 rounded-3xl border flex flex-col h-full backdrop-blur-md bg-gradient-to-br transition-all duration-500 group relative overflow-hidden will-change-transform hover:-translate-y-2
                                 ${cert.verified
                                     ? 'border-accent/25 hover:border-accent/45 bg-panel-deep/70 from-accent/[0.05] to-transparent shadow-[0_12px_34px_-18px_rgba(23,19,15,0.3)] hover:shadow-[0_18px_44px_-18px_rgba(185,28,28,0.35)]'
                                     : 'border-geyser/8 hover:border-geyser/15 bg-panel from-white/[0.6] to-transparent shadow-[0_12px_34px_-18px_rgba(23,19,15,0.3)] hover:shadow-[0_18px_44px_-18px_rgba(18,18,18,0.3)]'
@@ -119,8 +78,8 @@ export default function CertificatesOverlay() {
                             <div className={`absolute top-0 left-0 w-[2px] h-full scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top ${cert.verified ? 'bg-accent' : 'bg-[var(--color-geyser)]/30'}`} />
 
                             {/* Logo + Date row */}
-                            <div className="flex justify-between items-start mb-8 gap-4">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 drop-shadow-lg">
+                            <div className="flex justify-between items-start mb-5 gap-4">
+                                <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 drop-shadow-lg">
                                     <img src={cert.image} alt={cert.issuer} className="w-full h-full object-contain" />
                                 </div>
                                 <div className="flex flex-col items-end gap-2 mt-1">
@@ -135,7 +94,7 @@ export default function CertificatesOverlay() {
                             </div>
 
                             {/* Title */}
-                            <h3 className={`text-xl md:text-2xl font-space font-light mb-6 transition-colors duration-300 ${cert.verified ? 'text-[var(--color-geyser)]' : 'text-[var(--color-geyser)]/40'}`}>
+                            <h3 className={`text-lg md:text-xl font-space font-light mb-3 transition-colors duration-300 ${cert.verified ? 'text-[var(--color-geyser)]' : 'text-[var(--color-geyser)]/40'}`}>
                                 {cert.title}
                             </h3>
 
@@ -146,19 +105,17 @@ export default function CertificatesOverlay() {
 
                             {/* CTA */}
                             {cert.verified ? (
-                                <a href={cert.link} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-2 text-[10px] tracking-[0.2em] font-space uppercase text-accent/50 group-hover:text-accent transition-colors">
+                                <a href={cert.link} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-2 text-[10px] tracking-[0.2em] font-space uppercase text-accent/50 group-hover:text-accent transition-colors">
                                     View Credential <span className="inline-block transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
                                 </a>
                             ) : (
-                                <span className="mt-8 inline-flex items-center gap-2 text-[10px] tracking-[0.2em] font-space uppercase text-[var(--color-geyser)]/20">
+                                <span className="mt-5 inline-flex items-center gap-2 text-[10px] tracking-[0.2em] font-space uppercase text-[var(--color-geyser)]/20">
                                     In Progress…
                                 </span>
                             )}
                         </div>
                     ))}
                 </div>
-
-            </div>
         </section>
     );
 }

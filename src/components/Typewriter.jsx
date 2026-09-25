@@ -63,7 +63,7 @@ export default function Typewriter({
                     setIsInView(true);
                 }
             },
-            { threshold: 0.1 }
+            { root: el.closest('.paper-page__body') || null, threshold: 0.1 }
         );
 
         observer.observe(el);

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Github, Linkedin, Twitter, FileText, ArrowUpRight, Cpu, Globe, Sparkles, Terminal } from 'lucide-react';
 import useStore from '../store/useStore';
 
-export default function Footer() {
+export default function Footer({ compact = false }) {
     const location = useLocation();
     const navigate = useNavigate();
     const [timeStr, setTimeStr] = useState('');
@@ -31,20 +31,26 @@ export default function Footer() {
     // Smooth Scroll Navigation Helper
     const handleNavClick = (e, id) => {
         e.preventDefault();
-        const scrollToTarget = () => {
-            const el = document.getElementById(id);
+
+        const targetId = id === 'home' ? 'hero' : id;
+        const turn = () => {
+            window.dispatchEvent(
+                new CustomEvent('paper-deck:goto', { detail: { id: targetId } })
+            );
+        };
+
+        if (location.pathname !== '/') {
+            navigate('/');
+            setTimeout(turn, 150);
+        } else if (document.querySelector('.paper-deck')) {
+            turn();
+        } else {
+            const el = document.getElementById(targetId);
             if (el && window.lenis) {
                 window.lenis.scrollTo(el, { offset: 0, duration: 1.2 });
             } else if (el) {
                 el.scrollIntoView({ behavior: 'smooth' });
             }
-        };
-
-        if (location.pathname !== '/') {
-            navigate('/');
-            setTimeout(scrollToTarget, 150);
-        } else {
-            scrollToTarget();
         }
     };
 
@@ -75,7 +81,68 @@ export default function Footer() {
                 </div>
             </div>
 
+            {compact && (
+                <div className="w-full py-6 relative z-10">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[10px] tracking-[0.2em] uppercase text-graphite">
+                            <span className="inline-flex items-center gap-2 text-accent">
+                                <span className="w-1.5 h-1.5 bg-accent animate-pulse" />
+                                Nominal
+                            </span>
+                            <span className="flex items-center gap-2">
+                                <Globe className="w-3 h-3 text-accent" />
+                                Colombo · {timeStr || '13:00:00'} SLT
+                            </span>
+                        </div>
+
+                        <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] tracking-[0.2em] uppercase">
+                            {[
+                                { label: 'Projects', id: 'projects' },
+                                { label: 'Skills', id: 'skills' },
+                                { label: 'Research', id: 'research' },
+                                { label: 'Contact', id: 'contact' },
+                            ].map(({ label, id }) => (
+                                <li key={id}>
+                                    <a
+                                        href={`#${id}`}
+                                        onClick={(e) => handleNavClick(e, id)}
+                                        className="text-graphite hover:text-accent transition-colors"
+                                    >
+                                        {label}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="mt-5 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-ink/20">
+                        <span className="text-[10px] font-mono text-graphite/70 tracking-wide">
+                            © {new Date().getFullYear()} Siluna Nusal Dangalla
+                        </span>
+                        <div className="flex items-center gap-3">
+                            {[
+                                { label: 'GitHub', href: 'https://github.com/GitGuru29', icon: Github },
+                                { label: 'LinkedIn', href: 'https://www.linkedin.com/in/siluna-dangalla-0744a02b1/', icon: Linkedin },
+                                { label: 'Resume', href: '/Siluna_Nusal_CV.pdf', icon: FileText },
+                            ].map(({ label, href, icon: Icon }) => (
+                                <a
+                                    key={label}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={label}
+                                    className="text-graphite hover:text-accent transition-colors"
+                                >
+                                    <Icon className="w-3.5 h-3.5" />
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* 2. MAIN FOOTER — colophon */}
+            {!compact && (
             <div className="max-w-7xl mx-auto px-6 md:px-10 py-10 relative z-10">
 
                 {/* Brand header & status strip */}
@@ -232,6 +299,7 @@ export default function Footer() {
                 </div>
 
             </div>
+            )}
         </footer>
     );
 }

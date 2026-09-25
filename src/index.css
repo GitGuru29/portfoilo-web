@@ -1119,3 +1119,465 @@ html { scroll-padding-top: 76px; }
     color: var(--color-ink);
     -webkit-text-stroke: 1px transparent;
 }
+/* ═══════════════════════════════════════════════════
+   PAPER DECK — the whole folio as a spread of newspaper sheets
+═══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   PAPER DECK — Authentic 3D Broadsheet Newspaper Page-Turn System
+═══════════════════════════════════════════════════ */
+.paper-deck {
+    position: relative;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    background: linear-gradient(180deg, #e8e2d1 0%, #dcd5c1 100%);
+}
+
+/* 3-D stage with broadsheet perspective */
+.paper-deck__viewport {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    perspective: 2500px;
+    perspective-origin: 50% 50%;
+}
+
+/* Stack holding all broadsheet spreads */
+.paper-deck__stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+/* Seam shading at edges */
+.paper-deck__shade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(40px, 6vw, 100px);
+    pointer-events: none;
+    z-index: 45;
+    mix-blend-mode: multiply;
+}
+
+.paper-deck__shade--l {
+    left: 0;
+    background: linear-gradient(90deg, rgba(18, 18, 18, 0.12), transparent);
+}
+
+.paper-deck__shade--r {
+    right: 0;
+    background: linear-gradient(270deg, rgba(18, 18, 18, 0.1), transparent);
+}
+
+/* Fold crease — the spine highlight line that sweeps across during a page turn */
+.paper-deck__fold-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    left: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    display: none;
+    background: linear-gradient(
+        90deg,
+        rgba(18, 18, 18, 0.0) 0%,
+        rgba(18, 18, 18, 0.2) 25%,
+        rgba(245, 242, 235, 0.65) 46%,
+        rgba(255, 255, 255, 0.95) 50%,
+        rgba(245, 242, 235, 0.65) 54%,
+        rgba(18, 18, 18, 0.16) 75%,
+        rgba(18, 18, 18, 0.0) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        180deg,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        180deg,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+    );
+}
+
+/* ─────────────────────────────────────────────────
+   CHAPTER COLOR GRADING
+   Each sheet is a press run: one spot-ink hue per
+   chapter, graded into the paper like a duotone.
+   Components inherit automatically because Tailwind v4
+   resolves text-accent / border-accent / bg-accent to
+   var(--color-accent), which we re-point per sheet.
+   ───────────────────────────────────────────────── */
+.paper-page {
+    --ch-h: 210;
+    --ch-s: 90%;
+    --ch-l: 45%;
+    --ch-ink: hsl(var(--ch-h) var(--ch-s) var(--ch-l));
+    --ch-hot: hsl(var(--ch-h) calc(var(--ch-s) + 6%) calc(var(--ch-l) + 16%));
+    --ch-deep: hsl(var(--ch-h) var(--ch-s) calc(var(--ch-l) - 30%));
+    --ch-wash: hsl(var(--ch-h) var(--ch-s) var(--ch-l) / 0.07);
+    --ch-wash-2: hsl(calc(var(--ch-h) + 42) var(--ch-s) var(--ch-l) / 0.055);
+    --ch-glow: hsl(var(--ch-h) 100% 62% / 0.16);
+    --ch-rule: hsl(var(--ch-h) var(--ch-s) var(--ch-l) / 0.45);
+    --color-accent: var(--ch-ink);
+    --color-accent-hot: var(--ch-hot);
+    --color-telemetry: var(--ch-ink);
+}
+
+/* 00 — front page · press crimson */
+.paper-page[data-chapter='00'] { --ch-h: 355; --ch-s: 72%; --ch-l: 42%; }
+/* 01 — projects · signal orange */
+.paper-page[data-chapter='01'] { --ch-h: 22;  --ch-s: 88%; --ch-l: 48%; }
+/* 02 — experience · deep violet */
+.paper-page[data-chapter='02'] { --ch-h: 268; --ch-s: 62%; --ch-l: 50%; }
+/* 03 — capabilities · electric teal */
+.paper-page[data-chapter='03'] { --ch-h: 174; --ch-s: 72%; --ch-l: 33%; }
+/* 04 — open source · cobalt */
+.paper-page[data-chapter='04'] { --ch-h: 212; --ch-s: 88%; --ch-l: 46%; }
+/* 05 — research · ultraviolet */
+.paper-page[data-chapter='05'] { --ch-h: 292; --ch-s: 66%; --ch-l: 48%; }
+/* 06 — credentials · forest gold */
+.paper-page[data-chapter='06'] { --ch-h: 44;  --ch-s: 84%; --ch-l: 42%; }
+/* 07 — testimonials · rose magenta */
+.paper-page[data-chapter='07'] { --ch-h: 330; --ch-s: 74%; --ch-l: 48%; }
+/* 08 — contact · signal green */
+.paper-page[data-chapter='08'] { --ch-h: 146; --ch-s: 64%; --ch-l: 36%; }
+
+/* Duotone grade — a soft radial wash + corner bloom behind the ink */
+.paper-page__grade {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(120% 90% at 8% 0%, var(--ch-wash) 0%, transparent 58%),
+        radial-gradient(100% 80% at 100% 100%, var(--ch-wash-2) 0%, transparent 62%),
+        linear-gradient(168deg, var(--ch-wash) 0%, transparent 45%, var(--ch-wash-2) 100%);
+    opacity: 0;
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(1.04);
+}
+
+.paper-page.is-active .paper-page__grade { opacity: 1; transform: scale(1); }
+
+/* Press band — a saturated chapter-ink strip across the sheet head.
+   The single loudest cue that you turned to a new colour run. */
+.paper-page__band {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 40;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        var(--ch-ink) 0%,
+        var(--ch-hot) 28%,
+        var(--ch-deep) 58%,
+        var(--ch-hot) 82%,
+        var(--ch-ink) 100%
+    );
+    box-shadow: 0 0 18px var(--ch-glow);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.paper-page.is-active .paper-page__band { transform: scaleX(1); }
+
+/* Corner registration mark in the chapter hue */
+.paper-page__band::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 3px;
+    width: 34%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ch-ink));
+    opacity: 0.55;
+}
+
+/* Halftone bloom in the chapter hue, bottom-left */
+.paper-page__grade::after {
+    content: '';
+    position: absolute;
+    left: -14%;
+    bottom: -22%;
+    width: 62%;
+    height: 62%;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--ch-glow) 0%, transparent 68%);
+    filter: blur(14px);
+}
+
+/* Chapter rule, watermark and press marks pick up the hue */
+.paper-page__header {
+    border-bottom-color: var(--ch-rule);
+}
+
+.paper-page__watermark {
+    -webkit-text-stroke-color: hsl(var(--ch-h) var(--ch-s) var(--ch-l) / 0.2);
+    background: linear-gradient(
+        180deg,
+        hsl(var(--ch-h) var(--ch-s) var(--ch-l) / 0.09) 0%,
+        transparent 70%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.paper-page__folio {
+    border-top-color: var(--ch-rule);
+}
+
+/* Label rail + card accents on sheets */
+.paper-page__block-label {
+    color: var(--ch-ink);
+    border-top-color: var(--ch-rule);
+}
+
+.paper-page__block-label::after {
+    background: linear-gradient(90deg, var(--ch-rule), transparent);
+}
+
+.story-card:hover,
+.glass:hover {
+    border-color: var(--ch-ink);
+}
+
+/* Card hover rails + focus accents follow the chapter ink */
+.paper-page .group:hover > .bg-accent {
+    background: var(--ch-ink);
+}
+
+.paper-page :is(a, button):focus-visible {
+    outline: 2px solid var(--ch-ink);
+    outline-offset: 2px;
+}
+
+.meta-tag.text-accent,
+.stamp {
+    color: var(--ch-ink);
+}
+
+.stamp {
+    border-color: var(--ch-rule);
+}
+
+/* Fixes a single newspaper sheet / spread */
+.paper-page {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    box-sizing: border-box;
+    background-color: var(--color-panel);
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+    will-change: transform, opacity;
+    transform-origin: left center;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow:
+        -12px 0 35px rgba(18, 18, 18, 0.28),
+        0 24px 40px -40px rgba(18, 18, 18, 0.4);
+}
+
+/* Dynamic under-shadow cast on the page below while top page is turning */
+.paper-page__under-shadow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 30;
+    opacity: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(18, 18, 18, 0.55) 0%,
+        rgba(18, 18, 18, 0.28) 35%,
+        rgba(18, 18, 18, 0.08) 70%,
+        transparent 100%
+    );
+}
+
+
+/* ruled page margin that runs the height of every sheet */
+.paper-page::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 1px;
+    background: linear-gradient(180deg, rgba(18, 18, 18, 0.12), rgba(18, 18, 18, 0.05) 30%, rgba(18, 18, 18, 0.12));
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* ghost interlude watermark behind the chapter header */
+.paper-page__watermark {
+    position: absolute;
+    top: 6svh;
+    left: 1rem;
+    right: 1rem;
+    text-align: center;
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: clamp(4.5rem, 16vw, 20rem);
+    line-height: 0.8;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(18, 18, 18, 0.14);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+
+.paper-page__header {
+    position: relative;
+    z-index: 2;
+    border-bottom: 1px solid rgba(18, 18, 18, 0.14);
+}
+
+.paper-page__body {
+    position: relative;
+    z-index: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    overscroll-behavior-x: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(18, 18, 18, 0.3) transparent;
+}
+
+/* Single shared measure + rhythm for every sheet's content */
+.paper-page__content {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding: 2rem 1.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+    .paper-page__content {
+        padding: 2.75rem 2.5rem 3.5rem;
+        gap: 3rem;
+    }
+}
+
+/* Section components are content blocks, not standalone pages */
+.paper-page__content > * {
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Label rail for multiple blocks sharing one sheet */
+.paper-page__block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.paper-page__block-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(18, 18, 18, 0.45);
+    border-top: 1px solid rgba(18, 18, 18, 0.12);
+    padding-top: 1.25rem;
+}
+
+.paper-page__block-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(18, 18, 18, 0.12), transparent);
+}
+
+
+.paper-page__body::-webkit-scrollbar { width: 6px; height: 6px; }
+.paper-page__body::-webkit-scrollbar-track { background: transparent; }
+.paper-page__body::-webkit-scrollbar-thumb {
+    background: rgba(18, 18, 18, 0.25);
+    border-radius: 0;
+}
+
+.paper-page__body--center {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+.paper-page__folio {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 1.25rem;
+    border-top: 2px solid var(--ch-rule, rgba(18, 18, 18, 0.85));
+    background:
+        linear-gradient(180deg, rgba(18, 18, 18, 0.035), transparent 60%),
+        var(--color-panel-deep);
+}
+
+/* bare sheets (front page) — no header / folio chrome */
+.paper-page--bare {
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-image: none !important;
+    overflow: hidden !important;
+}
+
+/* Front page is a column: the broadsheet fills the sheet, ticker pins to the foot */
+.paper-page--bare .paper-page__body {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+.paper-page--bare .paper-page__body > *:first-child {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.paper-page--bare .stats-ticker-wrapper {
+    flex: 0 0 auto;
+}
+
+
+@media (max-width: 640px) {
+    .paper-page__folio span { white-space: nowrap; }
+    .paper-page__folio span:nth-child(2) { display: none; }
+}

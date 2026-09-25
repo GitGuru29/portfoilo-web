@@ -1,9 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useStore, { MOODS } from '../store/useStore';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const S = {
     paper: '#f5f2eb',
@@ -93,33 +90,7 @@ export default function HeroOverlay() {
             );
             setTimeout(() => setStatsStarted(true), 700);
 
-            /* Scroll-scrub: front page → Inside Edition */
-            const scrub = gsap.timeline({
-                scrollTrigger: {
-                    trigger: heroRef.current,
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    scrub: 1.4,
-                },
-            });
-
-            scrub.to([topRef.current, folioTopRef.current, folioBottomRef.current, leadGridRef.current], { opacity: 0, y: -40, duration: 1 }, 0);
-            scrub.to([bodyRef.current, chopA.current, chopB.current], { opacity: 0, y: -40, duration: 1 }, 0);
-            scrub.to(photoRef.current, { opacity: 0, y: -50, scale: 1.02, duration: 1 }, 0);
-
-            scrub.fromTo(aboutRef.current,
-                { autoAlpha: 0, y: 26 },
-                { autoAlpha: 1, y: 0, duration: 1.4, ease: 'power2.out' },
-                0.8
-            );
-            scrub.to({}, { duration: 1.6 });
-
-            ScrollTrigger.create({
-                trigger: heroRef.current,
-                start: 'top bottom', end: 'bottom center',
-                onEnter: () => setMood(MOODS.HERO),
-                onEnterBack: () => setMood(MOODS.HERO),
-            });
+            setMood(MOODS.HERO);
         }, heroRef);
         return () => ctx.revert();
     }, [setMood]);
@@ -132,8 +103,8 @@ export default function HeroOverlay() {
     });
 
     return (
-        <section ref={heroRef} id="home" style={{ width: '100%', height: '190vh', position: 'relative', zIndex: 10, background: S.paper }}>
-            <div ref={stageRef} style={{ width: '100%', height: '100dvh', position: 'sticky', top: 0, overflow: 'hidden' }}>
+        <section ref={heroRef} id="home" style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10, background: S.paper }}>
+            <div ref={stageRef} style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
 
                 {/* Newsprint grain */}
                 <div aria-hidden className="absolute inset-0 noise-bg opacity-35 pointer-events-none" />
@@ -150,7 +121,7 @@ export default function HeroOverlay() {
                 </div>
 
                 {/* ── MASTHEAD ── */}
-                <div ref={topRef} className="absolute left-0 right-0 top-[96px] md:top-[104px] px-6 z-10 text-center" style={{ opacity: 0 }}>
+                <div ref={topRef} className="absolute left-0 right-0 top-[96px] md:top-[104px] px-6 z-10 text-center">
                     <h1 className="masthead-title" aria-label="The Daily Developer">The Daily Developer</h1>
                     {/* ornamental double divider */}
                     <div className="mx-auto mt-2 mb-1.5 flex items-center justify-center gap-3" style={{ color: S.ink }}>
@@ -169,7 +140,7 @@ export default function HeroOverlay() {
                         <div className="col-span-12 md:col-span-7 lg:col-span-8 flex flex-col md:pr-8 pt-4 overflow-hidden" style={{ borderRight: '0 none' }}>
 
                             {/* Byline */}
-                            <div ref={bodyRef} className="flex flex-col gap-2" style={{ opacity: 0 }}>
+                            <div ref={bodyRef} className="flex flex-col gap-2">
                                 <div className="byline">
                                     <span>By Siluna Dangalla</span>
                                     <span className="dateline">Systems Correspondent · Colombo</span>
@@ -237,7 +208,7 @@ export default function HeroOverlay() {
 
                         {/* RIGHT — portrait plate + telegraph */}
                         <div className="hidden md:flex col-span-5 lg:col-span-4 flex-col pl-8 pt-5">
-                            <div ref={photoRef} className="flex flex-col gap-3" style={{ opacity: 0 }}>
+                            <div ref={photoRef} className="flex flex-col gap-3">
                                 {/* 1-bit halftone portrait */}
                                 <figure className="relative border border-ink p-1.5" style={{ background: S.panel }}>
                                     <div className="relative overflow-hidden" style={{ border: '1px solid rgba(18,18,18,0.4)' }}>

@@ -1,9 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Typewriter from './Typewriter';
-
-gsap.registerPlugin(ScrollTrigger);
+import React from 'react';
+import usePageReveal from '../utils/usePageReveal';
 
 const milestones = [
     {
@@ -76,75 +72,13 @@ const milestones = [
 ];
 
 export default function TimelineSection() {
-    const containerRef = useRef(null);
-    const spineRef = useRef(null);
-    const cardRefs = useRef([]);
-
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Animate spine line growing downward
-            gsap.fromTo(spineRef.current,
-                { scaleY: 0 },
-                {
-                    scaleY: 1,
-                    duration: 2.5,
-                    ease: 'power3.inOut',
-                    transformOrigin: 'top center',
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: 'top 70%',
-                    }
-                }
-            );
-
-            // Animate each card
-            cardRefs.current.forEach((el, i) => {
-                if (!el) return;
-                const isLeft = i % 2 === 0;
-                gsap.fromTo(el,
-                    { opacity: 0, x: isLeft ? -30 : 30, y: 50 },
-                    {
-                        opacity: 1,
-                        x: 0,
-                        y: 0,
-                        duration: 1.2,
-                        ease: "power3.out",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: el,
-                            start: 'top 85%',
-                        }
-                    }
-                );
-            });
-        }, containerRef);
-
-        return () => ctx.revert();
-    }, []);
+    const containerRef = usePageReveal({ selector: '.timeline-row', y: 44, stagger: 0.1 });
 
     return (
-        <section ref={containerRef} id="timeline" className="relative w-full py-32 px-6 overflow-hidden z-10">
-            {/* Structural line */}
-            <div className="structural-line structural-line-h top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl hidden lg:block" />
-
-            <div className="max-w-7xl mx-auto w-full">
-                {/* Header */}
-                <div className="mb-20 md:mb-32 flex flex-col items-center text-center">
-                    <span className="text-xs md:text-sm tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
-                        <Typewriter text="Engineering History" triggerOnScroll={true} loop={false} cursorChar="_" />
-                    </span>
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight">
-                        <Typewriter text={["The Build Log.", "Engineering Timeline.", "Milestones & Shipped Systems."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
-                    </h2>
-                </div>
-
-                {/* Timeline */}
-                <div className="relative flex flex-col items-center">
+        <section ref={containerRef} id="timeline" className="relative w-full overflow-hidden z-10">
+            <div className="relative flex flex-col items-center">
                     {/* Vertical spine */}
-                    <div
-                        ref={spineRef}
-                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-full bg-gradient-to-b from-transparent via-[var(--color-geyser)]/20 to-transparent origin-top hidden md:block"
-                    />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-full bg-gradient-to-b from-transparent via-[var(--color-geyser)]/20 to-transparent origin-top hidden md:block" />
 
                     {/* Mobile spine */}
                     <div className="absolute top-0 left-6 w-[1px] h-full bg-gradient-to-b from-transparent via-[var(--color-geyser)]/20 to-transparent md:hidden" />
@@ -154,8 +88,7 @@ export default function TimelineSection() {
                         return (
                             <div
                                 key={i}
-                                ref={el => cardRefs.current[i] = el}
-                                className={`relative w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-0 mb-12 md:mb-16 will-change-all`}
+                                className={`timeline-row relative w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-0 mb-8 md:mb-10 will-change-all`}
                             >
                                 {/* Left side — even cards */}
                                 <div className={`${isLeft ? 'hidden md:flex md:pr-12 md:text-right flex-col md:items-end' : 'hidden md:block'}`}>
@@ -184,7 +117,6 @@ export default function TimelineSection() {
                             </div>
                         );
                     })}
-                </div>
             </div>
         </section>
     );

@@ -77,34 +77,31 @@ export default function Contact() {
     };
 
     return (
-        <section id="contact" className="w-full py-24 md:py-32 px-4 md:px-8 relative z-10 overflow-hidden bg-transparent">
-            <div className="max-w-7xl mx-auto">
-
+        <section id="contact" className="w-full relative z-10 overflow-hidden bg-transparent">
                 {/* Main Dark Blue Glass Container */}
-                <div className="w-full rounded-none bg-panel border border-ink/15 shadow-[0_10px_40px_-18px_rgba(23,19,15,0.28)] p-8 md:p-14 lg:p-16 relative overflow-hidden">
-                    
+                <div className="w-full rounded-none bg-panel border border-ink/15 shadow-[0_10px_40px_-18px_rgba(23,19,15,0.28)] p-6 md:p-10 relative overflow-hidden">
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start relative z-10">
 
                         {/* Left Column: Direct Info & Booking CTA */}
-                        <div className="lg:col-span-5 space-y-8">
+                        <div className="lg:col-span-5 space-y-6">
                             <div>
                                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-none bg-panel/80 border border-ink/70 text-ink text-[10px] font-mono tracking-widest uppercase mb-4">
                                     <span className="w-2 h-2 bg-accent animate-pulse" />
                                     <span>● Open for Engagement — Desk 024</span>
                                 </div>
-                                <h2 className="text-3xl md:text-5xl font-space font-bold text-ink tracking-tight leading-tight mb-4">
+                                <h3 className="text-2xl md:text-4xl font-space font-bold text-ink tracking-tight leading-tight mb-3">
                                     Let's Build <br className="hidden md:block" />Something Exceptional.
-                                </h2>
+                                </h3>
                                 <p className="text-sm font-sans text-graphite leading-relaxed max-w-md">
                                     Open to Android &amp; Systems Engineering roles, full-time contracts, and high-impact technical collaborations.
                                 </p>
                             </div>
 
                             {/* Live Calendar Booking CTA Card */}
-                            <div className="p-6 rounded-none bg-panel/80 border border-bordertech space-y-4">
+                            <div className="p-5 rounded-none bg-panel/80 border border-bordertech space-y-3">
                                 <div className="flex items-center gap-3 text-ink font-space font-semibold text-sm">
-                                    <Calendar className="w-5 h-5 text-[#B91C1C]" />
+                                    <Calendar className="w-5 h-5 text-accent" />
                                     <span>Prefer a direct conversation?</span>
                                 </div>
                                 <p className="text-xs font-sans text-graphite leading-relaxed">
@@ -115,7 +112,7 @@ export default function Contact() {
                                         setMeetingModalOpen(true);
                                         playClickSound(soundEnabled);
                                     }}
-                                    className="w-full py-3 px-4 rounded-none bg-[#B91C1C] hover:bg-[#d02424] text-[#fdfbf6] font-space font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg"
+                                    className="w-full py-3 px-4 rounded-none bg-accent hover:bg-accent-hot text-[#fdfbf6] font-space font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg"
                                 >
                                     <span>Schedule a Meeting</span>
                                     <Calendar className="w-4 h-4" />
@@ -214,10 +211,10 @@ export default function Contact() {
                             <div className="p-6 md:p-10 rounded-none bg-panel/70 border border-bordertech shadow-2xl relative overflow-hidden">
                                 
                                 <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-xl font-space font-bold text-ink flex items-center gap-2">
-                                        <Send className="w-5 h-5 text-accent" />
+                                    <h4 className="text-lg font-space font-bold text-ink flex items-center gap-2">
+                                        <Send className="w-4 h-4 text-accent" />
                                         <span>Send a Dispatch</span>
-                                    </h3>
+                                    </h4>
 
                                     <a
                                         href="mailto:sdangalla44@gmail.com"
@@ -320,8 +317,6 @@ export default function Contact() {
 
                     </div>
                 </div>
-
-            </div>
         </section>
     );
 }

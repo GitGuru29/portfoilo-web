@@ -1,11 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import useStore, { MOODS } from '../store/useStore';
-import Typewriter from './Typewriter';
-
-gsap.registerPlugin(ScrollTrigger);
+import usePageReveal from '../utils/usePageReveal';
 
 // Maps categoryId to a short label shown on the card
 const CATEGORY_LABELS = {
@@ -18,76 +13,30 @@ const CATEGORY_LABELS = {
 };
 
 export default function ProjectsOverlay({ projects = [], isFiltered = false, children }) {
-    const containerRef = useRef(null);
-    const projectRefs = useRef([]);
-    const setMood = useStore((state) => state.setMood);
+    const containerRef = usePageReveal({ selector: '.project-row', y: 40, stagger: 0.1 });
 
     const [showAll, setShowAll] = useState(false);
     const DISPLAY_LIMIT = 5;
     const shouldLimit = !isFiltered && projects.length > DISPLAY_LIMIT;
     const displayedProjects = shouldLimit && !showAll ? projects.slice(0, DISPLAY_LIMIT) : projects;
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            ScrollTrigger.create({
-                trigger: containerRef.current,
-                start: 'top center',
-                end: 'bottom top',
-                onEnter: () => setMood(MOODS.OWL_MODE),
-                onEnterBack: () => setMood(MOODS.OWL_MODE),
-            });
-
-            projectRefs.current.forEach((el) => {
-                if (!el) return;
-                gsap.fromTo(el,
-                    { opacity: 0, y: 50, scale: 0.98 },
-                    {
-                        opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power3.out",
-                        force3D: true,
-                        scrollTrigger: {
-                            trigger: el,
-                            start: 'top 85%',
-                        }
-                    }
-                );
-            });
-        }, containerRef);
-
-        return () => ctx.revert();
-    }, [setMood, displayedProjects.length]);
-
     return (
-        <section id="projects" ref={containerRef} className="relative w-full min-h-screen bg-transparent py-32 flex flex-col items-center">
-
-            {/* Header */}
-            <div className="w-full max-w-7xl mx-auto px-6 mb-8 flex flex-col md:flex-row justify-between items-end gap-12 lg:gap-8">
-                <div>
-                    <h2 className="text-[10px] md:text-xs tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
-                        <Typewriter text="Latest Bulletins / Dispatches" triggerOnScroll={true} loop={false} cursorChar="_" />
-                    </h2>
-                    <h3 className="text-4xl md:text-5xl lg:text-6xl font-space font-light leading-tight text-[var(--color-geyser)]">
-                        <Typewriter text={["Systems in Print.", "Featured Dispatches.", "Open-Source Builds."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
-                    </h3>
-                </div>
-            </div>
+        <section id="projects" ref={containerRef} className="relative w-full bg-transparent flex flex-col items-center">
 
             {/* Filters */}
-            <div className="w-full max-w-7xl mx-auto px-6 mb-16">
+            <div className="w-full">
                 {children}
             </div>
 
             {/* Project Cards */}
-            <div className="w-full max-w-7xl mx-auto px-4 md:px-6 pb-24 relative flex flex-col gap-6 md:gap-8">
+            <div className="w-full relative flex flex-col gap-4 md:gap-5">
                 {displayedProjects.map((project, index) => (
                     <div
                         key={project.id}
-                        ref={el => {
-                            if (el && !projectRefs.current.includes(el)) projectRefs.current.push(el);
-                        }}
-                        className="w-full group will-change-all"
+                        className="project-row w-full group will-change-all"
                     >
-<Link to={`/project/${project.id}`} data-cursor="Open Project" className="block w-full">
-                            <div className="w-full story-card laser-card chamfer-sm p-6 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative overflow-hidden">
+                        <Link to={`/project/${project.id}`} data-cursor="Open Project" className="block w-full">
+                            <div className="w-full story-card laser-card chamfer-sm p-5 md:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 md:gap-8 relative overflow-hidden">
 
 
                                 {/* Left content */}
@@ -100,15 +49,15 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
                                             {CATEGORY_LABELS[project.categoryId] || project.role}
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl md:text-4xl lg:text-5xl font-space font-medium mb-4 text-geyser group-hover:text-accent transition-colors duration-300 leading-tight">
-                                        {project.title}
-                                    </h3>
-                                    <p className="text-sm md:text-base text-titanium font-inter font-light leading-relaxed max-w-2xl">
-                                        {project.description}
-                                    </p>
+                                     <h4 className="text-xl md:text-3xl lg:text-4xl font-space font-medium mb-3 text-geyser group-hover:text-accent transition-colors duration-300 leading-tight">
+                                         {project.title}
+                                     </h4>
+                                     <p className="text-sm text-titanium font-inter font-light leading-relaxed max-w-2xl">
+                                         {project.description}
+                                     </p>
 
-                                    {/* Dossier metadata */}
-                                    <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] tracking-[0.2em] uppercase text-graphite border-t border-bordertech pt-4 max-w-2xl">
+                                     {/* Dossier metadata */}
+                                     <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] tracking-[0.2em] uppercase text-graphite border-t border-bordertech pt-3 max-w-2xl">
                                         <span className="text-cyanx">[ COLOMBO / GIT HASH 7FA2 ]</span>
                                         <span>SYS.{String(index + 1).padStart(2, '0')} · {CATEGORY_LABELS[project.categoryId] || project.role}</span>
                                     </div>
@@ -142,7 +91,7 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
 
                 {/* Show all / collapse */}
                 {shouldLimit && (
-                    <div className="w-full flex justify-center mt-12 relative z-20">
+                    <div className="w-full flex justify-center mt-6 relative z-20">
                         <button
                             onClick={() => setShowAll(v => !v)}
                             className="group flex items-center gap-6 text-[10px] md:text-xs tracking-[0.3em] font-mono uppercase text-graphite hover:text-accent transition-colors duration-300 px-8 py-4 border border-bordertech hover:border-accent/50 bg-surface rounded-none"

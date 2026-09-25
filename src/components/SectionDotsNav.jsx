@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 const CHAPTERS = [
-    { id: 'hero', num: '00', label: 'Home' },
-    { id: 'projects', num: '01', label: 'Projects' },
-    { id: 'timeline', num: '02', label: 'Experience' },
-    { id: 'skills', num: '03', label: 'Skills' },
-    { id: 'github', num: '04', label: 'GitHub' },
-    { id: 'research', num: '05', label: 'Research' },
-    { id: 'recognition', num: '06', label: 'Credentials' },
-    { id: 'testimonials', num: '07', label: 'Testimonials' },
-    { id: 'contact', num: '08', label: 'Contact' },
+    { id: 'hero', num: '00', label: 'Home', hue: 355, sat: '72%', lum: '42%' },
+    { id: 'projects', num: '01', label: 'Projects', hue: 22, sat: '88%', lum: '48%' },
+    { id: 'timeline', num: '02', label: 'Experience', hue: 268, sat: '62%', lum: '50%' },
+    { id: 'skills', num: '03', label: 'Skills', hue: 174, sat: '72%', lum: '33%' },
+    { id: 'github', num: '04', label: 'GitHub', hue: 212, sat: '88%', lum: '46%' },
+    { id: 'research', num: '05', label: 'Research', hue: 292, sat: '66%', lum: '48%' },
+    { id: 'recognition', num: '06', label: 'Credentials', hue: 44, sat: '84%', lum: '42%' },
+    { id: 'testimonials', num: '07', label: 'Testimonials', hue: 330, sat: '74%', lum: '48%' },
+    { id: 'contact', num: '08', label: 'Contact', hue: 146, sat: '64%', lum: '36%' },
 ];
 
 export default function SectionDotsNav() {
@@ -47,7 +47,17 @@ export default function SectionDotsNav() {
             if (el) observer.observe(el);
         });
 
-        return () => observer.disconnect();
+        const onDeckChange = (e) => {
+            if (e.detail && e.detail.id) {
+                setActiveSection(e.detail.id);
+            }
+        };
+        window.addEventListener('paper-deck:change', onDeckChange);
+
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('paper-deck:change', onDeckChange);
+        };
     }, []);
 
     // Map active section back to a chapter
@@ -57,22 +67,16 @@ export default function SectionDotsNav() {
     })();
 
     const scrollToSection = (id) => {
-        const targetEl = id === 'recognition' ? document.getElementById('certificates') : document.getElementById(id);
-        if (!targetEl) return;
-
-        if (window.lenis) {
-            window.lenis.scrollTo(targetEl, { offset: -20 });
-        } else {
-            targetEl.scrollIntoView({ behavior: 'smooth' });
-        }
+        window.dispatchEvent(new CustomEvent('paper-deck:goto', { detail: { id } }));
     };
 
     if (typeof document === 'undefined') return null;
 
     return createPortal(
         <aside aria-label="Chapter Navigation" className="chapter-rail">
-            {CHAPTERS.map(({ id, num, label }, index) => {
+            {CHAPTERS.map(({ id, num, label, hue, sat, lum }, index) => {
                 const isActive = activeChapter === id;
+                const ink = `hsl(${hue} ${sat} ${lum})`;
                 return (
                     <button
                         key={id}
@@ -87,10 +91,14 @@ export default function SectionDotsNav() {
                         </span>
                         <span
                             className={`block transition-all duration-300 ${
-                                isActive
-                                    ? 'w-2 h-2 bg-accent skew-x-[-12deg] shadow-[0_0_8px_rgba(185,28,28,0.5)]'
-                                    : 'w-1.5 h-1.5 bg-graphite/70 group-hover:bg-ink group-hover:scale-125'
+                                isActive ? 'w-2.5 h-2.5 skew-x-[-12deg]' : 'w-1.5 h-1.5 group-hover:scale-125'
                             }`}
+                            style={{
+                                background: isActive
+                                    ? `linear-gradient(135deg, hsl(${hue} ${sat} ${lum}), hsl(${(hue + 40) % 360} ${sat} ${Number(lum) + 12}%) 55%, hsl(${hue} ${sat} 34%))`
+                                    : `hsl(${hue} 30% 40% / 0.7)`,
+                                boxShadow: isActive ? `0 0 10px ${ink}, 0 0 22px ${ink}55` : undefined,
+                            }}
                         />
                     </button>
                 );

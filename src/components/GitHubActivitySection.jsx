@@ -1,10 +1,6 @@
-import React, { useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
 import GitHub3DGraph from './GitHub3DGraph';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import usePageReveal from '../utils/usePageReveal';
 
 const COMMIT_LEDGER = [
     { month: 'OCT 25', commits: 41, detail: 'LLVM passes · AeroLang front-end' },
@@ -25,68 +21,31 @@ const TOP_REPOS = [
 ];
 
 export default function GitHubActivitySection() {
-    const sectionRef = useRef(null);
-    const headerRef = useRef(null);
-
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            gsap.fromTo(headerRef.current,
-                { opacity: 0, y: 50, skewY: 2 },
-                {
-                    opacity: 1, y: 0, skewY: 0,
-                    duration: 1.2,
-                    ease: "power4.out",
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top 80%",
-                    }
-                }
-            );
-        }, sectionRef);
-
-        return () => ctx.revert();
-    }, []);
+    const sectionRef = usePageReveal({ selector: '.github-canvas, .story-card', y: 36, stagger: 0.12 });
 
     return (
-        <section ref={sectionRef} className="relative w-full max-w-7xl mx-auto px-6 py-24 md:py-32 z-10 flex flex-col items-center">
-            
-            {/* Structural line */}
-            <div className="structural-line structural-line-h top-0 left-0 w-full hidden lg:block" />
-
-            <div className="w-full flex flex-col md:flex-row items-start justify-between mb-16 gap-12">
-                <div ref={headerRef}>
-                    <h2 className="text-xs md:text-sm tracking-[0.4em] font-space uppercase text-[var(--color-geyser)]/40 mb-4 md:mb-6">
-                        Live Telemetry
-                    </h2>
-                    <h3 className="text-3xl md:text-5xl lg:text-6xl font-space font-light text-[var(--color-geyser)] leading-tight">
-                        Contribution Skyline.
-                    </h3>
-                </div>
-                <div className="md:w-1/3 flex items-end">
-                    <p className="text-sm md:text-base text-[var(--color-geyser)]/50 font-inter font-light leading-relaxed">
-                        Live 3D architectural representation of my GitHub commits over the last 365 days. Drag to orbit the structure.
-                    </p>
+        <section ref={sectionRef} className="relative w-full z-10 flex flex-col items-center">
+            <div className="w-full flex flex-col md:flex-row items-start justify-between gap-5">
+                <p className="text-sm md:text-base text-[var(--color-geyser)]/50 font-inter font-light leading-relaxed md:max-w-sm">
+                    Live 3D architectural representation of my GitHub commits over the last 365 days. Drag to orbit the structure.
+                </p>
+                <div className="flex items-center gap-3 w-full md:w-auto">
+                    <span className="h-px flex-1 md:flex-none md:w-16 bg-ink/20" />
+                    <span className="meta-tag text-[var(--color-geyser)]/50">GitHub API · live</span>
                 </div>
             </div>
 
             {/* 3D Canvas Container */}
-            <motion.div 
-                initial={{ opacity: 0, scale: 0.98 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            <div
                 data-cursor="Orbit Model"
-                className="w-full h-[500px] md:h-[600px] border border-ink/30 rounded-none relative overflow-hidden bg-transparent shadow-none"
+                className="github-canvas w-full h-[320px] md:h-[420px] border border-ink/30 rounded-none relative overflow-hidden bg-transparent shadow-none"
             >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none z-10" />
                 <GitHub3DGraph username="GitGuru29" />
-                <div className="absolute bottom-4 left-4 p-4 text-[10px] tracking-[0.2em] font-mono uppercase text-ink/50 z-20">
-                    Data Source: GitHub API
-                </div>
-            </motion.div>
+            </div>
 
             {/* Commit Ledger — static fallback + editorial record */}
-            <div className="w-full grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 mt-10">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-5">
                 <div className="lg:col-span-3 story-card p-5 md:p-6">
                     <div className="flex items-center justify-between border-b border-ink/20 pb-2.5 mb-3">
                         <span className="font-mono text-[10px] tracking-[0.22em] uppercase font-bold text-ink">Monthly Contribution Ledger</span>

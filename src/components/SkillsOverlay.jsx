@@ -1,9 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Typewriter from './Typewriter';
-
-gsap.registerPlugin(ScrollTrigger);
+import React from 'react';
+import usePageReveal from '../utils/usePageReveal';
 
 const MARKET_ROWS = [
     { item: 'C / C++', index: '95', delta: '▲ steady' },
@@ -34,48 +30,15 @@ const CLASSIFIEDS = [
 ];
 
 export default function SkillsOverlay() {
-    const containerRef = useRef(null);
-    const titleRef = useRef(null);
-    const cardsRef = useRef([]);
-
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            gsap.fromTo(titleRef.current,
-                { opacity: 0, y: 30 },
-                {
-                    opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
-                    scrollTrigger: { trigger: containerRef.current, start: "top 80%" }
-                }
-            );
-            gsap.fromTo(cardsRef.current,
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 1, y: 0, duration: 1.2, stagger: 0.1, ease: "power3.out",
-                    force3D: true,
-                    scrollTrigger: { trigger: containerRef.current, start: "top 75%" }
-                }
-            );
-        }, containerRef);
-        return () => ctx.revert();
-    }, []);
+    const containerRef = usePageReveal({ selector: '.story-card', y: 36, stagger: 0.12 });
 
     return (
-        <section id="skills" ref={containerRef} className="w-full py-32 px-6 flex flex-col items-center bg-transparent relative z-10">
+        <section id="skills" ref={containerRef} className="w-full flex flex-col bg-transparent relative z-10">
 
-            {/* Header */}
-            <div ref={titleRef} className="w-full max-w-7xl mx-auto flex flex-col mb-16 md:mb-20 px-4">
-                <span className="kicker mb-5">
-                    <Typewriter text="Market Indices & Classifieds" triggerOnScroll={true} loop={false} cursorChar="_" />
-                </span>
-                <h2 className="poster-title uppercase text-3xl md:text-5xl lg:text-6xl text-geyser leading-none">
-                    <Typewriter text={["Market Indices.", "Classifieds & Rates.", "Stack Quotations."]} triggerOnScroll={true} pauseDuration={3000} cursorChar="_" />
-                </h2>
-            </div>
-
-            <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 px-4">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
 
                 {/* MARKET INDICES table */}
-                <div ref={el => cardsRef.current[0] = el} className="story-card p-6 md:p-8">
+                <div className="story-card p-6 md:p-7">
                     <div className="flex items-center justify-between mb-5">
                         <h3 className="text-geyser text-lg md:text-xl font-display font-bold uppercase tracking-tight">Market Indices</h3>
                         <span className="meta-tag text-cyanx">[01]</span>
@@ -101,8 +64,8 @@ export default function SkillsOverlay() {
                 </div>
 
                 {/* RATES / COMMODITIES + CLASSIFIEDS */}
-                <div className="flex flex-col gap-8">
-                    <div ref={el => cardsRef.current[1] = el} className="story-card p-6 md:p-8">
+                <div className="flex flex-col gap-5 md:gap-6">
+                    <div className="story-card p-6 md:p-7">
                         <div className="flex items-center justify-between mb-5">
                             <h3 className="text-geyser text-lg md:text-xl font-display font-bold uppercase tracking-tight">Rates &amp; Commodities</h3>
                             <span className="meta-tag text-cyanx">[02]</span>
@@ -125,7 +88,7 @@ export default function SkillsOverlay() {
                         </table>
                     </div>
 
-                    <div ref={el => cardsRef.current[2] = el} className="story-card p-6 md:p-8">
+                    <div className="story-card p-6 md:p-7">
                         <div className="flex items-center justify-between mb-5 border-b border-ink pb-3">
                             <h3 className="text-geyser text-lg md:text-xl font-display font-bold uppercase tracking-tight">Classifieds</h3>
                             <span className="meta-tag text-cyanx">[03]</span>

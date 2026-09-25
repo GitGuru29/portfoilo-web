@@ -52,7 +52,7 @@ function App() {
 
     return (
         <HashRouter>
-            <div className="relative text-ink font-sans overflow-clip min-h-screen bg-[var(--color-quantum-dark)]">
+            <div className="relative text-ink font-sans min-h-screen bg-[var(--color-quantum-dark)]">
 
                 {/* Premium custom cursor — always on top */}
                 <CustomCursor />
@@ -78,9 +78,9 @@ function App() {
                 <AnimatePresence>
                     {isUnlocked && (
                         <motion.div
-                            initial={{ opacity: 0, filter: 'blur(8px)' }}
-                            animate={{ opacity: 1, filter: 'blur(0px)' }}
-                            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                             className="relative w-full h-full z-content"
                         >
                             <LenisWrapper>
