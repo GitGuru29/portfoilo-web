@@ -1,106 +1,175 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import usePageReveal from '../utils/usePageReveal';
 
-// Maps categoryId to a short label shown on the card
 const CATEGORY_LABELS = {
     'android-sys': 'Android Systems',
-    'linux-sys': 'Linux Systems',
-    'os-dev': 'OS / Compiler',
-    'ai': 'AI / Quantitative',
-    'cyber-sec': 'Cyber Security',
-    'web': 'Web',
+    'linux-sys':   'Linux Systems',
+    'os-dev':      'OS / Compiler',
+    'ai':          'AI / Quantitative',
+    'cyber-sec':   'Cyber Security',
+    'web':         'Web',
 };
 
+const CATEGORY_DOTS = {
+    'android-sys': '#16a34a',
+    'linux-sys':   '#2563eb',
+    'os-dev':      '#9333ea',
+    'ai':          '#ea580c',
+    'cyber-sec':   '#dc2626',
+    'web':         '#0891b2',
+};
+
+const pad        = (n) => String(n).padStart(2, '0');
+const categoryOf = (p) => CATEGORY_LABELS[p.categoryId] || p.role;
+const dotColor   = (p) => CATEGORY_DOTS[p.categoryId] || 'var(--color-graphite)';
+const tagsOf     = (p) => p.role.split(' / ').slice(0, 4).map((t) => t.trim());
+
+/** Featured card — top of the list. */
+function FeaturedCard({ project, num }) {
+    return (
+        <Link
+            to={`/project/${project.id}`}
+            data-cursor="Open Project"
+            className="block group"
+        >
+            <article className="proj-featured">
+                {/* Left: meta column */}
+                <div className="proj-featured__meta">
+                    <span className="proj-featured__index">{num}</span>
+                    <span
+                        className="proj-featured__dot"
+                        style={{ background: dotColor(project) }}
+                    />
+                    <span className="proj-featured__cat">{categoryOf(project)}</span>
+                </div>
+
+                {/* Centre: title + body */}
+                <div className="proj-featured__body">
+                    <h3 className="proj-featured__title">{project.title}</h3>
+                    <p  className="proj-featured__desc">{project.description}</p>
+                    <div className="proj-featured__tags">
+                        {tagsOf(project).map((tag, i) => (
+                            <span key={i} className="proj-tag">{tag}</span>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Right: arrow */}
+                <div className="proj-featured__arrow">
+                    <ArrowUpRight
+                        size={18}
+                        className="proj-featured__arrow-icon"
+                        aria-hidden="true"
+                    />
+                </div>
+            </article>
+        </Link>
+    );
+}
+
+/** Regular row card */
+function ProjectRow({ project, num }) {
+    return (
+        <Link
+            to={`/project/${project.id}`}
+            data-cursor="Open Project"
+            className="block group"
+        >
+            <article className="proj-row">
+                <span className="proj-row__num">{num}</span>
+
+                <span
+                    className="proj-row__dot"
+                    style={{ background: dotColor(project) }}
+                />
+
+                <div className="proj-row__main">
+                    <span className="proj-row__title">{project.title}</span>
+                    <span className="proj-row__desc">{project.description}</span>
+                </div>
+
+                <div className="proj-row__tags">
+                    {tagsOf(project).map((tag, i) => (
+                        <span key={i} className="proj-tag">{tag}</span>
+                    ))}
+                </div>
+
+                <ArrowUpRight
+                    size={14}
+                    className="proj-row__arrow"
+                    aria-hidden="true"
+                />
+            </article>
+        </Link>
+    );
+}
+
 export default function ProjectsOverlay({ projects = [], isFiltered = false, children }) {
-    const containerRef = usePageReveal({ selector: '.project-row', y: 40, stagger: 0.1 });
+    const containerRef = usePageReveal({
+        selector: '.proj-featured, .proj-row',
+        y: 20,
+        scale: 1,
+        stagger: 0.05,
+    });
 
     const [showAll, setShowAll] = useState(false);
-    const DISPLAY_LIMIT = 5;
+    const DISPLAY_LIMIT = 7;
     const shouldLimit = !isFiltered && projects.length > DISPLAY_LIMIT;
-    const displayedProjects = shouldLimit && !showAll ? projects.slice(0, DISPLAY_LIMIT) : projects;
+    const shown       = shouldLimit && !showAll ? projects.slice(0, DISPLAY_LIMIT) : projects;
+
+    if (!shown.length) {
+        return (
+            <section id="projects" className="proj-shell">
+                {children}
+                <div className="proj-empty">
+                    <span className="proj-empty__label">— No dispatches match —</span>
+                </div>
+            </section>
+        );
+    }
+
+    const [featured, ...rest] = shown;
 
     return (
-        <section id="projects" ref={containerRef} className="relative w-full bg-transparent flex flex-col items-center">
+        <section id="projects" ref={containerRef} className="proj-shell">
 
-            {/* Filters */}
-            <div className="w-full">
-                {children}
-            </div>
+            {children}
 
-            {/* Project Cards */}
-            <div className="w-full relative flex flex-col gap-4 md:gap-5">
-                {displayedProjects.map((project, index) => (
-                    <div
-                        key={project.id}
-                        className="project-row w-full group will-change-all"
-                    >
-                        <Link to={`/project/${project.id}`} data-cursor="Open Project" className="block w-full">
-                            <div className="w-full story-card laser-card chamfer-sm p-5 md:p-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 md:gap-8 relative overflow-hidden">
+            {/* ── Rule ───────────────────────── */}
+            <div className="proj-rule" aria-hidden="true" />
 
+            {/* ── Featured ───────────────────── */}
+            <FeaturedCard project={featured} num={pad(1)} />
 
-                                {/* Left content */}
-                                <div className="flex flex-col z-10 flex-1 min-w-0 pr-0 md:pr-12">
-                                    <div className="flex items-center gap-4 mb-5">
-                                        <span className="text-[10px] md:text-xs font-mono text-accent-gradient tracking-widest tabular-nums border border-accent/30 px-2 py-1 rounded-none bg-accent/[0.06]">
-                                            SYS.{String(index + 1).padStart(2, '0')}
-                                        </span>
-                                        <span className="text-[9px] md:text-[10px] tracking-[0.3em] font-mono text-cyanx uppercase">
-                                            {CATEGORY_LABELS[project.categoryId] || project.role}
-                                        </span>
-                                    </div>
-                                     <h4 className="text-xl md:text-3xl lg:text-4xl font-space font-medium mb-3 text-geyser group-hover:text-accent transition-colors duration-300 leading-tight">
-                                         {project.title}
-                                     </h4>
-                                     <p className="text-sm text-titanium font-inter font-light leading-relaxed max-w-2xl">
-                                         {project.description}
-                                     </p>
+            {/* ── Divider ────────────────────── */}
+            {rest.length > 0 && (
+                <div className="proj-divider">
+                    <span className="proj-divider__label">Further dispatches</span>
+                </div>
+            )}
 
-                                     {/* Dossier metadata */}
-                                     <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[9px] tracking-[0.2em] uppercase text-graphite border-t border-bordertech pt-3 max-w-2xl">
-                                        <span className="text-cyanx">[ COLOMBO / GIT HASH 7FA2 ]</span>
-                                        <span>SYS.{String(index + 1).padStart(2, '0')} · {CATEGORY_LABELS[project.categoryId] || project.role}</span>
-                                    </div>
-                                </div>
+            {/* ── Row list ───────────────────── */}
+            {rest.length > 0 && (
+                <div className="proj-list">
+                    {rest.map((p, i) => (
+                        <ProjectRow key={p.id} project={p} num={pad(i + 2)} />
+                    ))}
+                </div>
+            )}
 
-                                {/* Right content */}
-                                <div className="flex flex-col items-start md:items-end z-10 gap-6 shrink-0 w-full md:w-auto mt-2 md:mt-0 pt-6 md:pt-0 border-t md:border-t-0 border-geyser/10 md:border-transparent">
-                                    {/* Tech tags */}
-                                    <div className="flex flex-wrap gap-2 justify-start md:justify-end max-w-[280px]">
-                                        {project.role.split(' / ').slice(0, 3).map((tag, ti) => (
-                                            <span
-                                                key={ti}
-                                                className="chip-tech"
-                                            >
-                                                {tag.trim()}
-                                            </span>
-                                        ))}
-                                    </div>
-
-                                    {/* Action rail */}
-                                    <div className="flex items-center gap-2 mt-2 md:mt-auto">
-                                        <span className="hud-btn">SOURCE</span>
-                                        <span className="hud-btn hud-btn--volt">DEPLOY</span>
-                                        <span className="hud-btn hud-btn--cyan">SYS_LOG</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-                ))}
-
-                {/* Show all / collapse */}
-                {shouldLimit && (
-                    <div className="w-full flex justify-center mt-6 relative z-20">
-                        <button
-                            onClick={() => setShowAll(v => !v)}
-                            className="group flex items-center gap-6 text-[10px] md:text-xs tracking-[0.3em] font-mono uppercase text-graphite hover:text-accent transition-colors duration-300 px-8 py-4 border border-bordertech hover:border-accent/50 bg-surface rounded-none"
-                        >
-                            {showAll ? '[-] Collapse Systems' : `[+] View all ${projects.length} systems`}
-                        </button>
-                    </div>
-                )}
-            </div>
+            {/* ── Show more ──────────────────── */}
+            {shouldLimit && (
+                <button
+                    onClick={() => setShowAll((v) => !v)}
+                    className="proj-more"
+                >
+                    {showAll
+                        ? '[ − ] Condense'
+                        : `[ + ] All ${projects.length} dispatches`}
+                </button>
+            )}
         </section>
     );
 }

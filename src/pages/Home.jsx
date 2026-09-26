@@ -75,11 +75,12 @@ export default function Home() {
                     chapter="01"
                     kicker="Selected Work"
                     title="Projects"
-                    watermark="SHIP"
+                    variant="broadsheet"
                     lede="Systems I've built and shipped — daemons, compilers, and native tooling, engineered for determinism and speed."
                 >
                     <ProjectsOverlay projects={filteredProjects} isFiltered={isFiltered}>
-                        <div className="w-full" id="portfolio-filters">
+                        {/* ── Toolbar: filters + search in one row ── */}
+                        <div className="proj-toolbar" id="portfolio-filters">
                             <CategoryFilter activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
                             <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                         </div>

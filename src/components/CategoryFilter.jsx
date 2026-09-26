@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { categoriesArray } from '../data/categories';
 import useStore from '../store/useStore';
 
@@ -11,21 +12,31 @@ const CategoryFilter = ({ activeCategory, setActiveCategory }) => {
     };
 
     return (
-        <div className="w-full flex justify-start py-8 z-10 relative border-t border-[var(--color-geyser)]/10 mt-4 pt-8">
-            <div className="flex flex-wrap items-center gap-6 md:gap-8">
+        <div className="proj-filters">
+            <div className="proj-filters__row">
                 {categoriesArray.map((category) => {
                     const isActive = activeCategory === category.id;
+                    const Icon = category.icon;
                     return (
                         <button
                             key={category.id}
                             onClick={() => handleCategoryClick(category)}
-                            className={`text-[10px] md:text-xs tracking-[0.2em] font-space uppercase transition-all duration-300 pb-1 ${
-                                isActive
-                                    ? 'text-accent border-b border-accent'
-                                    : 'text-titanium hover:text-geyser/80 border-b border-transparent'
-                            }`}
+                            className={`proj-filter-btn${isActive ? ' proj-filter-btn--active' : ''}`}
                         >
-                            {category.label}
+                            {Icon && <Icon size={11} aria-hidden="true" />}
+                            <span>{category.label}</span>
+                            <AnimatePresence>
+                                {isActive && (
+                                    <motion.span
+                                        layoutId="filter-underline"
+                                        className="proj-filter-btn__bar"
+                                        initial={{ scaleX: 0 }}
+                                        animate={{ scaleX: 1 }}
+                                        exit={{ scaleX: 0 }}
+                                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                    />
+                                )}
+                            </AnimatePresence>
                         </button>
                     );
                 })}

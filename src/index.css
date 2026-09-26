@@ -133,7 +133,7 @@ p { text-wrap: pretty; }
     position: fixed;
     top: 0; left: 0;
     width: 5px; height: 5px;
-    border-radius: 0;
+    border-radius: 50%;
     background: #121212;
     mix-blend-mode: multiply;
     pointer-events: none;
@@ -146,7 +146,7 @@ p { text-wrap: pretty; }
     position: fixed;
     top: 0; left: 0;
     width: 34px; height: 34px;
-    border-radius: 0;
+    border-radius: 50%;
     border: 1px solid rgba(18, 18, 18, 0.5);
     background: transparent;
     mix-blend-mode: multiply;
@@ -1424,6 +1424,9 @@ html { scroll-padding-top: 76px; }
     height: 100%;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
+    /* Sheets are stacked on top of each other — anything that exceeds a sheet
+       must be clipped by it, or it spills across the neighbouring pages. */
+    overflow: hidden;
     box-sizing: border-box;
     background-color: var(--color-panel);
     background-image:
@@ -1630,4 +1633,839 @@ html { scroll-padding-top: 76px; }
 @media (max-width: 640px) {
     .paper-page__folio span { white-space: nowrap; }
     .paper-page__folio span:nth-child(2) { display: none; }
+}/* ─────────────────────────────────────────────────
+   BROADSHEET LAYOUT SYSTEM
+
+   Newspaper structure, not newspaper trim. Two ideas:
+
+   1. The lead package carries a dark ink specimen panel
+      as its visual anchor, so the top of the sheet has
+      real contrast even when the lead project has no
+      photograph.
+   2. The body is a deterministic CSS grid, not CSS
+      multicol. Multicol fragments its children, and an
+      unbreakable block holding an aspect-ratio image
+      overflows its column. Grid keeps every cell
+      measurable. Column rules are cell borders, so they
+      land exactly on the gutters at any breakpoint.
+
+   Alignment does the separating. No card borders, no
+   floating widget boxes.
+   ───────────────────────────────────────────────── */
+
+.broadsheet {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+    width: 100%;
+    min-width: 0;
 }
+
+/* ── Banner: narrative headline above the sheet ────── */
+.paper-page--banner {
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+}
+
+.broadsheet__banner {
+    position: relative;
+    z-index: 2;
+    padding: 1.25rem 1.5rem 1.1rem;
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--ch-ink) 7%, transparent), transparent 70%);
+    border-bottom: 1px solid var(--ch-rule);
+}
+
+.broadsheet__banner-head {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4.2vw, 3.6rem);
+    line-height: 0.96;
+    letter-spacing: -0.028em;
+    color: var(--color-ink);
+    text-wrap: balance;
+    max-width: 34ch;
+}
+
+.broadsheet__banner-deck {
+    max-width: 66ch;
+    margin-top: 0.85rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--ch-rule);
+    font-size: clamp(0.875rem, 1.15vw, 0.9375rem);
+    line-height: 1.6;
+    color: var(--color-graphite);
+    text-wrap: pretty;
+}
+
+@media (max-width: 640px) {
+    .broadsheet__banner { padding: 1.1rem 1rem 1rem; }
+}
+
+/* ── Lead package ──────────────────────────────────── */
+.broadsheet__lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);
+    gap: 2.25rem;
+    align-items: start;
+    padding-bottom: 1.75rem;
+    border-bottom: 3px double var(--ch-rule);
+}
+
+@media (max-width: 940px) {
+    .broadsheet__lead { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+}
+
+.broadsheet__lead-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    min-width: 0;
+}
+
+.broadsheet__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ch-ink);
+}
+
+.broadsheet__eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--ch-rule);
+}
+
+.broadsheet__headline {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+}
+
+/* Single measure — the lead column is too narrow to set in two */
+.broadsheet__standfirst {
+    font-size: 1rem;
+    line-height: 1.62;
+    color: var(--color-graphite);
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+}
+
+.broadsheet__standfirst::first-letter {
+    float: left;
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: 3.5em;
+    line-height: 0.78;
+    padding: 0.04em 0.08em 0 0;
+    color: var(--ch-ink);
+}
+
+
+/* ── Specimen panel: the lead's dark anchor ─────────── */
+.broadsheet__plate {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 1.3rem 1.25rem;
+    background: var(--color-ink);
+    color: var(--color-panel);
+    align-self: start;
+}
+
+.broadsheet__plate-num {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: 3.4rem;
+    line-height: 0.78;
+    letter-spacing: -0.05em;
+    color: var(--ch-hot);
+    font-variant-numeric: tabular-nums;
+}
+
+.broadsheet__plate-rule {
+    height: 2px;
+    width: 2.5rem;
+    background: var(--ch-hot);
+}
+
+.broadsheet__plate-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.broadsheet__plate-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+
+.broadsheet__plate-key {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-panel) 55%, transparent);
+}
+
+.broadsheet__plate-val {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--color-panel);
+    overflow-wrap: anywhere;
+}
+
+/* ── Index: 3-column brief grid with real column rules ── */
+.broadsheet__index {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 0;
+    row-gap: 0;
+    min-width: 0;
+}
+
+@media (max-width: 1150px) { .broadsheet__index { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px)  { .broadsheet__index { grid-template-columns: minmax(0, 1fr); } }
+
+.broadsheet__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 0;
+    padding: 1.15rem 1.5rem 1.4rem;
+    border-top: 1px solid var(--ch-rule);
+    transition: background-color 0.25s ease;
+}
+
+/* Column gutters: rules land exactly on the cell edges */
+.broadsheet__item:not(:nth-child(3n + 1)) { border-left: 1px solid var(--ch-rule); }
+.broadsheet__item:nth-child(3n + 1) { padding-left: 0; }
+.broadsheet__item:nth-child(3n)     { padding-right: 0; }
+
+@media (max-width: 1150px) {
+    .broadsheet__item:nth-child(3n + 1) { padding-left: 1.5rem; }
+    .broadsheet__item:nth-child(3n)     { padding-right: 1.5rem; }
+    .broadsheet__item:not(:nth-child(3n + 1)) { border-left: 0; }
+    .broadsheet__item:not(:nth-child(2n + 1)) { border-left: 1px solid var(--ch-rule); }
+    .broadsheet__item:nth-child(2n + 1) { padding-left: 0; }
+    .broadsheet__item:nth-child(2n)     { padding-right: 0; }
+}
+
+@media (max-width: 700px) {
+    .broadsheet__item { padding-inline: 0; border-left: 0 !important; }
+}
+
+.broadsheet__item-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.broadsheet__num {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: var(--ch-ink);
+    font-variant-numeric: tabular-nums;
+    flex: 0 0 auto;
+}
+
+.broadsheet__item-kicker {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-graphite) 78%, transparent);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.broadsheet__item-title {
+    font-family: var(--font-space), var(--font-display), sans-serif;
+    font-weight: 500;
+    font-size: 1.0625rem;
+    line-height: 1.18;
+    letter-spacing: -0.012em;
+    color: var(--color-ink);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    transition: color 0.22s ease;
+}
+
+.broadsheet__item-body {
+    font-size: 0.8125rem;
+    line-height: 1.58;
+    color: var(--color-graphite);
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+}
+
+.broadsheet__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.28rem;
+    margin-top: 0.15rem;
+    min-width: 0;
+}
+
+.broadsheet__tag {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ch-ink);
+    padding: 0.14rem 0.38rem;
+    border: 1px solid color-mix(in srgb, var(--ch-rule) 55%, transparent);
+}
+
+/* Plate inside a brief — only when the project has an image */
+.broadsheet__item-plate {
+    margin: 0 0 0.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.broadsheet__item-plate img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 11rem;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top left;
+    border: 1px solid var(--ch-rule);
+    filter: grayscale(0.3) contrast(1.04);
+    transition: filter 0.4s ease;
+}
+
+.broadsheet__item-plate figcaption {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-graphite) 70%, transparent);
+}
+
+.broadsheet__story:hover .broadsheet__item { background: color-mix(in srgb, var(--ch-ink) 4%, transparent); }
+.broadsheet__story:hover .broadsheet__item-title { color: var(--ch-ink); }
+.broadsheet__story:hover .broadsheet__item-plate img { filter: grayscale(0) contrast(1.04); }
+.broadsheet__story:hover .broadsheet__plate { background: var(--ch-deep); }
+
+.broadsheet__more {
+    align-self: center;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+    padding: 0.7rem 1.7rem;
+    border: 1px solid var(--ch-rule);
+    background: transparent;
+    transition: color 0.22s ease, border-color 0.22s ease;
+}
+
+.broadsheet__more:hover { color: var(--ch-ink); border-color: var(--ch-ink); }
+
+/* ── Nameplate strip ────────────────────────────────
+   Sheets whose display type lives in the lead story get a
+   dense rule-separated nameplate row instead of a poster
+   title, so nothing competes with the lead headline. */
+.paper-page__header--strip .relative {
+    padding: 0.7rem 1.5rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+}
+
+.paper-page__header--strip .broadsheet__nameplate {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 2.1vw, 1.6rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    text-wrap: balance;
+}
+
+.paper-page__header--strip .broadsheet__deck {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.625rem;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: var(--color-graphite);
+    min-width: 0;
+    flex: 1 1 16rem;
+}
+
+@media (max-width: 640px) {
+    .paper-page__header--strip .relative { padding: 0.6rem 1rem; }
+}
+
+/* ═══════════════════════════════════════════════════
+   PROJECT SECTION — REDESIGN
+   Clean newspaper list: featured lead + compact rows.
+   No thumbnails. Colour-coded category dots. Clear
+   typographic rhythm. Everything in CSS tokens so the
+   chapter theming still applies.
+═══════════════════════════════════════════════════ */
+
+/* ── Shell ─────────────────────────────────────────── */
+.proj-shell {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    gap: 0;
+}
+
+/* ── Toolbar (filter pills + search) ─────────────────*/
+.proj-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    padding: 1rem 0 1.25rem;
+    border-bottom: 1.5px solid var(--ch-rule, rgba(18,18,18,.12));
+}
+
+/* ── Filter pills ─────────────────────────────────── */
+.proj-filters {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.proj-filters__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.4rem;
+    align-items: center;
+}
+
+.proj-filter-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--ch-rule, rgba(18,18,18,.18));
+    border-radius: 0;
+    background: transparent;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.proj-filter-btn:hover {
+    color: var(--color-ink);
+    border-color: color-mix(in srgb, var(--ch-ink) 45%, transparent);
+}
+
+.proj-filter-btn--active {
+    color: var(--ch-ink, var(--color-ink));
+    border-color: var(--ch-ink, var(--color-ink));
+    background: color-mix(in srgb, var(--ch-ink) 6%, transparent);
+    font-weight: 600;
+}
+
+.proj-filter-btn__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--ch-ink, var(--color-ink));
+    transform-origin: left center;
+}
+
+/* ── Search ───────────────────────────────────────── */
+.proj-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 0 1 14rem;
+    min-width: 9rem;
+    border-bottom: 1px solid var(--ch-rule, rgba(18,18,18,.18));
+    transition: border-color 0.2s ease;
+}
+
+.proj-search:focus-within {
+    border-color: var(--ch-ink, var(--color-ink));
+}
+
+.proj-search__icon {
+    position: absolute;
+    left: 0;
+    color: var(--color-graphite);
+    pointer-events: none;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.proj-search:focus-within .proj-search__icon {
+    color: var(--ch-ink, var(--color-ink));
+}
+
+.proj-search__input {
+    width: 100%;
+    padding: 0.4rem 1.5rem 0.4rem 1.3rem;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    color: var(--color-ink);
+}
+
+.proj-search__input::placeholder {
+    color: var(--color-bordertech);
+}
+
+.proj-search__clear {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    padding: 0.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--color-graphite);
+    transition: color 0.15s ease;
+}
+
+.proj-search__clear:hover { color: var(--color-ink); }
+
+/* ── Rule ─────────────────────────────────────────── */
+.proj-rule {
+    height: 1px;
+    background: var(--ch-rule, rgba(18,18,18,.12));
+    margin: 0;
+}
+
+/* ── Featured card ────────────────────────────────── */
+.proj-featured {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) 2.5rem;
+    gap: 1.5rem;
+    align-items: start;
+    padding: 1.75rem 0;
+    border-bottom: 2px solid var(--ch-rule, rgba(18,18,18,.12));
+    transition: background 0.2s ease;
+}
+
+@media (max-width: 640px) {
+    .proj-featured {
+        grid-template-columns: 2.5rem minmax(0,1fr) 1.5rem;
+        gap: 0.85rem;
+        padding: 1.25rem 0;
+    }
+}
+
+.proj-featured:hover {
+    background: color-mix(in srgb, var(--ch-ink) 3%, transparent);
+}
+
+/* left meta column */
+.proj-featured__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    padding-top: 0.25rem;
+}
+
+.proj-featured__index {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--ch-ink, var(--color-ink));
+    font-variant-numeric: tabular-nums;
+}
+
+.proj-featured__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.proj-featured__cat {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    line-height: 1;
+    margin-top: 0.2rem;
+}
+
+@media (max-width: 640px) {
+    .proj-featured__cat { display: none; }
+}
+
+/* centre body */
+.proj-featured__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.proj-featured__title {
+    font-family: var(--font-display), serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    transition: color 0.2s ease;
+}
+
+.group:hover .proj-featured__title {
+    color: var(--ch-ink, var(--color-ink));
+}
+
+.proj-featured__desc {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-graphite);
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+    max-width: 60ch;
+}
+
+.proj-featured__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.25rem;
+}
+
+/* right arrow */
+.proj-featured__arrow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-top: 0.3rem;
+}
+
+.proj-featured__arrow-icon {
+    color: var(--color-bordertech);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.group:hover .proj-featured__arrow-icon {
+    color: var(--ch-ink, var(--color-ink));
+    transform: translate(2px, -2px);
+}
+
+/* ── Section divider ──────────────────────────────── */
+.proj-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 0 0.6rem;
+}
+
+.proj-divider::before,
+.proj-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--ch-rule, rgba(18,18,18,.1));
+}
+
+.proj-divider__label {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-bordertech);
+    white-space: nowrap;
+}
+
+/* ── Row list ─────────────────────────────────────── */
+.proj-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--ch-rule, rgba(18,18,18,.1));
+}
+
+.proj-row {
+    display: grid;
+    grid-template-columns: 2.2rem 0.6rem 1fr auto 1.5rem;
+    gap: 0.85rem;
+    align-items: center;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--ch-rule, rgba(18,18,18,.08));
+    transition: background 0.18s ease;
+    min-width: 0;
+}
+
+@media (max-width: 640px) {
+    .proj-row {
+        grid-template-columns: 1.8rem 0.5rem 1fr 1.2rem;
+    }
+    .proj-row__tags { display: none; }
+}
+
+.proj-row:hover {
+    background: color-mix(in srgb, var(--ch-ink) 3%, transparent);
+}
+
+.proj-row__num {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    color: var(--color-bordertech);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.proj-row__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    justify-self: center;
+}
+
+.proj-row__main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.proj-row__title {
+    font-family: var(--font-display), serif;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.18s ease;
+}
+
+.group:hover .proj-row__title {
+    color: var(--ch-ink, var(--color-ink));
+}
+
+.proj-row__desc {
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--color-graphite);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.proj-row__tags {
+    display: flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.proj-row__arrow {
+    color: var(--color-bordertech);
+    flex-shrink: 0;
+    transition: color 0.18s ease, transform 0.18s ease;
+    justify-self: end;
+}
+
+.group:hover .proj-row__arrow {
+    color: var(--ch-ink, var(--color-ink));
+    transform: translate(2px, -2px);
+}
+
+/* ── Tags ─────────────────────────────────────────── */
+.proj-tag {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+    padding: 0.16rem 0.44rem;
+    border: 1px solid color-mix(in srgb, var(--ch-rule, rgba(18,18,18,.2)) 70%, transparent);
+    background: color-mix(in srgb, var(--color-panel-deep) 60%, transparent);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ── Empty state ──────────────────────────────────── */
+.proj-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+    border-top: 1px solid var(--ch-rule, rgba(18,18,18,.1));
+    border-bottom: 1px solid var(--ch-rule, rgba(18,18,18,.1));
+}
+
+.proj-empty__label {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-bordertech);
+}
+
+/* ── Show more ────────────────────────────────────── */
+.proj-more {
+    align-self: center;
+    margin-top: 1rem;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.5625rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+    padding: 0.65rem 1.75rem;
+    border: 1px solid var(--ch-rule, rgba(18,18,18,.2));
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.proj-more:hover {
+    color: var(--ch-ink, var(--color-ink));
+    border-color: var(--ch-ink, var(--color-ink));
+}
+

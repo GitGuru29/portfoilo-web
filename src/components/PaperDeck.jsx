@@ -504,6 +504,8 @@ export function PaperPage({
     lede = '',
     watermark = '',
     bare = false,
+    variant = 'poster',
+    banner = null,
     className = '',
     children,
     pageIndex = 0,
@@ -557,8 +559,16 @@ export function PaperPage({
             id={id}
             data-paper-page
             data-chapter={chapter}
-            className={`paper-page ${className}`}
+            className={`paper-page ${banner ? 'paper-page--banner' : ''} ${className}`}
         >
+            {/* Narrative banner — leads the page above the nameplate */}
+            {banner && (
+                <div className="broadsheet__banner">
+                    <h1 className="broadsheet__banner-head">{banner.headline}</h1>
+                    {banner.deck && <p className="broadsheet__banner-deck">{banner.deck}</p>}
+                </div>
+            )}
+
             <div className="paper-page__grade" aria-hidden="true" />
             <div className="paper-page__band" aria-hidden="true" />
 
@@ -571,8 +581,19 @@ export function PaperPage({
                 </span>
             )}
 
-            <header className="paper-page__header">
+            <header className={`paper-page__header ${variant === 'broadsheet' ? 'paper-page__header--strip' : ''}`}>
                 <div className="noise-bg absolute inset-0 opacity-40 pointer-events-none" />
+                {variant === 'broadsheet' ? (
+                    <div className="relative z-10 mx-auto w-full max-w-[78rem]">
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <span className="meta-tag text-accent">[ {chapter} ]</span>
+                            <span className="broadsheet__nameplate">{title}</span>
+                            <span className="h-px flex-1 min-w-[2rem] bg-ink/15" />
+                            {lede && <span className="broadsheet__deck">{lede}</span>}
+                            <span className="stamp">{kicker ? `verified ${kicker}` : 'verified page'}</span>
+                        </div>
+                    </div>
+                ) : (
                 <div className="relative z-10 mx-auto w-full max-w-[78rem] px-6 pt-6 pb-5">
                     <div className="mb-3 flex items-center gap-4">
                         <span className="meta-tag text-accent">[ {chapter} ]</span>
@@ -593,6 +614,7 @@ export function PaperPage({
                         <span className="h-px flex-1 bg-ink/15" />
                     </div>
                 </div>
+                )}
             </header>
 
             <div className="paper-page__body" data-lenis-prevent data-lenis-prevent-touch>
