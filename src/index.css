@@ -777,18 +777,6 @@ html { scroll-padding-top: 76px; }
     color: rgba(18, 18, 18, 0.82);
 }
 
-/* Newspapers-style justified columns */
-.news-columns {
-    column-count: 2;
-    column-gap: 2rem;
-    column-rule: 1px solid rgba(18, 18, 18, 0.35);
-    text-align: justify;
-}
-
-@media (max-width: 640px) {
-    .news-columns { column-count: 1; }
-}
-
 /* Dramatic decorative drop cap */
 .drop-cap::first-letter {
     font-family: var(--font-display), Georgia, serif;

@@ -2,17 +2,21 @@ import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
 import useStore, { MOODS } from '../store/useStore';
 
+/* Resolved from CSS custom properties so the front page inherits the
+   current newsprint palette and its own chapter-00 press grading
+   (.paper-page re-points --color-accent to --ch-ink per sheet).
+   Hard-coded hexes here silently drifted out of the token system. */
 const S = {
-    paper: '#f5f2eb',
-    panel: '#fdfbf6',
-    ink: '#121212',
-    graphite: '#57544d',
-    line: 'rgba(18,18,18,0.4)',
-    crimson: '#b91c1c',
-    mono: "'JetBrains Mono', monospace",
-    serif: "'Playfair Display', 'Fraunces', Georgia, serif",
-    blackletter: "'UnifrakturMaguntia', Georgia, serif",
-    body: "Georgia, 'Times New Roman', serif",
+    paper: 'var(--color-void)',
+    panel: 'var(--color-panel)',
+    ink: 'var(--color-ink)',
+    graphite: 'var(--color-graphite)',
+    line: 'var(--ch-rule)',
+    crimson: 'var(--ch-ink)',
+    mono: 'var(--font-mono)',
+    serif: 'var(--font-display)',
+    blackletter: 'var(--font-blackletter)',
+    body: 'var(--font-inter)',
 };
 
 /* ─── Folio-style countup (circulation indices) ─── */
@@ -57,7 +61,6 @@ export default function HeroOverlay() {
     const chopB          = useRef(null);
     const bodyRef        = useRef(null);
     const photoRef       = useRef(null);
-    const aboutRef       = useRef(null);
     const setMood        = useStore((s) => s.setMood);
     const [statsStarted, setStatsStarted] = useState(false);
 
@@ -146,13 +149,13 @@ export default function HeroOverlay() {
 
     return (
         <section ref={heroRef} id="home" style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10, background: S.paper }}>
-            <div ref={stageRef} style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
+            <div ref={stageRef} className="relative flex flex-col overflow-hidden" style={{ width: '100%', height: '100%' }}>
 
                 {/* Newsprint grain */}
                 <div aria-hidden className="absolute inset-0 noise-bg opacity-35 pointer-events-none" />
 
                 {/* ── FOLIO / TOP STRIP — double hairline ── */}
-                <div ref={folioTopRef} className="absolute top-[58px] md:top-[62px] left-6 right-6 z-20" style={{ borderTop: '1px solid ' + S.ink, borderBottom: '1px solid rgba(18,18,18,0.25)' }}>
+                <div ref={folioTopRef} className="flex-none px-6 pt-[58px] md:pt-[62px] z-20" style={{ borderTop: '1px solid ' + S.ink, borderBottom: '1px solid color-mix(in srgb, var(--color-ink) 25%, transparent)' }}>
                     <div className="flex items-center justify-between gap-4 px-2 pt-1.5 pb-1 font-mono text-[8px] md:text-[9px] tracking-[0.26em] uppercase text-ink/70">
                         <span className="hidden sm:inline">EST. 2021 — VOL. XXIV</span>
                         <span className="truncate font-semibold text-ink/90">THE DAILY DEVELOPER · BROADSHEET EDITION</span>
@@ -163,7 +166,7 @@ export default function HeroOverlay() {
                 </div>
 
                 {/* ── MASTHEAD ── */}
-                <div ref={topRef} className="absolute left-0 right-0 top-[96px] md:top-[104px] px-6 z-10 text-center">
+                <div ref={topRef} className="flex-none px-6 mt-4 md:mt-5 z-10 text-center">
                     <h1 className="masthead-title" aria-label="The Daily Developer">The Daily Developer</h1>
                     {/* ornamental double divider */}
                     <div className="mx-auto mt-2 mb-1.5 flex items-center justify-center gap-3" style={{ color: S.ink }}>
@@ -175,11 +178,11 @@ export default function HeroOverlay() {
                 </div>
 
                 {/* ── LEAD STORY + PORTRAIT ── */}
-                <div className="absolute left-0 right-0 bottom-[48px] top-[232px] md:top-[244px] z-10 px-6 md:px-[5vw]">
+                <div className="flex-1 min-h-0 z-10 px-6 md:px-[5vw] pb-2">
                     <div ref={leadGridRef} className="h-full grid grid-cols-12 gap-0 pt-3" style={{ borderTop: '2px solid ' + S.ink }}>
 
                         {/* LEFT — the lead story */}
-                        <div className="col-span-12 md:col-span-7 lg:col-span-8 flex flex-col md:pr-8 pt-4 overflow-hidden" style={{ borderRight: '0 none' }}>
+                        <div className="col-span-12 md:col-span-7 lg:col-span-8 flex flex-col md:pr-8 pt-4 min-h-0 overflow-y-auto overscroll-contain" style={{ borderRight: '0 none' }}>
 
                             {/* Byline */}
                             <div ref={bodyRef} className="flex flex-col gap-2">
@@ -201,16 +204,19 @@ export default function HeroOverlay() {
                                     </div>
                                 </div>
 
-                                {/* Justified two-column story w/ drop cap */}
-                                <div className="news-columns front-news-brief mt-3 hidden sm:block" style={{ fontFamily: S.body, fontSize: '12.5px', lineHeight: 1.55, color: 'rgba(18,18,18,0.88)' }}>
-                                    <p className="drop-cap mb-2 text-justify" style={{ marginTop: 3 }}>
+                                {/* Justified two-column story w/ drop cap.
+                                    Grid, not CSS multicol — multicol fragments its
+                                    children and overflowed its measure. The column
+                                    rule is drawn on the gutter so it stays exact. */}
+                                <div className="mt-3 hidden sm:grid sm:grid-cols-2" style={{ fontFamily: S.body, fontSize: '12.5px', lineHeight: 1.55, color: 'color-mix(in srgb, var(--color-ink) 88%, transparent)' }}>
+                                    <p className="drop-cap text-justify sm:pr-6 sm:border-r" style={{ marginTop: 3, borderColor: 'var(--ch-rule)' }}>
                                         The desk reports a developer who treats the machine as read-only until
                                         proven otherwise — building low-level systems software, native Android,
                                         and Linux tooling engineered for determinism and quiet correctness.
                                         Every project is compiled against reality: small, measurable, and
                                         predictable under load.
                                     </p>
-                                    <p className="mb-2 text-justify" style={{ marginTop: 3 }}>
+                                    <p className="text-justify sm:pl-6" style={{ marginTop: 3 }}>
                                         From kernel utilities to compiler passes, the work favours the lowest
                                         layer that will still run. The editorial board notes a particular
                                         immunity to fashionable abstractions: correctness before speed, speed
@@ -219,7 +225,7 @@ export default function HeroOverlay() {
                                 </div>
 
                                 {/* Mobile story excerpt */}
-                                <p className="sm:hidden text-justify" style={{ fontFamily: S.body, fontSize: '12.5px', lineHeight: 1.55, color: 'rgba(18,18,18,0.88)' }}>
+                                <p className="sm:hidden text-justify" style={{ fontFamily: S.body, fontSize: '12.5px', lineHeight: 1.55, color: 'color-mix(in srgb, var(--color-ink) 88%, transparent)' }}>
                                     The desk reports a developer who treats the machine as read-only until
                                     proven otherwise — building systems software, native Android, and Linux
                                     tooling for determinism, latency, and quiet correctness.
@@ -253,7 +259,7 @@ export default function HeroOverlay() {
                             <div ref={photoRef} className="flex flex-col gap-3">
                                 {/* 1-bit halftone portrait */}
                                 <figure className="relative border border-ink p-1.5" style={{ background: S.panel }}>
-                                    <div className="relative overflow-hidden" style={{ border: '1px solid rgba(18,18,18,0.4)' }}>
+                                    <div className="relative overflow-hidden" style={{ border: '1px solid color-mix(in srgb, var(--color-ink) 40%, transparent)' }}>
                                         <img
                                             src="/assets/profile.png"
                                             alt="Siluna Dangalla — Independent Systems Developer"
@@ -263,12 +269,12 @@ export default function HeroOverlay() {
                                         <div aria-hidden className="absolute inset-0 halftone opacity-30 pointer-events-none mix-blend-multiply" />
                                         <div aria-hidden
                                             className="absolute top-3 left-3 px-2 py-1 font-mono text-[8px] tracking-[0.3em] uppercase"
-                                            style={{ color: 'var(--color-accent)', border: '1px solid var(--color-accent)', background: 'rgba(245,242,235,0.92)' }}
+                                            style={{ color: 'var(--color-accent)', border: '1px solid var(--color-accent)', background: 'color-mix(in srgb, var(--color-void) 92%, transparent)' }}
                                         >
                                             ● Breaking
                                         </div>
                                     </div>
-                                    <figcaption className="mt-1 px-1 text-[11px] italic font-serif" style={{ color: 'rgba(18,18,18,0.8)', fontFamily: S.body }}>
+                                    <figcaption className="mt-1 px-1 text-[11px] italic font-serif" style={{ color: 'color-mix(in srgb, var(--color-ink) 80%, transparent)', fontFamily: S.body }}>
                                         Fig. 1 — Independent Systems Developer, Colombo
                                     </figcaption>
                                 </figure>
@@ -276,7 +282,7 @@ export default function HeroOverlay() {
                                 {/* Telegraph desk */}
                                 <div className="telegram px-3 py-2 mt-1" data-stamp="TELEGRAPH">
                                     <div className="dateline text-[8px] tracking-[0.3em] uppercase text-ink/60">Western Union — Desk 024</div>
-                                    <div className="mt-1.5 flex flex-col gap-0.5 font-mono text-[9.5px] tracking-[0.12em] uppercase" style={{ color: 'rgba(18,18,18,0.75)' }}>
+                                    <div className="mt-1.5 flex flex-col gap-0.5 font-mono text-[9.5px] tracking-[0.12em] uppercase" style={{ color: 'color-mix(in srgb, var(--color-ink) 75%, transparent)' }}>
                                         <span>Q. ENGAGEMENT WINDOW : <span className="text-accent">OPEN ▮</span></span>
                                         <span>Q. STACK            : C++ · KOTLIN · LINUX · LLVM</span>
                                         <span>Q. LOCATION         : COLOMBO · REMOTE · WORLDWIDE</span>
@@ -288,200 +294,13 @@ export default function HeroOverlay() {
                 </div>
 
                 {/* BOTTOM FOLIO STRIP — double hairline (stage level) */}
-                <div ref={folioBottomRef} className="absolute bottom-6 left-6 right-6 flex items-center justify-between font-mono text-[8px] tracking-[0.3em] uppercase text-ink/60"
-                    style={{ borderTop: '1px solid rgba(18,18,18,0.7)', paddingTop: 6 }}>
+                <div ref={folioBottomRef} className="flex-none mx-6 mb-6 flex items-center justify-between font-mono text-[8px] tracking-[0.3em] uppercase text-ink/60"
+                    style={{ borderTop: '1px solid color-mix(in srgb, var(--color-ink) 70%, transparent)', paddingTop: 6 }}>
                     <span>CONTINUED ON PAGE TWO — THE DEVELOPER'S DESK ↑</span>
                     <span className="hidden md:inline text-accent">● PRESIDENTIAL RACE = N/A ▮ FLOODS = N/A</span>
                     <span>6°55′N — 79°51′E</span>
                 </div>
 
-                {/* ══════════════════════════════════════
-                    PAGE 02 — INSIDE EDITION (About)
-                ══════════════════════════════════════ */}
-                <div
-                    ref={aboutRef}
-                    id="about"
-                    style={{
-                        position: 'absolute', inset: 0, visibility: 'hidden', opacity: 0, zIndex: 100,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        padding: 'clamp(16px, 3.5vw, 40px)',
-                    }}
-                >
-                    <div className="w-full max-w-7xl mx-auto flex flex-col gap-4 md:gap-5 px-4 md:px-8">
-                        
-                        {/* Editorial Top Bar */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 pb-2.5" style={{ borderBottom: '1px solid rgba(18,18,18,0.25)' }}>
-                            <div className="flex items-center gap-3">
-                                <span className="stamp--edition">● Inside Edition</span>
-                                <span className="dateline hidden sm:inline">THE DEVELOPER'S DESK — CONTINUED FROM PAGE ONE</span>
-                            </div>
-                            <div className="dateline text-accent">SPECIAL REPORT · DISPATCH NO. 024-B</div>
-                        </div>
-
-                        {/* Section Headline */}
-                        <div>
-                            <h2 className="headline-chop text-balance" style={{ fontSize: 'clamp(1.6rem, 3.4vw, 3rem)', lineHeight: 1.05 }}>
-                                SYSTEMS BEFORE SOFTWARE, CORRECTNESS BEFORE SPEED.
-                            </h2>
-                        </div>
-
-                        {/* Main 12-Column Editorial Grid */}
-                        <div className="grid grid-cols-12 gap-6 lg:gap-8 items-start">
-                            
-                            {/* Left Column — Deep Editorial Story & Philosophy (7 Cols) */}
-                            <div className="col-span-12 lg:col-span-7 flex flex-col gap-4">
-                                
-                                {/* Pull Quote */}
-                                <blockquote className="italic font-serif text-ink/85 text-sm md:text-base pl-4 border-l-2 border-accent py-1 bg-panel/60">
-                                    “The machine is read-only until proven otherwise — building low-level systems software, native Android tooling, and compilers engineered for determinism and quiet correctness.”
-                                </blockquote>
-
-                                {/* 2-Column Article Text */}
-                                <div className="news-columns" style={{ fontFamily: S.body, fontSize: '13px', lineHeight: 1.6, color: 'rgba(18,18,18,0.85)' }}>
-                                    <p className="drop-cap text-justify mb-2">
-                                        As a final-year Software Engineering undergraduate working at the edge of the stack, the desk bridges high-level user interfaces with low-level execution environments. From custom Linux daemons to AOSP launcher internals, every project is driven by the conviction that performance is not an afterthought, but a core architectural requirement.
-                                    </p>
-                                    <p className="text-justify mb-2">
-                                        Whether engineering compiler passes for AeroLang, optimizing inter-process communication in ByBridge, or securing network telemetry in AegisLayer, the focus remains on zero-allocation inner loops, predictable memory layouts, and strict contract enforcement. Opinion is reserved for the compiler.
-                                    </p>
-                                    <p className="text-justify mb-2">
-                                        Working from a corner desk in Colombo, the press favours the smallest moving part that solves the whole problem — a habit learned the hard way, on machines where every microsecond clears a market or a deadline.
-                                    </p>
-                                </div>
-
-                                {/* Education & Postings */}
-                                <div className="pt-2.5" style={{ borderTop: '1px solid rgba(18,18,18,0.2)' }}>
-                                    <div className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold mb-2">Education &amp; Postings</div>
-                                    <div className="grid grid-cols-3 gap-3">
-                                        {[
-                                            { year: '2021 →', entry: 'Systems foundations — first C under the desk', tag: 'BSc' },
-                                            { year: '2023 →', entry: 'Independent engineering & open-source work', tag: 'FREELANCE' },
-                                            { year: 'NOW', entry: 'AeroLang · ByBridge · AegisLayer on the bench', tag: 'ACTIVE' },
-                                        ].map(e => (
-                                            <div key={e.tag} className="flex flex-col gap-0.5">
-                                                <span className="font-mono text-[9px] text-ink/70">{e.year} <span className="text-accent">[{e.tag}]</span></span>
-                                                <span className="text-[11px] font-serif text-graphite leading-tight">{e.entry}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Core Disciplines List */}
-                                <div className="grid grid-cols-3 gap-3 pt-2.5" style={{ borderTop: '1px solid rgba(18,18,18,0.2)' }}>
-                                    <div className="flex flex-col gap-1">
-                                        <span className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold">01. Determinism</span>
-                                        <span className="text-[11px] font-serif text-graphite leading-tight">Zero hidden allocations & predictable latency.</span>
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                        <span className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold">02. Correctness</span>
-                                        <span className="text-[11px] font-serif text-graphite leading-tight">Type-safe boundaries & verified contracts.</span>
-                                    </div>
-                                    <div className="flex flex-col gap-1">
-                                        <span className="font-mono text-[9px] tracking-widest text-accent uppercase font-bold">03. Efficiency</span>
-                                        <span className="text-[11px] font-serif text-graphite leading-tight">Lowest layer that will run cleanly under load.</span>
-                                    </div>
-                                </div>
-
-                                {/* Tech Chips */}
-                                <div className="flex flex-wrap gap-2 pt-1">
-                                    {['C++20', 'Kotlin', 'Linux Kernel', 'Android AOSP', 'LLVM', 'Rust', 'eBPF', 'PostgreSQL', 'CMake', 'C#', 'Bash', 'Git'].map(t => (
-                                        <span key={t} className="chip-tech">{t}</span>
-                                    ))}
-                                </div>
-
-                                {/* Editor's signoff */}
-                                <div className="flex items-center justify-between gap-4" style={{ borderTop: '1px solid rgba(18,18,18,0.2)', paddingTop: 8, marginTop: 2 }}>
-                                    <p className="italic font-serif text-[11px] text-graphite leading-snug">
-                                        — The machine stays read-only until the contracts are proven. The desk is now open.
-                                    </p>
-                                    <span className="font-blackletter text-2xl leading-none shrink-0" style={{ color: S.ink }}>Siluna Dangalla</span>
-                                </div>
-                            </div>
-
-                            {/* Right Column — Technical Specifications & Telemetry Card (5 Cols) */}
-                            <div className="col-span-12 lg:col-span-5 flex flex-col gap-4">
-                                
-                                {/* Classified Specs Box */}
-                                <div className="story-card p-5 flex flex-col gap-3">
-                                    <div className="flex items-center justify-between border-b border-ink/20 pb-2">
-                                        <span className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-ink">SYSTEM SPECIFICATIONS</span>
-                                        <span className="font-mono text-[9px] text-accent">CLASSIFIED 024</span>
-                                    </div>
-
-                                    <div className="space-y-2 font-mono text-[11px]">
-                                        <div className="flex justify-between border-b border-ink/10 pb-1.5">
-                                            <span className="text-graphite uppercase">Degree</span>
-                                            <span className="font-semibold text-ink">BSc (Hons) Software Eng.</span>
-                                        </div>
-                                        <div className="flex justify-between border-b border-ink/10 pb-1.5">
-                                            <span className="text-graphite uppercase">Specialization</span>
-                                            <span className="font-semibold text-ink">Systems & Mobile Eng.</span>
-                                        </div>
-                                        <div className="flex justify-between border-b border-ink/10 pb-1.5">
-                                            <span className="text-graphite uppercase">Location</span>
-                                            <span className="font-semibold text-ink">Colombo, Sri Lanka</span>
-                                        </div>
-                                        <div className="flex justify-between border-b border-ink/10 pb-1.5">
-                                            <span className="text-graphite uppercase">Engagement</span>
-                                            <span className="font-semibold text-accent">Available / Remote</span>
-                                        </div>
-                                    </div>
-
-                                    {/* CTAs */}
-                                    <div className="flex flex-col gap-2 pt-2">
-                                        <a href="#projects" className="lux-btn-primary text-center justify-center py-2.5">
-                                            Explore Projects <span className="lux-btn-chevron">→</span>
-                                        </a>
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="lux-btn-ghost text-center justify-center py-2">
-                                                Fax CV ↗
-                                            </a>
-                                            <button
-                                                onClick={() => useStore.getState().setMeetingModalOpen(true)}
-                                                className="hud-btn hud-btn--volt text-center justify-center py-2 cursor-pointer"
-                                            >
-                                                Book Call 📅
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Dispatch Note */}
-                                <div className="telegram px-4 py-3" data-stamp="STATUS">
-                                    <div className="dateline text-[9px] tracking-[0.2em] uppercase text-ink/70">DESK DISPATCH NOTE</div>
-                                    <p className="font-mono text-[10px] text-graphite mt-1 leading-relaxed">
-                                        Currently engineering high-throughput platform tools. Reach out for systems contracts or full-time engagements.
-                                    </p>
-                                </div>
-
-                                {/* In Print — Current Works */}
-                                <div className="story-card p-4">
-                                    <div className="flex items-center justify-between border-b border-ink/20 pb-2 mb-2">
-                                        <span className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-ink">On the Bench</span>
-                                        <span className="font-mono text-[9px] text-accent">IN PRINT</span>
-                                    </div>
-                                    <div className="space-y-2 font-mono text-[11px]">
-                                        {[
-                                            { name: 'AeroLang', status: 'Compiler passes', state: 'RC' },
-                                            { name: 'ByBridge', status: 'IPC design', state: 'ACTIVE' },
-                                            { name: 'AegisLayer', status: 'Telemetry security', state: 'SHIPPING' },
-                                        ].map(w => (
-                                            <div key={w.name} className="flex items-center justify-between border-b border-ink/10 pb-1.5 last:border-0 last:pb-0">
-                                                <span className="text-ink">{w.name}</span>
-                                                <span className="flex items-center gap-2">
-                                                    <span className="text-graphite">{w.status}</span>
-                                                    <span className="text-accent">{w.state}</span>
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
             </div>
         </section>
     );
