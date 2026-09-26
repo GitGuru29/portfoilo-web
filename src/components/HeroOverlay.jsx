@@ -264,9 +264,8 @@ export default function HeroOverlay() {
                                             src="/assets/profile.png"
                                             alt="Siluna Dangalla — Independent Systems Developer"
                                             className="halftone-portrait w-full h-[32vh] max-h-[330px] object-cover"
-                                            style={{ objectPosition: '50% 12%' }}
+                                            style={{ objectPosition: '50% 35%' }}
                                         />
-                                        <div aria-hidden className="absolute inset-0 halftone opacity-30 pointer-events-none mix-blend-multiply" />
                                         <div aria-hidden
                                             className="absolute top-3 left-3 px-2 py-1 font-mono text-[8px] tracking-[0.3em] uppercase"
                                             style={{ color: 'var(--color-accent)', border: '1px solid var(--color-accent)', background: 'color-mix(in srgb, var(--color-void) 92%, transparent)' }}
