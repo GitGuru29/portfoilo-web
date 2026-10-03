@@ -76,6 +76,7 @@ export default function SectionDotsNav() {
                         className="chapter-rail__dot group focus:outline-none cursor-pointer"
                         style={isActive ? { borderColor: 'transparent' } : undefined}
                         aria-label={`Chapter ${num} — ${label}`}
+                        aria-current={isActive ? 'true' : undefined}
                     >
                         <span className="chapter-rail__tip">
                             <span className="text-accent font-mono mr-1.5">{num}.</span>

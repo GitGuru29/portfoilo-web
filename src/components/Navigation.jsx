@@ -231,7 +231,8 @@ export default function Navigation() {
                         <button
                             onClick={() => setMenuOpen(v => !v)}
                             aria-label="Toggle menu"
-                            className="md:hidden flex flex-col gap-[5px] p-1 opacity-50 hover:opacity-100"
+                            aria-expanded={menuOpen}
+                            className="md:hidden flex flex-col justify-center items-center gap-[5px] w-10 h-10 -mr-2 opacity-60 hover:opacity-100 cursor-pointer"
                         >
                             <span className={`block w-5 h-[1px] bg-current transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[6px]' : ''}`} />
                             <span className={`block w-5 h-[1px] bg-current transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />

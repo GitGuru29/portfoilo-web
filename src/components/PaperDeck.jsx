@@ -33,7 +33,7 @@ export default function PaperDeck({ children }) {
     }, []);
 
     return (
-        <main className="paper-deck">
+        <main id="folio" className="paper-deck">
             <div className="paper-deck__viewport">
                 <div ref={stackRef} className="paper-deck__stack">
                     {React.Children.map(children, (child, idx) => {
@@ -84,6 +84,8 @@ export function PaperPage({
             >
                 <div className="paper-page__grade" aria-hidden="true" />
                 <div className="paper-page__band" aria-hidden="true" />
+                {/* No inner scroll box: the front page scrolls with the
+                    document like every other sheet. */}
                 <div className="paper-page__body paper-page__body--center">
                     {children}
                 </div>

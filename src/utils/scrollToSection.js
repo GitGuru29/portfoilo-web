@@ -11,6 +11,12 @@
 
 const NAV_OFFSET = -72;
 
+/** Readers who ask for less motion get an instant jump, not a tween. */
+export function prefersReducedMotion() {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 /**
  * Scroll a sheet into view.
  * @param {string} id - Element id of the target sheet.
@@ -27,13 +33,21 @@ export function scrollToSection(
     const el = document.getElementById(id);
     if (!el) return;
 
+    const reduced = prefersReducedMotion();
+
+    // Hand focus to the destination so keyboard and screen-reader users land
+    // inside the new chapter. preventScroll keeps the browser from fighting
+    // the scroll we are about to perform.
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+    el.focus({ preventScroll: true });
+
     if (window.lenis) {
-        window.lenis.scrollTo(el, { offset, duration });
+        window.lenis.scrollTo(el, { offset, duration, immediate: reduced });
         return;
     }
 
     const top = el.getBoundingClientRect().top + window.scrollY + offset;
-    window.scrollTo({ top: Math.max(0, top), behavior });
+    window.scrollTo({ top: Math.max(0, top), behavior: reduced ? 'auto' : behavior });
 }
 
 /**

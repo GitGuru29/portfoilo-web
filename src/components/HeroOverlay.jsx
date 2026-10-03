@@ -249,7 +249,7 @@ export default function HeroOverlay() {
                                     <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="lux-btn-ghost">Fax CV <span className="lux-btn-chevron">↗</span></a>
                                     <span className="hidden md:inline-flex items-center gap-2">
                                         <span className="lux-scroll-line" style={{ height: 22 }} />
-                                        <span className="dateline">Turn to page two ↓</span>
+                                        <span className="dateline">Keep reading ↓</span>
                                     </span>
                                 </div>
                             </div>

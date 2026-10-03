@@ -8,6 +8,7 @@ import SystemMetricsWidget from './components/SystemMetricsWidget';
 import ScrollToTop from './components/ScrollToTop';
 import StoryProgress from './components/StoryProgress';
 import useStore from './store/useStore';
+import { anchorToSection } from './utils/scrollToSection';
 
 import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
@@ -83,6 +84,15 @@ function App() {
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                             className="relative w-full h-full z-content"
                         >
+                            {/* Keyboard users jump straight past the chrome */}
+                            <a
+                                href="#folio"
+                                onClick={anchorToSection('folio', { offset: 0 })}
+                                className="skip-link"
+                            >
+                                Skip to content
+                            </a>
+
                             <LenisWrapper>
                                 <Navigation />
 

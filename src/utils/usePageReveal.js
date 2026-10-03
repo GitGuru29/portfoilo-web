@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { prefersReducedMotion } from './scrollToSection';
 
 /**
  * Reveal-on-enter for the folio.
@@ -45,6 +46,11 @@ export default function usePageReveal({
         const play = (elements) => {
             if (!elements || elements.length === 0) return;
             gsap.killTweensOf(elements);
+            // Reduced motion: content is simply present, never animated in.
+            if (prefersReducedMotion()) {
+                gsap.set(elements, { opacity: 1, y: 0, scale: 1 });
+                return;
+            }
             gsap.fromTo(
                 elements,
                 { opacity: 0, y, scale, force3D: true },
