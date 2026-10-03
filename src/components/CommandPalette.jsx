@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Terminal, Code, Cpu, ShieldCheck, Sparkles, Volume2, VolumeX, Download, Github, Linkedin, Mail, ExternalLink, Command, ArrowRight } from 'lucide-react';
 import useStore from '../store/useStore';
 import { playClickSound, playChimeSound, playHoverSound } from '../utils/soundFX';
+import { scrollToSection } from '../utils/scrollToSection';
 
 export default function CommandPalette() {
     const isCommandPaletteOpen = useStore((s) => s.isCommandPaletteOpen);
@@ -42,31 +43,24 @@ export default function CommandPalette() {
         }
     }, [isCommandPaletteOpen]);
 
-    const scrollToSection = (id) => {
-        const targetEl = document.getElementById(id);
-        if (!targetEl) return;
+    const goToSection = (id) => {
         setCommandPaletteOpen(false);
         playClickSound(soundEnabled);
-
-        if (window.lenis) {
-            window.lenis.scrollTo(targetEl, { offset: -20, duration: 1.2 });
-        } else {
-            targetEl.scrollIntoView({ behavior: 'smooth' });
-        }
+        scrollToSection(id, { offset: -72 });
     };
 
     const COMMAND_ITEMS = [
         // Navigation Section
-        { id: 'nav-hero', label: 'Go to Hero / Home', category: 'Navigation', icon: Terminal, action: () => scrollToSection('hero') },
-        { id: 'nav-skills', label: 'Go to Skills & Competencies', category: 'Navigation', icon: Cpu, action: () => scrollToSection('skills') },
-        { id: 'nav-github', label: 'Go to GitHub Activity', category: 'Navigation', icon: Github, action: () => scrollToSection('github') },
-        { id: 'nav-projects', label: 'Go to Featured Projects', category: 'Navigation', icon: Code, action: () => scrollToSection('projects') },
-        { id: 'nav-timeline', label: 'Go to Experience & Build Log', category: 'Navigation', icon: Sparkles, action: () => scrollToSection('timeline') },
-        { id: 'nav-research', label: 'Go to Active Research', category: 'Navigation', icon: Cpu, action: () => scrollToSection('research') },
-        { id: 'nav-testimonials', label: 'Go to Recommendations & References', category: 'Navigation', icon: ShieldCheck, action: () => scrollToSection('testimonials') },
-        { id: 'nav-certificates', label: 'Go to Certificates', category: 'Navigation', icon: Sparkles, action: () => scrollToSection('certificates') },
-        { id: 'nav-badges', label: 'Go to Badges & Achievements', category: 'Navigation', icon: Sparkles, action: () => scrollToSection('badges') },
-        { id: 'nav-contact', label: 'Go to Contact', category: 'Navigation', icon: Mail, action: () => scrollToSection('contact') },
+        { id: 'nav-hero', label: 'Go to Hero / Home', category: 'Navigation', icon: Terminal, action: () => goToSection('hero') },
+        { id: 'nav-skills', label: 'Go to Skills & Competencies', category: 'Navigation', icon: Cpu, action: () => goToSection('skills') },
+        { id: 'nav-github', label: 'Go to GitHub Activity', category: 'Navigation', icon: Github, action: () => goToSection('github') },
+        { id: 'nav-projects', label: 'Go to Featured Projects', category: 'Navigation', icon: Code, action: () => goToSection('projects') },
+        { id: 'nav-timeline', label: 'Go to Experience & Build Log', category: 'Navigation', icon: Sparkles, action: () => goToSection('timeline') },
+        { id: 'nav-research', label: 'Go to Active Research', category: 'Navigation', icon: Cpu, action: () => goToSection('research') },
+        { id: 'nav-testimonials', label: 'Go to Recommendations & References', category: 'Navigation', icon: ShieldCheck, action: () => goToSection('testimonials') },
+        { id: 'nav-certificates', label: 'Go to Certificates', category: 'Navigation', icon: Sparkles, action: () => goToSection('certificates') },
+        { id: 'nav-badges', label: 'Go to Badges & Achievements', category: 'Navigation', icon: Sparkles, action: () => goToSection('badges') },
+        { id: 'nav-contact', label: 'Go to Contact', category: 'Navigation', icon: Mail, action: () => goToSection('contact') },
 
         // Actions & External Links
         { id: 'act-cv', label: 'Download Resume / CV (PDF)', category: 'Quick Actions', icon: Download, action: () => { window.open('/Siluna_Nusal_CV.pdf', '_blank'); setCommandPaletteOpen(false); } },

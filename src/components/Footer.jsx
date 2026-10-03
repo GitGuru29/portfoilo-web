@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Github, Linkedin, Twitter, FileText, ArrowUpRight, Cpu, Globe, Sparkles, Terminal } from 'lucide-react';
 import useStore from '../store/useStore';
+import { scrollToSection } from '../utils/scrollToSection';
 
 export default function Footer() {
     const location = useLocation();
@@ -33,24 +34,13 @@ export default function Footer() {
         e.preventDefault();
 
         const targetId = id === 'home' ? 'hero' : id;
-        const turn = () => {
-            window.dispatchEvent(
-                new CustomEvent('paper-deck:goto', { detail: { id: targetId } })
-            );
-        };
+        const jump = () => scrollToSection(targetId);
 
         if (location.pathname !== '/') {
             navigate('/');
-            setTimeout(turn, 150);
-        } else if (document.querySelector('.paper-deck')) {
-            turn();
+            setTimeout(jump, 150);
         } else {
-            const el = document.getElementById(targetId);
-            if (el && window.lenis) {
-                window.lenis.scrollTo(el, { offset: 0, duration: 1.2 });
-            } else if (el) {
-                el.scrollIntoView({ behavior: 'smooth' });
-            }
+            jump();
         }
     };
 

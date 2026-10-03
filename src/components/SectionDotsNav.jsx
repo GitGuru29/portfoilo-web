@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { scrollToSection } from '../utils/scrollToSection';
 
 const CHAPTERS = [
     { id: 'hero', num: '00', label: 'Home', hue: 350, sat: '82%', lum: '40%' },
@@ -48,17 +49,7 @@ export default function SectionDotsNav() {
             if (el) observer.observe(el);
         });
 
-        const onDeckChange = (e) => {
-            if (e.detail && e.detail.id) {
-                setActiveSection(e.detail.id);
-            }
-        };
-        window.addEventListener('paper-deck:change', onDeckChange);
-
-        return () => {
-            observer.disconnect();
-            window.removeEventListener('paper-deck:change', onDeckChange);
-        };
+        return () => observer.disconnect();
     }, []);
 
     // Map active section back to a chapter
@@ -67,8 +58,8 @@ export default function SectionDotsNav() {
         return activeSection;
     })();
 
-    const scrollToSection = (id) => {
-        window.dispatchEvent(new CustomEvent('paper-deck:goto', { detail: { id } }));
+    const goToChapter = (id) => {
+        scrollToSection(id);
     };
 
     if (typeof document === 'undefined') return null;
@@ -81,7 +72,7 @@ export default function SectionDotsNav() {
                 return (
                     <button
                         key={id}
-                        onClick={() => scrollToSection(id)}
+                        onClick={() => goToChapter(id)}
                         className="chapter-rail__dot group focus:outline-none cursor-pointer"
                         style={isActive ? { borderColor: 'transparent' } : undefined}
                         aria-label={`Chapter ${num} — ${label}`}

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
 import useStore, { MOODS } from '../store/useStore';
+import { anchorToSection } from '../utils/scrollToSection';
 
 /* Resolved from CSS custom properties so the front page inherits the
    current newsprint palette and its own chapter-00 press grading
@@ -244,7 +245,7 @@ export default function HeroOverlay() {
 
                                 {/* CTA — read the full report */}
                                 <div className="flex flex-wrap items-center gap-4 pt-3">
-                                    <a href="#projects" className="lux-btn-primary">Read Full Report <span className="lux-btn-chevron">→</span></a>
+                                    <a href="#projects" onClick={anchorToSection('projects')} className="lux-btn-primary">Read Full Report <span className="lux-btn-chevron">→</span></a>
                                     <a href="/Siluna_Nusal_CV.pdf" target="_blank" rel="noopener noreferrer" className="lux-btn-ghost">Fax CV <span className="lux-btn-chevron">↗</span></a>
                                     <span className="hidden md:inline-flex items-center gap-2">
                                         <span className="lux-scroll-line" style={{ height: 22 }} />

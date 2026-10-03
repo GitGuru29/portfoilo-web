@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
 /**
- * Reveal-on-enter scoped to the newspaper page body that contains the element.
+ * Reveal-on-enter for the folio.
  *
- * The deck turns pages with internal state rather than document scroll, so
- * document-level ScrollTrigger callbacks never fire and content set to
- * opacity 0 stays invisible. This observes the nearest `.paper-page__body`
- * instead, so reveals happen when the sheet body is the thing scrolling.
+ * Sheets scroll with the document, so reveals are observed against the
+ * viewport: content set to opacity 0 animates in as the reader reaches it,
+ * once. Elements are tagged with `data-page-revealed` so a reveal is never
+ * replayed.
  *
  * @param {object} options
  * @param {string} [options.selector] - Child selector to reveal. Defaults to the container.
@@ -16,7 +16,7 @@ import gsap from 'gsap';
  * @param {number} [options.duration] - Tween duration per element.
  * @param {number} [options.stagger] - Delay between elements.
  * @param {number} [options.threshold] - Fraction visible before revealing.
- * @param {number} [options.margin] - Root margin, px.
+ * @param {string} [options.margin] - Root margin, px.
  * @param {string} [options.ease] - GSAP ease.
  * @returns {React.RefObject} Ref to attach to the container element.
  */
@@ -36,7 +36,6 @@ export default function usePageReveal({
         const container = containerRef.current;
         if (!container) return;
 
-        const body = container.closest('.paper-page__body');
         const targets = selector
             ? Array.from(container.querySelectorAll(selector))
             : [container];
@@ -83,35 +82,28 @@ export default function usePageReveal({
         };
 
         const observer = new IntersectionObserver(onEnter, {
-            root: body,
+            root: null,
             rootMargin: `${margin}px`,
             threshold,
         });
 
         targets.forEach((el) => observer.observe(el));
 
-        // Sheets start display:none, so the observer root has no box. Re-check
-        // whenever the deck turns a page in.
-        const sweep = () => {
-            if (!body || body.offsetParent === null) return;
-            const bodyRect = body.getBoundingClientRect();
+        // Anything already on screen at mount reveals immediately.
+        const raf = requestAnimationFrame(() => {
             const visible = targets.filter((el) => {
                 if (el.dataset.pageRevealed) return false;
                 const r = el.getBoundingClientRect();
-                return r.top < bodyRect.bottom && r.bottom > bodyRect.top;
+                return r.top < window.innerHeight && r.bottom > 0;
             });
             if (visible.length === 0) return;
             visible.forEach((el) => {
                 el.dataset.pageRevealed = 'true';
             });
             play(visible);
-        };
-
-        window.addEventListener('paper-deck:change', sweep);
-        const raf = requestAnimationFrame(sweep);
+        });
 
         return () => {
-            window.removeEventListener('paper-deck:change', sweep);
             cancelAnimationFrame(raf);
             observer.disconnect();
             gsap.killTweensOf(targets);

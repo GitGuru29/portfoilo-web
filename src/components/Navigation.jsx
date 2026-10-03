@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import useStore from '../store/useStore';
 import { Terminal, Volume2, VolumeX } from 'lucide-react';
 import { playClickSound } from '../utils/soundFX';
+import { scrollToSection } from '../utils/scrollToSection';
 
 // Magnetic link — pulls toward cursor on hover
 function MagneticLink({ href, id, children, onClick, external }) {
@@ -103,15 +104,8 @@ export default function Navigation() {
     const handleNavClick = (e, id) => {
         e.preventDefault();
         setMenuOpen(false);
-        const doScroll = () => {
-            const element = document.getElementById(id);
-            if (!element) return;
-            if (window.lenis) {
-                window.lenis.scrollTo(element, { offset: 0, duration: 1.2 });
-            } else {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        };
+        const targetId = id === 'home' ? 'hero' : id;
+        const doScroll = () => scrollToSection(targetId);
         if (location.pathname !== '/') {
             navigate('/');
             setTimeout(doScroll, 150);
