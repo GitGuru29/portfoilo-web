@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, Globe, User, Mail, Building, CheckCircle, X, ArrowRight, Download, Sparkles } from 'lucide-react';
 import useStore from '../store/useStore';
@@ -53,7 +53,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     // Pre-calculate next 5 available business dates
-    const getUpcomingDates = () => {
+    const upcomingDates = useMemo(() => {
         const dates = [];
         let d = new Date();
         while (dates.length < 5) {
@@ -63,9 +63,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
             }
         }
         return dates;
-    };
-
-    const upcomingDates = getUpcomingDates();
+    }, []);
 
     // Auto-select first date if empty
     useEffect(() => {
@@ -139,6 +137,17 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
         }, 300);
     };
 
+    // ESC key listener
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                resetAndClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen]);
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -149,7 +158,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={resetAndClose}
-                        className="fixed inset-0 bg-ink/25 backdrop-blur-sm"
+                        className="fixed inset-0 bg-ink/30 backdrop-blur-sm"
                     />
 
                     {/* Modal Content */}
@@ -160,13 +169,13 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-panel border border-ink/15 rounded-none shadow-2xl z-10 p-6 md:p-8 scrollbar-thin overscroll-contain"
+                        className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-panel border border-ink/20 rounded-none shadow-[0_20px_60px_-20px_rgba(23,19,15,0.4)] z-10 p-6 md:p-8 scrollbar-thin overscroll-contain"
                     >
                         {/* Header Bar */}
                         <div className="flex items-center justify-between pb-5 border-b border-bordertech">
                             <div>
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-mono tracking-wider uppercase mb-1">
-                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 text-[10px] font-mono tracking-wider uppercase mb-1">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                     <span>Available for Opportunities</span>
                                 </div>
                                 <h3 className="text-xl md:text-2xl font-space font-bold text-ink tracking-tight">
@@ -175,16 +184,17 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                             </div>
                             <button
                                 onClick={resetAndClose}
-                                className="p-2 rounded-full bg-panel border border-bordertech text-graphite hover:text-ink transition-colors"
+                                aria-label="Close modal"
+                                className="p-2 rounded-none bg-panel-deep border border-bordertech text-graphite hover:text-ink transition-colors cursor-pointer"
                             >
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
                         {/* Live Timezone Banner */}
-                        <div className="my-5 p-3.5 rounded-2xl bg-panel/60 border border-bordertech flex items-center justify-between text-xs font-mono text-graphite">
+                        <div className="my-5 p-3.5 rounded-none bg-panel-deep/50 border border-bordertech flex items-center justify-between text-xs font-mono text-graphite">
                             <div className="flex items-center gap-2">
-                                <Globe className="w-4 h-4 text-[#B91C1C]" />
+                                <Globe className="w-4 h-4 text-accent" />
                                 <span>Colombo, LK (UTC+5:30): <strong className="text-ink">{lkTime}</strong></span>
                             </div>
                             <div className="hidden sm:flex items-center gap-1.5 text-graphite">
@@ -197,9 +207,9 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Step Indicators */}
                                 <div className="flex items-center justify-between text-xs font-mono tracking-widest text-graphite border-b border-bordertech/50 pb-3 uppercase">
-                                    <span className={step === 1 ? 'text-[#B91C1C] font-bold' : ''}>1. Select Topic</span>
-                                    <span className={step === 2 ? 'text-[#B91C1C] font-bold' : ''}>2. Date & Time</span>
-                                    <span className={step === 3 ? 'text-[#B91C1C] font-bold' : ''}>3. Your Details</span>
+                                    <span className={step === 1 ? 'text-accent font-bold' : ''}>1. Select Topic</span>
+                                    <span className={step === 2 ? 'text-accent font-bold' : ''}>2. Date & Time</span>
+                                    <span className={step === 3 ? 'text-accent font-bold' : ''}>3. Your Details</span>
                                 </div>
 
                                 {/* Step 1: Topic Selection */}
@@ -217,10 +227,10 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                                         setTopic(item.label);
                                                         playClickSound(soundEnabled);
                                                     }}
-                                                    className={`p-3.5 rounded-2xl border text-left transition-all ${
+                                                    className={`p-3.5 rounded-none border text-left transition-all cursor-pointer ${
                                                         topic === item.label
-                                                            ? 'bg-[#B91C1C]/15 border-[#B91C1C] text-ink shadow-lg'
-                                                            : 'bg-panel/80 border-bordertech text-graphite hover:text-ink hover:border-neutral-700'
+                                                            ? 'bg-accent/15 border-accent text-ink shadow-sm'
+                                                            : 'bg-panel-deep/40 border-bordertech text-graphite hover:text-ink hover:border-ink/30'
                                                     }`}
                                                 >
                                                     <div className="font-space font-semibold text-sm text-ink">{item.label}</div>
@@ -231,7 +241,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                         <button
                                             type="button"
                                             onClick={() => { setStep(2); playClickSound(soundEnabled); }}
-                                            className="w-full mt-4 py-3.5 bg-[#B91C1C] hover:bg-[#8CC8FF] text-black font-space font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg"
+                                            className="w-full mt-4 py-3.5 bg-accent hover:bg-accent-hot text-[#fdfbf6] font-space font-bold rounded-none text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
                                         >
                                             <span>Next: Choose Date & Time</span>
                                             <ArrowRight className="w-4 h-4" />
@@ -262,10 +272,10 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                                                 setSelectedDate(dateStr);
                                                                 playClickSound(soundEnabled);
                                                             }}
-                                                            className={`p-3 rounded-xl border text-center transition-all ${
+                                                            className={`p-3 rounded-none border text-center transition-all cursor-pointer ${
                                                                 isSelected
-                                                                    ? 'bg-[#B91C1C] text-black border-[#B91C1C] font-bold'
-                                                                    : 'bg-panel border-bordertech text-ink/70 hover:border-neutral-700'
+                                                                    ? 'bg-accent text-[#fdfbf6] border-accent font-bold shadow-sm'
+                                                                    : 'bg-panel-deep/40 border-bordertech text-ink hover:border-ink/30'
                                                             }`}
                                                         >
                                                             <div className="text-xs font-mono uppercase">{dayName}</div>
@@ -290,17 +300,17 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                                             setSelectedTimeSlot(slot);
                                                             playClickSound(soundEnabled);
                                                         }}
-                                                        className={`w-full p-3 rounded-xl border text-left text-xs font-mono transition-all flex items-center justify-between ${
+                                                        className={`w-full p-3 rounded-none border text-left text-xs font-mono transition-all flex items-center justify-between cursor-pointer ${
                                                             selectedTimeSlot === slot
-                                                                ? 'bg-[#B91C1C]/15 border-[#B91C1C] text-ink'
-                                                                : 'bg-panel border-bordertech text-graphite hover:text-ink'
+                                                                ? 'bg-accent/15 border-accent text-ink font-semibold'
+                                                                : 'bg-panel-deep/40 border-bordertech text-graphite hover:text-ink'
                                                         }`}
                                                     >
                                                         <div className="flex items-center gap-2">
-                                                            <Clock className="w-3.5 h-3.5 text-[#B91C1C]" />
+                                                            <Clock className="w-3.5 h-3.5 text-accent" />
                                                             <span>{slot}</span>
                                                         </div>
-                                                        {selectedTimeSlot === slot && <Sparkles className="w-3.5 h-3.5 text-[#B91C1C]" />}
+                                                        {selectedTimeSlot === slot && <Sparkles className="w-3.5 h-3.5 text-accent" />}
                                                     </button>
                                                 ))}
                                             </div>
@@ -310,14 +320,14 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                             <button
                                                 type="button"
                                                 onClick={() => setStep(1)}
-                                                className="w-1/3 py-3.5 border border-bordertech text-graphite hover:text-ink font-space font-semibold rounded-2xl text-xs uppercase"
+                                                className="w-1/3 py-3.5 border border-bordertech text-graphite hover:text-ink font-space font-semibold rounded-none text-xs uppercase cursor-pointer"
                                             >
                                                 Back
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => { setStep(3); playClickSound(soundEnabled); }}
-                                                className="w-2/3 py-3.5 bg-[#B91C1C] hover:bg-[#8CC8FF] text-black font-space font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-2"
+                                                className="w-2/3 py-3.5 bg-accent hover:bg-accent-hot text-[#fdfbf6] font-space font-bold rounded-none text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
                                             >
                                                 <span>Next: Your Info</span>
                                                 <ArrowRight className="w-4 h-4" />
@@ -332,7 +342,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                             <div>
                                                 <label className="text-[11px] font-mono text-graphite uppercase block mb-1">Your Name *</label>
-                                                <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-panel border border-bordertech text-ink text-xs">
+                                                <div className="flex items-center gap-2 px-3 py-2.5 rounded-none bg-panel-deep/50 border border-bordertech text-ink text-xs focus-within:border-accent">
                                                     <User className="w-4 h-4 text-graphite" />
                                                     <input
                                                         required
@@ -347,7 +357,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
 
                                             <div>
                                                 <label className="text-[11px] font-mono text-graphite uppercase block mb-1">Email Address *</label>
-                                                <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-panel border border-bordertech text-ink text-xs">
+                                                <div className="flex items-center gap-2 px-3 py-2.5 rounded-none bg-panel-deep/50 border border-bordertech text-ink text-xs focus-within:border-accent">
                                                     <Mail className="w-4 h-4 text-graphite" />
                                                     <input
                                                         required
@@ -363,7 +373,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
 
                                         <div>
                                             <label className="text-[11px] font-mono text-graphite uppercase block mb-1">Company / Organization</label>
-                                            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-panel border border-bordertech text-ink text-xs">
+                                            <div className="flex items-center gap-2 px-3 py-2.5 rounded-none bg-panel-deep/50 border border-bordertech text-ink text-xs focus-within:border-accent">
                                                 <Building className="w-4 h-4 text-graphite" />
                                                 <input
                                                     type="text"
@@ -382,7 +392,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                                 value={formData.notes}
                                                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                                                 placeholder="Briefly describe what you'd like to talk about..."
-                                                className="w-full px-3 py-2.5 rounded-xl bg-panel border border-bordertech text-ink text-xs focus:outline-none resize-none"
+                                                className="w-full px-3 py-2.5 rounded-none bg-panel-deep/50 border border-bordertech text-ink text-xs focus:outline-none focus:border-accent resize-none"
                                             />
                                         </div>
 
@@ -390,14 +400,14 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                             <button
                                                 type="button"
                                                 onClick={() => setStep(2)}
-                                                className="w-1/3 py-3.5 border border-bordertech text-graphite hover:text-ink font-space font-semibold rounded-2xl text-xs uppercase"
+                                                className="w-1/3 py-3.5 border border-bordertech text-graphite hover:text-ink font-space font-semibold rounded-none text-xs uppercase cursor-pointer"
                                             >
                                                 Back
                                             </button>
                                             <button
                                                 type="submit"
                                                 disabled={isSubmitting}
-                                                className="w-2/3 py-3.5 bg-[#B91C1C] hover:bg-[#8CC8FF] text-black font-space font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50"
+                                                className="w-2/3 py-3.5 bg-accent hover:bg-accent-hot text-[#fdfbf6] font-space font-bold rounded-none text-xs uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer shadow-md"
                                             >
                                                 {isSubmitting ? 'Confirming...' : 'Confirm Meeting Booking'}
                                             </button>
@@ -408,7 +418,7 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                         ) : (
                             /* Success Confirmation View */
                             <div className="py-8 text-center space-y-6">
-                                <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto shadow-lg">
+                                <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 flex items-center justify-center mx-auto shadow-lg">
                                     <CheckCircle className="w-8 h-8" />
                                 </div>
 
@@ -417,28 +427,28 @@ export default function ScheduleMeetingModal({ isOpen, onClose }) {
                                         Meeting Requested!
                                     </h4>
                                     <p className="text-xs font-sans text-graphite max-w-md mx-auto leading-relaxed">
-                                        Thank you, <strong className="text-ink">{formData.name}</strong>. Your request for <strong className="text-[#B91C1C]">{topic}</strong> on <strong className="text-ink">{selectedDate}</strong> at <strong className="text-ink">{selectedTimeSlot}</strong> has been logged.
+                                        Thank you, <strong className="text-ink">{formData.name}</strong>. Your request for <strong className="text-accent">{topic}</strong> on <strong className="text-ink">{selectedDate}</strong> at <strong className="text-ink">{selectedTimeSlot}</strong> has been logged.
                                     </p>
                                 </div>
 
-                                <div className="p-4 rounded-2xl bg-panel border border-bordertech text-left text-xs font-mono space-y-2 max-w-md mx-auto">
-                                    <div className="text-[#B91C1C] font-bold uppercase tracking-wider text-[10px]">Booking Summary</div>
-                                    <div className="text-ink/70">Name: {formData.name} ({formData.email})</div>
-                                    <div className="text-ink/70">Topic: {topic}</div>
-                                    <div className="text-ink/70">Slot: {selectedDate} @ {selectedTimeSlot}</div>
+                                <div className="p-4 rounded-none bg-panel-deep/60 border border-bordertech text-left text-xs font-mono space-y-2 max-w-md mx-auto">
+                                    <div className="text-accent font-bold uppercase tracking-wider text-[10px]">Booking Summary</div>
+                                    <div className="text-ink/80">Name: {formData.name} ({formData.email})</div>
+                                    <div className="text-ink/80">Topic: {topic}</div>
+                                    <div className="text-ink/80">Slot: {selectedDate} @ {selectedTimeSlot}</div>
                                 </div>
 
                                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                                     <button
                                         onClick={downloadICSFile}
-                                        className="px-6 py-3 rounded-xl bg-panel border border-[#B91C1C]/40 text-[#B91C1C] font-space font-semibold text-xs uppercase tracking-wider flex items-center gap-2 hover:bg-[#B91C1C]/10 transition-all"
+                                        className="px-6 py-3 rounded-none bg-panel-deep border border-accent/40 text-accent font-space font-semibold text-xs uppercase tracking-wider flex items-center gap-2 hover:bg-accent/10 transition-all cursor-pointer"
                                     >
                                         <Download className="w-4 h-4" />
                                         Download Calendar (.ics)
                                     </button>
                                     <button
                                         onClick={resetAndClose}
-                                        className="px-6 py-3 rounded-xl bg-[#B91C1C] text-black font-space font-bold text-xs uppercase tracking-wider"
+                                        className="px-6 py-3 rounded-none bg-accent hover:bg-accent-hot text-[#fdfbf6] font-space font-bold text-xs uppercase tracking-wider cursor-pointer"
                                     >
                                         Done
                                     </button>

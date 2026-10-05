@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useStore from '../store/useStore';
 import { playChimeSound, playTypewriterSound } from '../utils/soundFX';
@@ -21,7 +21,7 @@ export default function Preloader() {
     const [labelIdx, setLabelIdx] = useState(0);
     const raf = useRef(null);
     const start = useRef(null);
-    const DURATION = 3600; // ms to fill the bar
+    const DURATION = 1600; // Snappy 1.6s to fill the bar
 
     // Animate the percentage counter
     useEffect(() => {
@@ -29,21 +29,20 @@ export default function Preloader() {
         const tick = (now) => {
             const elapsed = now - start.current;
             const raw = Math.min(elapsed / DURATION, 1);
-            // Ease out with slight overshoot at 100%
+            // Ease out with smooth settling
             const eased = raw < 1 ? 1 - Math.pow(1 - raw, 3) : 1;
             const p = Math.round(eased * 100);
             setPct(p);
             setLabelIdx(Math.min(Math.floor(raw * LABELS.length), LABELS.length - 1));
 
-            // Bar fill runs to 103.5% then settles back to 100 —
-            // the press slamming the last impression home.
+            // Bar fill runs to 100%
             let f;
             if (raw < 0.94) {
                 f = eased * 100;
             } else if (raw < 0.995) {
-                f = 94 + ((raw - 0.94) / 0.055) * 9.5;
+                f = 94 + ((raw - 0.94) / 0.055) * 6;
             } else {
-                f = 103.5 - Math.min((raw - 0.995) / 0.005, 1) * 3.5;
+                f = 100;
             }
             setFill(f);
 
@@ -57,24 +56,25 @@ export default function Preloader() {
     useEffect(() => {
         playChimeSound(soundEnabled);
         ['S', 'I', 'D', 'A', 'N'].forEach((_, i) => {
-            setTimeout(() => playTypewriterSound(soundEnabled), (0.5 + i * 0.15) * 1000);
+            setTimeout(() => playTypewriterSound(soundEnabled), (0.2 + i * 0.08) * 1000);
         });
     }, [soundEnabled]);
 
     // Exit logic
-    useEffect(() => {
-        let exited = false;
-        const triggerExit = (delay = 400) => {
-            if (exited) return;
-            exited = true;
-            cancelAnimationFrame(raf.current);
-            setPct(100);
-            setIsExiting(true);
-            setTimeout(unlockSystem, delay);
-        };
+    const triggerExit = useCallback((delay = 250) => {
+        if (isExiting) return;
+        cancelAnimationFrame(raf.current);
+        setPct(100);
+        setFill(100);
+        setIsExiting(true);
+        setTimeout(unlockSystem, delay);
+    }, [isExiting, unlockSystem]);
 
-        const exitTimer = setTimeout(() => triggerExit(800), 4500);
-        const onInteract = () => triggerExit(300);
+    useEffect(() => {
+        const exitTimer = setTimeout(() => triggerExit(300), 2200);
+        const onInteract = (e) => {
+            triggerExit(200);
+        };
         window.addEventListener('click', onInteract, { once: true });
         window.addEventListener('keydown', onInteract, { once: true });
         window.addEventListener('wheel', onInteract, { once: true });
@@ -87,7 +87,7 @@ export default function Preloader() {
             window.removeEventListener('wheel', onInteract);
             window.removeEventListener('touchstart', onInteract);
         };
-    }, [unlockSystem]);
+    }, [triggerExit]);
 
     return (
         <AnimatePresence>
@@ -239,6 +239,16 @@ export default function Preloader() {
 
                         {/* Double rule below */}
                         <div className="mt-[3px] h-[1px] w-full" style={{ background: 'rgba(255,255,255,0.04)' }} />
+
+                        {/* Interactive Skip prompt */}
+                        <div className="mt-4 flex items-center justify-center">
+                            <button
+                                onClick={() => triggerExit(100)}
+                                className="px-3 py-1 rounded-none border border-white/20 hover:border-white/50 text-[10px] font-mono tracking-widest uppercase text-white/50 hover:text-white transition-all cursor-pointer bg-white/[0.03] hover:bg-white/[0.08]"
+                            >
+                                Skip [ESC / Click]
+                            </button>
+                        </div>
                     </motion.div>
 
                     {/* Bottom rule */}

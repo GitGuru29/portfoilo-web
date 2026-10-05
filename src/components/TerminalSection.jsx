@@ -732,8 +732,8 @@ export default function TerminalSection() {
     }, [cwd]);
 
     // ── Command processor ────────────────────────────────────────────────────
-    const handleEnter = useCallback(() => {
-        const raw = input.trim();
+    const handleEnter = useCallback((overrideInput) => {
+        const raw = (typeof overrideInput === 'string' ? overrideInput : input).trim();
         setInput('');
         if (!raw && !isAwaitingPassword) return;
 
@@ -1593,24 +1593,6 @@ export default function TerminalSection() {
                     className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-8 md:pb-16"
                     onPointerDown={() => toggleTerminal()}
                 >
-                    {/* Portrait Warning for Mobile */}
-                    <div className="md:hidden flex-col items-center justify-center fixed inset-0 z-[200] bg-[#0d1117] text-[#f1f5f9] p-6 text-center" style={{ display: 'none' }} id="portrait-warning">
-                        <style>{`
-                            @media (orientation: portrait) {
-                                #portrait-warning { display: flex !important; }
-                            }
-                        `}</style>
-                        <Smartphone size={48} className="mb-4 animate-bounce" />
-                        <h2 className="text-xl font-bold mb-2">Rotate Your Device</h2>
-                        <p className="text-[#94a3b8] mb-6">Please rotate your device to landscape mode for the best terminal experience.</p>
-                        <button 
-                            onPointerDown={(e) => { e.stopPropagation(); toggleTerminal(); }}
-                            className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                        >
-                            Close Terminal
-                        </button>
-                    </div>
-
                     <motion.div
                         className="w-full h-full md:max-w-5xl flex flex-col md:rounded-xl overflow-hidden shadow-2xl border border-white/10 relative"
                         style={{
@@ -1622,22 +1604,30 @@ export default function TerminalSection() {
                     >
                         {cmatrixActive && <CmatrixOverlay onClose={() => setCmatrixActive(false)} />}
                         {/* ── Title Bar ─────────────────────────────────── */}
-                        <div className="flex items-center justify-between px-4 h-10 border-b border-white/8 select-none flex-shrink-0"
+                        <div className="flex items-center justify-between px-4 h-11 border-b border-white/8 select-none flex-shrink-0"
                             style={{ background: '#161b22' }}>
                             <div className="flex items-center gap-2">
                                 <button
                                     onPointerDown={e => { e.stopPropagation(); toggleTerminal(); }}
-                                    className="w-3 h-3 rounded-full transition-opacity hover:opacity-80"
+                                    className="w-3.5 h-3.5 rounded-full transition-opacity hover:opacity-80 flex items-center justify-center cursor-pointer"
                                     style={{ background: '#ff5f57' }}
+                                    title="Close terminal"
+                                    aria-label="Close terminal"
                                 />
-                                <div className="w-3 h-3 rounded-full" style={{ background: '#febc2e' }} />
-                                <div className="w-3 h-3 rounded-full" style={{ background: '#28c840' }} />
+                                <div className="w-3.5 h-3.5 rounded-full" style={{ background: '#febc2e' }} />
+                                <div className="w-3.5 h-3.5 rounded-full" style={{ background: '#28c840' }} />
                             </div>
-                            <div className="flex items-center gap-2 text-[11px]" style={{ color: '#8b949e' }}>
-                                <Terminal size={11} />
-                                <span>siluna@silunaos: {cwd === '~' ? '~' : cwd}</span>
+                            <div className="flex items-center gap-2 text-[11px] font-mono" style={{ color: '#8b949e' }}>
+                                <Terminal size={12} />
+                                <span className="truncate max-w-[200px] sm:max-w-none">siluna@silunaos: {cwd === '~' ? '~' : cwd}</span>
                             </div>
-                            <div className="w-16" />
+                            <button
+                                onPointerDown={e => { e.stopPropagation(); toggleTerminal(); }}
+                                className="px-2 py-1 text-[10px] font-mono text-slate-400 hover:text-white rounded border border-white/10 hover:border-white/30 transition-colors flex items-center gap-1"
+                            >
+                                <X size={12} />
+                                <span className="hidden sm:inline">ESC</span>
+                            </button>
                         </div>
 
                         {/* ── Body ──────────────────────────────────────── */}
@@ -1726,6 +1716,35 @@ export default function TerminalSection() {
                                     />
                                 )}
                             </div>
+                        </div>
+
+                        {/* ── Mobile & Desktop Quick Command Bar ──────── */}
+                        <div className="flex-none px-3 py-2 bg-[#161b22] border-t border-white/8 flex items-center gap-1.5 overflow-x-auto select-none scrollbar-none">
+                            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider shrink-0 mr-1 hidden sm:inline">
+                                Quick:
+                            </span>
+                            {[
+                                { label: 'help', cmd: 'help' },
+                                { label: 'neofetch', cmd: 'neofetch' },
+                                { label: 'projects', cmd: 'projects' },
+                                { label: 'skills', cmd: 'skills' },
+                                { label: 'github', cmd: 'github' },
+                                { label: 'cmatrix', cmd: 'cmatrix' },
+                                { label: 'clear', cmd: 'clear' },
+                                { label: 'exit', cmd: 'exit' },
+                            ].map((item) => (
+                                <button
+                                    key={item.label}
+                                    type="button"
+                                    onPointerDown={(e) => {
+                                        e.stopPropagation();
+                                        handleEnter(item.cmd);
+                                    }}
+                                    className="px-2 py-1 bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white rounded border border-white/10 text-[10px] font-mono tracking-wider transition-colors shrink-0 cursor-pointer active:scale-95"
+                                >
+                                    {item.label}
+                                </button>
+                            ))}
                         </div>
                     </motion.div>
                 </motion.div>

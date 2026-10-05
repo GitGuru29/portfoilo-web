@@ -7,7 +7,7 @@ import { playClickSound } from '../utils/soundFX';
 import { scrollToSection } from '../utils/scrollToSection';
 
 // Magnetic link — pulls toward cursor on hover
-function MagneticLink({ href, id, children, onClick, external }) {
+function MagneticLink({ href, id, active, children, onClick, external }) {
     const linkRef = useRef(null);
     const raf = useRef(null);
     const pos = useRef({ x: 0, y: 0 });
@@ -58,9 +58,16 @@ function MagneticLink({ href, id, children, onClick, external }) {
             onClick={onClick}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="text-xs font-space font-semibold text-current opacity-75 hover:opacity-100 transition-all duration-300 uppercase tracking-[0.25em] inline-block"
+            className={`text-xs font-space font-semibold uppercase tracking-[0.25em] inline-block transition-all duration-300 relative py-1 ${
+                active
+                    ? 'text-accent opacity-100'
+                    : 'text-current opacity-70 hover:opacity-100'
+            }`}
         >
             {children}
+            {active && (
+                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent animate-in fade-in" />
+            )}
         </a>
     );
 }
@@ -68,6 +75,7 @@ function MagneticLink({ href, id, children, onClick, external }) {
 export default function Navigation() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [activeNav, setActiveNav] = useState('home');
     const location = useLocation();
     const navigate = useNavigate();
     const navRef = useRef(null);
@@ -81,8 +89,25 @@ export default function Navigation() {
             { y: 0, duration: 0.9, ease: 'power3.out' }
         );
 
-        const handleScroll = () => setScrolled(window.scrollY > 50);
-        window.addEventListener('scroll', handleScroll);
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
+
+            // Active section detection
+            const sections = ['contact', 'testimonials', 'skills', 'projects', 'hero'];
+            for (const s of sections) {
+                const el = document.getElementById(s);
+                if (el) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top <= window.innerHeight * 0.4) {
+                        setActiveNav(s === 'hero' ? 'home' : s);
+                        break;
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -104,6 +129,7 @@ export default function Navigation() {
     const handleNavClick = (e, id) => {
         e.preventDefault();
         setMenuOpen(false);
+        setActiveNav(id);
         const targetId = id === 'home' ? 'hero' : id;
         const doScroll = () => scrollToSection(targetId);
         if (location.pathname !== '/') {
@@ -148,7 +174,13 @@ export default function Navigation() {
                     {/* Desktop links */}
                     <div className="hidden md:flex items-center gap-10">
                         {navLinks.map(({ label, id }) => (
-                            <MagneticLink key={id} href={`#${id}`} id={id} onClick={(e) => handleNavClick(e, id)}>
+                            <MagneticLink
+                                key={id}
+                                href={`#${id}`}
+                                id={id}
+                                active={activeNav === id}
+                                onClick={(e) => handleNavClick(e, id)}
+                            >
                                 {label}
                             </MagneticLink>
                         ))}
@@ -253,9 +285,12 @@ export default function Navigation() {
                             key={id}
                             href={`#${id}`}
                             onClick={(e) => handleNavClick(e, id)}
-                            className="text-base font-space tracking-[0.2em] uppercase text-ink/60 hover:text-ink transition-colors border-b border-ink/10 pb-4"
+                            className={`text-base font-space tracking-[0.2em] uppercase transition-colors border-b border-ink/10 pb-4 flex items-center justify-between ${
+                                activeNav === id ? 'text-accent font-bold' : 'text-ink/70 hover:text-ink'
+                            }`}
                         >
-                            {label}
+                            <span>{label}</span>
+                            {activeNav === id && <span className="w-1.5 h-1.5 bg-accent rounded-full" />}
                         </a>
                     ))}
                     <a

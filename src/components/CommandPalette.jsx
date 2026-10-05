@@ -166,18 +166,18 @@ export default function CommandPalette() {
                                             key={item.id}
                                             onClick={() => item.action()}
                                             onMouseEnter={() => setSelectedIndex(idx)}
-                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all text-left ${
+                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-none transition-all text-left cursor-pointer ${
                                                 isSelected
-                                                    ? 'bg-[#B91C1C]/10 border border-[#B91C1C]/30 text-ink'
-                                                    : 'text-graphite hover:text-ink border border-transparent'
+                                                    ? 'bg-accent/15 border border-accent/40 text-ink'
+                                                    : 'text-graphite hover:text-ink border border-transparent hover:bg-panel-deep/50'
                                             }`}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className={`p-2 rounded-lg ${isSelected ? 'bg-[#B91C1C] text-black' : 'bg-panel text-graphite'}`}>
+                                                <div className={`p-2 rounded-none ${isSelected ? 'bg-accent text-white shadow-sm' : 'bg-panel-deep text-graphite'}`}>
                                                     <IconComponent className="w-4 h-4" />
                                                 </div>
                                                 <div>
-                                                    <span className="text-sm font-space font-medium block">
+                                                    <span className="text-sm font-space font-medium block text-ink">
                                                         {item.label}
                                                     </span>
                                                     <span className="text-[10px] font-mono tracking-wider text-graphite uppercase">
@@ -187,7 +187,7 @@ export default function CommandPalette() {
                                             </div>
 
                                             {isSelected && (
-                                                <div className="flex items-center gap-1 text-[11px] font-mono text-[#B91C1C]">
+                                                <div className="flex items-center gap-1 text-[11px] font-mono text-accent font-semibold">
                                                     <span>Execute</span>
                                                     <ArrowRight className="w-3.5 h-3.5" />
                                                 </div>

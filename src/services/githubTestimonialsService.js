@@ -278,12 +278,10 @@ export async function submitDirectRecommendation(data) {
             };
         } else {
             const errorText = await response.text();
-            alert(`GitHub API Error (Submission): ${response.status}\nMake sure your token is added to Vercel for PRODUCTION environments and redeployed!\nDetails: ${errorText}`);
-            console.error("Submission error:", errorText);
+            console.warn(`GitHub API Notice (${response.status}): Cached locally. Token not configured or rate limited.`);
         }
     } catch (err) {
-        alert(`Network Error during submission: ${err.message}`);
-        console.warn('GitHub issue creation warning:', err);
+        console.warn('GitHub issue creation offline/cached fallback:', err.message);
     }
 
     // Cache locally
@@ -318,13 +316,10 @@ export async function approveTestimonial(id) {
                 }),
             });
             if (!response.ok) {
-                alert("GitHub API Error: Could not approve. Make sure VITE_GITHUB_TOKEN is set in Vercel and you have redeployed!");
-                console.error("GitHub API Error:", await response.text());
-                return false;
+                console.warn("GitHub API Warning: Token needed for remote approval sync. Proceeding locally.");
             }
         } catch (err) {
             console.warn('Error updating GitHub issue label to approved:', err);
-            return false;
         }
     }
 

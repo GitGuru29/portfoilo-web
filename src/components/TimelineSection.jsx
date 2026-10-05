@@ -126,40 +126,40 @@ function TimelineCard({ milestone, mobile = false }) {
     const isActive = milestone.type === 'ACTIVE';
 
     return (
-        <div className={`group p-6 md:p-8 border border-accent/15 hover:border-accent/45 transition-all duration-500 bg-transparent hover:bg-accent/[0.02] relative overflow-hidden ${isActive ? 'border-accent/45' : ''}`}>
+        <div className={`group p-6 md:p-8 border border-ink/15 hover:border-accent/60 transition-all duration-300 bg-panel hover:bg-panel-deep relative overflow-hidden shadow-[0_4px_16px_rgba(23,19,15,0.04)] ${isActive ? 'border-accent/50 bg-panel-deep/70' : ''}`}>
             {/* Accent line */}
-            <div className="absolute top-0 left-0 w-[2px] h-full bg-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-700 ease-[0.16,1,0.3,1] origin-top" />
+            <div className="absolute top-0 left-0 w-[2px] h-full bg-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-500 ease-[0.16,1,0.3,1] origin-top" />
 
             {/* Header row */}
-            <div className="flex items-center justify-between mb-4 gap-4">
-                <span className="text-[9px] md:text-[10px] tracking-[0.25em] font-space uppercase text-[var(--color-geyser)]/40">
+            <div className="flex items-center justify-between mb-3 gap-4">
+                <span className="text-[9px] md:text-[10px] tracking-[0.25em] font-mono uppercase text-graphite/80 font-semibold">
                     {milestone.type}
                 </span>
-                <span className={`text-[9px] md:text-[10px] font-space tracking-[0.2em] font-bold ${isActive ? 'text-[var(--color-geyser)]' : 'text-[var(--color-geyser)]/50'}`}>
+                <span className={`text-[9px] md:text-[10px] font-mono tracking-[0.2em] font-bold ${isActive ? 'text-accent' : 'text-graphite'}`}>
                     {milestone.year} · {milestone.quarter}
                 </span>
             </div>
 
-            <h3 className="text-base md:text-lg font-space font-light text-[var(--color-geyser)] mb-3 leading-snug">
+            <h3 className="text-base md:text-lg font-space font-bold text-ink mb-2 leading-snug group-hover:text-accent transition-colors">
                 {milestone.title}
             </h3>
-            <p className="text-sm font-inter font-light text-[var(--color-geyser)]/50 leading-relaxed mb-5">
+            <p className="text-sm font-sans text-graphite leading-relaxed mb-4">
                 {milestone.description}
             </p>
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
                 {milestone.tags.map((tag, ti) => (
-                    <span key={ti} className="text-[9px] font-space tracking-[0.15em] uppercase text-[var(--color-geyser)]/40 border border-[var(--color-geyser)]/10 px-2 py-1">
+                    <span key={ti} className="text-[9px] font-mono tracking-wider uppercase text-graphite border border-ink/15 bg-panel-deep/50 px-2 py-0.5">
                         {tag}
                     </span>
                 ))}
             </div>
 
             {isActive && (
-                <div className="mt-5 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-geyser)] animate-pulse" />
-                    <span className="text-[9px] font-space tracking-[0.2em] uppercase text-[var(--color-geyser)]/60">Live</span>
+                <div className="mt-4 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-emerald-600 font-semibold">Active Workbench</span>
                 </div>
             )}
         </div>
