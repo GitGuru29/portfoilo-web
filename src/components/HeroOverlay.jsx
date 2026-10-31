@@ -266,20 +266,16 @@ export default function HeroOverlay() {
 
                         {/* Center Nameplate */}
                         <div className="col-span-12 lg:col-span-6 text-center">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent font-mono text-[9px] tracking-[0.22em] uppercase font-bold mb-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-                                <span>Core Systems &amp; Android Architect</span>
-                            </div>
-                            <h1 className="masthead-title select-none tracking-tight" aria-label="Siluna Nusal Dangalla">
-                                Siluna Nusal Dangalla
+                            <h1 className="masthead-title select-none" aria-label="The Daily Developer">
+                                The Daily Developer
                             </h1>
-                            <div className="mx-auto mt-2 mb-1 flex items-center justify-center gap-3">
-                                <span className="inline-block w-12 sm:w-20 border-t border-ink/20" />
-                                <span className="inline-block text-[9px] font-mono tracking-[0.25em] text-accent font-bold">COLOMBO // GLOBAL</span>
-                                <span className="inline-block w-12 sm:w-20 border-t border-ink/20" />
+                            <div className="mx-auto mt-1.5 mb-1.5 flex items-center justify-center gap-3">
+                                <span className="inline-block w-16 sm:w-28 md:w-36 border-t border-ink/45" />
+                                <span className="inline-block text-[9px] font-mono tracking-[0.35em] text-accent">◆ EST. 2021 ◆</span>
+                                <span className="inline-block w-16 sm:w-28 md:w-36 border-t border-ink/45" />
                             </div>
                             <div className="deck-title">
-                                C++20 · LINUX KERNEL · ANDROID INTERNALS · LLVM COMPILERS
+                                Siluna Nusal Dangalla — Systems &amp; Android Architect
                             </div>
                         </div>
 
@@ -344,7 +340,7 @@ export default function HeroOverlay() {
                                             </span>
                                         </span>
                                         <span style={revealLine()}>
-                                            <span ref={chopB} className="will-change-transform block" style={{ color: 'var(--color-accent)' }}>
+                                            <span ref={chopB} className="will-change-transform block" style={{ color: S.crimson }}>
                                                 LOW-LEVEL SYSTEMS &amp; COMPILERS
                                             </span>
                                         </span>
@@ -352,7 +348,7 @@ export default function HeroOverlay() {
                                 </div>
 
                                 {/* Two-Column Editorial Copy + Pull Quote */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1 text-[13px] leading-[1.65] text-graphite font-sans">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1 text-[13px] leading-[1.65] text-ink/85 font-serif">
                                     <div className="sm:pr-5 sm:border-r border-ink/15">
                                         <p className="drop-cap text-justify m-0">
                                             The Colombo engineering desk reports a systems architect who treats the machine
@@ -468,15 +464,14 @@ export default function HeroOverlay() {
                         <div className="col-span-12 lg:col-span-4 flex flex-col justify-between gap-4">
                             <div ref={photoRef} className="flex flex-col gap-3.5 h-full justify-between">
 
-                                {/* Modern Studio Portrait Showcase with Plate Switcher */}
-                                <figure className="relative rounded-2xl border border-white/10 bg-panel/90 backdrop-blur-xl p-3.5 m-0 shadow-2xl">
+                                {/* Archival Portrait Figure with Plate Switcher */}
+                                <figure className="relative border border-ink bg-panel p-2 m-0 shadow-[4px_4px_0_rgba(0,0,0,0.08)]">
                                     {/* Top Plate Selector Bar */}
-                                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
-                                        <div className="flex items-center gap-1.5 font-mono text-[9px] tracking-wider uppercase text-accent font-bold">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-                                            <span>ENGINEERING SPECIMEN</span>
-                                        </div>
-                                        <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-md border border-white/10">
+                                    <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-ink/20">
+                                        <span className="font-mono text-[8.5px] tracking-[0.22em] uppercase text-ink/80 font-bold">
+                                            ARCHIVAL SPECIMEN
+                                        </span>
+                                        <div className="flex items-center gap-1">
                                             {PLATES.map((p, idx) => (
                                                 <button
                                                     key={p.id}
@@ -485,42 +480,49 @@ export default function HeroOverlay() {
                                                         setActivePlate(idx);
                                                         playClickSound(soundEnabled);
                                                     }}
-                                                    className={`px-2.5 py-0.5 font-mono text-[9px] tracking-wider uppercase rounded transition-colors cursor-pointer ${
+                                                    className={`px-2 py-0.5 font-mono text-[8px] tracking-[0.18em] uppercase border transition-colors cursor-pointer ${
                                                         activePlate === idx
-                                                            ? 'bg-accent text-slate-950 font-bold'
-                                                            : 'text-slate-400 hover:text-white'
+                                                            ? 'border-accent bg-accent text-white font-bold'
+                                                            : 'border-ink/20 bg-panel-deep/50 text-graphite hover:text-ink'
                                                     }`}
                                                 >
-                                                    {p.id === 'studio' ? 'PLATE I' : 'PLATE II'}
+                                                    0{idx + 1}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
 
                                     {/* Image Frame */}
-                                    <div className="relative overflow-hidden rounded-xl border border-white/10 bg-slate-950 group">
+                                    <div className="relative overflow-hidden border border-ink/35 bg-[#121316] group">
                                         <img
                                             key={currentPlate.src}
                                             src={currentPlate.src}
                                             alt="Siluna Nusal Dangalla — Independent Systems Engineer"
-                                            className="w-full h-[260px] sm:h-[290px] lg:h-[270px] object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                                            className="halftone-portrait w-full h-[260px] sm:h-[290px] lg:h-[270px] object-cover group-hover:scale-[1.02]"
                                             style={{ objectPosition: currentPlate.pos }}
                                         />
+                                        {/* Subtle halftone texture overlay */}
+                                        <div aria-hidden className="absolute inset-0 halftone opacity-15 pointer-events-none mix-blend-overlay" />
 
-                                        {/* Top-left live badge */}
+                                        {/* Top-left live stamp */}
                                         <div
-                                            className="absolute top-3 left-3 px-2.5 py-1 rounded-full font-mono text-[9px] tracking-wider uppercase font-bold bg-slate-950/80 backdrop-blur-md border border-accent/40 text-accent flex items-center gap-1.5"
+                                            aria-hidden
+                                            className="absolute top-2.5 left-2.5 px-2 py-1 font-mono text-[8px] tracking-[0.26em] uppercase font-bold"
+                                            style={{
+                                                color: 'var(--color-accent)',
+                                                border: '1px solid var(--color-accent)',
+                                                background: 'color-mix(in srgb, var(--color-panel) 94%, transparent)',
+                                            }}
                                         >
-                                            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                            <span>{currentPlate.label}</span>
+                                            ● {currentPlate.label}
                                         </div>
 
                                         {/* Bottom-right stack tags */}
-                                        <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
+                                        <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1">
                                             {['C++20', 'KOTLIN', 'LLVM'].map((t) => (
                                                 <span
                                                     key={t}
-                                                    className="px-2 py-0.5 rounded-md font-mono text-[9px] tracking-wider uppercase bg-slate-950/80 backdrop-blur-md text-slate-200 border border-white/10"
+                                                    className="px-1.5 py-0.5 font-mono text-[8px] tracking-[0.18em] uppercase bg-ink/85 text-panel border border-panel/20"
                                                 >
                                                     {t}
                                                 </span>
@@ -528,56 +530,59 @@ export default function HeroOverlay() {
                                         </div>
                                     </div>
 
-                                    <figcaption className="mt-2.5 px-1 flex items-center justify-between gap-2 text-xs font-sans text-graphite">
+                                    <figcaption className="mt-2 px-1 flex items-center justify-between gap-2 text-[11px] italic font-serif text-ink/80">
                                         <span className="truncate">{currentPlate.caption}</span>
-                                        <span className="font-mono text-[9px] uppercase tracking-wider text-accent font-semibold shrink-0">
-                                            [STUDIO PLATE]
+                                        <span className="font-mono not-italic text-[8.5px] uppercase tracking-widest text-accent shrink-0">
+                                            [1:1 SCALE]
                                         </span>
                                     </figcaption>
                                 </figure>
 
-                                {/* Direct Systems Wire & Dispatch Hub */}
-                                <div className="p-4 rounded-2xl border border-white/10 bg-panel/90 backdrop-blur-xl shadow-xl">
-                                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                                        <span className="text-[10px] font-mono tracking-wider uppercase font-bold text-ink flex items-center gap-1.5">
-                                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                                            DIRECT SYSTEMS WIRE
+                                {/* Western Union Telegraph Desk */}
+                                <div className="telegram p-3.5" data-stamp="TELEGRAPH">
+                                    <div className="flex items-center justify-between border-b border-ink/15 pb-1.5">
+                                        <span className="dateline text-[8.5px] tracking-[0.26em] uppercase font-bold text-ink">
+                                            WESTERN UNION · DESK 024
                                         </span>
-                                        <span className="font-mono text-[9px] tracking-wider text-emerald-400 font-bold uppercase">
-                                            ONLINE · UTC+5:30
+                                        <span className="font-mono text-[8px] tracking-[0.2em] text-emerald-600 font-bold uppercase">
+                                            ● ONLINE
                                         </span>
                                     </div>
 
-                                    <div className="mt-3 space-y-2 font-mono text-[10px] tracking-wider uppercase text-graphite">
+                                    <div className="mt-2.5 space-y-1.5 font-mono text-[9.5px] tracking-[0.1em] uppercase text-ink/85">
                                         <div className="flex justify-between gap-2">
-                                            <span>AVAILABILITY:</span>
-                                            <span className="text-accent font-bold">ROLES &amp; CORE CONTRACTS ▮</span>
+                                            <span className="text-graphite">ENGAGEMENT:</span>
+                                            <span className="text-accent font-bold">OPEN FOR ROLES &amp; CONTRACTS ▮</span>
                                         </div>
                                         <div className="flex justify-between gap-2">
-                                            <span>CORE STACK:</span>
-                                            <span className="font-semibold text-ink text-right">C++ · KOTLIN · LINUX · LLVM</span>
+                                            <span className="text-graphite">PRIMARY STACK:</span>
+                                            <span className="font-semibold text-right">C++ · KOTLIN · LINUX · LLVM</span>
                                         </div>
                                         <div className="flex justify-between gap-2">
-                                            <span>DIRECT WIRE:</span>
-                                            <span className="lowercase font-semibold text-ink">sdangalla44@gmail.com</span>
+                                            <span className="text-graphite">SPECIALTY:</span>
+                                            <span className="text-right">AOSP · DAEMONS · COMPILERS</span>
+                                        </div>
+                                        <div className="flex justify-between gap-2">
+                                            <span className="text-graphite">DIRECT WIRE:</span>
+                                            <span className="lowercase font-semibold">sdangalla44@gmail.com</span>
                                         </div>
                                     </div>
 
-                                    <div className="mt-3.5 pt-3 border-t border-white/10 flex items-center gap-2">
+                                    <div className="mt-3 pt-2.5 border-t border-ink/15 flex items-center gap-2">
                                         <button
                                             type="button"
                                             onClick={handleCopyWire}
-                                            className="flex-1 py-2 px-3 rounded-lg border border-white/15 bg-white/5 hover:border-accent hover:text-accent font-mono text-[10px] tracking-wider uppercase font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-ink"
+                                            className="flex-1 py-1.5 px-2.5 border border-ink/30 bg-panel-deep/60 hover:border-accent hover:text-accent font-mono text-[8.5px] tracking-[0.2em] uppercase font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                                         >
                                             {copiedWire ? (
                                                 <>
-                                                    <Check size={12} className="text-emerald-400" />
-                                                    <span className="text-emerald-400">COPIED</span>
+                                                    <Check size={11} className="text-emerald-600" />
+                                                    <span className="text-emerald-600">WIRE COPIED</span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Copy size={12} />
-                                                    <span>COPY EMAIL</span>
+                                                    <Copy size={11} />
+                                                    <span>COPY EMAIL WIRE</span>
                                                 </>
                                             )}
                                         </button>
@@ -587,9 +592,9 @@ export default function HeroOverlay() {
                                                 setMeetingModalOpen(true);
                                                 playClickSound(soundEnabled);
                                             }}
-                                            className="py-2 px-4 rounded-lg bg-accent text-slate-950 hover:bg-accent-hot font-mono text-[10px] tracking-wider uppercase font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                                            className="py-1.5 px-3 bg-accent text-white hover:opacity-90 font-mono text-[8.5px] tracking-[0.2em] uppercase font-bold flex items-center gap-1.5 transition-opacity cursor-pointer"
                                         >
-                                            <Calendar size={12} />
+                                            <Calendar size={11} />
                                             <span>SCHEDULE</span>
                                         </button>
                                     </div>

@@ -18,7 +18,7 @@ const useStore = create((set) => ({
     hasBooted: false,
     isTerminalOpen: false,
     soundEnabled: true,
-    accentTheme: 'cyber', // 'cyber' (default) | 'cobalt' | 'violet' | 'studio'
+    accentTheme: 'studio', // 'studio' (default white) | 'cyber' | 'cobalt' | 'violet'
     isCommandPaletteOpen: false,
     isMeetingModalOpen: false,
 

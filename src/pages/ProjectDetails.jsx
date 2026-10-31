@@ -240,7 +240,7 @@ export default function ProjectDetails() {
                                         <div
                                             key={i}
                                             onClick={() => setLightboxImg({ src: img, index: i + 1 })}
-                                            className="group rounded-xl border border-white/10 hover:border-accent/60 bg-panel/90 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col"
+                                            className="group rounded-xl border border-bordertech hover:border-accent/60 bg-panel/90 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col"
                                         >
                                             {/* Window Header */}
                                             <div className="px-3 py-2 bg-slate-900/90 border-b border-white/10 flex items-center justify-between font-mono text-[9px] text-slate-400">

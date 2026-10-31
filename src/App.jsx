@@ -19,6 +19,34 @@ import WhatsAppChat from './components/WhatsAppChat';
 
 // Edition presets — modern high-tech engineering color profiles
 export const EDITION_PRESETS = {
+    studio: {
+        label: 'STUDIO WHITE',
+        void: '#ffffff',
+        panel: '#ffffff',
+        panelDeep: '#f8fafc',
+        ink: '#0f172a',
+        graphite: '#475569',
+        bordertech: '#e2e8f0',
+        accent: '#2563eb',
+        hot: '#1d4ed8',
+        dim: 'rgba(37, 99, 235, 0.08)',
+        cyan: '#0284c7',
+        scheme: 'light',
+    },
+    white: {
+        label: 'STUDIO WHITE',
+        void: '#ffffff',
+        panel: '#ffffff',
+        panelDeep: '#f8fafc',
+        ink: '#0f172a',
+        graphite: '#475569',
+        bordertech: '#e2e8f0',
+        accent: '#2563eb',
+        hot: '#1d4ed8',
+        dim: 'rgba(37, 99, 235, 0.08)',
+        cyan: '#0284c7',
+        scheme: 'light',
+    },
     cyber: {
         label: 'CYBER OBSIDIAN',
         void: '#07080c',
@@ -61,34 +89,48 @@ export const EDITION_PRESETS = {
         cyan: '#a855f7',
         scheme: 'dark',
     },
-    studio: {
-        label: 'STUDIO LIGHT',
-        void: '#f8fafc',
+    // Backwards-compatible aliases — legacy newspaper themes safely map to modern white
+    vermilion: {
+        label: 'STUDIO WHITE',
+        void: '#ffffff',
         panel: '#ffffff',
-        panelDeep: '#f1f5f9',
+        panelDeep: '#f8fafc',
         ink: '#0f172a',
         graphite: '#475569',
         bordertech: '#e2e8f0',
         accent: '#2563eb',
         hot: '#1d4ed8',
-        dim: 'rgba(37, 99, 235, 0.12)',
-        cyan: '#2563eb',
+        dim: 'rgba(37, 99, 235, 0.08)',
+        cyan: '#0284c7',
         scheme: 'light',
     },
-    // Backwards-compatible aliases
     crimson: {
-        label: 'CYBER OBSIDIAN',
-        void: '#07080c',
-        panel: '#0e111a',
-        panelDeep: '#141824',
-        ink: '#f8fafc',
-        graphite: '#94a3b8',
-        bordertech: 'rgba(255, 255, 255, 0.08)',
-        accent: '#00f0ff',
-        hot: '#38bdf8',
-        dim: 'rgba(0, 240, 255, 0.14)',
-        cyan: '#00f0ff',
-        scheme: 'dark',
+        label: 'STUDIO WHITE',
+        void: '#ffffff',
+        panel: '#ffffff',
+        panelDeep: '#f8fafc',
+        ink: '#0f172a',
+        graphite: '#475569',
+        bordertech: '#e2e8f0',
+        accent: '#2563eb',
+        hot: '#1d4ed8',
+        dim: 'rgba(37, 99, 235, 0.08)',
+        cyan: '#0284c7',
+        scheme: 'light',
+    },
+    amber: {
+        label: 'STUDIO WHITE',
+        void: '#ffffff',
+        panel: '#ffffff',
+        panelDeep: '#f8fafc',
+        ink: '#0f172a',
+        graphite: '#475569',
+        bordertech: '#e2e8f0',
+        accent: '#2563eb',
+        hot: '#1d4ed8',
+        dim: 'rgba(37, 99, 235, 0.08)',
+        cyan: '#0284c7',
+        scheme: 'light',
     },
     obsidian: {
         label: 'CYBER OBSIDIAN',
@@ -104,20 +146,6 @@ export const EDITION_PRESETS = {
         cyan: '#00f0ff',
         scheme: 'dark',
     },
-    amber: {
-        label: 'STUDIO LIGHT',
-        void: '#f8fafc',
-        panel: '#ffffff',
-        panelDeep: '#f1f5f9',
-        ink: '#0f172a',
-        graphite: '#475569',
-        bordertech: '#e2e8f0',
-        accent: '#2563eb',
-        hot: '#1d4ed8',
-        dim: 'rgba(37, 99, 235, 0.12)',
-        cyan: '#2563eb',
-        scheme: 'light',
-    },
 };
 
 function App() {
@@ -128,9 +156,9 @@ function App() {
 
     // Apply the modern engineering color profile to the root element
     useEffect(() => {
-        const preset = EDITION_PRESETS[accentTheme] || EDITION_PRESETS.cyber;
+        const preset = EDITION_PRESETS[accentTheme] || EDITION_PRESETS.studio;
         const root = document.documentElement;
-        root.dataset.edition = accentTheme in EDITION_PRESETS ? accentTheme : 'cyber';
+        root.dataset.edition = accentTheme in EDITION_PRESETS ? accentTheme : 'studio';
         root.style.colorScheme = preset.scheme;
         root.style.setProperty('--color-void', preset.void);
         root.style.setProperty('--color-panel', preset.panel);

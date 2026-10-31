@@ -69,10 +69,10 @@ export default function CommandPalette() {
         { id: 'act-linkedin', label: 'Open LinkedIn Profile', category: 'Quick Actions', icon: Linkedin, action: () => { window.open('https://linkedin.com/in/siluna-dangalla', '_blank'); setCommandPaletteOpen(false); } },
 
         // Modern Themes & Audio Settings
+        { id: 'set-theme-studio',  label: 'Theme: STUDIO WHITE (Clean Modern Architectural White)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('studio'); playChimeSound(soundEnabled); } },
         { id: 'set-theme-cyber',   label: 'Theme: CYBER OBSIDIAN (Deep Obsidian & Cyan)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('cyber'); playChimeSound(soundEnabled); } },
         { id: 'set-theme-cobalt',  label: 'Theme: MIDNIGHT BLUE (Sapphire & Navy)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('cobalt'); playChimeSound(soundEnabled); } },
         { id: 'set-theme-violet',  label: 'Theme: NEON TOKYO (Cyber Violet & Iris)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('violet'); playChimeSound(soundEnabled); } },
-        { id: 'set-theme-studio',  label: 'Theme: STUDIO LIGHT (Clean Minimalist Slate)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('studio'); playChimeSound(soundEnabled); } },
         { id: 'set-sound', label: `Audio: ${soundEnabled ? 'Mute Sound FX' : 'Enable Sound FX'}`, category: 'Appearance & Audio', icon: soundEnabled ? VolumeX : Volume2, action: () => { toggleSound(); playClickSound(!soundEnabled); } },
     ];
 

@@ -4,15 +4,17 @@ import { Activity, Github, Cpu, Calendar, Palette } from 'lucide-react';
 import useStore from '../store/useStore';
 import { playClickSound } from '../utils/soundFX';
 
-const EDITION_CYCLE = ['cyber', 'cobalt', 'violet', 'studio'];
+const EDITION_CYCLE = ['studio', 'cyber', 'cobalt', 'violet'];
 const EDITION_NAMES = {
+    studio: 'STUDIO WHITE',
+    white: 'STUDIO WHITE',
     cyber: 'CYBER OBSIDIAN',
     cobalt: 'MIDNIGHT BLUE',
     violet: 'NEON TOKYO',
-    studio: 'STUDIO LIGHT',
-    crimson: 'CYBER OBSIDIAN',
+    vermilion: 'STUDIO WHITE',
+    crimson: 'STUDIO WHITE',
     obsidian: 'CYBER OBSIDIAN',
-    amber: 'STUDIO LIGHT',
+    amber: 'STUDIO WHITE',
 };
 
 export default function SystemMetricsWidget() {
@@ -101,7 +103,7 @@ export default function SystemMetricsWidget() {
                     className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-panel-deep border border-ink/20 text-ink hover:border-accent hover:text-accent transition-all text-[9px] font-mono tracking-wider uppercase cursor-pointer"
                 >
                     <Palette className="w-2.5 h-2.5 text-accent" />
-                    <span>THEME: {EDITION_NAMES[accentTheme] || 'CYBER OBSIDIAN'}</span>
+                    <span>THEME: {EDITION_NAMES[accentTheme] || 'STUDIO WHITE'}</span>
                 </button>
 
                 <button

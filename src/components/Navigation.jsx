@@ -78,7 +78,7 @@ function MagneticLink({ href, num, active, children, onClick, external }) {
     );
 }
 
-const EDITION_ORDER = ['cyber', 'cobalt', 'violet', 'studio'];
+const EDITION_ORDER = ['studio', 'cyber', 'cobalt', 'violet'];
 
 export default function Navigation() {
     const [scrolled, setScrolled] = useState(false);
@@ -94,7 +94,7 @@ export default function Navigation() {
     const soundEnabled = useStore((state) => state.soundEnabled);
     const setMeetingModalOpen = useStore((state) => state.setMeetingModalOpen);
 
-    const activePreset = EDITION_PRESETS[accentTheme] || EDITION_PRESETS.cyber;
+    const activePreset = EDITION_PRESETS[accentTheme] || EDITION_PRESETS.studio;
 
     useEffect(() => {
         gsap.fromTo(navRef.current,

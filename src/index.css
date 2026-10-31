@@ -13,35 +13,35 @@
 @plugin "@tailwindcss/typography";
 
 /* ─────────────────────────────────────────────────
-   DESIGN TOKENS — MODERN HIGH-TECH ENGINEERING FOLIO
-   Deep Obsidian · Cyber Glass · Electric Cyan & Blue
+   DESIGN TOKENS — MODERN ARCHITECTURAL WHITE FOLIO
+   Pure White Canvas · Crisp Ink · Electric Cobalt
 ───────────────────────────────────────────────── */
 @theme {
-    /* Canvas — deep cyber obsidian */
-    --color-void: #07080c;
-    --color-panel: #0e111a;
-    --color-panel-deep: #141824;
+    /* Canvas — modern crisp white */
+    --color-void: #ffffff;
+    --color-panel: #ffffff;
+    --color-panel-deep: #f8fafc;
 
-    /* Ink & text — luminous clean slate white */
-    --color-ink: #f8fafc;
-    --color-graphite: #94a3b8;
-    --color-bordertech: rgba(255, 255, 255, 0.08);
+    /* Ink & text — crisp dark typography */
+    --color-ink: #0f172a;
+    --color-graphite: #475569;
+    --color-bordertech: #e2e8f0;
 
-    /* Accent colours — electric cyber cyan & sapphire */
-    --color-accent: #00f0ff;
-    --color-accent-hot: #38bdf8;
-    --color-cyanx: #00f0ff;
+    /* Accent colours — electric modern cobalt & sapphire */
+    --color-accent: #2563eb;
+    --color-accent-hot: #1d4ed8;
+    --color-cyanx: #0284c7;
     --color-amberx: #f59e0b;
-    --color-accent-dim: rgba(0, 240, 255, 0.14);
-    --color-telemetry: #00f0ff;
+    --color-accent-dim: rgba(37, 99, 235, 0.08);
+    --color-telemetry: #2563eb;
 
     /* Legacy aliases */
-    --color-quantum-dark: #07080c;
-    --color-quantum-black: #030407;
-    --color-surface: #0e111a;
-    --color-geyser: #f8fafc;
-    --color-titanium: #94a3b8;
-    --color-aura: rgba(255, 255, 255, 0.08);
+    --color-quantum-dark: #ffffff;
+    --color-quantum-black: #f8fafc;
+    --color-surface: #ffffff;
+    --color-geyser: #0f172a;
+    --color-titanium: #475569;
+    --color-aura: #e2e8f0;
 
     /* Fonts — modern geometric sans, clean mono, sleek display */
     --font-display: "Space Grotesk", "Syne", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -54,11 +54,11 @@
 }
 
 :root {
-    color-scheme: dark;
+    color-scheme: light;
 }
 
 /* ─────────────────────────────────────────────────
-   BASE — modern cyber canvas
+   BASE — modern white canvas
 ───────────────────────────────────────────────── */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -80,8 +80,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     background-image:
-        radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-        radial-gradient(color-mix(in srgb, var(--color-accent) 4%, transparent) 1px, transparent 1px);
+        radial-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+        radial-gradient(color-mix(in srgb, var(--color-accent) 6%, transparent) 1px, transparent 1px);
     background-size: 28px 28px, 56px 56px;
     background-position: 0 0, 14px 14px;
     transition: background-color 0.4s ease, color 0.4s ease;

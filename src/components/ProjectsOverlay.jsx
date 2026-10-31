@@ -36,13 +36,13 @@ function LeadFeatureCard({ project, num }) {
 
     return (
         <div className="proj-feature-lead py-4 md:py-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch p-6 sm:p-8 rounded-2xl bg-panel/90 border border-white/10 backdrop-blur-xl shadow-[0_12px_40px_-15px_rgba(0,0,0,0.5)] hover:border-accent/40 transition-all duration-500">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch p-6 sm:p-8 rounded-2xl bg-panel/90 border border-bordertech backdrop-blur-xl shadow-xl shadow-black/5 hover:border-accent/40 transition-all duration-500">
 
                 {/* Left Column: Project Details & Context */}
                 <div className="lg:col-span-7 flex flex-col justify-between gap-6">
                     <div className="flex flex-col gap-4">
                         {/* Top Category Strip */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
+                        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-bordertech">
                             <div className="flex items-center gap-2.5">
                                 <span className="font-mono font-bold text-sm text-accent bg-accent/10 border border-accent/30 px-2 py-0.5 rounded-md">
                                     FLAGSHIP #{num}
@@ -92,9 +92,9 @@ function LeadFeatureCard({ project, num }) {
 
                         {/* Metrics Grid */}
                         {metrics.length > 0 && (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-panel-deep/60 rounded-xl border border-white/10 mt-1">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-panel-deep/60 rounded-xl border border-bordertech mt-1">
                                 {metrics.map((m, idx) => (
-                                    <div key={idx} className="flex flex-col gap-1 border-r last:border-r-0 border-white/10 pr-2">
+                                    <div key={idx} className="flex flex-col gap-1 border-r last:border-r-0 border-bordertech pr-2">
                                         <span className="font-mono text-[9px] tracking-wider uppercase text-graphite">
                                             {m.label}
                                         </span>
@@ -108,12 +108,12 @@ function LeadFeatureCard({ project, num }) {
                     </div>
 
                     {/* Bottom Tags + CTAs */}
-                    <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                    <div className="pt-4 border-t border-bordertech flex flex-wrap items-center justify-between gap-4">
                         <div className="flex flex-wrap gap-1.5">
                             {tags.map((tag, i) => (
                                 <span
                                     key={i}
-                                    className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-graphite"
+                                    className="px-2.5 py-1 rounded-full bg-panel-deep border border-bordertech font-mono text-[10px] text-graphite"
                                 >
                                     {tag}
                                 </span>
@@ -126,7 +126,7 @@ function LeadFeatureCard({ project, num }) {
                                     href={project.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="px-4 py-2 border border-white/20 bg-panel-deep/70 hover:border-accent hover:text-accent font-mono text-[11px] tracking-wider uppercase font-semibold inline-flex items-center gap-1.5 rounded-full transition-all text-ink no-underline"
+                                    className="px-4 py-2 border border-bordertech bg-panel-deep/70 hover:border-accent hover:text-accent font-mono text-[11px] tracking-wider uppercase font-semibold inline-flex items-center gap-1.5 rounded-full transition-all text-ink no-underline"
                                 >
                                     <span>Live Build</span>
                                     <ExternalLink size={12} />
@@ -247,10 +247,10 @@ function SecondaryFeatureCard({ project, num }) {
     const isAegisLayer = project.id === 'aegislayer';
 
     return (
-        <div className="proj-secondary group p-6 rounded-2xl border border-white/10 bg-panel/90 backdrop-blur-xl hover:border-accent/50 transition-all duration-300 flex flex-col justify-between shadow-xl">
+        <div className="proj-secondary group p-6 rounded-2xl border border-bordertech bg-panel/90 backdrop-blur-xl hover:border-accent/50 transition-all duration-300 flex flex-col justify-between shadow-xl shadow-black/5">
             <div>
                 {/* Meta header */}
-                <div className="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-white/10">
+                <div className="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-bordertech">
                     <div className="flex items-center gap-2">
                         <span className="font-mono font-bold text-xs text-accent bg-accent/10 border border-accent/30 px-2 py-0.5 rounded-md">
                             #{num}
@@ -387,9 +387,9 @@ function SecondaryFeatureCard({ project, num }) {
                 </p>
             </div>
 
-            <div className="mt-5 pt-4 border-t border-white/10 space-y-3">
+            <div className="mt-5 pt-4 border-t border-bordertech space-y-3">
                 {metrics.length > 0 && (
-                    <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-lg bg-panel-deep/60 border border-white/10">
+                    <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-lg bg-panel-deep/60 border border-bordertech">
                         {metrics.slice(0, 3).map((m, idx) => (
                             <div key={idx} className="flex flex-col min-w-0">
                                 <span className="font-mono text-[8px] tracking-wider uppercase text-graphite truncate">
@@ -407,7 +407,7 @@ function SecondaryFeatureCard({ project, num }) {
                     {tags.slice(0, 4).map((tag, i) => (
                         <span
                             key={i}
-                            className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 font-mono text-[9px] text-graphite"
+                            className="px-2 py-0.5 rounded-md bg-panel-deep border border-bordertech font-mono text-[9px] text-graphite"
                         >
                             {tag}
                         </span>
@@ -429,7 +429,7 @@ function ProjectRow({ project, num }) {
             data-cursor="Open Dossier"
             className="block group no-underline"
         >
-            <article className="p-4 rounded-xl border border-white/10 bg-panel/70 hover:bg-panel-deep hover:border-accent/40 backdrop-blur-md transition-all duration-300 flex items-center justify-between gap-4 shadow-sm">
+            <article className="p-4 rounded-xl border border-bordertech bg-panel/70 hover:bg-panel-deep hover:border-accent/40 backdrop-blur-md transition-all duration-300 flex items-center justify-between gap-4 shadow-sm">
                 <span className="font-mono text-sm font-bold text-accent w-6 shrink-0">{num}</span>
 
                 <span
@@ -468,7 +468,7 @@ function ProjectRow({ project, num }) {
                     {tags.slice(0, 3).map((tag, i) => (
                         <span
                             key={i}
-                            className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 font-mono text-[9px] text-graphite"
+                            className="px-2 py-0.5 rounded-md bg-panel-deep border border-bordertech font-mono text-[9px] text-graphite"
                         >
                             {tag}
                         </span>
@@ -501,7 +501,7 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
         return (
             <section id="projects" className="py-12">
                 {children}
-                <div className="text-center py-16 p-6 rounded-2xl border border-white/10 bg-panel">
+                <div className="text-center py-16 p-6 rounded-2xl border border-bordertech bg-panel">
                     <span className="font-mono text-xs uppercase tracking-widest text-graphite">
                         — No projects match your selected filter —
                     </span>
@@ -540,7 +540,7 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
             {/* Ledger Rows (#04+) */}
             {rest.length > 0 && (
                 <div className="flex flex-col gap-3 w-full">
-                    <div className="flex items-center justify-between pb-2 mb-1 border-b border-white/10 font-mono text-[10px] uppercase tracking-wider text-graphite">
+                    <div className="flex items-center justify-between pb-2 mb-1 border-b border-bordertech font-mono text-[10px] uppercase tracking-wider text-graphite">
                         <span>Systems Engineering Catalog &amp; Utilities</span>
                         <span>{rest.length} Repositories</span>
                     </div>
@@ -560,7 +560,7 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
                 <div className="flex justify-center pt-4">
                     <button
                         onClick={() => setShowAll(!showAll)}
-                        className="px-6 py-3 rounded-full border border-white/20 bg-panel hover:border-accent hover:text-accent font-mono text-xs tracking-wider uppercase font-semibold transition-all shadow-md cursor-pointer"
+                        className="px-6 py-3 rounded-full border border-bordertech bg-panel hover:border-accent hover:text-accent font-mono text-xs tracking-wider uppercase font-semibold transition-all shadow-md cursor-pointer"
                     >
                         {showAll ? 'Show Fewer Projects' : `View All ${projects.length} Engineering Projects`}
                     </button>
