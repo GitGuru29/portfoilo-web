@@ -252,35 +252,35 @@ export default function HeroOverlay() {
 
                 {/* ── MONUMENTAL MASTHEAD + FLANKING EARS ── */}
                 <div ref={topRef} className="flex-none px-4 sm:px-6 md:px-10 pt-4 pb-3 z-10">
-                    <div className="grid grid-cols-12 items-center gap-4">
+                    <div className="flex items-center justify-between gap-3 lg:gap-5 w-full">
                         {/* Left Masthead Ear */}
-                        <div className="hidden lg:flex col-span-3 flex-col justify-between p-3 border border-ink/30 bg-panel/80 min-h-[82px]">
+                        <div className="hidden lg:flex w-48 xl:w-60 shrink-0 flex-col justify-between p-2.5 xl:p-3 border border-ink/30 bg-panel/80 min-h-[82px]">
                             <div className="flex items-center justify-between text-[8px] font-mono tracking-[0.24em] uppercase text-accent font-bold border-b border-ink/15 pb-1">
                                 <span>SPECIAL REPORT</span>
                                 <span>FOLIO 01–09</span>
                             </div>
-                            <p className="text-[10px] font-serif leading-snug text-ink/85 mt-1.5">
+                            <p className="text-[10px] font-serif leading-snug text-ink/85 mt-1.5 m-0">
                                 Native Android Daemons, Linux Kernel Utilities &amp; LLVM Compiler Infrastructure.
                             </p>
                         </div>
 
-                        {/* Center Nameplate */}
-                        <div className="col-span-12 lg:col-span-6 text-center">
-                            <h1 className="masthead-title select-none" aria-label="The Daily Developer">
+                        {/* Center Nameplate — The Daily Developer on ONE LINE */}
+                        <div className="flex-1 min-w-0 text-center px-1 sm:px-2">
+                            <h1 className="masthead-title select-none whitespace-nowrap" aria-label="The Daily Developer">
                                 The Daily Developer
                             </h1>
                             <div className="mx-auto mt-1.5 mb-1.5 flex items-center justify-center gap-3">
-                                <span className="inline-block w-16 sm:w-28 md:w-36 border-t border-ink/45" />
-                                <span className="inline-block text-[9px] font-mono tracking-[0.35em] text-accent">◆ EST. 2021 ◆</span>
-                                <span className="inline-block w-16 sm:w-28 md:w-36 border-t border-ink/45" />
+                                <span className="inline-block w-14 sm:w-24 md:w-32 border-t border-ink/45" />
+                                <span className="inline-block text-[9px] font-mono tracking-[0.35em] text-accent font-semibold">◆ EST. 2021 ◆</span>
+                                <span className="inline-block w-14 sm:w-24 md:w-32 border-t border-ink/45" />
                             </div>
-                            <div className="deck-title">
+                            <div className="deck-title whitespace-nowrap">
                                 Siluna Nusal Dangalla — Systems &amp; Android Architect
                             </div>
                         </div>
 
                         {/* Right Masthead Ear */}
-                        <div className="hidden lg:flex col-span-3 flex-col justify-between p-3 border border-ink/30 bg-panel/80 min-h-[82px]">
+                        <div className="hidden lg:flex w-48 xl:w-60 shrink-0 flex-col justify-between p-2.5 xl:p-3 border border-ink/30 bg-panel/80 min-h-[82px]">
                             <div className="flex items-center justify-between text-[8px] font-mono tracking-[0.24em] uppercase text-ink/70 border-b border-ink/15 pb-1">
                                 <span>BUREAU DESK</span>
                                 <span className="text-accent font-bold">● LIVE</span>
