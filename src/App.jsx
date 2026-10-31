@@ -17,63 +17,106 @@ import CommandPalette from './components/CommandPalette';
 import ScheduleMeetingModal from './components/ScheduleMeetingModal';
 import WhatsAppChat from './components/WhatsAppChat';
 
-// Edition presets — drive the entire broadsheet palette + spot ink via runtime CSS vars.
+// Edition presets — modern high-tech engineering color profiles
 export const EDITION_PRESETS = {
-    crimson: {
-        label: 'VERMILION',
-        void: '#f2ede4',
-        panel: '#faf7f0',
-        panelDeep: '#e6e0d4',
-        ink: '#0d0d0d',
-        graphite: '#4a463f',
-        bordertech: '#c6bfb0',
-        accent: '#c81e1e',
-        hot: '#e02424',
-        dim: 'rgba(200, 30, 30, 0.14)',
-        cyan: '#0d0d0d',
-        scheme: 'light',
+    cyber: {
+        label: 'CYBER OBSIDIAN',
+        void: '#07080c',
+        panel: '#0e111a',
+        panelDeep: '#141824',
+        ink: '#f8fafc',
+        graphite: '#94a3b8',
+        bordertech: 'rgba(255, 255, 255, 0.08)',
+        accent: '#00f0ff',
+        hot: '#38bdf8',
+        dim: 'rgba(0, 240, 255, 0.14)',
+        cyan: '#00f0ff',
+        scheme: 'dark',
     },
     cobalt: {
-        label: 'BLUEPRINT',
-        void: '#edf1f7',
-        panel: '#f7f9fc',
-        panelDeep: '#dde4ef',
-        ink: '#0b1324',
-        graphite: '#3b475e',
-        bordertech: '#b6c2d6',
-        accent: '#1d4ed8',
-        hot: '#2563eb',
-        dim: 'rgba(29, 78, 216, 0.14)',
-        cyan: '#0b1324',
+        label: 'MIDNIGHT BLUE',
+        void: '#060a14',
+        panel: '#0c1426',
+        panelDeep: '#111b33',
+        ink: '#f1f5f9',
+        graphite: '#94a3b8',
+        bordertech: 'rgba(59, 130, 246, 0.16)',
+        accent: '#3b82f6',
+        hot: '#60a5fa',
+        dim: 'rgba(59, 130, 246, 0.15)',
+        cyan: '#60a5fa',
+        scheme: 'dark',
+    },
+    violet: {
+        label: 'NEON TOKYO',
+        void: '#090712',
+        panel: '#120e22',
+        panelDeep: '#1a1432',
+        ink: '#faf5ff',
+        graphite: '#c084fc',
+        bordertech: 'rgba(168, 85, 247, 0.16)',
+        accent: '#a855f7',
+        hot: '#c084fc',
+        dim: 'rgba(168, 85, 247, 0.15)',
+        cyan: '#a855f7',
+        scheme: 'dark',
+    },
+    studio: {
+        label: 'STUDIO LIGHT',
+        void: '#f8fafc',
+        panel: '#ffffff',
+        panelDeep: '#f1f5f9',
+        ink: '#0f172a',
+        graphite: '#475569',
+        bordertech: '#e2e8f0',
+        accent: '#2563eb',
+        hot: '#1d4ed8',
+        dim: 'rgba(37, 99, 235, 0.12)',
+        cyan: '#2563eb',
         scheme: 'light',
     },
-    amber: {
-        label: 'ARCHIVAL',
-        void: '#f3ede0',
-        panel: '#fbf8f1',
-        panelDeep: '#e5decb',
-        ink: '#14110d',
-        graphite: '#52493e',
-        bordertech: '#c7bca8',
-        accent: '#b45309',
-        hot: '#d97706',
-        dim: 'rgba(180, 83, 9, 0.14)',
-        cyan: '#14110d',
-        scheme: 'light',
+    // Backwards-compatible aliases
+    crimson: {
+        label: 'CYBER OBSIDIAN',
+        void: '#07080c',
+        panel: '#0e111a',
+        panelDeep: '#141824',
+        ink: '#f8fafc',
+        graphite: '#94a3b8',
+        bordertech: 'rgba(255, 255, 255, 0.08)',
+        accent: '#00f0ff',
+        hot: '#38bdf8',
+        dim: 'rgba(0, 240, 255, 0.14)',
+        cyan: '#00f0ff',
+        scheme: 'dark',
     },
     obsidian: {
-        label: 'NIGHT PRESS',
-        void: '#0b0c0f',
-        panel: '#12141a',
-        panelDeep: '#191c24',
-        ink: '#f0ede6',
-        graphite: '#9ca3af',
-        bordertech: '#2a2f3d',
-        accent: '#f97316',
-        hot: '#fb923c',
-        dim: 'rgba(249, 115, 22, 0.16)',
-        cyan: '#f0ede6',
+        label: 'CYBER OBSIDIAN',
+        void: '#07080c',
+        panel: '#0e111a',
+        panelDeep: '#141824',
+        ink: '#f8fafc',
+        graphite: '#94a3b8',
+        bordertech: 'rgba(255, 255, 255, 0.08)',
+        accent: '#00f0ff',
+        hot: '#38bdf8',
+        dim: 'rgba(0, 240, 255, 0.14)',
+        cyan: '#00f0ff',
         scheme: 'dark',
+    },
+    amber: {
+        label: 'STUDIO LIGHT',
+        void: '#f8fafc',
+        panel: '#ffffff',
+        panelDeep: '#f1f5f9',
+        ink: '#0f172a',
+        graphite: '#475569',
+        bordertech: '#e2e8f0',
+        accent: '#2563eb',
+        hot: '#1d4ed8',
+        dim: 'rgba(37, 99, 235, 0.12)',
+        cyan: '#2563eb',
+        scheme: 'light',
     },
 };
 
@@ -83,11 +126,11 @@ function App() {
     const setMeetingModalOpen = useStore((state) => state.setMeetingModalOpen);
     const accentTheme = useStore((state) => state.accentTheme);
 
-    // Apply the press edition plate to the root element
+    // Apply the modern engineering color profile to the root element
     useEffect(() => {
-        const preset = EDITION_PRESETS[accentTheme] || EDITION_PRESETS.crimson;
+        const preset = EDITION_PRESETS[accentTheme] || EDITION_PRESETS.cyber;
         const root = document.documentElement;
-        root.dataset.edition = accentTheme in EDITION_PRESETS ? accentTheme : 'crimson';
+        root.dataset.edition = accentTheme in EDITION_PRESETS ? accentTheme : 'cyber';
         root.style.colorScheme = preset.scheme;
         root.style.setProperty('--color-void', preset.void);
         root.style.setProperty('--color-panel', preset.panel);

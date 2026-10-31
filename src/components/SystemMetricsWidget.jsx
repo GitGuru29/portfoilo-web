@@ -4,12 +4,15 @@ import { Activity, Github, Cpu, Calendar, Palette } from 'lucide-react';
 import useStore from '../store/useStore';
 import { playClickSound } from '../utils/soundFX';
 
-const EDITION_CYCLE = ['crimson', 'cobalt', 'amber', 'obsidian'];
+const EDITION_CYCLE = ['cyber', 'cobalt', 'violet', 'studio'];
 const EDITION_NAMES = {
-    crimson: 'VERMILION',
-    cobalt: 'BLUEPRINT',
-    amber: 'ARCHIVAL',
-    obsidian: 'NIGHT PRESS',
+    cyber: 'CYBER OBSIDIAN',
+    cobalt: 'MIDNIGHT BLUE',
+    violet: 'NEON TOKYO',
+    studio: 'STUDIO LIGHT',
+    crimson: 'CYBER OBSIDIAN',
+    obsidian: 'CYBER OBSIDIAN',
+    amber: 'STUDIO LIGHT',
 };
 
 export default function SystemMetricsWidget() {
@@ -94,11 +97,11 @@ export default function SystemMetricsWidget() {
             <div className="flex items-center gap-3 md:gap-4">
                 <button
                     onClick={cycleEdition}
-                    title="Cycle Press Edition"
-                    className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-panel-deep border border-ink/25 text-ink hover:border-accent hover:text-accent transition-all text-[9px] font-mono tracking-wider uppercase cursor-pointer"
+                    title="Cycle Theme"
+                    className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-panel-deep border border-ink/20 text-ink hover:border-accent hover:text-accent transition-all text-[9px] font-mono tracking-wider uppercase cursor-pointer"
                 >
                     <Palette className="w-2.5 h-2.5 text-accent" />
-                    <span>EDITION: {EDITION_NAMES[accentTheme] || 'VERMILION'}</span>
+                    <span>THEME: {EDITION_NAMES[accentTheme] || 'CYBER OBSIDIAN'}</span>
                 </button>
 
                 <button

@@ -78,7 +78,7 @@ function MagneticLink({ href, num, active, children, onClick, external }) {
     );
 }
 
-const EDITION_ORDER = ['crimson', 'cobalt', 'amber', 'obsidian'];
+const EDITION_ORDER = ['cyber', 'cobalt', 'violet', 'studio'];
 
 export default function Navigation() {
     const [scrolled, setScrolled] = useState(false);
@@ -94,7 +94,7 @@ export default function Navigation() {
     const soundEnabled = useStore((state) => state.soundEnabled);
     const setMeetingModalOpen = useStore((state) => state.setMeetingModalOpen);
 
-    const activePreset = EDITION_PRESETS[accentTheme] || EDITION_PRESETS.crimson;
+    const activePreset = EDITION_PRESETS[accentTheme] || EDITION_PRESETS.cyber;
 
     useEffect(() => {
         gsap.fromTo(navRef.current,
@@ -192,15 +192,15 @@ export default function Navigation() {
                         onClick={(e) => handleNavClick(e, 'home')}
                         className="group flex items-center gap-2.5 text-ink no-underline shrink-0"
                     >
-                        <span className="w-6 h-6 border border-ink bg-ink text-panel flex items-center justify-center font-blackletter text-sm leading-none group-hover:bg-accent group-hover:border-accent transition-colors">
+                        <span className="w-6 h-6 rounded-md bg-accent text-void flex items-center justify-center font-mono font-bold text-xs leading-none shadow-[0_0_12px_-2px_var(--color-accent)] group-hover:scale-105 transition-transform">
                             S
                         </span>
                         <div className="flex flex-col">
-                            <span className="text-[10px] font-mono font-bold tracking-[0.26em] uppercase leading-none text-ink group-hover:text-accent transition-colors">
+                            <span className="text-[10px] font-mono font-bold tracking-[0.24em] uppercase leading-none text-ink group-hover:text-accent transition-colors">
                                 SILUNA.SYS
                             </span>
-                            <span className="text-[8px] font-mono tracking-[0.2em] uppercase text-graphite leading-tight mt-0.5 hidden sm:inline">
-                                VOL. XXIV · COLOMBO
+                            <span className="text-[8px] font-mono tracking-[0.18em] uppercase text-graphite leading-tight mt-0.5 hidden sm:inline">
+                                ARCHITECT · COLOMBO
                             </span>
                         </div>
                     </a>
@@ -239,19 +239,19 @@ export default function Navigation() {
 
                     {/* Right actions */}
                     <div className="flex items-center gap-2 md:gap-2.5 shrink-0">
-                        {/* Press Edition Switcher */}
+                        {/* Modern Theme Switcher */}
                         <button
                             onClick={cycleEdition}
-                            title="Switch Press Edition (Vermilion · Blueprint · Archival · Night Press)"
-                            aria-label="Switch Press Edition"
-                            data-cursor="Switch Edition"
-                            className="flex items-center gap-2 border border-ink/25 bg-panel-deep/50 hover:border-accent px-2.5 py-1.5 text-[9px] font-mono tracking-[0.18em] text-ink transition-all rounded-none cursor-pointer"
+                            title="Switch Theme (Cyber Obsidian · Midnight Blue · Neon Tokyo · Studio Light)"
+                            aria-label="Switch Theme"
+                            data-cursor="Switch Theme"
+                            className="flex items-center gap-2 border border-ink/20 bg-panel-deep/60 hover:border-accent px-3 py-1.5 text-[9px] font-mono tracking-[0.18em] text-ink transition-all rounded-full cursor-pointer shadow-sm"
                         >
                             <span
-                                className="w-2 h-2 inline-block rotate-45 transition-transform duration-300"
+                                className="w-2 h-2 rounded-full inline-block animate-pulse"
                                 style={{ background: activePreset.accent }}
                             />
-                            <span className="hidden sm:inline text-graphite">EDITION:</span>
+                            <span className="hidden sm:inline text-graphite">THEME:</span>
                             <span className="font-bold text-accent">
                                 {activePreset.label}
                             </span>

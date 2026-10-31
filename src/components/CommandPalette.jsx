@@ -68,11 +68,11 @@ export default function CommandPalette() {
         { id: 'act-github', label: 'Open GitHub Profile', category: 'Quick Actions', icon: ExternalLink, action: () => { window.open('https://github.com/GitGuru29', '_blank'); setCommandPaletteOpen(false); } },
         { id: 'act-linkedin', label: 'Open LinkedIn Profile', category: 'Quick Actions', icon: Linkedin, action: () => { window.open('https://linkedin.com/in/siluna-dangalla', '_blank'); setCommandPaletteOpen(false); } },
 
-        // Theme & Audio Settings
-        { id: 'set-theme-crimson',  label: 'Edition: VERMILION PRESS (Warm Newsprint)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('crimson'); playChimeSound(soundEnabled); } },
-        { id: 'set-theme-cobalt',   label: 'Edition: BLUEPRINT COBALT (Technical Drafting)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('cobalt'); playChimeSound(soundEnabled); } },
-        { id: 'set-theme-amber',    label: 'Edition: ARCHIVAL LEDGER (Copper & Ochre)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('amber'); playChimeSound(soundEnabled); } },
-        { id: 'set-theme-obsidian', label: 'Edition: NIGHT PRESS (Darkroom Carbon)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('obsidian'); playChimeSound(soundEnabled); } },
+        // Modern Themes & Audio Settings
+        { id: 'set-theme-cyber',   label: 'Theme: CYBER OBSIDIAN (Deep Obsidian & Cyan)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('cyber'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-cobalt',  label: 'Theme: MIDNIGHT BLUE (Sapphire & Navy)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('cobalt'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-violet',  label: 'Theme: NEON TOKYO (Cyber Violet & Iris)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('violet'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-studio',  label: 'Theme: STUDIO LIGHT (Clean Minimalist Slate)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('studio'); playChimeSound(soundEnabled); } },
         { id: 'set-sound', label: `Audio: ${soundEnabled ? 'Mute Sound FX' : 'Enable Sound FX'}`, category: 'Appearance & Audio', icon: soundEnabled ? VolumeX : Volume2, action: () => { toggleSound(); playClickSound(!soundEnabled); } },
     ];
 

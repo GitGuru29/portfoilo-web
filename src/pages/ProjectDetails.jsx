@@ -240,26 +240,32 @@ export default function ProjectDetails() {
                                         <div
                                             key={i}
                                             onClick={() => setLightboxImg({ src: img, index: i + 1 })}
-                                            className="group border border-ink/25 hover:border-accent bg-panel p-3 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
+                                            className="group rounded-xl border border-white/10 hover:border-accent/60 bg-panel/90 backdrop-blur-md overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col"
                                         >
-                                            <div className="relative w-full bg-[#0d1117] flex items-center justify-center p-2 overflow-hidden border border-ink/15 min-h-[220px]">
+                                            {/* Window Header */}
+                                            <div className="px-3 py-2 bg-slate-900/90 border-b border-white/10 flex items-center justify-between font-mono text-[9px] text-slate-400">
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="w-2 h-2 rounded-full bg-rose-500/80 inline-block" />
+                                                    <span className="w-2 h-2 rounded-full bg-amber-500/80 inline-block" />
+                                                    <span className="w-2 h-2 rounded-full bg-emerald-500/80 inline-block" />
+                                                    <span className="ml-1.5 font-bold text-slate-300">
+                                                        FIG. {String(i + 1).padStart(2, '0')} // {project.title}
+                                                    </span>
+                                                </div>
+                                                <span className="text-accent uppercase font-bold flex items-center gap-1">
+                                                    <span>Enlarge</span>
+                                                    <Maximize2 className="w-3 h-3" />
+                                                </span>
+                                            </div>
+
+                                            {/* Preview Image Viewport */}
+                                            <div className="relative w-full bg-gradient-to-b from-slate-950 to-black flex items-center justify-center p-3 overflow-hidden min-h-[220px]">
                                                 <img
                                                     src={img}
                                                     alt={`${project.title} plate ${i + 1}`}
-                                                    className="max-w-full max-h-[360px] object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+                                                    className="max-w-full max-h-[340px] object-contain transition-transform duration-500 group-hover:scale-[1.03] drop-shadow-[0_0_20px_rgba(0,0,0,0.8)]"
                                                     loading="lazy"
                                                 />
-                                                <div className="absolute top-2.5 right-2.5 p-1.5 bg-ink/80 text-void opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <Maximize2 className="w-3.5 h-3.5" />
-                                                </div>
-                                            </div>
-                                            <div className="mt-2.5 pt-2 border-t border-ink/10 text-[10px] font-mono text-graphite flex items-center justify-between px-1">
-                                                <span>
-                                                    PLATE {String(i + 1).padStart(2, '0')} // {project.title}
-                                                </span>
-                                                <span className="uppercase text-accent font-bold">
-                                                    FIG. {i + 1} ↗
-                                                </span>
                                             </div>
                                         </div>
                                     ))}

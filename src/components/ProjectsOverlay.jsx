@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ExternalLink, Layers, Cpu, Terminal } from 'lucide-react';
+import { ArrowUpRight, ExternalLink, Cpu, Terminal, Shield, Smartphone, Activity } from 'lucide-react';
 import usePageReveal from '../utils/usePageReveal';
 
 const CATEGORY_LABELS = {
@@ -13,12 +13,12 @@ const CATEGORY_LABELS = {
 };
 
 const CATEGORY_DOTS = {
-    'android-sys': '#16a34a',
-    'linux-sys':   '#2563eb',
-    'os-dev':      '#9333ea',
-    'ai':          '#ea580c',
-    'cyber-sec':   '#dc2626',
-    'web':         '#0891b2',
+    'android-sys': '#10b981',
+    'linux-sys':   '#38bdf8',
+    'os-dev':      '#a855f7',
+    'ai':          '#f59e0b',
+    'cyber-sec':   '#ef4444',
+    'web':         '#06b6d4',
 };
 
 const pad        = (n) => String(n).padStart(2, '0');
@@ -27,41 +27,40 @@ const dotColor   = (p) => CATEGORY_DOTS[p.categoryId] || 'var(--color-accent)';
 const tagsOf     = (p) => p.stack && p.stack.length ? p.stack : p.role.split(' / ').slice(0, 4).map((t) => t.trim());
 const coverImage = (p) => (p.images && p.images[0]) || (p.androidImages && p.androidImages[0]) || (p.linuxImages && p.linuxImages[0]) || null;
 
-/** Lead Flagship Feature (#01) — Full-width 2-column broadsheet spread */
+/** Lead Flagship Feature (#01 AeroLang) — Modern IDE & Compiler Workbench Spread */
 function LeadFeatureCard({ project, num }) {
     const img = coverImage(project);
     const tags = tagsOf(project);
     const metrics = project.metrics || [];
+    const [viewMode, setViewMode] = useState('specimen'); // 'specimen' | 'ir'
 
     return (
-        <div className="proj-feature-lead py-6 md:py-8 border-b-2 border-ink/25">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+        <div className="proj-feature-lead py-4 md:py-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch p-6 sm:p-8 rounded-2xl bg-panel/90 border border-white/10 backdrop-blur-xl shadow-[0_12px_40px_-15px_rgba(0,0,0,0.5)] hover:border-accent/40 transition-all duration-500">
 
-                {/* Left Column: Editorial Lead Story */}
-                <div className="lg:col-span-7 flex flex-col justify-between gap-4">
-                    <div className="flex flex-col gap-3">
-                        {/* Eyebrow Strip */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-ink/15">
+                {/* Left Column: Project Details & Context */}
+                <div className="lg:col-span-7 flex flex-col justify-between gap-6">
+                    <div className="flex flex-col gap-4">
+                        {/* Top Category Strip */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
                             <div className="flex items-center gap-2.5">
-                                <span className="font-display font-bold text-xl text-accent leading-none tabular-nums">
-                                    {num}
+                                <span className="font-mono font-bold text-sm text-accent bg-accent/10 border border-accent/30 px-2 py-0.5 rounded-md">
+                                    FLAGSHIP #{num}
                                 </span>
                                 <span
-                                    className="w-2 h-2 rounded-full shrink-0"
+                                    className="w-2 h-2 rounded-full shrink-0 animate-pulse"
                                     style={{ background: dotColor(project) }}
                                 />
-                                <span className="font-mono text-[9.5px] tracking-[0.24em] uppercase font-bold text-ink">
-                                    LEAD MONOGRAPH · {categoryOf(project)}
+                                <span className="font-mono text-[10px] tracking-[0.2em] uppercase font-semibold text-graphite">
+                                    {categoryOf(project)}
                                 </span>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 font-mono text-[10px] uppercase">
                                 {project.year && (
-                                    <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-graphite">
-                                        {project.year}
-                                    </span>
+                                    <span className="text-graphite tracking-widest">{project.year}</span>
                                 )}
                                 {project.status && (
-                                    <span className="px-2 py-0.5 border border-accent/50 bg-accent/10 text-accent font-mono text-[8.5px] tracking-[0.2em] uppercase font-bold">
+                                    <span className="px-2.5 py-0.5 border border-accent/40 bg-accent/15 text-accent rounded-full font-bold tracking-widest text-[9px]">
                                         ● {project.status}
                                     </span>
                                 )}
@@ -75,31 +74,31 @@ function LeadFeatureCard({ project, num }) {
                                 data-cursor="Open Monograph"
                                 className="group inline-block no-underline"
                             >
-                                <h3 className="font-display font-bold text-3xl sm:text-4xl md:text-[2.75rem] text-ink group-hover:text-accent transition-colors leading-[0.98] tracking-tight">
+                                <h3 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-ink group-hover:text-accent transition-colors leading-[1.05] tracking-tight">
                                     {project.title}
                                 </h3>
                             </Link>
                             {project.subtitle && (
-                                <div className="mt-1.5 font-mono text-xs tracking-[0.14em] uppercase text-graphite font-semibold">
+                                <p className="mt-2 font-mono text-xs sm:text-sm tracking-wider text-accent font-semibold">
                                     {project.subtitle}
-                                </div>
+                                </p>
                             )}
                         </div>
 
-                        {/* Standfirst with Drop Cap */}
-                        <p className="drop-cap font-serif text-sm sm:text-[15px] leading-relaxed text-ink/85 text-justify m-0 pt-1">
+                        {/* Description */}
+                        <p className="font-sans text-sm sm:text-base leading-relaxed text-graphite m-0">
                             {project.description}
                         </p>
 
-                        {/* Metrics Bar */}
+                        {/* Metrics Grid */}
                         {metrics.length > 0 && (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3.5 bg-panel-deep/60 border border-ink/20 mt-1">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-panel-deep/60 rounded-xl border border-white/10 mt-1">
                                 {metrics.map((m, idx) => (
-                                    <div key={idx} className="flex flex-col gap-0.5 border-r last:border-r-0 border-ink/15 pr-2">
-                                        <span className="font-mono text-[8.5px] tracking-[0.22em] uppercase text-graphite">
+                                    <div key={idx} className="flex flex-col gap-1 border-r last:border-r-0 border-white/10 pr-2">
+                                        <span className="font-mono text-[9px] tracking-wider uppercase text-graphite">
                                             {m.label}
                                         </span>
-                                        <span className="font-mono text-xs font-bold text-ink truncate">
+                                        <span className="font-mono text-xs sm:text-sm font-bold text-ink truncate">
                                             {m.value}
                                         </span>
                                     </div>
@@ -108,11 +107,16 @@ function LeadFeatureCard({ project, num }) {
                         )}
                     </div>
 
-                    {/* Bottom Tags + Action Buttons */}
-                    <div className="pt-3 border-t border-ink/15 flex flex-wrap items-center justify-between gap-4">
+                    {/* Bottom Tags + CTAs */}
+                    <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
                         <div className="flex flex-wrap gap-1.5">
                             {tags.map((tag, i) => (
-                                <span key={i} className="proj-tag">{tag}</span>
+                                <span
+                                    key={i}
+                                    className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 font-mono text-[10px] text-graphite"
+                                >
+                                    {tag}
+                                </span>
                             ))}
                         </div>
 
@@ -122,70 +126,111 @@ function LeadFeatureCard({ project, num }) {
                                     href={project.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="px-3.5 py-2 border border-ink/35 bg-panel hover:border-accent hover:text-accent font-mono text-[10px] tracking-[0.2em] uppercase font-semibold inline-flex items-center gap-1.5 transition-colors no-underline text-ink"
+                                    className="px-4 py-2 border border-white/20 bg-panel-deep/70 hover:border-accent hover:text-accent font-mono text-[11px] tracking-wider uppercase font-semibold inline-flex items-center gap-1.5 rounded-full transition-all text-ink no-underline"
                                 >
-                                    <span>Live System</span>
+                                    <span>Live Build</span>
                                     <ExternalLink size={12} />
                                 </a>
                             )}
                             <Link
                                 to={`/project/${project.id}`}
                                 data-cursor="Open Monograph"
-                                className="px-4 py-2 bg-ink text-panel hover:bg-accent hover:text-white font-mono text-[10px] tracking-[0.2em] uppercase font-bold inline-flex items-center gap-2 transition-colors no-underline"
+                                className="px-5 py-2.5 bg-accent hover:bg-accent-hot text-slate-950 font-mono text-[11px] tracking-wider uppercase font-bold inline-flex items-center gap-2 rounded-full transition-all shadow-[0_0_20px_-3px_var(--color-accent)] no-underline"
                             >
-                                <span>Inspect Dossier</span>
-                                <ArrowUpRight size={13} />
+                                <span>View Monograph</span>
+                                <ArrowUpRight size={14} />
                             </Link>
                         </div>
                     </div>
                 </div>
 
-                {/* Right Column: Specimen Plate / Architectural Blueprint */}
-                <div className="lg:col-span-5 flex flex-col">
-                    <Link
-                        to={`/project/${project.id}`}
-                        data-cursor="Inspect Plates"
-                        className="group flex-1 flex flex-col justify-between border border-ink bg-ink text-panel p-4 relative overflow-hidden no-underline shadow-[6px_6px_0_rgba(0,0,0,0.1)]"
-                    >
-                        <div className="flex items-center justify-between border-b border-panel/20 pb-2.5 mb-3">
-                            <span className="font-mono text-[9px] tracking-[0.24em] uppercase text-accent-hot font-bold flex items-center gap-1.5">
-                                <Cpu size={12} />
-                                <span>SPECIMEN PLATE // {num}</span>
-                            </span>
-                            <span className="font-mono text-[8.5px] tracking-[0.2em] uppercase text-panel/60">
-                                {project.role}
-                            </span>
+                {/* Right Column: Modern IDE & Compiler Workbench Showcase Window */}
+                <div className="lg:col-span-5 flex flex-col justify-center">
+                    <div className="relative rounded-xl border border-white/15 bg-slate-950/80 overflow-hidden shadow-2xl flex flex-col">
+                        {/* macOS Window Title Bar */}
+                        <div className="px-3.5 py-2.5 bg-slate-900/90 border-b border-white/10 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <span className="w-2.5 h-2.5 rounded-full bg-rose-500/90 inline-block" />
+                                <span className="w-2.5 h-2.5 rounded-full bg-amber-500/90 inline-block" />
+                                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/90 inline-block" />
+                                <span className="ml-2 font-mono text-[10px] text-slate-400 font-semibold truncate">
+                                    aerolang-core // llvm_ir_codegen.cpp
+                                </span>
+                            </div>
+
+                            {/* View Switcher Tabs */}
+                            <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-md border border-white/10">
+                                <button
+                                    onClick={() => setViewMode('specimen')}
+                                    className={`px-2 py-0.5 rounded text-[9px] font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                                        viewMode === 'specimen'
+                                            ? 'bg-accent text-slate-950 font-bold'
+                                            : 'text-slate-400 hover:text-white'
+                                    }`}
+                                >
+                                    Plate
+                                </button>
+                                <button
+                                    onClick={() => setViewMode('ir')}
+                                    className={`px-2 py-0.5 rounded text-[9px] font-mono uppercase tracking-wider transition-colors cursor-pointer ${
+                                        viewMode === 'ir'
+                                            ? 'bg-accent text-slate-950 font-bold'
+                                            : 'text-slate-400 hover:text-white'
+                                    }`}
+                                >
+                                    LLVM IR
+                                </button>
+                            </div>
                         </div>
 
-                        {img ? (
-                            <div className="relative overflow-hidden border border-panel/20 bg-[#0a0c10] my-auto">
-                                <img
-                                    src={img}
-                                    alt={project.title}
-                                    className="w-full h-48 sm:h-56 object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-500"
-                                />
-                                <div className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/80 border border-white/20 font-mono text-[8px] tracking-[0.2em] uppercase text-white">
-                                    FIG. {num}.1 — SYSTEM SNAPSHOT
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="my-auto py-8 px-4 border border-panel/15 bg-black/30 font-mono text-xs space-y-2">
-                                <div className="text-accent-hot font-bold uppercase tracking-widest text-[10px]">
-                                    // ARCHITECTURAL SPECIFICATION
-                                </div>
-                                <div className="text-panel/80 text-[11px] leading-relaxed">
-                                    MODULE: {project.id.toUpperCase()}<br />
-                                    DOMAIN: {categoryOf(project).toUpperCase()}<br />
-                                    STACK : {tags.join(' · ')}
-                                </div>
-                            </div>
-                        )}
+                        {/* Interactive Window Viewport */}
+                        <div className="relative min-h-[260px] sm:min-h-[290px] flex items-center justify-center p-6 bg-gradient-to-b from-[#090d16] via-[#06080e] to-[#030408]">
+                            {/* Ambient Cyber Backlight */}
+                            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,240,255,0.18)_0%,transparent_70%)] pointer-events-none" />
 
-                        <div className="mt-3 pt-2.5 border-t border-panel/20 flex items-center justify-between font-mono text-[9px] tracking-[0.2em] uppercase text-panel/75 group-hover:text-accent-hot transition-colors">
-                            <span>OPEN TECHNICAL MONOGRAPH &amp; SCHEMATICS</span>
-                            <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            {viewMode === 'specimen' ? (
+                                <Link
+                                    to={`/project/${project.id}`}
+                                    className="group relative flex flex-col items-center justify-center w-full no-underline"
+                                >
+                                    <div className="relative p-4 rounded-xl border border-white/10 bg-slate-900/60 backdrop-blur-md shadow-2xl group-hover:border-accent/60 transition-all duration-300">
+                                        <img
+                                            src={img || '/aerolang/aero-1.png'}
+                                            alt={project.title}
+                                            className="max-h-[170px] w-auto object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_0_30px_rgba(0,240,255,0.35)]"
+                                        />
+                                    </div>
+                                    <div className="mt-4 flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-white/10 text-[10px] font-mono text-slate-300">
+                                        <Cpu size={12} className="text-accent" />
+                                        <span>Click to Inspect Architecture Schematics ↗</span>
+                                    </div>
+                                </Link>
+                            ) : (
+                                <div className="w-full font-mono text-xs text-slate-300 space-y-1.5 leading-relaxed p-2 select-text">
+                                    <div className="text-accent font-semibold">// Lowering Aero AST into LLVM SSA Form</div>
+                                    <div className="text-emerald-400">define i32 @aero_runtime_entry() #0 &#123;</div>
+                                    <div className="pl-4 text-slate-400">%1 = alloca i32, align 4</div>
+                                    <div className="pl-4 text-cyan-300">%res = call fastcc i32 @evaluate_ast(%AST* %root)</div>
+                                    <div className="pl-4 text-slate-400">store i32 %res, i32* %1, align 4</div>
+                                    <div className="pl-4 text-purple-300">ret i32 %res</div>
+                                    <div className="text-emerald-400">&#125;</div>
+                                    <div className="text-[10px] text-slate-500 pt-2 border-t border-white/10 flex items-center justify-between">
+                                        <span>OPT PASSES: DcePass, LoopUnroll</span>
+                                        <span className="text-accent">AArch64 / x86_64</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    </Link>
+
+                        {/* Bottom Status Ribbon */}
+                        <div className="px-4 py-2 bg-slate-900/90 border-t border-white/10 flex items-center justify-between font-mono text-[9px] text-slate-400">
+                            <span className="flex items-center gap-1.5 text-accent font-semibold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+                                JIT PIPELINE NOMINAL
+                            </span>
+                            <span className="uppercase text-slate-500">LLVM 18 · AArch64 / x86_64</span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -193,88 +238,164 @@ function LeadFeatureCard({ project, num }) {
     );
 }
 
-/** Secondary Feature Card (#02 & #03) — 2-column broadsheet feature box */
+/** Secondary Feature Card (#02 & #03) — Modern Device & Terminal HUD Mockups */
 function SecondaryFeatureCard({ project, num }) {
     const img = coverImage(project);
     const tags = tagsOf(project);
     const metrics = project.metrics || [];
+    const isBybridge = project.id === 'bybridge';
+    const isAegisLayer = project.id === 'aegislayer';
 
     return (
-        <Link
-            to={`/project/${project.id}`}
-            data-cursor="Read Monograph"
-            className="proj-secondary group flex flex-col justify-between p-5 md:p-6 border border-ink/25 bg-panel hover:border-accent transition-all duration-300 relative overflow-hidden no-underline shadow-[4px_4px_0_rgba(0,0,0,0.05)] hover:shadow-[6px_6px_0_rgba(0,0,0,0.1)]"
-        >
-            {/* Top accent hover bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-
+        <div className="proj-secondary group p-6 rounded-2xl border border-white/10 bg-panel/90 backdrop-blur-xl hover:border-accent/50 transition-all duration-300 flex flex-col justify-between shadow-xl">
             <div>
                 {/* Meta header */}
-                <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-ink/15">
+                <div className="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-white/10">
                     <div className="flex items-center gap-2">
-                        <span className="font-display font-bold text-lg text-accent leading-none tabular-nums">
-                            {num}
+                        <span className="font-mono font-bold text-xs text-accent bg-accent/10 border border-accent/30 px-2 py-0.5 rounded-md">
+                            #{num}
                         </span>
                         <span
                             className="w-2 h-2 rounded-full"
                             style={{ background: dotColor(project) }}
                         />
-                        <span className="font-mono text-[9px] tracking-[0.22em] uppercase text-graphite font-semibold">
+                        <span className="font-mono text-[10px] tracking-wider uppercase text-graphite font-semibold">
                             {categoryOf(project)}
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
                         {project.year && (
-                            <span className="font-mono text-[8.5px] tracking-[0.18em] text-graphite uppercase">
+                            <span className="font-mono text-[9px] text-graphite uppercase tracking-wider">
                                 {project.year}
                             </span>
                         )}
-                        <ArrowUpRight
-                            size={15}
-                            className="text-graphite group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
-                        />
+                        <Link
+                            to={`/project/${project.id}`}
+                            className="p-1 rounded-full text-graphite hover:text-accent hover:bg-white/5 transition-colors"
+                        >
+                            <ArrowUpRight size={16} />
+                        </Link>
                     </div>
                 </div>
 
-                {/* Optional Specimen Thumbnail */}
-                {img && (
-                    <div className="mb-3.5 relative overflow-hidden border border-ink/20 bg-[#0d1117] h-36">
+                {/* ── Modern Showcase Visual Area ── */}
+                {isBybridge ? (
+                    /* Bybridge: Authentic Modern Smartphone & Terminal Bridge Mockup */
+                    <Link
+                        to={`/project/${project.id}`}
+                        className="mb-5 block relative rounded-xl border border-white/10 bg-gradient-to-b from-slate-900 via-slate-950 to-black p-4 overflow-hidden group/box shadow-lg no-underline"
+                    >
+                        {/* Ambient Glow */}
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.15)_0%,transparent_70%)] pointer-events-none" />
+
+                        <div className="flex items-center justify-between gap-4">
+                            {/* Smartphone Chassis Frame */}
+                            <div className="relative w-28 sm:w-32 h-44 sm:h-48 rounded-[1.6rem] border-[3px] border-slate-700 bg-slate-950 shadow-2xl overflow-hidden p-1 shrink-0 flex flex-col items-center">
+                                {/* Camera Notch */}
+                                <div className="w-8 h-2 bg-black rounded-full absolute top-1.5 z-20" />
+                                {/* Full Phone Screen Display */}
+                                <img
+                                    src="/bybridge/android-1.png"
+                                    alt="Bybridge Android UI"
+                                    className="w-full h-full object-cover rounded-[1.3rem] transition-transform duration-500 group-hover/box:scale-105"
+                                />
+                            </div>
+
+                            {/* Accompanying Linux Bridge Terminal HUD */}
+                            <div className="flex-1 font-mono text-[10px] text-slate-300 space-y-2 py-1">
+                                <div className="flex items-center gap-1.5 text-accent font-bold">
+                                    <Activity size={12} />
+                                    <span>BRIDGE ACTIVE</span>
+                                </div>
+                                <div className="p-2 rounded-lg bg-black/50 border border-white/10 text-[9px] text-slate-400 space-y-1">
+                                    <div className="text-emerald-400">$ bybridge --stream</div>
+                                    <div>Arch Linux &lt;=&gt; Android</div>
+                                    <div className="text-cyan-300">H.264 RTP 120 FPS</div>
+                                    <div className="text-amber-400">Latency: &lt; 8ms LAN</div>
+                                </div>
+                                <span className="inline-flex items-center gap-1 text-[9px] text-slate-400 group-hover/box:text-accent transition-colors font-semibold">
+                                    Inspect Full System ↗
+                                </span>
+                            </div>
+                        </div>
+                    </Link>
+                ) : isAegisLayer ? (
+                    /* AegisLayer: Modern Cyber Defense Shield HUD */
+                    <Link
+                        to={`/project/${project.id}`}
+                        className="mb-5 block relative rounded-xl border border-white/10 bg-gradient-to-b from-slate-900 via-slate-950 to-black p-4 overflow-hidden group/box shadow-lg no-underline"
+                    >
+                        {/* Ambient Glow */}
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.2)_0%,transparent_70%)] pointer-events-none" />
+
+                        <div className="flex items-center justify-between pb-2 mb-3 border-b border-white/10 font-mono text-[9px] text-slate-400">
+                            <span className="flex items-center gap-1.5 text-accent font-semibold">
+                                <Shield size={12} />
+                                <span>AEGIS-DAEMON // SECURITY HUD</span>
+                            </span>
+                            <span className="text-emerald-400">● 0-DEP ML ACTIVE</span>
+                        </div>
+
+                        {/* Centered Graphic Preview Without Awkward Cropping */}
+                        <div className="h-36 sm:h-40 flex items-center justify-center p-2">
+                            <img
+                                src="/assets/aegislayer_dashboard.png"
+                                alt="AegisLayer Dashboard"
+                                className="max-h-full max-w-full object-contain drop-shadow-[0_0_25px_rgba(56,189,248,0.35)] transition-transform duration-500 group-hover/box:scale-105"
+                            />
+                        </div>
+
+                        <div className="pt-2 border-t border-white/10 flex items-center justify-between font-mono text-[9px] text-slate-400">
+                            <span>eBPF Hooks: Nominal</span>
+                            <span className="text-accent group-hover/box:translate-x-0.5 transition-transform font-bold">
+                                View Monograph ↗
+                            </span>
+                        </div>
+                    </Link>
+                ) : img ? (
+                    /* Generic Feature Image with Modern Glass Frame */
+                    <Link
+                        to={`/project/${project.id}`}
+                        className="mb-5 block relative rounded-xl border border-white/10 bg-slate-950 h-36 overflow-hidden group/box"
+                    >
                         <img
                             src={img}
                             alt={project.title}
-                            className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-500"
+                            className="w-full h-full object-contain p-2 opacity-90 group-hover/box:opacity-100 group-hover/box:scale-105 transition-all duration-500"
                         />
-                        <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 bg-ink/85 text-panel font-mono text-[7.5px] tracking-[0.2em] uppercase">
-                            PLATE {num}
+                        <span className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/80 rounded border border-white/15 font-mono text-[8px] text-white">
+                            PLATE #{num}
                         </span>
-                    </div>
-                )}
+                    </Link>
+                ) : null}
 
                 {/* Title & Subtitle */}
-                <h3 className="font-display font-bold text-xl md:text-2xl text-ink group-hover:text-accent transition-colors leading-tight">
-                    {project.title}
-                </h3>
+                <Link to={`/project/${project.id}`} className="no-underline group/t inline-block">
+                    <h3 className="font-display font-bold text-2xl text-ink group-hover/t:text-accent transition-colors leading-tight">
+                        {project.title}
+                    </h3>
+                </Link>
                 {project.subtitle && (
-                    <div className="mt-1 font-mono text-[9.5px] tracking-[0.15em] uppercase text-accent/90 font-semibold">
+                    <div className="mt-1 font-mono text-[11px] uppercase tracking-wider text-accent font-semibold">
                         {project.subtitle}
                     </div>
                 )}
 
                 {/* Description */}
-                <p className="mt-2.5 font-sans text-xs sm:text-[13px] text-graphite leading-relaxed line-clamp-3">
+                <p className="mt-3 font-sans text-sm text-graphite leading-relaxed line-clamp-3">
                     {project.description}
                 </p>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-ink/15 space-y-2.5">
+            <div className="mt-5 pt-4 border-t border-white/10 space-y-3">
                 {metrics.length > 0 && (
-                    <div className="grid grid-cols-3 gap-2 py-1.5 px-2.5 bg-panel-deep/55 border border-ink/10">
+                    <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-lg bg-panel-deep/60 border border-white/10">
                         {metrics.slice(0, 3).map((m, idx) => (
                             <div key={idx} className="flex flex-col min-w-0">
-                                <span className="font-mono text-[7.5px] tracking-[0.18em] uppercase text-graphite truncate">
+                                <span className="font-mono text-[8px] tracking-wider uppercase text-graphite truncate">
                                     {m.label}
                                 </span>
-                                <span className="font-mono text-[9.5px] font-bold text-ink truncate">
+                                <span className="font-mono text-[10px] font-bold text-ink truncate">
                                     {m.value}
                                 </span>
                             </div>
@@ -283,16 +404,21 @@ function SecondaryFeatureCard({ project, num }) {
                 )}
 
                 <div className="flex flex-wrap gap-1.5">
-                    {tags.slice(0, 5).map((tag, i) => (
-                        <span key={i} className="proj-tag">{tag}</span>
+                    {tags.slice(0, 4).map((tag, i) => (
+                        <span
+                            key={i}
+                            className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 font-mono text-[9px] text-graphite"
+                        >
+                            {tag}
+                        </span>
                     ))}
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }
 
-/** Regular Archival Ledger Row (#04+) */
+/** Regular Project Row (#04+) — Modern Frosted Row Item */
 function ProjectRow({ project, num }) {
     const tags = tagsOf(project);
     const primaryMetric = project.metrics && project.metrics[0];
@@ -303,47 +429,55 @@ function ProjectRow({ project, num }) {
             data-cursor="Open Dossier"
             className="block group no-underline"
         >
-            <article className="proj-row px-2 sm:px-3">
-                <span className="proj-row__num font-bold text-accent">{num}</span>
+            <article className="p-4 rounded-xl border border-white/10 bg-panel/70 hover:bg-panel-deep hover:border-accent/40 backdrop-blur-md transition-all duration-300 flex items-center justify-between gap-4 shadow-sm">
+                <span className="font-mono text-sm font-bold text-accent w-6 shrink-0">{num}</span>
 
                 <span
-                    className="proj-row__dot"
+                    className="w-2.5 h-2.5 rounded-full shrink-0"
                     style={{ background: dotColor(project) }}
                     title={categoryOf(project)}
                 />
 
-                <div className="proj-row__main">
+                <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2.5 flex-wrap">
-                        <span className="proj-row__title">{project.title}</span>
+                        <span className="font-display font-bold text-base text-ink group-hover:text-accent transition-colors">
+                            {project.title}
+                        </span>
                         {project.subtitle && (
-                            <span className="hidden md:inline font-mono text-[9px] tracking-[0.14em] uppercase text-graphite">
+                            <span className="hidden md:inline font-mono text-[10px] text-graphite truncate">
                                 — {project.subtitle}
                             </span>
                         )}
                         {project.year && (
-                            <span className="font-mono text-[8.5px] tracking-[0.18em] uppercase text-graphite/70 ml-auto sm:ml-0">
+                            <span className="font-mono text-[9px] text-graphite/80 ml-auto sm:ml-0">
                                 [{project.year}]
                             </span>
                         )}
                     </div>
-                    <span className="proj-row__desc">{project.description}</span>
+                    <p className="font-sans text-xs text-graphite truncate mt-0.5 m-0">
+                        {project.description}
+                    </p>
                 </div>
 
-                <div className="proj-row__tags">
+                <div className="hidden lg:flex items-center gap-1.5 shrink-0">
                     {primaryMetric && (
-                        <span className="hidden xl:inline-block px-2 py-0.5 font-mono text-[8.5px] tracking-[0.14em] uppercase bg-accent/10 border border-accent/30 text-accent font-semibold mr-1">
+                        <span className="px-2.5 py-0.5 rounded-full font-mono text-[9px] bg-accent/10 border border-accent/30 text-accent font-semibold mr-1">
                             {primaryMetric.value}
                         </span>
                     )}
                     {tags.slice(0, 3).map((tag, i) => (
-                        <span key={i} className="proj-tag">{tag}</span>
+                        <span
+                            key={i}
+                            className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 font-mono text-[9px] text-graphite"
+                        >
+                            {tag}
+                        </span>
                     ))}
                 </div>
 
                 <ArrowUpRight
-                    size={15}
-                    className="proj-row__arrow"
-                    aria-hidden="true"
+                    size={16}
+                    className="text-graphite group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
                 />
             </article>
         </Link>
@@ -352,7 +486,7 @@ function ProjectRow({ project, num }) {
 
 export default function ProjectsOverlay({ projects = [], isFiltered = false, children }) {
     const containerRef = usePageReveal({
-        selector: '.proj-feature-lead, .proj-secondary, .proj-row',
+        selector: '.proj-feature-lead, .proj-secondary, article',
         y: 20,
         scale: 1,
         stagger: 0.05,
@@ -365,10 +499,12 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
 
     if (!shown.length) {
         return (
-            <section id="projects" className="proj-shell">
+            <section id="projects" className="py-12">
                 {children}
-                <div className="proj-empty">
-                    <span className="proj-empty__label">— No dispatches match your filter criteria —</span>
+                <div className="text-center py-16 p-6 rounded-2xl border border-white/10 bg-panel">
+                    <span className="font-mono text-xs uppercase tracking-widest text-graphite">
+                        — No projects match your selected filter —
+                    </span>
                 </div>
             </section>
         );
@@ -380,53 +516,55 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
     const restStartIndex = !isFiltered && shown.length >= 3 ? 4 : 2;
 
     return (
-        <section id="projects" ref={containerRef} className="proj-shell">
-
+        <section id="projects" ref={containerRef} className="w-full flex flex-col gap-8 py-6">
             {children}
 
-            {/* ── Rule ───────────────────────── */}
-            <div className="proj-rule" aria-hidden="true" />
+            {/* Lead Flagship Feature (#01) */}
+            {featured && (
+                <LeadFeatureCard project={featured} num="01" />
+            )}
 
-            {/* ── Lead Flagship Monograph (#01) ── */}
-            <LeadFeatureCard project={featured} num={pad(1)} />
-
-            {/* ── Secondary Feature Pair (#02 & #03) ── */}
+            {/* Secondary Features (#02 & #03) */}
             {secondary.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-6 pb-2">
-                    {secondary.map((p, i) => (
-                        <SecondaryFeatureCard key={p.id} project={p} num={pad(i + 2)} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                    {secondary.map((proj, i) => (
+                        <SecondaryFeatureCard
+                            key={proj.id}
+                            project={proj}
+                            num={pad(i + 2)}
+                        />
                     ))}
                 </div>
             )}
 
-            {/* ── Divider ────────────────────── */}
+            {/* Ledger Rows (#04+) */}
             {rest.length > 0 && (
-                <div className="proj-divider">
-                    <span className="proj-divider__label">
-                        Archival System Dispatches ({rest.length} {shouldLimit && !showAll ? `of ${projects.length - 3}` : 'indexed'})
-                    </span>
-                </div>
-            )}
+                <div className="flex flex-col gap-3 w-full">
+                    <div className="flex items-center justify-between pb-2 mb-1 border-b border-white/10 font-mono text-[10px] uppercase tracking-wider text-graphite">
+                        <span>Systems Engineering Catalog &amp; Utilities</span>
+                        <span>{rest.length} Repositories</span>
+                    </div>
 
-            {/* ── Row list ───────────────────── */}
-            {rest.length > 0 && (
-                <div className="proj-list">
-                    {rest.map((p, i) => (
-                        <ProjectRow key={p.id} project={p} num={pad(restStartIndex + i)} />
+                    {rest.map((proj, i) => (
+                        <ProjectRow
+                            key={proj.id}
+                            project={proj}
+                            num={pad(restStartIndex + i)}
+                        />
                     ))}
                 </div>
             )}
 
-            {/* ── Show more ──────────────────── */}
+            {/* Expand / Collapse Button */}
             {shouldLimit && (
-                <button
-                    onClick={() => setShowAll((v) => !v)}
-                    className="proj-more"
-                >
-                    {showAll
-                        ? '[ − ] Condense Archival Index'
-                        : `[ + ] Expand All ${projects.length} System Monographs`}
-                </button>
+                <div className="flex justify-center pt-4">
+                    <button
+                        onClick={() => setShowAll(!showAll)}
+                        className="px-6 py-3 rounded-full border border-white/20 bg-panel hover:border-accent hover:text-accent font-mono text-xs tracking-wider uppercase font-semibold transition-all shadow-md cursor-pointer"
+                    >
+                        {showAll ? 'Show Fewer Projects' : `View All ${projects.length} Engineering Projects`}
+                    </button>
+                </div>
             )}
         </section>
     );
