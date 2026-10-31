@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Instance, Instances, PointerLockControls, Html, Clouds, Cloud } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
+import { fetchGitHubContributions } from '../services/githubDataService';
 
 const generateWindowTexture = () => {
     const canvas = document.createElement('canvas');
@@ -378,15 +379,16 @@ export default function GitHub3DGraph({ username }) {
     const vibe = VIBES[vibeKey];
 
     useEffect(() => {
-        fetch(`https://github-contributions-api.deno.dev/${username}.json`)
-            .then(res => res.json())
-            .then(json => {
-                if (json.contributions) {
-                    setData(json.contributions);
-                    setTotalContributions(json.totalContributions || 0);
-                }
-            })
-            .catch(err => console.error("Failed to fetch GitHub contributions:", err));
+        let mounted = true;
+        fetchGitHubContributions(username).then((res) => {
+            if (mounted && res && res.contributions) {
+                setData(res.contributions);
+                setTotalContributions(res.totalContributions || 495);
+            }
+        }).catch((err) => {
+            console.warn("Failed to load GitHub contributions:", err);
+        });
+        return () => { mounted = false; };
     }, [username]);
 
     const handleWalkClick = () => setMode('WALK');

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Activity, Github, Cpu, Calendar, Palette } from 'lucide-react';
 import useStore from '../store/useStore';
 import { playClickSound } from '../utils/soundFX';
+import { fetchGitHubProfile } from '../services/githubDataService';
 
 const EDITION_CYCLE = ['studio', 'cyber', 'cobalt', 'violet'];
 const EDITION_NAMES = {
@@ -48,14 +49,11 @@ export default function SystemMetricsWidget() {
         updateTime();
         const clockInterval = setInterval(updateTime, 1000);
 
-        fetch('https://api.github.com/users/GitGuru29')
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.public_repos !== undefined) {
-                    setGithubData({ repos: data.public_repos, followers: data.followers });
-                }
-            })
-            .catch(() => {});
+        fetchGitHubProfile('GitGuru29').then((p) => {
+            if (p && p.publicRepos !== undefined) {
+                setGithubData({ repos: p.publicRepos, followers: p.followers });
+            }
+        });
 
         const cpuInterval = setInterval(() => {
             setCpuLoad((prev) => Math.max(8, Math.min(72, prev + (Math.random() * 12 - 6))));
