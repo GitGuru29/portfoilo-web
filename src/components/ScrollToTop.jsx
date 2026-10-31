@@ -38,7 +38,7 @@ export default function ScrollToTop() {
             ref={btnRef}
             onClick={handleClick}
             aria-label="Scroll to top"
-            className="fixed bottom-12 right-6 md:right-8 z-[89] w-10 h-10 flex items-center justify-center rounded-none border border-ink/20 bg-panel/90 backdrop-blur-md hover:border-accent hover:text-accent transition-all duration-300 shadow-[0_4px_18px_rgba(23,19,15,0.12)] group opacity-0"
+            className="fixed bottom-12 right-6 md:right-8 z-[89] w-10 h-10 flex items-center justify-center rounded-none border border-ink/25 bg-panel/95 backdrop-blur-md hover:border-accent hover:text-accent transition-all duration-300 shadow-[0_4px_18px_rgba(23,19,15,0.12)] group opacity-0 cursor-pointer"
             style={{ willChange: 'transform, opacity' }}
         >
             <svg
@@ -46,10 +46,11 @@ export default function ScrollToTop() {
                 height="12"
                 viewBox="0 0 12 12"
                 fill="none"
-                className="text-slate-400 group-hover:text-ink transition-all group-hover:-translate-y-0.5 duration-300"
+                className="text-ink/80 group-hover:text-accent transition-all group-hover:-translate-y-0.5 duration-300"
             >
-                <path d="M6 10V2M2 6l4-4 4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6 10V2M2 6l4-4 4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
         </button>
     );
 }
+

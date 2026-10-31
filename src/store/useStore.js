@@ -18,7 +18,7 @@ const useStore = create((set) => ({
     hasBooted: false,
     isTerminalOpen: false,
     soundEnabled: true,
-    accentTheme: 'sky', // 'sky' | 'deep' | 'ochre' — riso plate filter
+    accentTheme: 'crimson', // 'crimson' | 'cobalt' | 'amber' | 'obsidian' — press edition
     isCommandPaletteOpen: false,
     isMeetingModalOpen: false,
 

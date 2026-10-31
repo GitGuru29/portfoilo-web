@@ -88,46 +88,47 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
     return createPortal(
         <AnimatePresence>
             {isOpen && (
-                <div onClick={onClose} className="fixed inset-0 z-[99990] flex items-center justify-center p-4 bg-ink/25 backdrop-blur-sm">
+                <div onClick={onClose} className="fixed inset-0 z-[99990] flex items-center justify-center p-4 bg-ink/40 backdrop-blur-sm">
                     <motion.div
                         onClick={(e) => e.stopPropagation()}
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.96, y: 16 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative z-10 w-full max-w-2xl max-h-[85vh] bg-panel border border-white/15 rounded-2xl shadow-2xl p-5 md:p-7 text-ink flex flex-col overflow-hidden my-auto"
+                        exit={{ opacity: 0, scale: 0.96, y: 16 }}
+                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="relative z-10 w-full max-w-2xl max-h-[85vh] bg-panel border-2 border-ink rounded-none shadow-[8px_8px_0_rgba(13,13,13,0.3)] p-5 md:p-7 text-ink flex flex-col overflow-hidden my-auto"
                     >
-                        {/* Background Ambient Glow */}
-                        <div className="absolute -top-24 -right-24 w-60 h-60 bg-[#B91C1C]/15 rounded-full blur-3xl pointer-events-none" />
-
                         {/* Header (Fixed at Top) */}
-                        <div className="flex items-center justify-between pb-4 border-b border-ink/10 mb-4 flex-shrink-0">
+                        <div className="flex items-center justify-between pb-4 border-b-2 border-ink mb-4 flex-shrink-0">
                             <div>
-                                <span className="text-xs font-mono tracking-widest text-[#B91C1C] uppercase">Endorsements & Testimonials</span>
-                                <h3 className="text-xl md:text-2xl font-space font-bold text-ink mt-0.5">Submit a Recommendation</h3>
+                                <span className="text-[10px] font-mono tracking-[0.22em] text-accent font-bold uppercase">
+                                    DISPATCH ENDORSEMENT // LETTERS DESK
+                                </span>
+                                <h3 className="text-xl md:text-2xl font-display font-bold text-ink mt-0.5">
+                                    Submit a Recommendation
+                                </h3>
                             </div>
                             <button
                                 onClick={onClose}
-                                className="p-2 rounded-full text-ink/60 hover:text-ink hover:bg-white/10 transition-colors"
+                                className="p-2 rounded-none border border-ink/25 text-graphite hover:text-ink hover:border-ink transition-colors cursor-pointer"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
 
                         {submitted ? (
                             <div className="text-center py-10 space-y-4 flex-1 flex flex-col justify-center items-center">
-                                <div className="w-16 h-16 bg-[#B91C1C]/20 border border-[#B91C1C] text-[#B91C1C] rounded-full flex items-center justify-center mb-2">
+                                <div className="w-16 h-16 bg-accent/10 border-2 border-accent text-accent rounded-none flex items-center justify-center mb-2">
                                     <CheckCircle2 className="w-8 h-8" />
                                 </div>
-                                <h4 className="text-xl font-space font-bold text-ink">Recommendation Submitted!</h4>
-                                <p className="text-sm text-graphite max-w-md mx-auto leading-relaxed">
-                                    Thank you for your endorsement! Your recommendation has been submitted directly and will appear live on this portfolio.
+                                <h4 className="text-xl font-display font-bold text-ink">Endorsement Filed!</h4>
+                                <p className="text-sm font-serif text-graphite max-w-md mx-auto leading-relaxed">
+                                    Thank you for your endorsement. Your recommendation has been recorded and published to the portfolio ledger.
                                 </p>
                                 <button
                                     onClick={handleReset}
-                                    className="mt-6 px-6 py-2.5 bg-[#B91C1C] hover:bg-[#8CC8FF] text-neutral-950 font-space font-semibold rounded-lg transition-all shadow-lg"
+                                    className="mt-6 px-6 py-2.5 bg-ink hover:bg-accent text-void font-mono font-bold text-xs tracking-widest uppercase rounded-none transition-all cursor-pointer"
                                 >
-                                    Done & Close
+                                    Done &amp; Close
                                 </button>
                             </div>
                         ) : (
@@ -136,8 +137,8 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
                                 <div className="space-y-4 flex-1 overflow-y-auto pr-2 pb-2">
                                     {/* Photo Upload Dropzone */}
                                     <div>
-                                        <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
-                                            Profile Photo / Avatar
+                                        <label className="block text-[10px] font-mono tracking-[0.18em] uppercase text-graphite mb-1">
+                                            Profile Portrait / Avatar
                                         </label>
                                         <input
                                             type="file"
@@ -148,22 +149,22 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
                                         />
 
                                         {formData.avatar ? (
-                                            <div className="flex items-center justify-between p-2.5 bg-ink/5 border border-white/15 rounded-xl">
+                                            <div className="flex items-center justify-between p-2.5 bg-panel-deep border border-ink/20 rounded-none">
                                                 <div className="flex items-center gap-3">
                                                     <img
                                                         src={formData.avatar}
                                                         alt="Avatar preview"
-                                                        className="w-10 h-10 rounded-full object-cover border border-[#B91C1C]"
+                                                        className="w-10 h-10 rounded-none object-cover border border-accent"
                                                     />
                                                     <div>
-                                                        <p className="text-xs font-space text-ink">Photo Ready</p>
-                                                        <p className="text-[11px] text-graphite">Compressed avatar preview</p>
+                                                        <p className="text-xs font-mono font-bold text-ink">Portrait Ready</p>
+                                                        <p className="text-[10px] font-mono text-graphite">Compressed specimen preview</p>
                                                     </div>
                                                 </div>
                                                 <button
                                                     type="button"
                                                     onClick={() => setFormData({ ...formData, avatar: '' })}
-                                                    className="p-1.5 text-graphite hover:text-red-400 transition-colors"
+                                                    className="p-1.5 text-graphite hover:text-accent transition-colors cursor-pointer"
                                                     title="Remove photo"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
@@ -175,24 +176,24 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
                                                 onDragOver={handleDragOver}
                                                 onDragLeave={handleDragLeave}
                                                 onClick={() => fileInputRef.current?.click()}
-                                                className={`w-full py-4 px-4 border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all ${
+                                                className={`w-full py-4 px-4 border border-dashed rounded-none flex flex-col items-center justify-center cursor-pointer transition-all ${
                                                     isDragging
-                                                        ? 'border-[#B91C1C] bg-[#B91C1C]/10'
-                                                        : 'border-white/15 bg-ink/5 hover:border-white/30 hover:bg-white/10'
+                                                        ? 'border-accent bg-accent/10'
+                                                        : 'border-ink/30 bg-panel-deep/50 hover:border-accent'
                                                 }`}
                                             >
                                                 {compressing ? (
-                                                    <div className="flex items-center gap-2 text-sm text-[#B91C1C]">
+                                                    <div className="flex items-center gap-2 text-xs font-mono text-accent">
                                                         <Loader2 className="w-4 h-4 animate-spin" />
-                                                        Processing photo...
+                                                        Processing image...
                                                     </div>
                                                 ) : (
                                                     <>
                                                         <Upload className="w-5 h-5 text-graphite mb-1" />
-                                                        <p className="text-xs font-space font-medium text-ink">
-                                                            Drag & drop your photo here, or <span className="text-[#B91C1C]">browse</span>
+                                                        <p className="text-xs font-mono text-ink">
+                                                            Drag &amp; drop photo here, or <span className="text-accent font-bold underline">browse</span>
                                                         </p>
-                                                        <p className="text-[10px] text-graphite mt-0.5">Supports PNG, JPG, WebP</p>
+                                                        <p className="text-[10px] font-mono text-graphite mt-0.5">Supports PNG, JPG, WebP</p>
                                                     </>
                                                 )}
                                             </div>
@@ -202,8 +203,8 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {/* Name */}
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
-                                                Your Full Name <span className="text-[#B91C1C]">*</span>
+                                            <label className="block text-[10px] font-mono tracking-[0.18em] uppercase text-graphite mb-1">
+                                                Your Full Name <span className="text-accent">*</span>
                                             </label>
                                             <div className="relative">
                                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-graphite" />
@@ -213,15 +214,15 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
                                                     value={formData.name}
                                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                                     placeholder="e.g. Sarah Jenkins"
-                                                    className="w-full pl-9 pr-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink placeholder-neutral-500 focus:outline-none focus:border-[#B91C1C] transition-colors"
+                                                    className="w-full pl-9 pr-3 py-2.5 bg-panel-deep border border-ink/25 rounded-none text-xs font-mono text-ink placeholder-graphite/60 focus:outline-none focus:border-accent transition-colors"
                                                 />
                                             </div>
                                         </div>
 
                                         {/* Role & Company */}
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
-                                                Role / Company
+                                            <label className="block text-[10px] font-mono tracking-[0.18em] uppercase text-graphite mb-1">
+                                                Role / Organization
                                             </label>
                                             <div className="relative">
                                                 <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-graphite" />
@@ -229,8 +230,8 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
                                                     type="text"
                                                     value={formData.role}
                                                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                                                    placeholder="e.g. Lead Designer @ Acme"
-                                                    className="w-full pl-9 pr-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink placeholder-neutral-500 focus:outline-none focus:border-[#B91C1C] transition-colors"
+                                                    placeholder="e.g. Principal Engineer @ Acme"
+                                                    className="w-full pl-9 pr-3 py-2.5 bg-panel-deep border border-ink/25 rounded-none text-xs font-mono text-ink placeholder-graphite/60 focus:outline-none focus:border-accent transition-colors"
                                                 />
                                             </div>
                                         </div>
@@ -239,13 +240,13 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {/* Relationship */}
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
-                                                Relationship
+                                            <label className="block text-[10px] font-mono tracking-[0.18em] uppercase text-graphite mb-1">
+                                                Working Relationship
                                             </label>
                                             <select
                                                 value={formData.relationship}
                                                 onChange={(e) => setFormData({ ...formData, relationship: e.target.value })}
-                                                className="w-full px-3 py-2 bg-panel border border-ink/10 rounded-lg text-sm text-ink focus:outline-none focus:border-[#B91C1C] transition-colors"
+                                                className="w-full px-3 py-2.5 bg-panel-deep border border-ink/25 rounded-none text-xs font-mono text-ink focus:outline-none focus:border-accent transition-colors"
                                             >
                                                 <option value="Client">Client</option>
                                                 <option value="Manager / Supervisor">Manager / Supervisor</option>
@@ -256,22 +257,22 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
 
                                         {/* Star Rating */}
                                         <div>
-                                            <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
+                                            <label className="block text-[10px] font-mono tracking-[0.18em] uppercase text-graphite mb-1">
                                                 Rating
                                             </label>
-                                            <div className="flex items-center gap-1 py-1">
+                                            <div className="flex items-center gap-1.5 py-1.5">
                                                 {[1, 2, 3, 4, 5].map((star) => (
                                                     <button
                                                         key={star}
                                                         type="button"
                                                         onClick={() => setFormData({ ...formData, rating: star })}
-                                                        className="focus:outline-none transition-transform hover:scale-110"
+                                                        className="focus:outline-none transition-transform hover:scale-110 cursor-pointer"
                                                     >
                                                         <Star
                                                             className={`w-5 h-5 ${
                                                                 star <= formData.rating
-                                                                    ? 'fill-[#B91C1C] text-[#B91C1C]'
-                                                                    : 'text-neutral-600'
+                                                                    ? 'fill-accent text-accent'
+                                                                    : 'text-ink/25'
                                                             }`}
                                                         />
                                                     </button>
@@ -282,7 +283,7 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
 
                                     {/* LinkedIn */}
                                     <div>
-                                        <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
+                                        <label className="block text-[10px] font-mono tracking-[0.18em] uppercase text-graphite mb-1">
                                             LinkedIn Profile URL (Optional)
                                         </label>
                                         <div className="relative">
@@ -292,43 +293,43 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
                                                 value={formData.linkedin}
                                                 onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
                                                 placeholder="https://linkedin.com/in/..."
-                                                className="w-full pl-9 pr-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink placeholder-neutral-500 focus:outline-none focus:border-[#B91C1C] transition-colors"
+                                                className="w-full pl-9 pr-3 py-2.5 bg-panel-deep border border-ink/25 rounded-none text-xs font-mono text-ink placeholder-graphite/60 focus:outline-none focus:border-accent transition-colors"
                                             />
                                         </div>
                                     </div>
 
                                     {/* Recommendation Text */}
                                     <div>
-                                        <label className="block text-xs font-space tracking-wider uppercase text-graphite mb-1">
-                                            Your Endorsement / Recommendation <span className="text-[#B91C1C]">*</span>
+                                        <label className="block text-[10px] font-mono tracking-[0.18em] uppercase text-graphite mb-1">
+                                            Your Endorsement / Letter <span className="text-accent">*</span>
                                         </label>
                                         <textarea
                                             required
                                             rows={3}
                                             value={formData.text}
                                             onChange={(e) => setFormData({ ...formData, text: e.target.value })}
-                                            placeholder="Write your reference, experience working together, or feedback..."
-                                            className="w-full px-3 py-2 bg-ink/5 border border-ink/10 rounded-lg text-sm text-ink placeholder-neutral-500 focus:outline-none focus:border-[#B91C1C] transition-colors resize-none"
+                                            placeholder="Write your reference, experience working together, or technical feedback..."
+                                            className="w-full px-3 py-2.5 bg-panel-deep border border-ink/25 rounded-none text-xs font-mono text-ink placeholder-graphite/60 focus:outline-none focus:border-accent transition-colors resize-none"
                                         />
                                     </div>
                                 </div>
 
-                                {/* Submit Footer (Always Sticky at Bottom) */}
-                                <div className="pt-3 border-t border-ink/10 flex items-center justify-between flex-shrink-0 mt-auto bg-panel">
-                                    <span className="text-xs text-graphite">
-                                        Direct in-browser submission
+                                {/* Submit Footer */}
+                                <div className="pt-3 border-t border-ink/20 flex items-center justify-between flex-shrink-0 mt-auto bg-panel">
+                                    <span className="text-[10px] font-mono uppercase tracking-widest text-graphite">
+                                        Direct Ledger Dispatch
                                     </span>
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="px-6 py-2.5 bg-[#B91C1C] hover:bg-[#8CC8FF] text-neutral-950 font-space font-semibold text-sm rounded-lg transition-all flex items-center gap-2 shadow-lg hover:shadow-[#B91C1C]/20 cursor-pointer disabled:opacity-50"
+                                        className="px-6 py-2.5 bg-ink hover:bg-accent text-void font-mono font-bold text-xs uppercase tracking-widest rounded-none transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
                                     >
                                         {isSubmitting ? (
                                             <Loader2 className="w-4 h-4 animate-spin" />
                                         ) : (
-                                            <Send className="w-4 h-4" />
+                                            <Send className="w-3.5 h-3.5" />
                                         )}
-                                        {isSubmitting ? 'Submitting...' : 'Submit Recommendation'}
+                                        {isSubmitting ? 'Transmitting...' : 'Publish Endorsement'}
                                     </button>
                                 </div>
                             </form>
@@ -340,3 +341,4 @@ export default function SubmitReferenceModal({ isOpen, onClose, onSuccess }) {
         document.body
     );
 }
+

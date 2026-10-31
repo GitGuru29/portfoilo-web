@@ -69,9 +69,10 @@ export default function CommandPalette() {
         { id: 'act-linkedin', label: 'Open LinkedIn Profile', category: 'Quick Actions', icon: Linkedin, action: () => { window.open('https://linkedin.com/in/siluna-dangalla', '_blank'); setCommandPaletteOpen(false); } },
 
         // Theme & Audio Settings
-        { id: 'set-theme-sky',   label: 'Plate: SKY · RISO_01', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('sky'); playChimeSound(soundEnabled); } },
-        { id: 'set-theme-deep',  label: 'Plate: DEEP SKY · RISO_02', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('deep'); playChimeSound(soundEnabled); } },
-        { id: 'set-theme-ochre', label: 'Plate: OCHRE · RISO_03', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('ochre'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-crimson',  label: 'Edition: VERMILION PRESS (Warm Newsprint)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('crimson'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-cobalt',   label: 'Edition: BLUEPRINT COBALT (Technical Drafting)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('cobalt'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-amber',    label: 'Edition: ARCHIVAL LEDGER (Copper & Ochre)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('amber'); playChimeSound(soundEnabled); } },
+        { id: 'set-theme-obsidian', label: 'Edition: NIGHT PRESS (Darkroom Carbon)', category: 'Appearance & Audio', icon: Sparkles, action: () => { setAccentTheme('obsidian'); playChimeSound(soundEnabled); } },
         { id: 'set-sound', label: `Audio: ${soundEnabled ? 'Mute Sound FX' : 'Enable Sound FX'}`, category: 'Appearance & Audio', icon: soundEnabled ? VolumeX : Volume2, action: () => { toggleSound(); playClickSound(!soundEnabled); } },
     ];
 

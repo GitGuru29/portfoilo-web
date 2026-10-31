@@ -396,91 +396,105 @@ export default function GitHub3DGraph({ username }) {
     }, [totalContributions]);
 
     return (
-        <div className="w-full h-full min-h-[500px] md:min-h-[600px] relative overflow-hidden rounded-[24px]" style={{ background: vibe.bg }}>
+        <div className="w-full h-full relative overflow-hidden rounded-none" style={{ background: vibe.bg }}>
 
-            {/* SPLASH SCREEN — shown until user clicks Explore */}
+            {/* ARCHITECTURAL BLUEPRINT SPLASH — shown until user launches 3D engine */}
             {!started && (
                 <div
-                    className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-6"
-                    style={{ background: `linear-gradient(135deg, ${vibe.bg} 0%, #0f172a 100%)` }}
+                    className="absolute inset-0 z-30 flex flex-col items-center justify-between p-6 md:p-10"
+                    style={{
+                        background: `radial-gradient(circle at 50% 35%, #131c2e 0%, #090b10 100%)`,
+                        backgroundImage: `
+                            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+                        `,
+                        backgroundSize: '28px 28px',
+                    }}
                 >
-                    <div className="text-center">
-                        <div className="text-slate-400 font-mono text-[11px] tracking-[0.3em] uppercase mb-3">GitHub Contribution City</div>
-                        <div className="font-mono text-5xl font-bold mb-1" style={{ color: vibe.directional.color }}>
-                            {data ? totalContributions : '—'}
-                        </div>
-                        <div className="text-slate-400 font-mono text-xs tracking-widest uppercase">commits in {new Date().getFullYear()}</div>
+                    {/* Top Blueprint Header */}
+                    <div className="w-full flex items-center justify-between border-b border-white/15 pb-3 font-mono text-[9.5px] tracking-[0.24em] uppercase text-white/60">
+                        <span>PLATE 04.1 · 3D CONTRIBUTION SKYLINE</span>
+                        <span className="text-amber-400">● WEBGL2 INSTANCE ENGINE READY</span>
                     </div>
 
-                    <div className="flex gap-6 font-mono text-[11px] text-slate-500 tracking-widest uppercase">
-                        <span className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>Buildings = Commits
-                        </span>
-                        <span className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>Height = Activity
-                        </span>
+                    {/* Center Counter & Trigger */}
+                    <div className="flex flex-col items-center text-center my-auto py-4">
+                        <div className="font-mono text-[10px] tracking-[0.32em] uppercase text-white/50 mb-2">
+                            GITHUB TELEMETRY · @{username}
+                        </div>
+                        <div className="font-display font-bold text-5xl md:text-6xl text-[#f5f2eb] tracking-tight tabular-nums mb-1">
+                            {data ? totalContributions : '495'}
+                        </div>
+                        <div className="font-mono text-[10px] tracking-[0.26em] uppercase text-amber-400/90 mb-6">
+                            VERIFIED CONTRIBUTIONS · TRAILING 365 DAYS
+                        </div>
+
+                        <button
+                            onClick={() => setStarted(true)}
+                            disabled={!data}
+                            className="group relative px-7 py-3.5 rounded-none border-2 border-[#f5f2eb] bg-[#f5f2eb] text-[#0d0d0d] hover:bg-amber-400 hover:border-amber-400 hover:text-[#0d0d0d] font-mono text-xs tracking-[0.24em] uppercase font-bold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-[6px_6px_0_rgba(255,255,255,0.15)]"
+                        >
+                            {data ? '[ INITIALIZE 3D SKYLINE ENGINE → ]' : '[ SYNCHRONIZING TELEMETRY... ]'}
+                        </button>
                     </div>
 
-                    <button
-                        onClick={() => setStarted(true)}
-                        disabled={!data}
-                        className="group relative mt-2 px-10 py-4 rounded-2xl font-mono text-sm tracking-[0.2em] uppercase font-bold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
-                        style={{
-                            background: data ? `linear-gradient(135deg, #2563eb, #7c3aed)` : '#1e293b',
-                            color: '#fff',
-                            boxShadow: data ? '0 0 40px rgba(99,102,241,0.5)' : 'none'
-                        }}
-                    >
-                        {data ? '🏙️  Explore City  →' : 'Loading data...'}
-                    </button>
-
-                    {data && (
-                        <div className="text-slate-600 font-mono text-[10px] tracking-widest uppercase">
-                            {vibeKey.toLowerCase()} mode · {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {/* Bottom Blueprint Legend */}
+                    <div className="w-full flex flex-wrap items-center justify-between gap-4 border-t border-white/15 pt-3 font-mono text-[9px] tracking-[0.22em] uppercase text-white/50">
+                        <div className="flex items-center gap-5">
+                            <span className="flex items-center gap-2">
+                                <span className="w-2 h-2 bg-amber-400 inline-block" />
+                                TOWER HEIGHT = COMMITS
+                            </span>
+                            <span className="hidden sm:flex items-center gap-2">
+                                <span className="w-2 h-2 bg-sky-400 inline-block" />
+                                MODES: STREET · DRONE · FIRST-PERSON WALK
+                            </span>
                         </div>
-                    )}
+                        <span>{vibeKey} LIGHTING PROFILE</span>
+                    </div>
                 </div>
             )}
 
-            {/* 3D CANVAS — only mounted after user clicks Explore */}
+            {/* 3D CANVAS — mounted after user clicks Initialize */}
             {started && (
                 <>
 
-                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-6">
-                        <div className="flex justify-between items-start">
-                            <div className="text-geyser/80 font-mono text-xs tracking-widest bg-black/50 p-3 backdrop-blur-md border border-accent/20 rounded-lg shadow-sm">
-                                <span className="text-accent font-bold">{username}</span>'s Contributions — {new Date().getFullYear()}
+                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4 md:p-6">
+                        <div className="flex justify-between items-start gap-3">
+                            <div className="text-white/90 font-mono text-[10px] tracking-[0.22em] uppercase bg-black/75 px-3.5 py-2 backdrop-blur-md border border-white/20 rounded-none">
+                                <span className="text-amber-400 font-bold">@{username}</span> · CONTRIBUTION SKYLINE
                             </div>
-                            <div className="text-geyser font-mono text-lg bg-black/50 px-4 py-2 backdrop-blur-md border border-accent/20 rounded-lg shadow-sm flex items-center gap-2">
-                                {totalContributions} <span className="text-[10px] text-titanium uppercase tracking-widest">TOTAL</span>
+                            <div className="text-white font-mono text-sm bg-black/75 px-3.5 py-1.5 backdrop-blur-md border border-white/20 rounded-none flex items-center gap-2 tabular-nums">
+                                <span className="font-bold text-amber-400">{totalContributions}</span>
+                                <span className="text-[9px] text-white/60 uppercase tracking-[0.2em]">COMMITS</span>
                             </div>
                         </div>
 
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-                            <div className="flex gap-3 items-center bg-black/50 p-3 backdrop-blur-md border border-accent/20 rounded-lg shadow-sm pointer-events-auto">
-                                <span className="text-[10px] text-titanium font-mono tracking-widest">LESS</span>
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
+                            <div className="flex gap-2 items-center bg-black/75 px-3 py-2 backdrop-blur-md border border-white/20 rounded-none pointer-events-auto">
+                                <span className="text-[9px] text-white/60 font-mono tracking-[0.2em]">LESS</span>
                                 {Object.values(LEVELS).map((lvl, idx) => (
-                                    <div key={idx} className="w-4 h-4 rounded-sm border border-accent/20" style={{ backgroundColor: lvl.color }} />
+                                    <div key={idx} className="w-3.5 h-3.5 rounded-none border border-white/20" style={{ backgroundColor: lvl.color }} />
                                 ))}
-                                <span className="text-[10px] text-titanium font-mono tracking-widest">MORE</span>
+                                <span className="text-[9px] text-white/60 font-mono tracking-[0.2em]">MORE</span>
                             </div>
 
-                            <div className="flex bg-black/50 p-1.5 backdrop-blur-md border border-accent/20 rounded-lg shadow-sm pointer-events-auto gap-1">
+                            <div className="flex bg-black/75 p-1 backdrop-blur-md border border-white/20 rounded-none pointer-events-auto gap-1">
                                 <button 
                                     onClick={() => setMode('CINEMATIC')}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'CINEMATIC' ? 'bg-accent text-black shadow-md' : 'text-titanium hover:text-accent hover:bg-accent/10'}`}
+                                    className={`px-3.5 py-1.5 font-mono text-[9.5px] tracking-[0.2em] uppercase transition-colors rounded-none cursor-pointer ${mode === 'CINEMATIC' ? 'bg-amber-400 text-black font-bold' : 'text-white/70 hover:text-white hover:bg-white/10'}`}
                                 >
                                     ◉ STREET
                                 </button>
                                 <button 
                                     onClick={() => setMode('DRONE')}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'DRONE' ? 'bg-accent text-black shadow-md' : 'text-titanium hover:text-accent hover:bg-accent/10'}`}
+                                    className={`px-3.5 py-1.5 font-mono text-[9.5px] tracking-[0.2em] uppercase transition-colors rounded-none cursor-pointer ${mode === 'DRONE' ? 'bg-amber-400 text-black font-bold' : 'text-white/70 hover:text-white hover:bg-white/10'}`}
                                 >
                                     ✈ DRONE
                                 </button>
                                 <button 
                                     onClick={handleWalkClick}
-                                    className={`px-4 py-2 font-mono text-[10px] tracking-widest transition-colors rounded-md ${mode === 'WALK' ? 'bg-accent text-black shadow-md' : 'text-titanium hover:text-accent hover:bg-accent/10'}`}
+                                    className={`px-3.5 py-1.5 font-mono text-[9.5px] tracking-[0.2em] uppercase transition-colors rounded-none cursor-pointer ${mode === 'WALK' ? 'bg-amber-400 text-black font-bold' : 'text-white/70 hover:text-white hover:bg-white/10'}`}
                                 >
                                     🚶 WALK
                                 </button>
@@ -489,10 +503,10 @@ export default function GitHub3DGraph({ username }) {
                     </div>
 
                     {mode === 'WALK' && !isLocked && (
-                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-md pointer-events-none">
-                            <div className="text-center font-mono text-accent border border-accent/25 p-8 bg-[#0c0d11]/90 rounded-2xl shadow-2xl">
-                                <div className="text-sm mb-4 tracking-[0.2em] uppercase font-bold">CLICK TO ENTER</div>
-                                <div className="text-[10px] text-titanium uppercase tracking-[0.1em]">[WASD] to move, [MOUSE] to look, [ESC] to exit</div>
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/70 backdrop-blur-md pointer-events-none">
+                            <div className="text-center font-mono text-amber-400 border border-white/25 p-8 bg-[#0c0d11]/95 rounded-none shadow-2xl">
+                                <div className="text-xs mb-3 tracking-[0.25em] uppercase font-bold">CLICK CANVAS TO ENTER WALK MODE</div>
+                                <div className="text-[10px] text-white/70 uppercase tracking-[0.16em]">[WASD] MOVE · [MOUSE] LOOK · [ESC] EXIT</div>
                             </div>
                         </div>
                     )}
