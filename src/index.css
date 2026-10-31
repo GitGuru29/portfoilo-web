@@ -739,7 +739,7 @@ html { scroll-padding-top: 76px; }
 .masthead-title {
     font-family: var(--font-blackletter), "UnifrakturMaguntia", "Cloister Black", Georgia, serif;
     font-weight: 400;
-    font-size: clamp(2rem, 4.4vw, 4.2rem);
+    font-size: clamp(2.2rem, 5vw, 4.6rem);
     line-height: 1.05;
     letter-spacing: 0.02em;
     color: var(--color-ink);
