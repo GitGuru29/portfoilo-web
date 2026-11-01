@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, X, Minus, Square, Smartphone } from 'lucide-react';
 import useStore from '../store/useStore';
 import CmatrixOverlay from './CmatrixOverlay';
+import { getMaintenanceStatus, setMaintenanceStatus } from '../data/maintenanceConfig';
 
 // ─── Virtual File System ──────────────────────────────────────────────────────
 const buildFS = () => ({
@@ -1317,6 +1318,27 @@ export default function TerminalSection() {
             out.push({ type: 'out', text: "~/projects\n├── aerolang/      — Compiled language targeting Android NDK\n├── neonmonitor/   — Real-time Linux process monitor (C++)\n├── sightlock/     — Android biometric liveness detection\n└── bybridge/      — Cross-device TCP/WebSocket daemon\n\nTip: cd projects/aerolang && cat main.c" });
         }
 
+        else if (cmd === 'maintenance') {
+            const sub = args[0]?.toLowerCase();
+            if (sub === 'on') {
+                setMaintenanceStatus(true);
+                out.push({ type: 'sys', text: '⚡ Maintenance mode ENABLED. Breaking news dispatch broadcast is now LIVE at the top of the site.' });
+            } else if (sub === 'off') {
+                setMaintenanceStatus(false);
+                out.push({ type: 'sys', text: '✓ Maintenance mode DISABLED. Broadcast banner cleared. Normal status resumed.' });
+            } else if (sub === 'toggle') {
+                const current = getMaintenanceStatus();
+                setMaintenanceStatus(!current);
+                out.push({ type: 'sys', text: `Maintenance mode toggled to: ${!current ? 'ENABLED (LIVE BROADCAST)' : 'DISABLED (OFF)'}` });
+            } else {
+                const current = getMaintenanceStatus();
+                out.push({
+                    type: 'out',
+                    text: `Maintenance Dispatch Control:\n  Current Status: ${current ? 'ACTIVE [BREAKING NEWS LIVE]' : 'STANDBY [OFF]'}\n\nUsage:\n  maintenance on     — Activate breaking news maintenance wire\n  maintenance off    — Deactivate breaking news wire\n  maintenance toggle — Switch status on/off`
+                });
+            }
+        }
+
         else if (cmd === 'start') {
             push([{ type: 'sys', text: 'Authentication successful. Unlocking mainframe...' }]);
             setTimeout(() => unlockSystem(), 800);
@@ -1364,7 +1386,7 @@ export default function TerminalSection() {
             e.preventDefault();
             const parts = input.split(' ');
             if (parts.length === 1) {
-                const allCmds = ['ls', 'll', 'la', 'cd', 'cat', 'pwd', 'echo', 'grep', 'find', 'touch', 'mkdir', 'rm', 'cp', 'mv', 'git', 'make', 'gcc', 'g++', 'sudo', 'man', 'which', 'uname', 'date', 'uptime', 'whoami', 'id', 'env', 'history', 'neofetch', 'htop', 'top', 'python3', 'node', 'ssh', 'ping', 'curl', 'clear', 'exit', 'help', 'about', 'skills', 'projects', 'github', 'resume', 'contact', 'start', 'cmatrix'];
+                const allCmds = ['ls', 'll', 'la', 'cd', 'cat', 'pwd', 'echo', 'grep', 'find', 'touch', 'mkdir', 'rm', 'cp', 'mv', 'git', 'make', 'gcc', 'g++', 'sudo', 'man', 'which', 'uname', 'date', 'uptime', 'whoami', 'id', 'env', 'history', 'neofetch', 'htop', 'top', 'python3', 'node', 'ssh', 'ping', 'curl', 'clear', 'exit', 'help', 'about', 'skills', 'projects', 'github', 'resume', 'contact', 'maintenance', 'start', 'cmatrix'];
                 const matches = allCmds.filter(c => c.startsWith(input));
                 if (matches.length === 1) setInput(matches[0] + ' ');
                 else if (matches.length > 1) push([{ type: 'tab-complete', entries: matches }]);
@@ -1565,7 +1587,7 @@ export default function TerminalSection() {
                             ['Git', 'git status, git log, git log --oneline, git branch, git diff'],
                             ['System', 'uname -a, uptime, date, whoami, id, env, which, history'],
                             ['Dev', 'gcc, g++, make, python3, node, neofetch, htop'],
-                            ['Portfolio', 'about, skills, projects, github, resume, contact'],
+                            ['Portfolio', 'about, skills, projects, github, resume, contact, maintenance'],
                             ['Shell', 'echo, man, sudo, exit, clear, cmatrix, Ctrl+L, Ctrl+C'],
                         ].map(([cat, cmds]) => (
                             <div key={cat} className="flex gap-3">

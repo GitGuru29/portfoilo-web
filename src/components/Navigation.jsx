@@ -6,6 +6,7 @@ import { EDITION_PRESETS } from '../App';
 import { Terminal, Volume2, VolumeX, Sparkles, Calendar } from 'lucide-react';
 import { playClickSound } from '../utils/soundFX';
 import { scrollToSection } from '../utils/scrollToSection';
+import BreakingNewsBanner from './BreakingNewsBanner';
 
 // Magnetic link — pulls toward cursor on hover
 function MagneticLink({ href, num, active, children, onClick, external }) {
@@ -182,17 +183,21 @@ export default function Navigation() {
 
     return (
         <>
-            <nav
+            <header
                 ref={navRef}
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 will-change-transform ${
                     isTerminalOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
-                } ${
-                    scrolled
-                        ? 'py-2 bg-panel/95 backdrop-blur-md border-b border-ink/25 text-ink shadow-[0_4px_20px_-8px_rgba(0,0,0,0.18)]'
-                        : 'py-2.5 bg-panel/90 backdrop-blur-md border-b border-ink/25 text-ink'
                 }`}
             >
-                <div className="max-w-[84rem] mx-auto px-4 md:px-6 flex items-center justify-between gap-4">
+                <BreakingNewsBanner />
+                <nav
+                    className={`w-full transition-all duration-300 ${
+                        scrolled
+                            ? 'py-2 bg-panel/95 backdrop-blur-md border-b border-ink/25 text-ink shadow-[0_4px_20px_-8px_rgba(0,0,0,0.18)]'
+                            : 'py-2.5 bg-panel/90 backdrop-blur-md border-b border-ink/25 text-ink'
+                    }`}
+                >
+                    <div className="max-w-[84rem] mx-auto px-4 md:px-6 flex items-center justify-between gap-4">
 
                     {/* Masthead Brand Mark */}
                     <a
@@ -332,6 +337,7 @@ export default function Navigation() {
                     </div>
                 </div>
             </nav>
+        </header>
 
             {/* Mobile dropdown */}
             {menuOpen && (

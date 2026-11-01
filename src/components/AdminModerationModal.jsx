@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShieldCheck, Check, Trash2, Key, Star, Clock, AlertCircle, Pencil, Save, ArrowLeft, Upload, Loader2, Linkedin, User, Building, RefreshCw } from 'lucide-react';
+import { X, ShieldCheck, Check, Trash2, Key, Star, Clock, AlertCircle, Pencil, Save, ArrowLeft, Upload, Loader2, Linkedin, User, Building, RefreshCw, Radio } from 'lucide-react';
 import { fetchPendingTestimonials, fetchApprovedTestimonials, approveTestimonial, deleteTestimonial, updateTestimonial, compressImageFile } from '../services/githubTestimonialsService';
+import { getMaintenanceStatus, setMaintenanceStatus, MAINTENANCE_EVENT_NAME } from '../data/maintenanceConfig';
 
-const ADMIN_SECRET_PIN = 'msfvenom';
+const ADMIN_SECRET_PIN = '22818';
 
 export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic }) {
     const [pin, setPin] = useState('');
@@ -30,6 +31,25 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
     const editFileInputRef = useRef(null);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [maintenanceActive, setMaintenanceActive] = useState(() => getMaintenanceStatus());
+
+    useEffect(() => {
+        const handleMaintenanceChange = (e) => {
+            if (e.detail && typeof e.detail.active === 'boolean') {
+                setMaintenanceActive(e.detail.active);
+            } else {
+                setMaintenanceActive(getMaintenanceStatus());
+            }
+        };
+        window.addEventListener(MAINTENANCE_EVENT_NAME, handleMaintenanceChange);
+        return () => window.removeEventListener(MAINTENANCE_EVENT_NAME, handleMaintenanceChange);
+    }, []);
+
+    const handleToggleMaintenance = () => {
+        const nextState = !maintenanceActive;
+        setMaintenanceActive(nextState);
+        setMaintenanceStatus(nextState);
+    };
 
     const loadAdminData = async () => {
         setIsLoading(true);
@@ -418,6 +438,39 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                         ) : (
                             /* Authenticated Admin Dashboard */
                             <div className="flex flex-col flex-1 min-h-0">
+                                {/* Live Maintenance & Breaking News Broadcast Control */}
+                                <div className="p-3.5 bg-ink/5 border border-ink/10 rounded-xl mb-4 flex-shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-3 h-3 rounded-full shrink-0 ${maintenanceActive ? 'bg-red-500 animate-pulse' : 'bg-emerald-500'}`} />
+                                        <div>
+                                            <div className="text-xs font-mono font-bold uppercase tracking-wider text-ink flex items-center gap-2">
+                                                <span>Breaking News Maintenance:</span>
+                                                <span className={`px-2 py-0.5 rounded text-[10px] ${maintenanceActive ? 'bg-red-500/20 text-red-400 border border-red-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'}`}>
+                                                    {maintenanceActive ? 'ACTIVE (BROADCASTING)' : 'STANDBY (OFF)'}
+                                                </span>
+                                            </div>
+                                            <p className="text-[11px] text-graphite mt-0.5 m-0">
+                                                {maintenanceActive
+                                                    ? 'Live alert is active. Visitors can browse normally while seeing the update notification.'
+                                                    : 'Site is operating normally with no maintenance notice.'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={handleToggleMaintenance}
+                                        className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold tracking-wider transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer ${
+                                            maintenanceActive
+                                                ? 'bg-red-500/20 text-red-300 border border-red-500/40 hover:bg-red-500/30'
+                                                : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30'
+                                        }`}
+                                    >
+                                        <Radio className="w-3.5 h-3.5" />
+                                        {maintenanceActive ? 'Turn Dispatch OFF' : 'Turn Dispatch ON'}
+                                    </button>
+                                </div>
+
                                 {/* Navigation Tabs */}
                                 <div className="flex items-center gap-3 border-b border-ink/10 pb-3 mb-4 flex-shrink-0">
                                     <button
@@ -556,7 +609,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
                                 {/* Footer */}
                                 <div className="pt-3 border-t border-ink/10 flex items-center justify-between flex-shrink-0 mt-auto bg-neutral-950">
                                     <span className="text-xs text-graphite font-mono">
-                                        Admin Key: <code className="text-[#B91C1C]">msfvenom</code>
+                                        Admin Key: <code className="text-[#B91C1C]">22818</code>
                                     </span>
                                     <button
                                         onClick={handleLogout}
