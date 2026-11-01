@@ -36,7 +36,7 @@ function LeadFeatureCard({ project, num }) {
 
     return (
         <div className="proj-feature-lead py-4 md:py-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch p-6 sm:p-8 rounded-2xl bg-panel/90 border border-bordertech backdrop-blur-xl shadow-xl shadow-black/5 hover:border-accent/40 transition-all duration-500">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch p-6 sm:p-8 rounded-2xl bg-panel border border-bordertech shadow-xl shadow-black/5 hover:border-accent/40 transition-all duration-300">
 
                 {/* Left Column: Project Details & Context */}
                 <div className="lg:col-span-7 flex flex-col justify-between gap-6">
@@ -249,7 +249,7 @@ function SecondaryFeatureCard({ project, num }) {
     const isAegisLayer = project.id === 'aegislayer';
 
     return (
-        <div className="proj-secondary group p-6 rounded-2xl border border-bordertech bg-panel/90 backdrop-blur-xl hover:border-accent/50 transition-all duration-300 flex flex-col justify-between shadow-xl shadow-black/5">
+        <div className="proj-secondary group p-6 rounded-2xl border border-bordertech bg-panel hover:border-accent/50 transition-all duration-300 flex flex-col justify-between shadow-xl shadow-black/5">
             <div>
                 {/* Meta header */}
                 <div className="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-bordertech">
@@ -437,7 +437,7 @@ function ProjectRow({ project, num }) {
             data-cursor="Open Dossier"
             className="block group no-underline"
         >
-            <article className="p-4 rounded-xl border border-bordertech bg-panel/70 hover:bg-panel-deep hover:border-accent/40 backdrop-blur-md transition-all duration-300 flex items-center justify-between gap-4 shadow-sm">
+            <article className="p-4 rounded-xl border border-bordertech bg-panel hover:bg-panel-deep hover:border-accent/40 transition-all duration-300 flex items-center justify-between gap-4 shadow-sm">
                 <span className="font-mono text-sm font-bold text-accent w-6 shrink-0">{num}</span>
 
                 <span
@@ -494,10 +494,10 @@ function ProjectRow({ project, num }) {
 
 export default function ProjectsOverlay({ projects = [], isFiltered = false, children }) {
     const containerRef = usePageReveal({
-        selector: '.proj-feature-lead, .proj-secondary, article',
-        y: 20,
+        selector: '.proj-feature-lead, .proj-secondary',
+        y: 16,
         scale: 1,
-        stagger: 0.05,
+        stagger: 0.08,
     });
 
     const [showAll, setShowAll] = useState(false);

@@ -12,14 +12,14 @@ export default function LenisWrapper({ children }) {
         const reduced = prefersReducedMotion();
 
         const lenis = new Lenis({
-            duration: reduced ? 0 : 1.2,
+            duration: reduced ? 0 : 0.85,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             direction: 'vertical',
             gestureDirection: 'vertical',
-            smooth: !reduced,
-            mouseMultiplier: 1,
+            smoothWheel: !reduced,
             smoothTouch: false,
-            touchMultiplier: 2,
+            wheelMultiplier: 1.0,
+            touchMultiplier: 1.5,
             infinite: false,
         });
 

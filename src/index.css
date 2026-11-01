@@ -1347,7 +1347,7 @@ html { scroll-padding-top: 76px; }
     opacity: 0.55;
 }
 
-/* Halftone bloom in the chapter hue, bottom-left */
+/* Halftone bloom in the chapter hue, bottom-left — pure GPU radial gradient without blur convolution */
 .paper-page__grade::after {
     content: '';
     position: absolute;
@@ -1356,8 +1356,7 @@ html { scroll-padding-top: 76px; }
     width: 75%;
     height: 75%;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--ch-glow) 0%, transparent 68%);
-    filter: blur(24px);
+    background: radial-gradient(circle, var(--ch-glow) 0%, transparent 70%);
 }
 
 /* Chapter rule, watermark and press marks pick up the hue */

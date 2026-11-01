@@ -102,20 +102,28 @@ export default function Navigation() {
             { y: 0, duration: 0.9, ease: 'power3.out' }
         );
 
+        let ticking = false;
         const handleScroll = () => {
-            setScrolled(window.scrollY > 40);
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    setScrolled(window.scrollY > 40);
 
-            // Active section detection across all chapters
-            const sections = ['contact', 'testimonials', 'recognition', 'research', 'github', 'skills', 'timeline', 'projects', 'hero'];
-            for (const s of sections) {
-                const el = document.getElementById(s);
-                if (el) {
-                    const rect = el.getBoundingClientRect();
-                    if (rect.top <= window.innerHeight * 0.42) {
-                        setActiveNav(s === 'hero' ? 'home' : s);
-                        break;
+                    // Active section detection across all chapters
+                    const threshold = window.innerHeight * 0.42;
+                    const sections = ['contact', 'testimonials', 'recognition', 'research', 'github', 'skills', 'timeline', 'projects', 'hero'];
+                    for (const s of sections) {
+                        const el = document.getElementById(s);
+                        if (el) {
+                            const rect = el.getBoundingClientRect();
+                            if (rect.top <= threshold) {
+                                setActiveNav(s === 'hero' ? 'home' : s);
+                                break;
+                            }
+                        }
                     }
-                }
+                    ticking = false;
+                });
+                ticking = true;
             }
         };
 

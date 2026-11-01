@@ -35,7 +35,7 @@ export default function StatsTicker() {
                 className="ticker-track"
                 animate={{ x: ['0%', '-50%'] }}
                 transition={{ duration: 45, ease: 'linear', repeat: Infinity }}
-                style={{ width: 'max-content' }}
+                style={{ width: 'max-content', willChange: 'transform' }}
             >
                 {ROW_A.map((item, i) => (
                     <React.Fragment key={`ticker-item-${i}`}>
