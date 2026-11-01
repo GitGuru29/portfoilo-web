@@ -179,19 +179,23 @@ export default function ProjectDetails() {
                     {/* Key Metrics Telemetry Bar */}
                     {project.metrics && project.metrics.length > 0 && (
                         <div className="mt-8 pt-6 border-t-2 border-ink/20 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {project.metrics.map((m, idx) => (
-                                <div
-                                    key={idx}
-                                    className="px-4 py-3 bg-panel-deep/70 border border-ink/20 flex items-center justify-between"
-                                >
-                                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-graphite">
-                                        SPECIFICATION 0{idx + 1}
-                                    </span>
-                                    <span className="font-mono text-xs md:text-sm font-bold text-ink">
-                                        {m}
-                                    </span>
-                                </div>
-                            ))}
+                            {project.metrics.map((m, idx) => {
+                                const label = typeof m === 'object' && m !== null ? m.label : `SPECIFICATION 0${idx + 1}`;
+                                const value = typeof m === 'object' && m !== null ? m.value : m;
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="px-4 py-3 bg-panel-deep/70 border border-ink/20 flex items-center justify-between gap-3"
+                                    >
+                                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-graphite truncate">
+                                            {label}
+                                        </span>
+                                        <span className="font-mono text-xs md:text-sm font-bold text-ink truncate text-right">
+                                            {value}
+                                        </span>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </header>
