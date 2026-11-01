@@ -70,7 +70,7 @@ export default function SkillsOverlay() {
     const containerRef = usePageReveal({ selector: '.pillar-card, .story-card', y: 30, stagger: 0.08 });
 
     return (
-        <section id="skills" ref={containerRef} className="w-full flex flex-col gap-6 bg-transparent relative z-10">
+        <section ref={containerRef} className="w-full flex flex-col gap-6 bg-transparent relative z-10">
 
             {/* ── TOP: 4 ARCHITECTURAL DOMAIN PLATES ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

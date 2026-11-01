@@ -499,7 +499,7 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
 
     if (!shown.length) {
         return (
-            <section id="projects" className="py-12">
+            <section className="py-12">
                 {children}
                 <div className="text-center py-16 p-6 rounded-2xl border border-bordertech bg-panel">
                     <span className="font-mono text-xs uppercase tracking-widest text-graphite">
@@ -516,7 +516,7 @@ export default function ProjectsOverlay({ projects = [], isFiltered = false, chi
     const restStartIndex = !isFiltered && shown.length >= 3 ? 4 : 2;
 
     return (
-        <section id="projects" ref={containerRef} className="w-full flex flex-col gap-8 py-6">
+        <section ref={containerRef} className="w-full flex flex-col gap-8 py-6">
             {children}
 
             {/* Lead Flagship Feature (#01) */}

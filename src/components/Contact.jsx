@@ -84,7 +84,7 @@ export default function Contact() {
     };
 
     return (
-        <section id="contact" className="w-full relative z-10 overflow-hidden bg-transparent">
+        <section className="w-full relative z-10 overflow-hidden bg-transparent">
             <div className="w-full rounded-none bg-panel border-2 border-ink/80 shadow-[6px_6px_0_rgba(13,13,13,0.12)] p-6 md:p-10 relative overflow-hidden">
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start relative z-10">

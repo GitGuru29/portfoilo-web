@@ -1291,6 +1291,7 @@ html { scroll-padding-top: 76px; }
     inset: 0;
     z-index: 0;
     pointer-events: none;
+    overflow: hidden;
     background:
         radial-gradient(125% 95% at 8% 0%, var(--ch-wash) 0%, transparent 60%),
         radial-gradient(105% 85% at 100% 100%, var(--ch-wash-2) 0%, transparent 65%),
@@ -1425,6 +1426,7 @@ html { scroll-padding-top: 76px; }
     border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 16%, transparent);
     box-shadow: 0 10px 22px -20px rgba(0, 0, 0, 0.45);
     transition: background-color 0.35s ease;
+    overflow: clip;
 }
 
 /* ruled page margin that runs the height of every sheet */
@@ -1565,6 +1567,33 @@ html { scroll-padding-top: 76px; }
     background:
         linear-gradient(180deg, color-mix(in srgb, var(--color-ink) 3%, transparent), transparent 60%),
         var(--color-panel-deep);
+}
+
+/* ─────────────────────────────────────────────────
+   CHAPTER 09 / COLOPHON — END OF RUN
+   Fits content tightly, eliminates bottom dead space,
+   folio bar sits cleanly above bottom telemetry bar.
+   ───────────────────────────────────────────────── */
+.paper-page#colophon,
+.paper-page[data-chapter='09'] {
+    min-height: auto !important;
+}
+
+.paper-page#colophon .paper-page__body,
+.paper-page[data-chapter='09'] .paper-page__body {
+    flex: 0 0 auto;
+}
+
+.paper-page#colophon .paper-page__content,
+.paper-page[data-chapter='09'] .paper-page__content {
+    padding-top: 1.5rem;
+    padding-bottom: 0;
+    gap: 1.5rem;
+}
+
+.paper-page#colophon .paper-page__folio,
+.paper-page[data-chapter='09'] .paper-page__folio {
+    padding-bottom: calc(0.65rem + 34px);
 }
 
 /* bare sheets (front page) — no header / folio chrome.

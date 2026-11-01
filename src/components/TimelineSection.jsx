@@ -118,7 +118,7 @@ export default function TimelineSection() {
     }, [newestFirst]);
 
     return (
-        <section ref={containerRef} id="timeline" className="relative w-full overflow-hidden z-10">
+        <section ref={containerRef} className="relative w-full overflow-hidden z-10">
             {/* Top Chronicle Toolbar */}
             <div className="flex flex-wrap items-center justify-between gap-4 pb-4 mb-8 border-b border-ink/20">
                 <div className="flex items-center gap-3 font-mono text-[10px] tracking-[0.22em] uppercase text-graphite">
