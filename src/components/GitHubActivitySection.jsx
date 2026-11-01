@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { ArrowUpRight, GitCommit, GitPullRequest, GitBranch, ShieldCheck, Activity, Terminal } from 'lucide-react';
-import GitHub3DGraph from './GitHub3DGraph';
 import usePageReveal from '../utils/usePageReveal';
 import { 
     fetchGitHubProfile, 
@@ -12,6 +11,9 @@ import {
     BASELINE_PROFILE 
 } from '../services/githubDataService';
 import verifiedContributionsSnapshot from '../data/githubContributions.json';
+
+// Lazy-load Three.js 3D canvas so initial page load doesn't bundle WebGL/Three engine
+const GitHub3DGraph = lazy(() => import('./GitHub3DGraph'));
 
 const INITIAL_MONTHLY = calculateMonthlyCommitSummary(verifiedContributionsSnapshot.contributions);
 
@@ -104,7 +106,16 @@ export default function GitHubActivitySection() {
                 data-cursor="Orbit Skyline"
                 className="github-canvas w-full h-[360px] md:h-[440px] border-2 border-ink rounded-none relative overflow-hidden bg-[#0a0c10] shadow-[6px_6px_0_rgba(0,0,0,0.1)]"
             >
-                <GitHub3DGraph username="GitGuru29" />
+                <Suspense
+                    fallback={
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-slate-400 font-mono text-xs">
+                            <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
+                            <span>INITIALIZING SKYLINE TELEMETRY...</span>
+                        </div>
+                    }
+                >
+                    <GitHub3DGraph username="GitGuru29" />
+                </Suspense>
             </div>
 
             {/* Commit Ledger & Repository Index */}

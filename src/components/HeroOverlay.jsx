@@ -458,6 +458,8 @@ export default function HeroOverlay() {
                                             key={currentPlate.src}
                                             src={currentPlate.src}
                                             alt="Siluna Nusal Dangalla — Independent Systems Engineer"
+                                            fetchPriority="high"
+                                            decoding="async"
                                             className="halftone-portrait w-full h-[260px] sm:h-[290px] lg:h-[270px] object-cover group-hover:scale-[1.02]"
                                             style={{ objectPosition: currentPlate.pos }}
                                         />

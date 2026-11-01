@@ -26,7 +26,7 @@ export default function BadgesOverlay() {
 
                         <div className="flex justify-between items-start mb-4">
                             <div className="w-14 h-14 p-1.5 bg-panel-deep border border-ink/15 flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:border-accent/50">
-                                <img src={badge.image} alt={badge.title} className="w-full h-full object-contain" />
+                                <img src={badge.image} alt={badge.title} loading="lazy" decoding="async" className="w-full h-full object-contain" />
                             </div>
                             <span className="text-[10px] font-mono text-graphite uppercase text-right ml-2 mt-1">{badge.date}</span>
                         </div>

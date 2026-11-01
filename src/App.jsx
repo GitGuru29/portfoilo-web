@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import LenisWrapper from './components/LenisWrapper';
@@ -11,11 +11,13 @@ import useStore from './store/useStore';
 import { anchorToSection } from './utils/scrollToSection';
 
 import Home from './pages/Home';
-import ProjectDetails from './pages/ProjectDetails';
 import Preloader from './components/Preloader';
-import CommandPalette from './components/CommandPalette';
-import ScheduleMeetingModal from './components/ScheduleMeetingModal';
 import WhatsAppChat from './components/WhatsAppChat';
+
+// Code-split routes and modals to ensure critical initial load remains ultra-light
+const ProjectDetails = lazy(() => import('./pages/ProjectDetails'));
+const CommandPalette = lazy(() => import('./components/CommandPalette'));
+const ScheduleMeetingModal = lazy(() => import('./components/ScheduleMeetingModal'));
 
 // Edition presets — modern high-tech engineering color profiles
 export const EDITION_PRESETS = {
@@ -197,13 +199,19 @@ function App() {
                 <StoryProgress />
 
                 {/* Developer Command Palette (Cmd + K) */}
-                <CommandPalette />
+                <Suspense fallback={null}>
+                    <CommandPalette />
+                </Suspense>
 
-                {/* Schedule Meeting Modal */}
-                <ScheduleMeetingModal
-                    isOpen={isMeetingModalOpen}
-                    onClose={() => setMeetingModalOpen(false)}
-                />
+                {/* Schedule Meeting Modal — rendered on demand */}
+                {isMeetingModalOpen && (
+                    <Suspense fallback={null}>
+                        <ScheduleMeetingModal
+                            isOpen={isMeetingModalOpen}
+                            onClose={() => setMeetingModalOpen(false)}
+                        />
+                    </Suspense>
+                )}
 
                 {/* The Sleek Preloader */}
                 <AnimatePresence>
@@ -232,10 +240,12 @@ function App() {
                                 <Navigation />
 
                                 {/* Scrollable DOM Content */}
-                                <Routes>
-                                    <Route path="/" element={<Home />} />
-                                    <Route path="/project/:id" element={<ProjectDetails />} />
-                                </Routes>
+                                <Suspense fallback={null}>
+                                    <Routes>
+                                        <Route path="/" element={<Home />} />
+                                        <Route path="/project/:id" element={<ProjectDetails />} />
+                                    </Routes>
+                                </Suspense>
                             </LenisWrapper>
 
                             {/* Fixed global UI — outside scroll context */}

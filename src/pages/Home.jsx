@@ -12,11 +12,13 @@ import CategoryFilter from '../components/CategoryFilter';
 import SearchBar from '../components/SearchBar';
 import StatsTicker from '../components/StatsTicker';
 import TimelineSection from '../components/TimelineSection';
-import TerminalSection from '../components/TerminalSection';
 import SectionDotsNav from '../components/SectionDotsNav';
 import PaperDeck, { PaperPage } from '../components/PaperDeck';
 import { projectsData } from '../data/projects';
 import { CATEGORIES } from '../data/categories';
+
+// Lazy-load terminal emulator (only pulled into memory when accessed)
+const TerminalSection = React.lazy(() => import('../components/TerminalSection'));
 
 /**
  * Home — single-page route as a paper pad.
@@ -187,7 +189,9 @@ export default function Home() {
             </PaperDeck>
 
             {/* ── Floating Terminal overlay ── */}
-            <TerminalSection />
+            <React.Suspense fallback={null}>
+                <TerminalSection />
+            </React.Suspense>
         </div>
     );
 }

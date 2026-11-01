@@ -154,6 +154,8 @@ export default function TestimonialsOverlay() {
                                     <img
                                         src={current.avatar}
                                         alt={current.name}
+                                        loading="lazy"
+                                        decoding="async"
                                         className="w-12 h-12 rounded-none object-cover border border-ink/40 p-0.5 bg-panel-deep"
                                         onError={(e) => {
                                             e.target.src =

@@ -197,6 +197,8 @@ function LeadFeatureCard({ project, num }) {
                                         <img
                                             src={img || '/aerolang/aero-1.png'}
                                             alt={project.title}
+                                            loading="lazy"
+                                            decoding="async"
                                             className="max-h-[170px] w-auto object-contain transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_0_30px_rgba(0,240,255,0.35)]"
                                         />
                                     </div>
@@ -297,6 +299,8 @@ function SecondaryFeatureCard({ project, num }) {
                                 <img
                                     src="/bybridge/android-1.png"
                                     alt="Bybridge Android UI"
+                                    loading="lazy"
+                                    decoding="async"
                                     className="w-full h-full object-cover rounded-[1.3rem] transition-transform duration-500 group-hover/box:scale-105"
                                 />
                             </div>
@@ -341,6 +345,8 @@ function SecondaryFeatureCard({ project, num }) {
                             <img
                                 src="/assets/aegislayer_dashboard.png"
                                 alt="AegisLayer Dashboard"
+                                loading="lazy"
+                                decoding="async"
                                 className="max-h-full max-w-full object-contain drop-shadow-[0_0_25px_rgba(56,189,248,0.35)] transition-transform duration-500 group-hover/box:scale-105"
                             />
                         </div>
@@ -361,6 +367,8 @@ function SecondaryFeatureCard({ project, num }) {
                         <img
                             src={img}
                             alt={project.title}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-contain p-2 opacity-90 group-hover/box:opacity-100 group-hover/box:scale-105 transition-all duration-500"
                         />
                         <span className="absolute bottom-2 right-2 px-2 py-0.5 bg-black/80 rounded border border-white/15 font-mono text-[8px] text-white">
