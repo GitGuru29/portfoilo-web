@@ -97,6 +97,6 @@ export const badgesData = [
         color: "text-purple-400",
         bgColor: "bg-[#e9f5e9]",
         borderColor: "border-[#e9f5e9]",
-        link: "https://developers.google.com/profile/badgeshttps://developers.google.com/profile/badges/recognitions/learnings?u=SIDAN" // TODO: update with your badge link
+        link: "https://developers.google.com/profile/badges/recognitions/learnings?u=SIDAN"
     }
 ];

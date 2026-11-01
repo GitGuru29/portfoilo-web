@@ -37,13 +37,10 @@ export default function SectionDotsNav() {
 
         CHAPTERS.forEach(({ id }) => {
             const el = document.getElementById(id);
-            // "recognition" is a container spanning badges + certificates
+            // "recognition" is the chapter container for badges
             if (id === 'recognition') {
-                const children = ['certificates', 'badges'];
-                children.forEach((cid) => {
-                    const cel = document.getElementById(cid);
-                    if (cel) observer.observe(cel);
-                });
+                const cel = document.getElementById('badges') || document.getElementById('recognition');
+                if (cel) observer.observe(cel);
                 return;
             }
             if (el) observer.observe(el);
@@ -54,7 +51,7 @@ export default function SectionDotsNav() {
 
     // Map active section back to a chapter
     const activeChapter = (() => {
-        if (activeSection === 'certificates' || activeSection === 'badges') return 'recognition';
+        if (activeSection === 'badges') return 'recognition';
         return activeSection;
     })();
 

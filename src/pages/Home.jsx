@@ -5,7 +5,6 @@ import GitHubActivitySection from '../components/GitHubActivitySection';
 import ProjectsOverlay from '../components/ProjectsOverlay';
 import ActiveResearchOverlay from '../components/ActiveResearchOverlay';
 import TestimonialsOverlay from '../components/TestimonialsOverlay';
-import CertificatesOverlay from '../components/CertificatesOverlay';
 import BadgesOverlay from '../components/BadgesOverlay';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
@@ -140,17 +139,12 @@ export default function Home() {
                     id="recognition"
                     chapter="06"
                     kicker="Credentials"
-                    title="Certificates & Badges"
-                    watermark="REVIEW"
-                    lede="Credentialed milestones — certifications, awards, and achievements."
+                    title="Developer Badges & Honors"
+                    watermark="HONORS"
+                    lede="Verified Google Developer Program badges and platform achievements."
                 >
                     <div className="paper-page__block">
-                        <span className="paper-page__block-label">Industry Certificates</span>
-                        <CertificatesOverlay />
-                    </div>
-
-                    <div className="paper-page__block">
-                        <span className="paper-page__block-label">Community Badges</span>
+                        <span className="paper-page__block-label">Google Developer Badges</span>
                         <BadgesOverlay />
                     </div>
                 </PaperPage>

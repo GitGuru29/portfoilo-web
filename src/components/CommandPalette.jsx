@@ -58,8 +58,7 @@ export default function CommandPalette() {
         { id: 'nav-timeline', label: 'Go to Experience & Build Log', category: 'Navigation', icon: Sparkles, action: () => goToSection('timeline') },
         { id: 'nav-research', label: 'Go to Active Research', category: 'Navigation', icon: Cpu, action: () => goToSection('research') },
         { id: 'nav-testimonials', label: 'Go to Recommendations & References', category: 'Navigation', icon: ShieldCheck, action: () => goToSection('testimonials') },
-        { id: 'nav-certificates', label: 'Go to Certificates', category: 'Navigation', icon: Sparkles, action: () => goToSection('certificates') },
-        { id: 'nav-badges', label: 'Go to Badges & Achievements', category: 'Navigation', icon: Sparkles, action: () => goToSection('badges') },
+        { id: 'nav-badges', label: 'Go to Google Developer Badges & Honors', category: 'Navigation', icon: Sparkles, action: () => goToSection('badges') },
         { id: 'nav-contact', label: 'Go to Contact', category: 'Navigation', icon: Mail, action: () => goToSection('contact') },
 
         // Actions & External Links
