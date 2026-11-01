@@ -19,7 +19,7 @@ const EDITION_NAMES = {
 };
 
 export default function SystemMetricsWidget() {
-    const [githubData, setGithubData] = useState({ repos: 30, followers: 0 });
+    const [githubData, setGithubData] = useState({ repos: 41, followers: 69 });
     const [cpuLoad, setCpuLoad] = useState(18);
     const [time, setTime] = useState('');
     const soundEnabled = useStore((s) => s.soundEnabled);

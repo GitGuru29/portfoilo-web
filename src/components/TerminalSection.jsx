@@ -1305,7 +1305,7 @@ export default function TerminalSection() {
         }
 
         else if (cmd === 'github') {
-            out.push({ type: 'out', text: "github.com/GitGuru29\n───────────────────\nRepos:  30+\nFocus:  C++  ·  Kotlin  ·  Python  ·  Systems\n\nProjects:\n  aerolang       — Compiler targeting native Android\n  NeoMonitor     — Linux process monitor in C++\n  SightLock      — Android biometric security tool\n  Bybridge       — Cross-device ecosystem daemon" });
+            out.push({ type: 'out', text: "github.com/GitGuru29\n───────────────────\nRepos:    41 public\nFollowers: 69\nStars:    ★ 47\nCommits:  2,012+ verified\nFocus:    C++  ·  Kotlin  ·  Linux  ·  QML  ·  Compilers\n\nFlagship Repositories:\n  ArchTitan-OS          — Custom Arch Linux distribution & system daemons (★ 5)\n  Titan-Share-settings  — Cross-device ecosystem daemon & settings suite (★ 11)\n  NeonMonitor           — Linux process telemetry HUD with on-device ML (★ 1)\n  SightLock             — Android biometric security enforcement daemon (★ 2)\n  RepoPulse-AI          — Tech Lead Action analyzing PR codebase risk (★ 1)\n  AeroDropAndroid       — Native macOS ↔ Android TLS 1.3 socket client (★ 1)" });
         }
 
         else if (cmd === 'resume') {

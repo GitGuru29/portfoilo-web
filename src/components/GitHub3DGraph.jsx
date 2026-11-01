@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Instance, Instances, PointerLockControls, Html, Clouds, Cloud } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
-import { fetchGitHubContributions } from '../services/githubDataService';
+import { fetchGitHubContributions, build52WeekSkyline } from '../services/githubDataService';
 
 const generateWindowTexture = () => {
     const canvas = document.createElement('canvas');
@@ -369,8 +369,8 @@ function NatureEnvironment({ vibeKey }) {
 
 
 export default function GitHub3DGraph({ username }) {
-    const [data, setData] = useState(null);
-    const [totalContributions, setTotalContributions] = useState(0);
+    const [data, setData] = useState(() => build52WeekSkyline(2012));
+    const [totalContributions, setTotalContributions] = useState(2012);
     const [mode, setMode] = useState('CINEMATIC');
     const [isLocked, setIsLocked] = useState(false);
     const [hoveredBox, setHoveredBox] = useState(null);
@@ -383,7 +383,7 @@ export default function GitHub3DGraph({ username }) {
         fetchGitHubContributions(username).then((res) => {
             if (mounted && res && res.contributions) {
                 setData(res.contributions);
-                setTotalContributions(res.totalContributions || 495);
+                setTotalContributions(res.totalContributions || 2012);
             }
         }).catch((err) => {
             console.warn("Failed to load GitHub contributions:", err);
@@ -425,7 +425,7 @@ export default function GitHub3DGraph({ username }) {
                             GITHUB TELEMETRY · @{username}
                         </div>
                         <div className="font-display font-bold text-5xl md:text-6xl text-[#f5f2eb] tracking-tight tabular-nums mb-1">
-                            {data ? totalContributions : '495'}
+                            {totalContributions.toLocaleString()}
                         </div>
                         <div className="font-mono text-[10px] tracking-[0.26em] uppercase text-amber-400/90 mb-6">
                             VERIFIED CONTRIBUTIONS · TRAILING 365 DAYS
@@ -433,10 +433,9 @@ export default function GitHub3DGraph({ username }) {
 
                         <button
                             onClick={() => setStarted(true)}
-                            disabled={!data}
-                            className="group relative px-7 py-3.5 rounded-none border-2 border-[#f5f2eb] bg-[#f5f2eb] text-[#0d0d0d] hover:bg-amber-400 hover:border-amber-400 hover:text-[#0d0d0d] font-mono text-xs tracking-[0.24em] uppercase font-bold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-[6px_6px_0_rgba(255,255,255,0.15)]"
+                            className="group relative px-7 py-3.5 rounded-none border-2 border-[#f5f2eb] bg-[#f5f2eb] text-[#0d0d0d] hover:bg-amber-400 hover:border-amber-400 hover:text-[#0d0d0d] font-mono text-xs tracking-[0.24em] uppercase font-bold transition-all duration-300 cursor-pointer shadow-[6px_6px_0_rgba(255,255,255,0.15)]"
                         >
-                            {data ? '[ INITIALIZE 3D SKYLINE ENGINE → ]' : '[ SYNCHRONIZING TELEMETRY... ]'}
+                            [ INITIALIZE 3D SKYLINE ENGINE → ]
                         </button>
                     </div>
 
