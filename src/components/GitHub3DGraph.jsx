@@ -3,7 +3,8 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Instance, Instances, PointerLockControls, Html, Clouds, Cloud } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
-import { fetchGitHubContributions, build52WeekSkyline } from '../services/githubDataService';
+import { fetchGitHubContributions, parseRawContributionsToWeeks } from '../services/githubDataService';
+import verifiedContributionsSnapshot from '../data/githubContributions.json';
 
 const generateWindowTexture = () => {
     const canvas = document.createElement('canvas');
@@ -369,8 +370,8 @@ function NatureEnvironment({ vibeKey }) {
 
 
 export default function GitHub3DGraph({ username }) {
-    const [data, setData] = useState(() => build52WeekSkyline(2012));
-    const [totalContributions, setTotalContributions] = useState(2012);
+    const [data, setData] = useState(() => parseRawContributionsToWeeks(verifiedContributionsSnapshot.contributions));
+    const [totalContributions, setTotalContributions] = useState(2040);
     const [mode, setMode] = useState('CINEMATIC');
     const [isLocked, setIsLocked] = useState(false);
     const [hoveredBox, setHoveredBox] = useState(null);
@@ -383,7 +384,7 @@ export default function GitHub3DGraph({ username }) {
         fetchGitHubContributions(username).then((res) => {
             if (mounted && res && res.contributions) {
                 setData(res.contributions);
-                setTotalContributions(res.totalContributions || 2012);
+                setTotalContributions(res.totalContributions || 2040);
             }
         }).catch((err) => {
             console.warn("Failed to load GitHub contributions:", err);
