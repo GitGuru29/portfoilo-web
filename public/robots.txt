@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://silunadangalla.vercel.app/sitemap.xml
+
