@@ -21,6 +21,7 @@ const useStore = create((set) => ({
     accentTheme: 'studio', // 'studio' (default white) | 'cyber' | 'cobalt' | 'violet'
     isCommandPaletteOpen: false,
     isMeetingModalOpen: false,
+    isAdminModalOpen: false,
 
     unlockSystem: () => set({ isUnlocked: true, hasBooted: true, isTerminalOpen: false }),
     lockSystem: () => set({ isUnlocked: false }),
@@ -29,6 +30,7 @@ const useStore = create((set) => ({
     setAccentTheme: (theme) => set({ accentTheme: theme }),
     setCommandPaletteOpen: (open) => set({ isCommandPaletteOpen: open }),
     setMeetingModalOpen: (open) => set({ isMeetingModalOpen: open }),
+    setAdminModalOpen: (open) => set({ isAdminModalOpen: open }),
 }));
 
 export default useStore;

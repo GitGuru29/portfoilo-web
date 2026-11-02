@@ -87,12 +87,14 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
         await approveTestimonial(id);
         await loadAdminData();
         if (onRefreshPublic) onRefreshPublic();
+        window.dispatchEvent(new CustomEvent('testimonials-updated'));
     };
 
     const handleDelete = async (id) => {
         await deleteTestimonial(id);
         await loadAdminData();
         if (onRefreshPublic) onRefreshPublic();
+        window.dispatchEvent(new CustomEvent('testimonials-updated'));
     };
 
     const handleStartEdit = (item) => {
@@ -139,6 +141,7 @@ export default function AdminModerationModal({ isOpen, onClose, onRefreshPublic 
         setEditingItem(null);
         await loadAdminData();
         if (onRefreshPublic) onRefreshPublic();
+        window.dispatchEvent(new CustomEvent('testimonials-updated'));
     };
 
     const handleLogout = () => {

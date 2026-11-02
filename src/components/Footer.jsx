@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Github, Linkedin, Twitter, FileText, ArrowUpRight, Cpu, Globe, Sparkles, Terminal } from 'lucide-react';
+import { Github, Linkedin, Twitter, FileText, ArrowUpRight, Cpu, Globe, Sparkles, Terminal, ShieldCheck } from 'lucide-react';
 import useStore from '../store/useStore';
 import { scrollToSection } from '../utils/scrollToSection';
 
@@ -213,6 +213,18 @@ export default function Footer() {
                                     <span>CLI Terminal</span>
                                 </div>
                                 <span className="text-[9px] font-mono px-1.5 border border-ink/40 text-graphite">`</span>
+                            </button>
+
+                            <button
+                                onClick={() => useStore.getState().setAdminModalOpen(true)}
+                                className="flex items-center justify-between px-3 py-1.5 rounded-none bg-panel/60 border border-ink/50 text-graphite hover:text-accent font-mono text-xs transition-colors cursor-pointer"
+                                title="Admin Moderation & Maintenance Control Panel (PIN: 22818)"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-accent" />
+                                    <span>Admin &amp; Maintenance</span>
+                                </div>
+                                <span className="text-[9px] font-mono px-1.5 border border-ink/40 text-graphite">PIN</span>
                             </button>
                         </div>
                     </div>

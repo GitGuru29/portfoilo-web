@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Radio, X } from 'lucide-react';
+import useStore from '../store/useStore';
 import {
     MAINTENANCE_CONFIG,
     MAINTENANCE_EVENT_NAME,
@@ -96,6 +97,14 @@ export default function BreakingNewsBanner() {
                             {MAINTENANCE_CONFIG.statusNote}
                         </span>
 
+                        <button
+                            onClick={() => useStore.getState().setAdminModalOpen(true)}
+                            title="Open Admin Maintenance Control Panel"
+                            className="hidden sm:inline-flex px-2 py-0.5 rounded bg-black/40 hover:bg-black/60 border border-white/20 font-mono text-[9px] uppercase tracking-wider text-red-100 hover:text-white transition-colors cursor-pointer"
+                        >
+                            Manage
+                        </button>
+
                         {MAINTENANCE_CONFIG.allowDismiss && (
                             <button
                                 onClick={handleDismiss}
@@ -112,3 +121,4 @@ export default function BreakingNewsBanner() {
         </AnimatePresence>
     );
 }
+

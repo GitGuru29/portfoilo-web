@@ -64,3 +64,4 @@ export function setMaintenanceStatus(active) {
     }
     window.dispatchEvent(new CustomEvent(MAINTENANCE_EVENT_NAME, { detail: { active } }));
 }
+

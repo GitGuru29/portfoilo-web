@@ -18,6 +18,7 @@ import WhatsAppChat from './components/WhatsAppChat';
 const ProjectDetails = lazy(() => import('./pages/ProjectDetails'));
 const CommandPalette = lazy(() => import('./components/CommandPalette'));
 const ScheduleMeetingModal = lazy(() => import('./components/ScheduleMeetingModal'));
+const AdminModerationModal = lazy(() => import('./components/AdminModerationModal'));
 
 // Edition presets — modern high-tech engineering color profiles
 export const EDITION_PRESETS = {
@@ -154,6 +155,8 @@ function App() {
     const isUnlocked = useStore((state) => state.isUnlocked);
     const isMeetingModalOpen = useStore((state) => state.isMeetingModalOpen);
     const setMeetingModalOpen = useStore((state) => state.setMeetingModalOpen);
+    const isAdminModalOpen = useStore((state) => state.isAdminModalOpen);
+    const setAdminModalOpen = useStore((state) => state.setAdminModalOpen);
     const accentTheme = useStore((state) => state.accentTheme);
 
     // Apply the modern engineering color profile to the root element
@@ -209,6 +212,16 @@ function App() {
                         <ScheduleMeetingModal
                             isOpen={isMeetingModalOpen}
                             onClose={() => setMeetingModalOpen(false)}
+                        />
+                    </Suspense>
+                )}
+
+                {/* Admin Moderation & Maintenance Control Modal */}
+                {isAdminModalOpen && (
+                    <Suspense fallback={null}>
+                        <AdminModerationModal
+                            isOpen={isAdminModalOpen}
+                            onClose={() => setAdminModalOpen(false)}
                         />
                     </Suspense>
                 )}

@@ -3,15 +3,15 @@ import { motion } from 'framer-motion';
 import { Quote, Star, Linkedin, ChevronLeft, ChevronRight, MessageSquarePlus, RefreshCw, ShieldCheck } from 'lucide-react';
 import { fetchApprovedTestimonials } from '../services/githubTestimonialsService';
 import SubmitReferenceModal from './SubmitReferenceModal';
-import AdminModerationModal from './AdminModerationModal';
+import useStore from '../store/useStore';
 
 export default function TestimonialsOverlay() {
     const [testimonials, setTestimonials] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAdminOpen, setIsAdminOpen] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
+    const setAdminModalOpen = useStore((s) => s.setAdminModalOpen);
 
     const loadTestimonials = async () => {
         setLoading(true);
@@ -22,6 +22,9 @@ export default function TestimonialsOverlay() {
 
     useEffect(() => {
         loadTestimonials();
+        const handleUpdate = () => loadTestimonials();
+        window.addEventListener('testimonials-updated', handleUpdate);
+        return () => window.removeEventListener('testimonials-updated', handleUpdate);
     }, []);
 
     const nextSlide = () => {
@@ -55,8 +58,8 @@ export default function TestimonialsOverlay() {
 
                     <div className="flex flex-wrap items-center gap-2.5">
                         <button
-                            onClick={() => setIsAdminOpen(true)}
-                            title="Admin Moderation Desk"
+                            onClick={() => setAdminModalOpen(true)}
+                            title="Admin Moderation Desk (PIN: 22818)"
                             className="p-2.5 rounded-none bg-panel border border-ink/20 text-graphite hover:text-accent hover:border-accent transition-all cursor-pointer"
                         >
                             <ShieldCheck className="w-4 h-4" />
@@ -236,13 +239,6 @@ export default function TestimonialsOverlay() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSuccess={loadTestimonials}
-            />
-
-            {/* Admin Control Dashboard */}
-            <AdminModerationModal
-                isOpen={isAdminOpen}
-                onClose={() => setIsAdminOpen(false)}
-                onRefreshPublic={loadTestimonials}
             />
         </div>
     );

@@ -62,6 +62,8 @@ export default function CommandPalette() {
         { id: 'nav-contact', label: 'Go to Contact', category: 'Navigation', icon: Mail, action: () => goToSection('contact') },
 
         // Actions & External Links
+        { id: 'act-admin', label: 'Admin Moderation & Maintenance Control Panel (PIN: 22818)', category: 'Quick Actions', icon: ShieldCheck, action: () => { useStore.getState().setAdminModalOpen(true); setCommandPaletteOpen(false); } },
+        { id: 'act-maintenance', label: 'Toggle Website Maintenance Mode & Breaking News', category: 'Quick Actions', icon: ShieldCheck, action: () => { useStore.getState().setAdminModalOpen(true); setCommandPaletteOpen(false); } },
         { id: 'act-cv', label: 'Download Resume / CV (PDF)', category: 'Quick Actions', icon: Download, action: () => { window.open('/Siluna_Nusal_CV.pdf', '_blank'); setCommandPaletteOpen(false); } },
         { id: 'act-terminal', label: 'Toggle Interactive Floating Terminal', category: 'Quick Actions', icon: Terminal, action: () => { toggleTerminal(); setCommandPaletteOpen(false); } },
         { id: 'act-github', label: 'Open GitHub Profile', category: 'Quick Actions', icon: ExternalLink, action: () => { window.open('https://github.com/GitGuru29', '_blank'); setCommandPaletteOpen(false); } },
