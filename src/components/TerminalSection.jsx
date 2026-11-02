@@ -508,23 +508,25 @@ nothing to commit, working tree clean`
 };
 
 const NEOFETCH_OUTPUT = [
-    { text: '       _,met$$$$$gg.          ', color: '#e95420', suffix: { text: 'siluna', color: '#4ade80' }, suffix2: { text: '@', color: '#94a3b8' }, suffix3: { text: 'portfolio', color: '#60a5fa' } },
-    { text: '    ,g$$$$$$$$$$$$$$$P.       ', color: '#e95420', info: '──────────────────────────' },
-    { text: '  ,g$$P"        """Y$$.".     ', color: '#e95420', info: 'Role:     Systems & Android Developer' },
-    { text: ' ,$$P\'              `$$$.     ', color: '#e95420', info: 'GitHub:   @GitGuru29' },
-    { text: '\',$$P       ,ggs.     `$$b:   ', color: '#e95420', info: 'Repos:    30+ Public Repositories' },
-    { text: '`d$$\'     ,$P"\'   .    $$$    ', color: '#e95420', info: 'Focus:    Systems, Security, Tooling' },
-    { text: ' $$P      d$\'     ,    $$P    ', color: '#e95420', info: 'Stack:    C++, Rust, Kotlin, Python, Bash' },
-    { text: ' $$:      $$.   -    ,d$$\'    ', color: '#e95420', info: 'Core:     Kernel Internals, OS Architecture' },
-    { text: ' $$\\;      Y$b._   _,d$P\'     ', color: '#e95420', info: 'Projects: AeroLang, NeoMonitor, SightLock' },
-    { text: ' Y$$.    `.`"Y$$$$P"\'         ', color: '#e95420', info: 'Uptime:   Powered by 100% Coffee ☕' },
-    { text: ' `$$b      "-.__              ', color: '#e95420' },
-    { text: '  `Y$$                        ', color: '#e95420' },
-    { text: '   `Y$$.                      ', color: '#e95420', colors: true },
-    { text: '     `$$b.                    ', color: '#e95420' },
-    { text: '       `Y$$b.                 ', color: '#e95420' },
-    { text: '          `"Y$b._             ', color: '#e95420' },
-    { text: '              `""""           ', color: '#e95420' },
+    { text: '               +                 ', color: '#38bdf8', suffix: { text: 'siluna', color: '#4ade80' }, suffix2: { text: '@', color: '#94a3b8' }, suffix3: { text: 'archtitan-os', color: '#38bdf8' } },
+    { text: '              +++                ', color: '#38bdf8', info: '───────────────────────────────' },
+    { text: '             +++++               ', color: '#38bdf8', info: 'OS:       ArchTitan OS v3.1 x86_64' },
+    { text: '            +++++++              ', color: '#38bdf8', info: 'Host:     Titan Systems Architecture' },
+    { text: '           +++++++++             ', color: '#38bdf8', info: 'Kernel:   6.12.1-arch-zen (cgroups v2)' },
+    { text: '          ++++   ++++            ', color: '#38bdf8', info: 'Uptime:   23 days, 4 hours, 12 mins' },
+    { text: '         *++++   ++++*           ', color: '#38bdf8', info: 'Packages: 942 (pacman), 14 (titan-pm)' },
+    { text: '        +++++     +++++          ', color: '#38bdf8', info: 'Shell:    fish 3.7.1 + starship' },
+    { text: '       +++++ ####### +++++       ', color: '#38bdf8', info: 'WM:       Hyprland (Wayland Native)' },
+    { text: '      *++++ ######### ++++*      ', color: '#38bdf8', info: 'Theme:    Catppuccin Mocha (TDL Qt6)' },
+    { text: '     +++++   #####   +++++       ', color: '#38bdf8', info: 'Icons:    Titan-Mocha-Dark' },
+    { text: '    ++++      ###      ++++      ', color: '#38bdf8', info: 'Terminal: Kitty / LayerShell Telemetry' },
+    { text: '   ++++++     ###     ++++++     ', color: '#38bdf8', info: 'CPU:      Intel Core / AMD Ryzen Zen4' },
+    { text: '  ++++++      ###      ++++++    ', color: '#38bdf8', info: 'GPU:      AutoGpuSwitcher (iGPU + dGPU)' },
+    { text: ' ++++++       ###       ++++++   ', color: '#38bdf8', info: 'Memory:   178 MiB / 32140 MiB (Idle)' },
+    { text: '*++++          #          ++++*  ', color: '#38bdf8', info: 'Daemons:  titan-hwm, titanshared' },
+    { text: ' +++           #           +++   ', color: '#38bdf8', colors: true },
+    { text: '  ++           #            ++   ', color: '#38bdf8' },
+    { text: '   +           #             +   ', color: '#38bdf8' },
 ];
 
 const MAN_PAGES = {
@@ -1229,8 +1231,29 @@ export default function TerminalSection() {
             }
         }
 
-        else if (cmd === 'neofetch') {
+        else if (cmd === 'neofetch' || cmd === 'titanfetch') {
             out.push({ type: 'neofetch' });
+        }
+
+        else if (cmd === 'archtitan') {
+            out.push({
+                type: 'out',
+                text: `ArchTitan OS — High-Performance Developer-First Linux Distribution
+Version:    v3.1 Stable (Arch Linux rolling base)
+Compositor: Hyprland (Wayland) + Titan Design Language (Qt6/QML)
+Kernel:     6.12.1-arch-zen with cgroups v2 hierarchical resource slicing
+
+Active Core Subsystems:
+  ● titan-hwm.service        - C++20 Hardware & Slice Manager [RUNNING]
+  ● titanshared.service      - Cross-Device /dev/uinput Daemon [ACTIVE]
+  ● autogpuswitcher.service  - Dynamic Hybrid GPU Power Gater [POWERSAVE]
+  ● titan-sysmon.service     - LayerShell Telemetry HUD [1Hz NOMINAL]
+  ● btrfs-snapshot-pre.hook  - Atomic Pacman Pre-Update Rollback [ENGAGED]
+
+Idle Memory: < 185 MB RAM | Cold Boot: 1.84s to Wayland
+Monograph:   #/project/archtitan
+Source:      https://github.com/GitGuru29/ArchTitan-OS`
+            });
         }
 
         else if (cmd === 'htop' || cmd === 'top') {
@@ -1386,7 +1409,7 @@ export default function TerminalSection() {
             e.preventDefault();
             const parts = input.split(' ');
             if (parts.length === 1) {
-                const allCmds = ['ls', 'll', 'la', 'cd', 'cat', 'pwd', 'echo', 'grep', 'find', 'touch', 'mkdir', 'rm', 'cp', 'mv', 'git', 'make', 'gcc', 'g++', 'sudo', 'man', 'which', 'uname', 'date', 'uptime', 'whoami', 'id', 'env', 'history', 'neofetch', 'htop', 'top', 'python3', 'node', 'ssh', 'ping', 'curl', 'clear', 'exit', 'help', 'about', 'skills', 'projects', 'github', 'resume', 'contact', 'maintenance', 'start', 'cmatrix'];
+                const allCmds = ['ls', 'll', 'la', 'cd', 'cat', 'pwd', 'echo', 'grep', 'find', 'touch', 'mkdir', 'rm', 'cp', 'mv', 'git', 'make', 'gcc', 'g++', 'sudo', 'man', 'which', 'uname', 'date', 'uptime', 'whoami', 'id', 'env', 'history', 'neofetch', 'titanfetch', 'archtitan', 'htop', 'top', 'python3', 'node', 'ssh', 'ping', 'curl', 'clear', 'exit', 'help', 'about', 'skills', 'projects', 'github', 'resume', 'contact', 'maintenance', 'start', 'cmatrix'];
                 const matches = allCmds.filter(c => c.startsWith(input));
                 if (matches.length === 1) setInput(matches[0] + ' ');
                 else if (matches.length > 1) push([{ type: 'tab-complete', entries: matches }]);
@@ -1586,8 +1609,8 @@ export default function TerminalSection() {
                             ['Files', 'cat, grep, touch, mkdir, rm, cp, mv'],
                             ['Git', 'git status, git log, git log --oneline, git branch, git diff'],
                             ['System', 'uname -a, uptime, date, whoami, id, env, which, history'],
-                            ['Dev', 'gcc, g++, make, python3, node, neofetch, htop'],
-                            ['Portfolio', 'about, skills, projects, github, resume, contact, maintenance'],
+                            ['Dev', 'gcc, g++, make, python3, node, neofetch, titanfetch, htop'],
+                            ['Portfolio', 'archtitan, about, skills, projects, github, resume, contact, maintenance'],
                             ['Shell', 'echo, man, sudo, exit, clear, cmatrix, Ctrl+L, Ctrl+C'],
                         ].map(([cat, cmds]) => (
                             <div key={cat} className="flex gap-3">

@@ -73,26 +73,26 @@ function FolioStat({ target, suffix, prefix = '', label, sublabel, started }) {
 const FRONT_PAGE_HIGHLIGHTS = [
     {
         idx: '01',
-        id: 'aerolang',
-        title: 'AeroLang Compiler',
-        tag: 'C++ · LLVM IR',
-        summary: 'Custom compiled language targeting native Android & Linux binaries.',
-        icon: Cpu,
+        id: 'archtitan',
+        title: 'ArchTitan OS',
+        tag: 'Arch Linux · C++20 · Wayland',
+        summary: 'High-performance developer Linux distribution with cgroup v2 slicing & custom daemons.',
+        icon: Terminal,
     },
     {
         idx: '02',
-        id: 'aegislayer',
-        title: 'AegisLayer Daemon',
-        tag: 'Kotlin · On-Device ML',
-        summary: 'Zero-dependency autonomous Android system daemon & habit engine.',
-        icon: Shield,
+        id: 'aerolang',
+        title: 'AeroLang Compiler',
+        tag: 'C++20 · LLVM IR Backend',
+        summary: 'Custom compiled language targeting native Android NDK & Linux binaries.',
+        icon: Cpu,
     },
     {
         idx: '03',
         id: 'bybridge',
-        title: 'Bybridge IPC Suite',
-        tag: 'C++ · WebSockets · RTP',
-        summary: 'Low-latency cross-device ecosystem bridging Arch Linux & Android.',
+        title: 'Bybridge & TitanShare',
+        tag: 'C++ · WebSockets · RTP · /dev/uinput',
+        summary: 'Low-latency cross-device ecosystem bridging Arch Linux & Android natively.',
         icon: Layers,
     },
 ];
@@ -242,7 +242,7 @@ export default function HeroOverlay() {
                     <div className="flex items-center justify-between gap-3 py-2 font-mono text-[8px] md:text-[9.5px] tracking-[0.24em] uppercase text-ink/75">
                         <span className="hidden sm:inline font-semibold">VOL. XXIV · ISSUE NO. 024</span>
                         <span className="truncate font-bold text-ink">THE DAILY DEVELOPER · SYSTEMS ENGINEERING BROADSHEET</span>
-                        <span className="hidden lg:inline text-graphite">KERNEL: 6.12-ARCH · C++20 / KOTLIN</span>
+                        <span className="hidden lg:inline text-graphite">FLAGSHIP: ARCHTITAN OS · LINUX 6.12-ZEN · C++20 / WAYLAND</span>
                         <span className="text-accent font-semibold flex items-center gap-1.5 shrink-0">
                             <span className="w-1.5 h-1.5 bg-accent inline-block rotate-45 animate-pulse" />
                             SYSTEM: NOMINAL

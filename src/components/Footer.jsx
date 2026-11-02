@@ -154,9 +154,10 @@ export default function Footer() {
                         </h3>
                         <ul className="space-y-1.5 font-mono text-xs">
                             {[
+                                { name: 'ArchTitan OS', href: '#/project/archtitan' },
                                 { name: 'AeroLang Compiler', href: 'https://aero-lang-web.vercel.app/' },
-                                { name: 'AegisLayer Security', href: '/project/aegislayer' },
-                                { name: 'ByBridge IPC Engine', href: '/project/bybridge' },
+                                { name: 'TitanShare & Bybridge', href: '#/project/bybridge' },
+                                { name: 'AegisLayer Security', href: '#/project/aegislayer' },
                             ].map((proj) => (
                                 <li key={proj.name}>
                                     <a

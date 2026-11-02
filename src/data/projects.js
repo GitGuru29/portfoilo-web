@@ -1,4 +1,5 @@
 import { CATEGORIES } from './categories';
+import archtitanMd from '../content/projects/archtitan.md?raw';
 import bybridgeMd from '../content/projects/bybridge.md?raw';
 import aerolangMd from '../content/projects/aerolang.md?raw';
 import neonmonitorMd from '../content/projects/neonmonitor.md?raw';
@@ -9,6 +10,33 @@ import titanshareAndroidMd from '../content/projects/titanshare-android.md?raw';
 import marketRegimeMd from '../content/projects/market-regime-intelligence.md?raw';
 
 export const projectsData = [
+    {
+        id: 'archtitan',
+        title: 'ArchTitan OS',
+        subtitle: 'High-Performance Developer-First Linux Distribution',
+        role: 'Operating System Architecture / Linux Kernel & C++',
+        categoryId: CATEGORIES.OS_DEV.id,
+        year: '2024–2026',
+        status: 'SHIPPED / STABLE V3.1',
+        featured: true,
+        github: 'https://github.com/GitGuru29/ArchTitan-OS',
+        stack: ['Arch Linux', 'Linux 6.12-zen', 'C++20 (titan-hwm)', 'Hyprland (Wayland)', 'Qt6 / QML (TDL)', 'cgroups v2', 'BTRFS'],
+        metrics: [
+            { label: 'Idle Footprint', value: '< 185 MB RAM' },
+            { label: 'Cold Boot', value: '1.84s to Wayland' },
+            { label: 'Resource Daemon', value: 'titan-hwm v3.1 (C++20)' },
+            { label: 'Safety', value: 'Atomic BTRFS Rollback' },
+        ],
+        description: 'A custom, high-performance Linux distribution built on Arch Linux and the modern Wayland ecosystem. Features the C++20 Titan Hardware Manager (titan-hwm v3.1) for cgroups v2 resource slicing, unified Qt6 Titan Design Language (TDL), automated BTRFS snapshot rollbacks, and native cross-device Linux/Android daemons.',
+        images: [
+            '/archtitan/gallery.png',
+            '/archtitan/wallpaper.jpg',
+            '/archtitan/states.png',
+            '/archtitan/logo.png',
+            '/archtitan/reticle.png'
+        ],
+        content: archtitanMd
+    },
     {
         id: 'aerolang',
         title: 'AeroLang',
@@ -209,23 +237,6 @@ export const projectsData = [
             { label: 'Vision', value: 'ML Kit Card OCR' },
         ],
         description: 'A modern, secure E-Commerce Android application built with Jetpack Compose and Firebase featuring on-device ML Kit Card Scanning and real-time geolocation.',
-        images: [],
-        content: ''
-    },
-    {
-        id: 'archtitan',
-        title: 'ArchTitan OS',
-        subtitle: 'Modular Developer-First Linux Distribution',
-        role: 'OS Architecture / Linux',
-        categoryId: CATEGORIES.OS_DEV.id,
-        year: '2025',
-        status: 'CONCEPT / WIP',
-        stack: ['Arch Linux', 'Custom ISO / archiso', 'Dotfiles', 'Systemd', 'WM Scripting'],
-        metrics: [
-            { label: 'Base', value: 'Arch Linux Kernel' },
-            { label: 'Target', value: 'Systems Engineering' },
-        ],
-        description: 'A modular Linux-based operating environment focused on developer productivity, deterministic automation, and hardware performance control.',
         images: [],
         content: ''
     },
